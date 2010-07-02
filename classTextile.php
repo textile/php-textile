@@ -339,6 +339,7 @@ class Textile
 			$text = $this->retrieve($text);
 			$text = $this->retrieveCitations($text);
 			$text = $this->retrieveURLs($text);
+			$text = $this->replaceGlyphs($text);
 
 				// just to be tidy
 			$text = str_replace("<br />", "<br />\n", $text);
@@ -372,6 +373,7 @@ class Textile
 			$text = $this->retrieve($text);
 			$text = $this->retrieveCitations($text);
 			$text = $this->retrieveURLs($text);
+			$text = $this->replaceGlyphs($text);
 
 				// just to be tidy
 			$text = str_replace("<br />", "<br />\n", $text);
@@ -1140,7 +1142,7 @@ class Textile
 			'$1'.$txt_quote_double_close,		 //  double closing
 			$txt_quote_double_open, 			 //  double opening
 			'<acronym title="$2">$1</acronym>',  //  3+ uppercase acronym
-			'<span class="caps">$1</span>$2',	 //  3+ uppercase
+			'<span class="caps">glyph:$1</span>$2',	 //  3+ uppercase
 			'$1'.$txt_ellipsis, 				 //  ellipsis
 			'$1'.$txt_emdash.'$2',				 //  em dash
 			' '.$txt_endash.' ',				 //  en dash
@@ -1167,6 +1169,11 @@ class Textile
 		 return join('', $glyph_out);
 	}
 
+// -------------------------------------------------------------
+  function replaceGlyphs($text)
+  {
+    return preg_replace('/glyph:([^<]+)/','$1',$text);
+  }
 // -------------------------------------------------------------
 	function iAlign($in)
 	{
