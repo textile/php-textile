@@ -113,18 +113,34 @@ Phrase modifier syntax:
 
 	   "linktext":url	->	 <a href="url">linktext</a>
  "linktext(title)":url	->	 <a href="url" title="title">linktext</a>
- ""text(citation title|credits)"":url -> citation link as auto-numbered footnote
-   Example: Scientists ""believe(Proof of a small moon)"":url the moon is small. ->
-    <p>Scientists believe<sup>x</sup> the moon is small.</p>
-   And at the end of your text you get a citation footnote...
-    <p><sup>x</sup> <a href="url">Proof of a small moon.</a></p>
-
-		   !imageurl!	->	 <img src="imageurl" />
+ 		   !imageurl!	->	 <img src="imageurl" />
   !imageurl(alt text)!	->	 <img src="imageurl" alt="alt text" />
 	!imageurl!:linkurl	->	 <a href="linkurl"><img src="imageurl" /></a>
 
 ABC(Always Be Closing)	->	 <acronym title="Always Be Closing">ABC</acronym>
 
+
+Citation Links:
+  Allows the generation of an automated list of citations with links. Each 
+  citation reference is marked with a superscript reference that links into the 
+  automatically generated list of citation links.
+  
+  Each list item links back to its source in the body text and also contains the
+  cited resource as a link.
+
+  Syntax:
+    text[citation link text|citation link postamble]:url moretext
+ 
+  Example:
+    Scientists say["Proof" of a small moon.|Copyright(c) author]:url the moon is small. 
+      ->
+    <p>Scientists say<sup><a href="cite_def_x" id="cite_src_x">x</sup> the moon is small.</p>
+    
+   And at the end of your text you get an ordered list of citation footnotes with links...
+   
+   <ol class="citation_footnotes">
+    <li id="cite_def_x" ><a href="cite_src_x">^</a> <a href="url">"Proof"" of a small moon.</a> Copyright(c) author</li>
+   </ol>
 
 Table syntax:
 
@@ -765,47 +781,37 @@ class Textile
 	function citations($text)
 	{
 		return preg_replace_callback('/
-			(^|(?<=[\s>.$pnct\(])|[{[]) # $pre
-			""							 # start
+			\[							 # start
 			(' . $this->c . ')			 # $atts
-			([^"]+?)					 # $text
-			(?:\(([^)]+?)\)(?="))?		 # $title
-			"":
+			([^\]]+?)					 # $text
+			\]:
 			('.$this->urlch.'+?)		 # $url
 			(\/)?						 # $slash
 			([^\w\/;]*?)				 # $post
-			([\]}]|(?=\s|$|\)))
+			((?=\s|$|\)))
 		/x', array(&$this, "fCitations"), $text);
 	}
 
 // -------------------------------------------------------------
 	function fCitations($m)
 	{
-		list(, $pre, $atts, $text, $title, $url, $slash, $post, $tail) = $m;
+		list(, $atts, $text, $url, $slash, $post, $tail) = $m;
 
-		$atts = $no_title_atts = $this->pba($atts);
-		$atts .= ($title != '') ? ' title="' . $this->encode_html($title) . '"' : '';
+		$atts = $this->pba($atts);
 
 		if (!$this->noimage)
 			$text = $this->image($text);
 
 		$text = $this->span($text);
 		$text = $this->glyphs($text);
-    $url = $this->shelveURL($url.$slash);
+    $url  = $this->shelveURL($url.$slash);
    
-	  $key = md5($url);
-	  $citation_index = 1 + count(@$this->citations);
-	  $out = trim($text).'<sup class="citation" id="cite_src_'.$key.'"><a href="#cite_def_'.$key.'">'.$citation_index.'</a></sup>'.$post;
-	  $parts = explode('|',$title);
-	  $this->citations[] = array(
-	    'link' => '<a href="' . $url . '"' . $no_title_atts . $this->rel . '>' . $this->encode_html($parts[0]) . '</a> '.$this->span(@$parts[1]),
-	    'key'  => $key,
-	    );
+	  $key = 1 + count(@$this->citations);
+	  $out = '<sup class="citation" id="cite_src_'.$key.'"><a href="#cite_def_'.$key.'">'.$key.'</a></sup>'.$post;
+	  $parts = explode('|',$text);
+	  $this->citations[$key] = '<a href="' . $url . '"' . $atts . $this->rel . '>' . $parts[0] . '</a> '.$this->span(@$parts[1]);
 
-	  if (($pre and !$tail) or ($tail and !$pre))
-		  $out = $pre.$out.$tail;
-
-		// $this->dump($out);
+	  $out = $out.$tail;
 		return $this->shelve($out);
 	}
 
@@ -816,10 +822,8 @@ class Textile
     if( !empty($this->citations) )
     {
       $citations[] = '<ol class="citation_footnotes">';
-      foreach($this->citations as $citation_info)
-      {
-        $citations[] = '<li id="cite_def_'.$citation_info['key'].'"> <a href="#cite_src_'.$citation_info['key'].'">^</a> '.$citation_info['link']."</li>";
-      }  
+      foreach($this->citations as $key=>$citation)
+        $citations[] = '<li id="cite_def_'.$key.'"> <a href="#cite_src_'.$key.'">^</a> '.$citation."</li>";
       $citations[] = '</ol>';
     }
     
