@@ -886,7 +886,7 @@ class Textile
     {
       $citations[] = '<ol class="citation_footnotes">';
       foreach($this->citations as $key=>$citation)
-        $citations[] = '<li id="cite_def_'.$key.'"><a class="cite" href="#cite_src_'.$key.'">^</a> '.$citation."</li>";
+        $citations[] = '<li id="cite_def_'.$key.'"><a class="citeref" href="#cite_src_'.$key.'">^</a> '.$citation."</li>";
       $citations[] = '</ol>';
     }
     
