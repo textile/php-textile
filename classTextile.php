@@ -231,6 +231,7 @@ Applying Attributes:
 @define('txt_trademark',          '&#8482;');
 @define('txt_registered',         '&#174;');
 @define('txt_copyright',          '&#169;');
+@define('txt_has_unicode',        @preg_match('/\pL/u', 'a')); // Detect if Unicode is compiled into PCRE
 
 class Textile
 {
@@ -1175,22 +1176,34 @@ class Textile
 		$text = preg_replace('/"\z/', "\" ", $text);
 		$pnc = '[[:punct:]]';
 
+		if (txt_has_unicode) {
+			$acr = '\p{Lu}\p{Nd}';
+			$abr = '\p{Lu}';
+			$nab = '\p{Ll}';
+			$wrd = '\p{L}+|\p{N}+|\_+';
+		} else {
+			$acr = 'A-Z0-9';
+			$abr = 'A-Z';
+			$nab = 'a-z';
+			$wrd = '\w';
+		}
+
 		$glyph_search = array(
-			'/(\w)\'(\w)/', 									 // apostrophe's
-			'/(\s)\'(\d+\w?)\b(?!\')/', 						 // back in '88
-			'/(\S)\'(?=\s|'.$pnc.'|<|$)/',						 //  single closing
-			'/\'/', 											 //  single opening
-			'/(\S)\"(?=\s|'.$pnc.'|<|$)/',						 //  double closing
-			'/"/',												 //  double opening
-			'/\b([A-Z][A-Z0-9]{2,})\b(?:[(]([^)]*)[)])/',		 //  3+ uppercase acronym
-			'/(?<=\s|^|[>(;-])([A-Z]{3,})([a-z]*)(?=\s|'.$pnc.'|<|$)/',  //  3+ uppercase
-			'/([^.]?)\.{3}/',									 //  ellipsis
-			'/(\s?)--(\s?)/',									 //  em dash
-			'/\s-(?:\s|$)/',									 //  en dash
-			'/(\d+)( ?)x( ?)(?=\d+)/',							 //  dimension sign
-			'/(\b ?|\s|^)[([]TM[])]/i', 						 //  trademark
-			'/(\b ?|\s|^)[([]R[])]/i',							 //  registered
-			'/(\b ?|\s|^)[([]C[])]/i',							 //  copyright
+			'/('.$wrd.')\'('.$wrd.')/',        // I'm an apostrophe
+			'/(\s)\'(\d+'.$wrd.'?)\b(?!\')/',  // back in '88
+			'/(\S)\'(?=\s|'.$pnc.'|<|$)/',     // single closing
+			'/\'/',                            // single opening
+			'/(\S)\"(?=\s|'.$pnc.'|<|$)/',     // double closing
+			'/"/',                             // double opening
+			'/\b(['.$abr.']['.$acr.']{2,})\b(?:[(]([^)]*)[)])/',  // 3+ uppercase acronym
+			'/(?<=\s|^|[>(;-])(['.$abr.']{3,})(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/',  // 3+ uppercase
+			'/([^.]?)\.{3}/',                  // ellipsis
+			'/(\s?)--(\s?)/',                  // em dash
+			'/\s-(?:\s|$)/',                   // en dash
+			'/(\d+)( ?)x( ?)(?=\d+)/',         // dimension sign
+			'/(\b ?|\s|^)[([]TM[])]/i',        // trademark
+			'/(\b ?|\s|^)[([]R[])]/i',         // registered
+			'/(\b ?|\s|^)[([]C[])]/i',         // copyright
 		 );
 
 		extract($this->glyph, EXTR_PREFIX_ALL, 'txt');
