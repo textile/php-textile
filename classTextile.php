@@ -317,6 +317,11 @@ class Textile
 
 	function TextileThis($text, $lite = '', $encode = '', $noimage = '', $strict = '', $rel = '')
 	{
+  	$this->span_depth = 0;
+		$this->tag_index = 1;
+		$this->citations = array();
+		$this->citation_index = 1;
+
 		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
 
 		$this->lite = $lite;
@@ -338,8 +343,10 @@ class Textile
 
 			$text = $this->retrieve($text);
 			$text = $this->retrieveCitations($text);
-			$text = $this->retrieveURLs($text);
 			$text = $this->replaceGlyphs($text);
+			$text = $this->retrieveTags($text);
+			$text = $this->retrieveURLs($text);
+			$this->span_depth=0;
 
 				// just to be tidy
 			$text = str_replace("<br />", "<br />\n", $text);
@@ -352,6 +359,11 @@ class Textile
 
 	function TextileRestricted($text, $lite = 1, $noimage = 1, $rel = 'nofollow')
 	{
+		$this->span_depth=0;
+		$this->tag_index = 1;
+		$this->citations = array();
+		$this->citation_index = 1;
+
 		$this->restricted = true;
 		$this->lite = $lite;
 		$this->noimage = $noimage;
@@ -372,8 +384,10 @@ class Textile
 
 			$text = $this->retrieve($text);
 			$text = $this->retrieveCitations($text);
-			$text = $this->retrieveURLs($text);
 			$text = $this->replaceGlyphs($text);
+			$text = $this->retrieveTags($text);
+			$text = $this->retrieveURLs($text);
+			$this->span_depth=0;
 
 				// just to be tidy
 			$text = str_replace("<br />", "<br />\n", $text);
@@ -731,19 +745,25 @@ class Textile
 	{
 		$qtags = array('\*\*','\*','\?\?','-','__','_','%','\+','~','\^');
 		$pnct = ".,\"'?!;:";
-
-		foreach($qtags as $f) {
-			$text = preg_replace_callback("/
-				(^|(?<=[\s>$pnct\(])|[{[])
-				($f)(?!$f)
-				({$this->c})
-				(?::(\S+))?
-				([^\s$f]+|\S.*?[^\s$f\n])
-				([$pnct]*)
-				$f
-				($|[\]}]|(?=[[:punct:]]{1,2}|\s|\)))
-			/x", array(&$this, "fSpan"), $text);
+    $this->span_depth++;
+      
+    if( $this->span_depth < 10 )
+    {
+		  foreach($qtags as $f) 
+		  {
+			  $text = preg_replace_callback("/
+				  (^|(?<=[\s>$pnct\(])|[{[])            # pre
+				  ($f)(?!$f)                            # tag
+				  ({$this->c})                          # atts
+				  (?::(\S+))?                           # cite
+				  ([^\s$f]+|\S.*?[^\s$f\n])             # content
+				  ([$pnct]*)                            # end
+				  $f
+				  ($|[\]}]|(?=[[:punct:]]{1,2}|\s|\)))  # tail
+			  /x", array(&$this, "fSpan"), $text);
+		  }
 		}
+		$this->span_depth--;
 		return $text;
 	}
 
@@ -764,20 +784,55 @@ class Textile
 		);
 
 		list(, $pre, $tag, $atts, $cite, $content, $end, $tail) = $m;
+
 		$tag = $qtags[$tag];
 		$atts = $this->pba($atts);
 		$atts .= ($cite != '') ? 'cite="' . $cite . '"' : '';
 
-		$out = "<$tag$atts>$content$end</$tag>";
+    $content = $this->span($content);
+
+    $opentag  = '<'.$tag.$atts.'>';
+    $closetag = '</'.$tag.'>';
+    $tags = $this->storeTags($opentag, $closetag);
+    $out = "{$tags['open']}{$content}{$end}{$tags['close']}";
 
 		if (($pre and !$tail) or ($tail and !$pre))
 			$out = $pre.$out.$tail;
 
-//		$this->dump($out);
-
 		return $out;
 
 	}
+
+// -------------------------------------------------------------
+  function storeTags($opentag,$closetag='')
+  {
+    $key = ($this->tag_index++);
+
+    //$key = 1 + @count($this->tagCache);
+    $key = str_pad( (string)$key, 10, '0', STR_PAD_LEFT ); # $key must be of fixed length to allow proper matching in retrieveTags
+    $this->tagCache[$key] = array('open'=>$opentag, 'close'=>$closetag);
+    $tags = array(
+      'open'  => "textileopentag{$key} ",
+      'close' => "textileclosetag{$key}",
+      );
+    return $tags;
+  }
+  function retrieveTags($text)
+  {
+    $text = preg_replace_callback('/textileopentag([\d]{10}) /' , array(&$this, 'fRetrieveOpenTags'),  $text);
+    $text = preg_replace_callback('/textileclosetag([\d]{10})/', array(&$this, 'fRetrieveCloseTags'), $text);
+    return $text;
+  }
+  function fRetrieveOpenTags($m)
+  {
+    list(, $key ) = $m;
+    return $this->tagCache[$key]['open'];
+  }
+  function fRetrieveCloseTags($m)
+  {
+    list(, $key ) = $m;
+    return $this->tagCache[$key]['close'];
+  }
 
 // -------------------------------------------------------------
 	function citations($text)
@@ -807,8 +862,8 @@ class Textile
 		$text = $this->span($text);
 		$text = $this->glyphs($text);
     $url  = $this->shelveURL($url.$slash);
-   
-	  $key = 1 + count(@$this->citations);
+  
+	  $key = ($this->citation_index++);
 	  $out = '<sup class="citation" id="cite_src_'.$key.'"><a href="#cite_def_'.$key.'">'.$key.'</a></sup>'.$post;
 	  $parts = explode('|',$text);
 	  $this->citations[$key] = '<a href="' . $url . '"' . $atts . $this->rel . '>' . $parts[0] . '</a> '.$this->span(@$parts[1]);
@@ -864,8 +919,12 @@ class Textile
 		$text = $this->span($text);
 		$text = $this->glyphs($text);
     $url = $this->shelveURL($url.$slash);
-   
-	  $out = '<a href="' . $url . '"' . $atts . $this->rel . '>' . trim($text) . '</a>' . $post;
+    
+    $opentag = '<a href="' . $url . '"' . $atts . $this->rel . '>';
+    $closetag = '</a>';
+    $tags = $this->storeTags($opentag, $closetag);
+    $out = $tags['open'].trim($text).$tags['close'].$post;
+    //$out = '<a href="' . $url . '"' . $atts . $this->rel . '>' . trim($text) . '</a>' . $post;
 
 	  if (($pre and !$tail) or ($tail and !$pre))
 		  $out = $pre.$out.$tail;
