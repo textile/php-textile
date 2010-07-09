@@ -26,7 +26,7 @@ Copyright (c) 2003-2004, Dean Allen <dean@textism.com>
 All rights reserved.
 
 Thanks to Carlo Zottmann <carlo@g-blog.net> for refactoring
-Textile's procedural code into a class framework.
+Textile's procedural code into a class framework
 
 Additions and fixes Copyright (c) 2006 Alex Shiels http://thresholdstate.com/
 
@@ -113,7 +113,8 @@ Phrase modifier syntax:
 
 	   "linktext":url	->	 <a href="url">linktext</a>
  "linktext(title)":url	->	 <a href="url" title="title">linktext</a>
- 		   !imageurl!	->	 <img src="imageurl" />
+
+		   !imageurl!	->	 <img src="imageurl" />
   !imageurl(alt text)!	->	 <img src="imageurl" alt="alt text" />
 	!imageurl!:linkurl	->	 <a href="linkurl"><img src="imageurl" /></a>
 
@@ -121,26 +122,27 @@ ABC(Always Be Closing)	->	 <acronym title="Always Be Closing">ABC</acronym>
 
 
 Citation Links:
-  Allows the generation of an automated list of citations with links. Each 
-  citation reference is marked with a superscript reference that links into the 
+  Allows the generation of an automated list of citations with links. Each
+  citation reference is marked with a superscript reference that links into the
   automatically generated list of citation links.
-  
+
   Each list item links back to its source in the body text and also contains the
   cited resource as a link.
 
   Syntax:
     text[citation link text|citation link postamble]:url moretext
- 
+
   Example:
-    Scientists say["Proof" of a small moon.|Copyright(c) author]:url the moon is small. 
+    Scientists say["Proof" of a small moon.|Copyright(c) author]:url the moon is small.
       ->
     <p>Scientists say<sup><a href="cite_def_x" id="cite_src_x">x</sup> the moon is small.</p>
-    
+
    And at the end of your text you get an ordered list of citation footnotes with links...
-   
+
    <ol class="citation_footnotes">
     <li id="cite_def_x" ><a href="cite_src_x">^</a> <a href="url">"Proof"" of a small moon.</a> Copyright(c) author</li>
    </ol>
+
 
 Table syntax:
 
@@ -219,16 +221,16 @@ Applying Attributes:
 @define('txt_quote_single_close', '&#8217;');
 @define('txt_quote_double_open',  '&#8220;');
 @define('txt_quote_double_close', '&#8221;');
-@define('txt_apostrophe',		  '&#8217;');
-@define('txt_prime',			  '&#8242;');
-@define('txt_prime_double', 	  '&#8243;');
-@define('txt_ellipsis', 		  '&#8230;');
-@define('txt_emdash',			  '&#8212;');
-@define('txt_endash',			  '&#8211;');
-@define('txt_dimension',		  '&#215;');
-@define('txt_trademark',		  '&#8482;');
-@define('txt_registered',		  '&#174;');
-@define('txt_copyright',		  '&#169;');
+@define('txt_apostrophe',         '&#8217;');
+@define('txt_prime',              '&#8242;');
+@define('txt_prime_double',       '&#8243;');
+@define('txt_ellipsis',           '&#8230;');
+@define('txt_emdash',             '&#8212;');
+@define('txt_endash',             '&#8211;');
+@define('txt_dimension',          '&#215;');
+@define('txt_trademark',          '&#8482;');
+@define('txt_registered',         '&#174;');
+@define('txt_copyright',          '&#169;');
 
 class Textile
 {
@@ -281,20 +283,20 @@ class Textile
 		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p');
 
 		$this->glyph = array(
-		   'quote_single_open'	=> txt_quote_single_open,
+		   'quote_single_open'  => txt_quote_single_open,
 		   'quote_single_close' => txt_quote_single_close,
-		   'quote_double_open'	=> txt_quote_double_open,
+		   'quote_double_open'  => txt_quote_double_open,
 		   'quote_double_close' => txt_quote_double_close,
-		   'apostrophe' 		=> txt_apostrophe,
-		   'prime'				=> txt_prime,
-		   'prime_double'		=> txt_prime_double,
-		   'ellipsis'			=> txt_ellipsis,
-		   'emdash' 			=> txt_emdash,
-		   'endash' 			=> txt_endash,
-		   'dimension'			=> txt_dimension,
-		   'trademark'			=> txt_trademark,
-		   'registered' 		=> txt_registered,
-		   'copyright'			=> txt_copyright,
+		   'apostrophe'         => txt_apostrophe,
+		   'prime'              => txt_prime,
+		   'prime_double'       => txt_prime_double,
+		   'ellipsis'           => txt_ellipsis,
+		   'emdash'             => txt_emdash,
+		   'endash'             => txt_endash,
+		   'dimension'          => txt_dimension,
+		   'trademark'          => txt_trademark,
+		   'registered'         => txt_registered,
+		   'copyright'          => txt_copyright,
 		);
 
 		if (defined('hu'))
@@ -317,11 +319,10 @@ class Textile
 
 	function TextileThis($text, $lite = '', $encode = '', $noimage = '', $strict = '', $rel = '')
 	{
-  	$this->span_depth = 0;
+	  	$this->span_depth = 0;
 		$this->tag_index = 1;
 		$this->citations = array();
 		$this->citation_index = 1;
-
 		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
 
 		$this->lite = $lite;
@@ -346,9 +347,9 @@ class Textile
 			$text = $this->replaceGlyphs($text);
 			$text = $this->retrieveTags($text);
 			$text = $this->retrieveURLs($text);
-			$this->span_depth=0;
+			$this->span_depth = 0;
 
-				// just to be tidy
+			// just to be tidy
 			$text = str_replace("<br />", "<br />\n", $text);
 
 			return $text;
@@ -359,14 +360,14 @@ class Textile
 
 	function TextileRestricted($text, $lite = 1, $noimage = 1, $rel = 'nofollow')
 	{
-		$this->span_depth=0;
-		$this->tag_index = 1;
-		$this->citations = array();
-		$this->citation_index = 1;
-
 		$this->restricted = true;
 		$this->lite = $lite;
 		$this->noimage = $noimage;
+
+		$this->span_depth = 0;
+		$this->tag_index = 1;
+		$this->citations = array();
+		$this->citation_index = 1;
 
 		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
 
@@ -387,9 +388,9 @@ class Textile
 			$text = $this->replaceGlyphs($text);
 			$text = $this->retrieveTags($text);
 			$text = $this->retrieveURLs($text);
-			$this->span_depth=0;
+			$this->span_depth = 0;
 
-				// just to be tidy
+			// just to be tidy
 			$text = str_replace("<br />", "<br />\n", $text);
 
 			return $text;
@@ -745,13 +746,13 @@ class Textile
 	{
 		$qtags = array('\*\*','\*','\?\?','-','__','_','%','\+','~','\^');
 		$pnct = ".,\"'?!;:";
-    $this->span_depth++;
-      
-    if( $this->span_depth < 10 )
-    {
-		  foreach($qtags as $f) 
-		  {
-			  $text = preg_replace_callback("/
+		$this->span_depth++;
+
+		if( $this->span_depth < 10 )
+		{
+			foreach($qtags as $f)
+			{
+				$text = preg_replace_callback("/
 				  (^|(?<=[\s>$pnct\(])|[{[])            # pre
 				  ($f)(?!$f)                            # tag
 				  ({$this->c})                          # atts
@@ -761,7 +762,7 @@ class Textile
 				  $f
 				  ($|[\]}]|(?=[[:punct:]]{1,2}|\s|\)))  # tail
 			  /x", array(&$this, "fSpan"), $text);
-		  }
+			}
 		}
 		$this->span_depth--;
 		return $text;
@@ -789,62 +790,67 @@ class Textile
 		$atts = $this->pba($atts);
 		$atts .= ($cite != '') ? 'cite="' . $cite . '"' : '';
 
-    $content = $this->span($content);
+		$content = $this->span($content);
 
-    $opentag  = '<'.$tag.$atts.'>';
-    $closetag = '</'.$tag.'>';
-    $tags = $this->storeTags($opentag, $closetag);
-    $out = "{$tags['open']}{$content}{$end}{$tags['close']}";
+		$opentag  = '<'.$tag.$atts.'>';
+		$closetag = '</'.$tag.'>';
+		$tags = $this->storeTags($opentag, $closetag);
+		$out = "{$tags['open']}{$content}{$end}{$tags['close']}";
 
 		if (($pre and !$tail) or ($tail and !$pre))
 			$out = $pre.$out.$tail;
 
 		return $out;
-
 	}
 
 // -------------------------------------------------------------
-  function storeTags($opentag,$closetag='')
-  {
-    $key = ($this->tag_index++);
+	function storeTags($opentag,$closetag='')
+	{
+		$key = ($this->tag_index++);
 
-    //$key = 1 + @count($this->tagCache);
-    $key = str_pad( (string)$key, 10, '0', STR_PAD_LEFT ); # $key must be of fixed length to allow proper matching in retrieveTags
-    $this->tagCache[$key] = array('open'=>$opentag, 'close'=>$closetag);
-    $tags = array(
-      'open'  => "textileopentag{$key} ",
-      'close' => "textileclosetag{$key}",
-      );
-    return $tags;
-  }
-  function retrieveTags($text)
-  {
-    $text = preg_replace_callback('/textileopentag([\d]{10}) /' , array(&$this, 'fRetrieveOpenTags'),  $text);
-    $text = preg_replace_callback('/textileclosetag([\d]{10})/', array(&$this, 'fRetrieveCloseTags'), $text);
-    return $text;
-  }
-  function fRetrieveOpenTags($m)
-  {
-    list(, $key ) = $m;
-    return $this->tagCache[$key]['open'];
-  }
-  function fRetrieveCloseTags($m)
-  {
-    list(, $key ) = $m;
-    return $this->tagCache[$key]['close'];
-  }
+		//$key = 1 + @count($this->tagCache);
+		$key = str_pad( (string)$key, 10, '0', STR_PAD_LEFT ); # $key must be of fixed length to allow proper matching in retrieveTags
+		$this->tagCache[$key] = array('open'=>$opentag, 'close'=>$closetag);
+		$tags = array(
+		  'open'  => "textileopentag{$key} ",
+		  'close' => "textileclosetag{$key}",
+		);
+		return $tags;
+	}
+
+// -------------------------------------------------------------
+	function retrieveTags($text)
+	{
+		$text = preg_replace_callback('/textileopentag([\d]{10}) /' , array(&$this, 'fRetrieveOpenTags'),  $text);
+		$text = preg_replace_callback('/textileclosetag([\d]{10})/', array(&$this, 'fRetrieveCloseTags'), $text);
+		return $text;
+	}
+
+// -------------------------------------------------------------
+	function fRetrieveOpenTags($m)
+	{
+		list(, $key ) = $m;
+		return $this->tagCache[$key]['open'];
+	}
+
+// -------------------------------------------------------------
+	function fRetrieveCloseTags($m)
+	{
+		list(, $key ) = $m;
+		return $this->tagCache[$key]['close'];
+	}
 
 // -------------------------------------------------------------
 	function citations($text)
 	{
 		return preg_replace_callback('/
-			\[							 # start
-			(' . $this->c . ')			 # $atts
-			([^\]]+?)					 # $text
+			\[                   # start
+			(' . $this->c . ')   # $atts
+			([^\]]+?)            # $text
 			\]:
-			('.$this->urlch.'+?)		 # $url
-			(\/)?						 # $slash
-			([^\w\/;]*?)				 # $post
+			('.$this->urlch.'+?) # $url
+			(\/)?                # $slash
+			([^\w\/;]*?)         # $post
 			((?=\s|$|\)))
 		/x', array(&$this, "fCitations"), $text);
 	}
@@ -861,14 +867,14 @@ class Textile
 
 		$text = $this->span($text);
 		$text = $this->glyphs($text);
-    $url  = $this->shelveURL($url.$slash);
-  
-	  $key = ($this->citation_index++);
-	  $out = '<sup class="citation" id="cite_src_'.$key.'"><a href="#cite_def_'.$key.'">'.$key.'</a></sup>'.$post;
-	  $parts = explode('|',$text);
-	  $this->citations[$key] = '<a href="' . $url . '"' . $atts . $this->rel . '>' . $parts[0] . '</a> '.$this->span(@$parts[1]);
+		$url  = $this->shelveURL($url.$slash);
 
-	  $out = $out.$tail;
+		$key = ($this->citation_index++);
+		$out = '<sup class="citation" id="cite_src_'.$key.'"><a href="#cite_def_'.$key.'">'.$key.'</a></sup>'.$post;
+		$parts = explode('|',$text);
+		$this->citations[$key] = '<a href="' . $url . '"' . $atts . $this->rel . '>' . $parts[0] . '</a> '.$this->span(@$parts[1]);
+
+		$out = $out.$tail;
 		return $this->shelve($out);
 	}
 
@@ -880,7 +886,7 @@ class Textile
     {
       $citations[] = '<ol class="citation_footnotes">';
       foreach($this->citations as $key=>$citation)
-        $citations[] = '<li id="cite_def_'.$key.'"> <a href="#cite_src_'.$key.'">^</a> '.$citation."</li>";
+        $citations[] = '<li id="cite_def_'.$key.'"><a class="cite" href="#cite_src_'.$key.'">^</a> '.$citation."</li>";
       $citations[] = '</ol>';
     }
     
@@ -918,20 +924,17 @@ class Textile
 
 		$text = $this->span($text);
 		$text = $this->glyphs($text);
-    $url = $this->shelveURL($url.$slash);
-    
-    $opentag = '<a href="' . $url . '"' . $atts . $this->rel . '>';
-    $closetag = '</a>';
-    $tags = $this->storeTags($opentag, $closetag);
-    $out = $tags['open'].trim($text).$tags['close'].$post;
-    //$out = '<a href="' . $url . '"' . $atts . $this->rel . '>' . trim($text) . '</a>' . $post;
+		$url = $this->shelveURL($url.$slash);
 
-	  if (($pre and !$tail) or ($tail and !$pre))
-		  $out = $pre.$out.$tail;
+		$opentag = '<a href="' . $url . '"' . $atts . $this->rel . '>';
+		$closetag = '</a>';
+		$tags = $this->storeTags($opentag, $closetag);
+		$out = $tags['open'].trim($text).$tags['close'].$post;
 
-		// $this->dump($out);
+		if (($pre and !$tail) or ($tail and !$pre))
+			$out = $pre.$out.$tail;
+
 		return $this->shelve($out);
-
 	}
 
 // -------------------------------------------------------------
@@ -1168,7 +1171,6 @@ class Textile
 // -------------------------------------------------------------
 	function glyphs($text)
 	{
-
 		// fix: hackish
 		$text = preg_replace('/"\z/', "\" ", $text);
 		$pnc = '[[:punct:]]';
@@ -1194,21 +1196,21 @@ class Textile
 		extract($this->glyph, EXTR_PREFIX_ALL, 'txt');
 
 		$glyph_replace = array(
-			'$1'.$txt_apostrophe.'$2',			 // apostrophe's
-			'$1'.$txt_apostrophe.'$2',			 // back in '88
-			'$1'.$txt_quote_single_close,		 //  single closing
-			$txt_quote_single_open, 			 //  single opening
-			'$1'.$txt_quote_double_close,		 //  double closing
-			$txt_quote_double_open, 			 //  double opening
-			'<acronym title="$2">$1</acronym>',  //  3+ uppercase acronym
-			'<span class="caps">glyph:$1</span>$2',	 //  3+ uppercase
-			'$1'.$txt_ellipsis, 				 //  ellipsis
-			'$1'.$txt_emdash.'$2',				 //  em dash
-			' '.$txt_endash.' ',				 //  en dash
-			'$1$2'.$txt_dimension.'$3', 		 //  dimension sign
-			'$1'.$txt_trademark,				 //  trademark
-			'$1'.$txt_registered,				 //  registered
-			'$1'.$txt_copyright,				 //  copyright
+			'$1'.$txt_apostrophe.'$2',              // I'm an apostrophe
+			'$1'.$txt_apostrophe.'$2',              // back in '88
+			'$1'.$txt_quote_single_close,           // single closing
+			$txt_quote_single_open,                 // single opening
+			'$1'.$txt_quote_double_close,           // double closing
+			$txt_quote_double_open,                 // double opening
+			'<acronym title="$2">$1</acronym>',     // 3+ uppercase acronym
+			'<span class="caps">glyph:$1</span>$2', // 3+ uppercase
+			'$1'.$txt_ellipsis,                     // ellipsis
+			'$1'.$txt_emdash.'$2',                  // em dash
+			' '.$txt_endash.' ',                    // en dash
+			'$1$2'.$txt_dimension.'$3',             // dimension sign
+			'$1'.$txt_trademark,                    // trademark
+			'$1'.$txt_registered,                   // registered
+			'$1'.$txt_copyright,                    // copyright
 		 );
 
 		 $text = preg_split("@(<[\w/!?].*>)@Us", $text, -1, PREG_SPLIT_DELIM_CAPTURE);
@@ -1229,10 +1231,11 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-  function replaceGlyphs($text)
-  {
-    return preg_replace('/glyph:([^<]+)/','$1',$text);
-  }
+	function replaceGlyphs($text)
+	{
+		return preg_replace('/glyph:([^<]+)/','$1',$text);
+	}
+
 // -------------------------------------------------------------
 	function iAlign($in)
 	{
@@ -1368,5 +1371,3 @@ class Textile
 
 
 } // end class
-
-?>
