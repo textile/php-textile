@@ -814,7 +814,7 @@ class Textile
 		$this->tagCache[$key] = array('open'=>$opentag, 'close'=>$closetag);
 		$tags = array(
 		  'open'  => "textileopentag{$key} ",
-		  'close' => "textileclosetag{$key}",
+		  'close' => " textileclosetag{$key}",
 		);
 		return $tags;
 	}
@@ -823,7 +823,7 @@ class Textile
 	function retrieveTags($text)
 	{
 		$text = preg_replace_callback('/textileopentag([\d]{10}) /' , array(&$this, 'fRetrieveOpenTags'),  $text);
-		$text = preg_replace_callback('/textileclosetag([\d]{10})/', array(&$this, 'fRetrieveCloseTags'), $text);
+		$text = preg_replace_callback('/ textileclosetag([\d]{10})/', array(&$this, 'fRetrieveCloseTags'), $text);
 		return $text;
 	}
 
