@@ -256,6 +256,7 @@ class Textile
 	var $url_schemes = array();
 	var $glyph = array();
 	var $hu = '';
+	var $max_span_depth = 5;
 
 	var $ver = '2.0.0';
 	var $rev = '$Rev: 3359 $';
@@ -320,7 +321,7 @@ class Textile
 
 	function TextileThis($text, $lite = '', $encode = '', $noimage = '', $strict = '', $rel = '')
 	{
-	  	$this->span_depth = 0;
+		$this->span_depth = 0;
 		$this->tag_index = 1;
 		$this->citations = array();
 		$this->citation_index = 1;
@@ -749,7 +750,7 @@ class Textile
 		$pnct = ".,\"'?!;:";
 		$this->span_depth++;
 
-		if( $this->span_depth < 10 )
+		if( $this->span_depth <= $this->max_span_depth )
 		{
 			foreach($qtags as $f)
 			{
