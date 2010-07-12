@@ -282,7 +282,7 @@ class Textile
 
 		$this->url_schemes = array('http','https','ftp','mailto');
 
-		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p');
+		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', 'div');
 
 		$this->glyph = array(
 		   'quote_single_open'  => txt_quote_single_open,
@@ -706,6 +706,13 @@ class Textile
 			$o1 = "<pre$atts>";
 			$o2 = $c2 = '';
 			$c1 = "</pre>";
+		}
+		elseif ($tag == 'div' ) {
+		  $content = $this->shelve($content);
+			$o1 = "<div$atts>";
+			$o2 = "<p".$this->pba($att, '', 0).">";
+			$c2 = "</p>";
+			$c1 = "</div>";
 		}
 		else {
 			$o2 = "\t<$tag$atts>";
