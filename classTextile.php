@@ -20,7 +20,7 @@ T E X T I L E
 
 A Humane Web Text Generator
 
-Version 2.0
+Version 2.1 alpha
 
 Copyright (c) 2003-2004, Dean Allen <dean@textism.com>
 All rights reserved.
@@ -270,7 +270,7 @@ class Textile
 	var $hu = '';
 	var $max_span_depth = 5;
 
-	var $ver = '2.0.0';
+	var $ver = '2.1.0 alpha';
 	var $rev = '$Rev: 3359 $';
 
 	var $doc_root;
