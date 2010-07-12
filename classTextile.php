@@ -931,12 +931,15 @@ class Textile
 		$opentag = '<a href="' . $url . '"' . $atts . $this->rel . '>';
 		$closetag = '</a>';
 		$tags = $this->storeTags($opentag, $closetag);
-		$out = $tags['open'].trim($text).$tags['close'].$post;
+		$out = $tags['open'].trim($text).$tags['close'];
 
 		if (($pre and !$tail) or ($tail and !$pre))
-			$out = $pre.$out.$tail;
+		{
+			$out = $pre.$out.$post.$tail;
+			$post = '';
+		}
 
-		return $this->shelve($out);
+		return $this->shelve($out).$post;
 	}
 
 // -------------------------------------------------------------
