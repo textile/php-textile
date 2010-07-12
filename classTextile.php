@@ -1181,7 +1181,8 @@ class Textile
 			$acr = '\p{Lu}\p{Nd}';
 			$abr = '\p{Lu}';
 			$nab = '\p{Ll}';
-			$wrd = '\p{L}+|\p{N}+|\_+';
+//			$wrd = '\p{L}+|\p{N}+|\_+';
+			$wrd = '(?:\p{L}|\p{M}|\p{N}|\p{Pc})';
 		} else {
 			$acr = 'A-Z0-9';
 			$abr = 'A-Z';
