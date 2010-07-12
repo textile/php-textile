@@ -71,6 +71,18 @@ Block modifier syntax:
 	Paragraph: p. (also applied by default)
 	Example: p. Text -> <p>Text</p>
 
+  Divs: div.
+  Example: div. My div -> <div><p>My div</p></div>
+  Example: 
+    div.. My div here
+    just keeps going.
+    
+    p. Following paragraph.
+    
+    -> <div><p>My div here just keeps going</p></div>
+    
+       <p>Following paragraph.</p>
+
 	Blockquote: bq.
 	Example: bq. Block quotation... -> <blockquote>Block quotation...</blockquote>
 
