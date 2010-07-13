@@ -125,6 +125,8 @@ Phrase modifier syntax:
 
 	   "linktext":url	->	 <a href="url">linktext</a>
  "linktext(title)":url	->	 <a href="url" title="title">linktext</a>
+        "!":url  ->  <a href="url">url</a>
+    "!(title)":url  ->  <a href="url" title="title">url</a>
 
 		   !imageurl!	->	 <img src="imageurl" />
   !imageurl(alt text)!	->	 <img src="imageurl" alt="alt text" />
