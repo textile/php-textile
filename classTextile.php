@@ -125,8 +125,8 @@ Phrase modifier syntax:
 
 	   "linktext":url	->	 <a href="url">linktext</a>
  "linktext(title)":url	->	 <a href="url" title="title">linktext</a>
-        "!":url  ->  <a href="url">url</a>
-    "!(title)":url  ->  <a href="url" title="title">url</a>
+        "$":url  ->  <a href="url">url</a>
+    "$(title)":url  ->  <a href="url" title="title">url</a>
 
 		   !imageurl!	->	 <img src="imageurl" />
   !imageurl(alt text)!	->	 <img src="imageurl" alt="alt text" />
@@ -939,7 +939,7 @@ class Textile
 	{
 		list(, $pre, $atts, $text, $title, $url, $slash, $post, $tail) = $m;
 
-		if( '!' === $text ) $text = $url;
+		if( '$' === $text ) $text = $url;
 
 		$atts = $this->pba($atts);
 		$atts .= ($title != '') ? ' title="' . $this->encode_html($title) . '"' : '';
