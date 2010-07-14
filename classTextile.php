@@ -1443,6 +1443,7 @@ class Textile
 	{
 		foreach (func_get_args() as $a)
 			echo "\n<pre>",(is_array($a)) ? print_r($a) : $a, "</pre>\n";
+	  return $this;
 	}
 
 // -------------------------------------------------------------
