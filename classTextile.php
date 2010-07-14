@@ -413,6 +413,7 @@ class Textile
 	}
 
 // -------------------------------------------------------------
+// -------------------------------------------------------------
 	function pba($in, $element = "", $include_id = 1) // "parse block attributes"
 	{
 		$style = '';
@@ -420,6 +421,8 @@ class Textile
 		$lang = '';
 		$colspan = '';
 		$rowspan = '';
+		$span = '';
+		$width = '';
 		$id = '';
 		$atts = '';
 
@@ -469,16 +472,25 @@ class Textile
 				$class = $ids[1];
 			}
 
+			if ($element == 'col') {
+				if (preg_match("/(?:\\\\(\d+))?\s*(\d+)?/", $matched, $csp)) {
+					$span = isset($csp[1]) ? $csp[1] : '';
+					$width = isset($csp[2]) ? $csp[2] : '';
+				}
+			}
+
 			if ($this->restricted)
 				return ($lang)	  ? ' lang="'	 . $lang			.'"':'';
 
 			return join('',array(
 				($style)   ? ' style="'   . join("", $style) .'"':'',
-				($class)   ? ' class="'   . $class			 .'"':'',
-				($lang)    ? ' lang="'	  . $lang			 .'"':'',
-				($id and $include_id) ? ' id="' 	 . $id				.'"':'',
-				($colspan) ? ' colspan="' . $colspan		 .'"':'',
-				($rowspan) ? ' rowspan="' . $rowspan		 .'"':''
+				($class)   ? ' class="'   . $class           .'"':'',
+				($lang)    ? ' lang="'    . $lang            .'"':'',
+				($id and $include_id) ? ' id="' . $id        .'"':'',
+				($colspan) ? ' colspan="' . $colspan         .'"':'',
+				($rowspan) ? ' rowspan="' . $rowspan         .'"':'',
+				($span)    ? ' span="'    . $span            .'"':'',
+				($width)   ? ' width="'   . $width           .'"':'',
 			));
 		}
 		return '';
@@ -497,7 +509,7 @@ class Textile
 	function table($text)
 	{
 		$text = $text . "\n\n";
-		return preg_replace_callback("/^(?:table(_?{$this->s}{$this->a}{$this->c})\. ?\n)?^({$this->a}{$this->c}\.? ?\|.*\|)\n\n/smU",
+		return preg_replace_callback("/^(?:table(_?{$this->s}{$this->a}{$this->c})\.(.*)?\n)?^({$this->a}{$this->c}\.? ?\|.*\|)\n\n/smU",
 		   array(&$this, "fTable"), $text);
 	}
 
@@ -506,13 +518,42 @@ class Textile
 	{
 		$tatts = $this->pba($matches[1], 'table');
 
-		foreach(preg_split("/\|$/m", $matches[2], -1, PREG_SPLIT_NO_EMPTY) as $row) {
+		$sum = $matches[2] ? ' summary="'.htmlspecialchars(trim($matches[2])).'"' : '';
+		$cap = '';
+		$colgrp = '';
+		foreach(preg_split("/\|\s*?$/m", $matches[3], -1, PREG_SPLIT_NO_EMPTY) as $row) {
+			// Caption
+			if (preg_match("/^\|\=($this->s$this->a$this->c)\. ([^\|\n]*)(.*)/s", ltrim($row), $cmtch)) {
+				$capts = $this->pba($cmtch[1]);
+				$cap = "\t<caption".$capts.">".$cmtch[2]."</caption>\n";
+				$row = $cmtch[3];
+			}
+
+			// Colgroup
+			if (preg_match("/^\|:($this->s$this->a$this->c\. .*)/m", ltrim($row), $gmtch)) {
+				$idx=0;
+				foreach (explode('|', str_replace('.', '', $gmtch[1])) as $col) {
+					$gatts = $this->pba(trim($col), 'col');
+					$colgrp .= "\t<col".(($idx==0) ? "group".$gatts.">" : $gatts.">")."\n";
+					$idx++;
+				}
+				$colgrp .= "\t</colgroup>\n";
+				continue;
+			}
+
+			preg_match("/(:?^\|($this->vlgn)($this->s$this->a$this->c)\.$\n)?^(.*)/m", ltrim($row), $grpmatch);
+
+			// Row group
+			$rgrp = isset($grpmatch[2]) ? ($grpmatch[2] == '^') ? 'head' : ( ($grpmatch[2] == '~') ? 'foot' : (($grpmatch[2] == '-') ? 'body' : '' ) ) : '';
+			$rgrpatts = isset($grpmatch[3]) ? $this->pba($grpmatch[3]) : '';
+			$row = $grpmatch[4];
+
 			if (preg_match("/^($this->a$this->c\. )(.*)/m", ltrim($row), $rmtch)) {
 				$ratts = $this->pba($rmtch[1], 'tr');
 				$row = $rmtch[2];
 			} else $ratts = '';
 
-				$cells = array();
+			$cells = array();
 			foreach(explode("|", $row) as $cell) {
 				$ctyp = "d";
 				if (preg_match("/^_/", $cell)) $ctyp = "h";
@@ -526,10 +567,12 @@ class Textile
 				if (trim($cell) != '')
 					$cells[] = $this->doTagBr("t$ctyp", "\t\t\t<t$ctyp$catts>$cell</t$ctyp>");
 			}
-			$rows[] = "\t\t<tr$ratts>\n" . join("\n", $cells) . ($cells ? "\n" : "") . "\t\t</tr>";
+			$grp = ($rgrp) ? "\t<t".$rgrp.$rgrpatts.">\n" : '';
+			$rows[] = $grp."\t\t<tr$ratts>\n" . join("\n", $cells) . ($cells ? "\n" : "") . "\t\t</tr>";
 			unset($cells, $catts);
 		}
-		return "\t<table$tatts>\n" . join("\n", $rows) . "\n\t</table>\n\n";
+
+		return "\t<table{$tatts}{$sum}>\n" .$cap. $colgrp. join("\n", $rows) . "\n\t</table>\n\n";
 	}
 
 // -------------------------------------------------------------
