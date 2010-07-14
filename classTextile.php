@@ -1185,7 +1185,8 @@ class Textile
 // -------------------------------------------------------------
 	function cleanWhiteSpace($text)
 	{
-		$out = str_replace("\r\n", "\n", $text);		# DOS line endings
+		$out = preg_replace("/^\xEF\xBB\xBF|\x1A/", '', $text); # Byte order mark (if present)
+		$out = preg_replace("/\r\n?/", "\n", $out); # DOS and MAC line endings to *NIX style endings
 		$out = preg_replace("/^[ \t]*\n/m", "\n", $out);	# lines containing only whitespace
 		$out = preg_replace("/\n{3,}/", "\n\n", $out);	# 3 or more line ends
 		$out = preg_replace("/^\n*/", "", $out);		# leading blank lines
@@ -1250,7 +1251,6 @@ class Textile
 			$acr = '\p{Lu}\p{Nd}';
 			$abr = '\p{Lu}';
 			$nab = '\p{Ll}';
-//			$wrd = '\p{L}+|\p{N}+|\_+';
 			$wrd = '(?:\p{L}|\p{M}|\p{N}|\p{Pc})';
 		} else {
 			$acr = 'A-Z0-9';
