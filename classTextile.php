@@ -723,7 +723,7 @@ class Textile
 // -------------------------------------------------------------
 	function fBlock($m)
 	{
-		// $this->dump($m);
+		//$this->dump(__METHOD__)->dump($m);
 		list(, $tag, $att, $ext, $cite, $content) = $m;
 		$atts = $this->pba($att);
 
@@ -735,7 +735,12 @@ class Textile
 			$atts .= ' id="fn' . $fnid . '"';
 			if (strpos($atts, 'class=') === false)
 				$atts .= ' class="footnote"';
-			$content = '<sup>' . $fns[1] . '</sup> ' . $content;
+				
+			$sup = '<sup>' . $fns[1] . '</sup>';
+			if($att==='^')
+			  $sup = '<a href="#fnref' . $fnid . '" rev="footnote">'.$sup.'</a>';
+		
+			$content = $sup . ' ' . $content;
 		}
 
 		if ($tag == "bq") {
@@ -1234,10 +1239,13 @@ class Textile
 // -------------------------------------------------------------
 	function footnoteID($id, $t)
 	{
-		if (empty($this->fn[$id]))
-			$this->fn[$id] = uniqid(rand());
+	  $backref = '';
+		if (empty($this->fn[$id])) {
+			$this->fn[$id] = $a = uniqid(rand());
+  		$backref = 'id="fnref'.$a.'" ';
+		}
 		$fnid = $this->fn[$id];
-		return '<sup class="footnote"><a href="#fn'.$fnid.'">'.$id.'</a></sup>'.$t;
+		return '<sup '.$backref.'class="footnote"><a href="#fn'.$fnid.'" rel="footnote">'.$id.'</a></sup>'.$t;
 	}
 
 // -------------------------------------------------------------
