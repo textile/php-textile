@@ -742,7 +742,7 @@ class Textile
 			if (strpos($atts, 'class=') === false)
 				$atts .= ' class="footnote"';
 				
-  	  $backlink = '<a href="#fnrev' . $fnid . '" rev="footnote">'.$fns[1].'</a>';
+  	  $backlink = '<a href="#fnrev' . $fnid . '">'.$fns[1].'</a>';
 		  if (strpos($att, '^') === false) 
     		$backlink = $fns[1];
 			$sup = "<sup$supp_id>$backlink</sup>";
@@ -1253,13 +1253,12 @@ class Textile
 		}
 		$fnid = $this->fn[$id];
 		
-	  $footref = '<a href="#fn'.$fnid.'" rel="footnote">'.$id.'</a>';
+	  $footref = '<a href="#fn'.$fnid.'">'.$id.'</a>';
 		if( '!' == $nolink ) $footref = $id;
 		
 		$footref = '<sup '.$backref.'class="footnote">'.$footref.'</sup>';
 
 	  return $footref;
-//		return '<sup '.$backref.'class="footnote"><a href="#fn'.$fnid.'" rel="footnote">'.$id.'</a></sup>'.$t;
 	}
 
 // -------------------------------------------------------------
