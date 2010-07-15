@@ -719,7 +719,6 @@ class Textile
 	}
 
 
-
 // -------------------------------------------------------------
 	function fBlock($m)
 	{
@@ -732,13 +731,21 @@ class Textile
 		if (preg_match("/fn(\d+)/", $tag, $fns)) {
 			$tag = 'p';
 			$fnid = empty($this->fn[$fns[1]]) ? $fns[1] : $this->fn[$fns[1]];
-			$atts .= ' id="fn' . $fnid . '"';
+
+      # If there is an author-specified ID goes on the wrapper & the auto-id gets pushed to the <sup>
+      $supp_id = '';
+			if (strpos($atts, ' id=') === false)
+  			$atts .= ' id="fn' . $fnid . '"';
+  	  else
+  			$supp_id = ' id="fn' . $fnid . '"';
+
 			if (strpos($atts, 'class=') === false)
 				$atts .= ' class="footnote"';
 				
-			$sup = '<sup>' . $fns[1] . '</sup>';
-			if($att==='^')
-			  $sup = '<a href="#fnref' . $fnid . '" rev="footnote">'.$sup.'</a>';
+  	  $backlink = '<a href="#fnrev' . $fnid . '" rev="footnote">'.$fns[1].'</a>';
+		  if (strpos($att, '^') === false) 
+    		$backlink = $fns[1];
+			$sup = "<sup$supp_id>$backlink</sup>";
 		
 			$content = $sup . ' ' . $content;
 		}
@@ -1232,20 +1239,27 @@ class Textile
 // -------------------------------------------------------------
 	function footnoteRef($text)
 	{
-		return preg_replace('/(?<=\S)\[([0-9]+)\](\s)?/Ue',
-			'$this->footnoteID(\'\1\',\'\2\')', $text);
+		return preg_replace('/(?<=\S)\[([0-9]+)([\!]?)\](\s)?/Ue',
+			'$this->footnoteID(\'\1\',\'\2\',\'\3\')', $text);
 	}
 
 // -------------------------------------------------------------
-	function footnoteID($id, $t)
+	function footnoteID($id, $nolink, $t)
 	{
 	  $backref = '';
 		if (empty($this->fn[$id])) {
 			$this->fn[$id] = $a = uniqid(rand());
-  		$backref = 'id="fnref'.$a.'" ';
+  		$backref = 'id="fnrev'.$a.'" ';
 		}
 		$fnid = $this->fn[$id];
-		return '<sup '.$backref.'class="footnote"><a href="#fn'.$fnid.'" rel="footnote">'.$id.'</a></sup>'.$t;
+		
+	  $footref = '<a href="#fn'.$fnid.'" rel="footnote">'.$id.'</a>';
+		if( '!' == $nolink ) $footref = $id;
+		
+		$footref = '<sup '.$backref.'class="footnote">'.$footref.'</sup>';
+
+	  return $footref;
+//		return '<sup '.$backref.'class="footnote"><a href="#fn'.$fnid.'" rel="footnote">'.$id.'</a></sup>'.$t;
 	}
 
 // -------------------------------------------------------------
