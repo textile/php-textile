@@ -296,7 +296,7 @@ class Textile
 
 		$this->url_schemes = array('http','https','ftp','mailto');
 
-		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', 'div');
+		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', 'div', 'citelist');
 
 		$this->glyph = array(
 		   'quote_single_open'  => txt_quote_single_open,
@@ -355,11 +355,12 @@ class Textile
 			}
 
 			if (!$lite) {
+    		$text = $this->parseCitationDefs($text);
 				$text = $this->block($text);
+  			$text = $this->retrieveCitations($text);
 			}
 
 			$text = $this->retrieve($text);
-			$text = $this->retrieveCitations($text);
 			$text = $this->replaceGlyphs($text);
 			$text = $this->retrieveTags($text);
 			$text = $this->retrieveURLs($text);
@@ -396,11 +397,12 @@ class Textile
 				$text = $this->blockLite($text);
 			}
 			else {
+    		$text = $this->parseCitationDefs($text);
 				$text = $this->block($text);
+  			$text = $this->retrieveCitations($text);
 			}
 
 			$text = $this->retrieve($text);
-			$text = $this->retrieveCitations($text);
 			$text = $this->replaceGlyphs($text);
 			$text = $this->retrieveTags($text);
 			$text = $this->retrieveURLs($text);
@@ -722,7 +724,6 @@ class Textile
 // -------------------------------------------------------------
 	function fBlock($m)
 	{
-		//$this->dump(__METHOD__)->dump($m);
 		list(, $tag, $att, $ext, $cite, $content) = $m;
 		$atts = $this->pba($att);
 
@@ -739,18 +740,16 @@ class Textile
   	  else
   			$supp_id = ' id="fn' . $fnid . '"';
 
-			if (strpos($atts, 'class=') === false)
-				$atts .= ' class="footnote"';
-				
+			if (strpos($atts, 'class=') === false) $atts .= ' class="footnote"';
+
   	  $backlink = '<a href="#fnrev' . $fnid . '">'.$fns[1].'</a>';
-		  if (strpos($att, '^') === false) 
-    		$backlink = $fns[1];
+		  if (strpos($att, '^') === false) $backlink = $fns[1];
 			$sup = "<sup$supp_id>$backlink</sup>";
-		
+
 			$content = $sup . ' ' . $content;
 		}
 
-		if ($tag == "bq") {
+    if ($tag == "bq") {
 			$cite = $this->shelveURL($cite);
 			$cite = ($cite != '') ? ' cite="' . $cite . '"' : '';
 			$o1 = "\t<blockquote$cite$atts>\n";
@@ -764,6 +763,9 @@ class Textile
 			$c2 = "</code>";
 			$c1 = "</pre>";
 			$content = $this->shelve($this->r_encode_html(rtrim($content, "\n")."\n"));
+		}
+		elseif ($tag == 'citelist' ) {
+		  $content = "<ol$atts>\n[@citelist].\n\n</ol>";
 		}
 		elseif ($tag == 'notextile') {
 			$content = $this->shelve($content);
@@ -886,7 +888,6 @@ class Textile
 	{
 		$key = ($this->tag_index++);
 
-		//$key = 1 + @count($this->tagCache);
 		$key = str_pad( (string)$key, 10, '0', STR_PAD_LEFT ); # $key must be of fixed length to allow proper matching in retrieveTags
 		$this->tagCache[$key] = array('open'=>$opentag, 'close'=>$closetag);
 		$tags = array(
@@ -919,57 +920,125 @@ class Textile
 	}
 
 // -------------------------------------------------------------
+	function parseCitationDefs($text)
+	{
+		$text = preg_replace_callback("/
+			cite\#                #  start of citation def marker
+			([\w:-]+)             # !label
+			([\^]?)               # !link
+			({$this->c})          # !att
+			\.[\s]+               #  end of def marker
+			([^\n]*)              # !content
+			[\n]*                 #  eat the newline(s)
+		/ux", array(&$this, "fParseCitationDefs"), $text."\n");
+		
+		return $text;
+	}
+
+// -------------------------------------------------------------
+	function fParseCitationDefs($m)
+  {
+		list(, $label, $link, $att, $content) = $m;
+
+    if( empty($this->citations[$label]['def']) ) 
+    {
+      $this->citations[$label]['def'] = array(
+        'atts'    => $this->pba($att),
+        'content' => $this->graf($content),
+        'id'      => uniqid(rand()),
+        'link'    => $link,
+      );
+    }
+    return '';
+  }
+
+// -------------------------------------------------------------
 	function citations($text)
 	{
 		return preg_replace_callback('/
 			\[                   # start
 			(' . $this->c . ')   # $atts
-			([^\]]+?)            # $text
-			\]:
-			('.$this->urlch.'+?) # $url
-			(\/)?                # $slash
-			([^\w\/;]*?)         # $post
-			((?=\s|$|\)))
+			\#
+			([^\]!]+?)           # $label
+			([!]?)               # $nolink
+			\]
 		/x', array(&$this, "fCitations"), $text);
 	}
 
 // -------------------------------------------------------------
 	function fCitations($m)
 	{
-		list(, $atts, $text, $url, $slash, $post, $tail) = $m;
-
+	  #   By the time this function is called, all the defs will have been processed
+	  # into the citations array. So now we can resolve the link numbers in the order
+	  # we process the refs...
+	  #
+		list(, $atts, $label, $nolink) = $m;
 		$atts = $this->pba($atts);
+    $nolink = ($nolink === '!');
 
-		if (!$this->noimage)
-			$text = $this->image($text);
+    # Wipe this reference if no matching def has been processed for it...
+    if( empty( $this->citations[$label]) )
+      return '';
 
-		$text = $this->span($text);
-		$text = $this->glyphs($text);
-		$url  = $this->shelveURL($url.$slash);
+    # Assign a sequence number to this reference if there isn't one already...
+    if( empty( $this->citations[$label]['seq'] ) )
+      $this->citations[$label]['seq'] = ($this->citation_index++);
+    $num = $this->citations[$label]['seq'];
 
-		$key = ($this->citation_index++);
-		$out = '<sup class="citation" id="cite_src_'.$key.'"><a href="#cite_def_'.$key.'">'.$key.'</a></sup>'.$post;
-		$parts = explode('|',$text);
-		$this->citations[$key] = '<a href="' . $url . '"' . $atts . $this->rel . '>' . $parts[0] . '</a> '.$this->span(@$parts[1]);
+    # Make our anchor point & stash it for possible use in backlinks when the footer list is generated later...
+    $this->citations[$label]['refids'][] = $refid = uniqid(rand());
+    
+    # Build the link (if any)...
+    $_ = '<span id="autofnref'.$refid.'">'.$num.'</span>';
+    if( !$nolink )
+      $_ = '<a href="#autofn'.$this->citations[$label]['def']['id'].'">'.$_.'</a>';
+ 
+    # Build the reference...
+		$_ = '<sup'.$atts.'>'.$_.'</sup>';
 
-		$out = $out.$tail;
-		return $this->shelve($out);
+		return $this->shelve($_);
 	}
 
 // -------------------------------------------------------------
   function retrieveCitations($text)
   {
-    $citations = array();
-    if( !empty($this->citations) )
-    {
-      $citations[] = '<ol class="citation_footnotes">';
-      foreach($this->citations as $key=>$citation)
-        $citations[] = '<li id="cite_def_'.$key.'"><a class="citeref" href="#cite_src_'.$key.'">^</a> '.$citation."</li>";
-      $citations[] = '</ol>';
+    #   Previously, parseCitationDefs() will have processed the defs, citations() will have
+    # resolved the sequence numbers and inserted the superscript references as needed.
+    # Now it's time to output the definitions themselves.
+    #
+    #   They will go where the explicit citelist. marker is (if any), otherwise
+    # they get appended to the end of the text.
+    #
+    $_ = $o = $unused = array();
+    if( !empty($this->citations) ) {
+
+      # Sequence all referenced definitions...
+      foreach( $this->citations as $label=>$info ) {
+        $i = @$info['seq'];
+        if( !empty($i) ) {
+          $info['seq'] = $label;
+          $o[$i] = $info;
+        } else {
+          $unused[] = $info;  # unreferenced definitions go here for possible future use.
+        }
+      }
+      ksort($o);
+
+      # Construct the list of defs...
+      foreach($o as $seq=>$info) {
+        extract($info['def']);
+        $link = (($link==='^') && (1 === count($info['refids']))) ? '<a href="#autofnref'.$info['refids'][0].'">^</a>' : '';
+        $_[] = "\t".'<li'.$atts.'>'.$link.'<span id="autofn'.$id.'"> </span>'.$content.'</li>';
+      }
+      $_ = join("\n",$_);
+      
+      # Try replacing any citelist marker. If not successful, just append to text.
+      $text = preg_replace( "/\[@citelist\].\n/u", $_, $text, -1, $n );
+      if( 0 == $n && !empty($_) )
+        $text = $text."\n<ol class=\"citations\">\n$_\n</ol>";
     }
     
-    $citations = join("\n",$citations);
-    return $text."\n\n".$citations;
+    return $text;
   }
 
 // -------------------------------------------------------------
@@ -1462,8 +1531,9 @@ class Textile
 // NOTE: deprecated
 	function dump()
 	{
+	  static $bool = array( false=>'false', true=>'true' );
 		foreach (func_get_args() as $a)
-			echo "\n<pre>",(is_array($a)) ? print_r($a) : $a, "</pre>\n";
+			echo "\n<pre>",(is_array($a)) ? print_r($a) : (is_bool($a)) ? $bool[$a] : $a, "</pre>\n";
 	  return $this;
 	}
 
