@@ -509,7 +509,7 @@ class Textile
 
 		$sum = $matches[2] ? ' summary="'.htmlspecialchars(trim($matches[2])).'"' : '';
 		$cap = '';
-		$colgrp = '';
+		$colgrp = $last_rgrp = '';
 		foreach(preg_split("/\|\s*?$/m", $matches[3], -1, PREG_SPLIT_NO_EMPTY) as $row) {
 			// Caption
 			if (preg_match("/^\|\=($this->s$this->a$this->c)\. ([^\|\n]*)(.*)/s", ltrim($row), $cmtch)) {
@@ -523,7 +523,7 @@ class Textile
 				$idx=0;
 				foreach (explode('|', str_replace('.', '', $gmtch[1])) as $col) {
 					$gatts = $this->pba(trim($col), 'col');
-					$colgrp .= "\t<col".(($idx==0) ? "group".$gatts.">" : $gatts.">")."\n";
+					$colgrp .= "\t<col".(($idx==0) ? "group".$gatts.">" : $gatts." />")."\n";
 					$idx++;
 				}
 				$colgrp .= "\t</colgroup>\n";
@@ -533,7 +533,7 @@ class Textile
 			preg_match("/(:?^\|($this->vlgn)($this->s$this->a$this->c)\.$\n)?^(.*)/m", ltrim($row), $grpmatch);
 
 			// Row group
-			$rgrp = isset($grpmatch[2]) ? ($grpmatch[2] == '^') ? 'head' : ( ($grpmatch[2] == '~') ? 'foot' : (($grpmatch[2] == '-') ? 'body' : '' ) ) : '';
+			$rgrp = isset($grpmatch[2]) ? (($grpmatch[2] == '^') ? 'head' : ( ($grpmatch[2] == '~') ? 'foot' : (($grpmatch[2] == '-') ? 'body' : '' ) ) ) : '';
 			$rgrpatts = isset($grpmatch[3]) ? $this->pba($grpmatch[3]) : '';
 			$row = $grpmatch[4];
 
@@ -556,12 +556,13 @@ class Textile
 				if (trim($cell) != '')
 					$cells[] = $this->doTagBr("t$ctyp", "\t\t\t<t$ctyp$catts>$cell</t$ctyp>");
 			}
-			$grp = ($rgrp) ? "\t<t".$rgrp.$rgrpatts.">\n" : '';
+			$grp = (($rgrp && $last_rgrp) ? "\t</t".$last_rgrp.">\n" : '') . (($rgrp) ? "\t<t".$rgrp.$rgrpatts.">\n" : '');
+			$last_rgrp = ($rgrp) ? $rgrp : $last_rgrp;
 			$rows[] = $grp."\t\t<tr$ratts>\n" . join("\n", $cells) . ($cells ? "\n" : "") . "\t\t</tr>";
 			unset($cells, $catts);
 		}
 
-		return "\t<table{$tatts}{$sum}>\n" .$cap. $colgrp. join("\n", $rows) . "\n\t</table>\n\n";
+		return "\t<table{$tatts}{$sum}>\n" .$cap. $colgrp. join("\n", $rows) . "\n".(($last_rgrp) ? "\t</t".$last_rgrp.">\n" : '')."\t</table>\n\n";
 	}
 
 // -------------------------------------------------------------
@@ -988,7 +989,6 @@ class Textile
 		#
 		#   They will go where the explicit citelist. marker is (if any), otherwise
 		# they get appended to the end of the text.
-		#
 		$_ = $o = $unused = array();
 		if( !empty($this->citations) ) {
 
