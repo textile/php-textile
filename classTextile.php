@@ -753,7 +753,9 @@ class Textile
 			$content = $this->shelve($this->r_encode_html(rtrim($content, "\n")."\n"));
 		}
 		elseif ($tag == 'citelist' ) {
-			$content = "<ol$atts>\n[@citelist].\n\n</ol>";
+      $num = $att[0];
+      if( $num != '^' && $num != '~' ) $num = '';
+			$content = "<ol$atts>\n[@citelist$num].\n\n</ol>";
 		}
 		elseif ($tag == 'notextile') {
 			$content = $this->shelve($content);
@@ -906,7 +908,7 @@ class Textile
 		$text = preg_replace_callback("/
 			cite\#                #  start of citation def marker
 			([\w:-]+)             # !label
-			([\^]?)               # !link
+			([\^~]?)              # !link
 			({$this->c})          # !att
 			\.[\s]+               #  end of def marker
 			([^\n]*)              # !content
@@ -990,8 +992,14 @@ class Textile
 		#
 		#   They will go where the explicit citelist. marker is (if any), otherwise
 		# they get appended to the end of the text.
+
 		$_ = $o = $unused = array();
 		if( !empty($this->citations) ) {
+
+      $g_links = ''; # Default to no backlinks globally.
+      if( preg_match("/\[@citelist([\^~]?)\]\.\n/u", $text, $m) ) {
+  		  $g_links = $m[1];
+  		  }
 
 			# Sequence all referenced definitions...
 			foreach( $this->citations as $label=>$info ) {
@@ -1009,19 +1017,40 @@ class Textile
 			# Construct the list of defs...
 			foreach($o as $seq=>$info) {
 				extract($info['def']);
-				$link = (($link==='^') && (1 === count($info['refids']))) ? '<a href="#autofnref'.$info['refids'][0].'">^</a>' : '';
-				$_[] = "\t".'<li'.$atts.'>'.$link.'<span id="autofn'.$id.'"> </span>'.$content.'</li>';
+				$links = $this->makeBackrefLink($info, $g_links);
+				$_[] = "\t".'<li'.$atts.'>'.$links.'<span id="autofn'.$id.'"> </span>'.$content.'</li>';
 			}
 			$_ = join("\n",$_);
 
 			# Try replacing any citelist marker. If not successful, just append to text.
-			$text = preg_replace( "/\[@citelist\].\n/u", $_, $text, -1, $n );
+			$g_links = preg_quote( $g_links, '\\');
+			$text = preg_replace( "/\[@citelist$g_links\]\.\n/u", $_, $text, 1, $n );
 			if( 0 == $n && !empty($_) )
 				$text = $text."\n<ol class=\"citations\">\n$_\n</ol>";
 		}
 
 		return $text;
 	}
+
+  function makeBackrefLink( &$info, $g_links )
+  {
+    extract( $info['def'] );
+    $backlink_type = ($link) ? $link : $g_links;
+	  $i = 'a';
+    
+		if( $backlink_type == '^' ) 
+		  return '<a href="#autofnref'.$info['refids'][0].'"><sup>'.$i.'</sup></a>';
+
+		if( $backlink_type == '~' ) {
+		  $_ = array();
+		  foreach( $info['refids'] as $id )
+ 		    $_[] = '<a href="#autofnref'.$id.'"><sup>'.(string)($i++).'</sup></a>';
+		  $_ = join( ' ', $_ );
+		  return $_;
+		}
+		
+		return '';
+  }
 
 // -------------------------------------------------------------
 	function links($text)
