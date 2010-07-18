@@ -632,7 +632,6 @@ class Textile
 		return preg_replace_callback('@<('.preg_quote($tag).')([^>]*?)>(.*)(</\1>)@s', array(&$this, 'doBr'), $in);
 	}
 
-
 // -------------------------------------------------------------
 	function doPBr($in)
 	{
@@ -965,10 +964,10 @@ class Textile
 		# Assign a sequence number to this reference if there isn't one already...
 		if( empty( $this->citations[$label]['seq'] ) )
 			$this->citations[$label]['seq'] = ($this->citation_index++);
-
 		$num = $this->citations[$label]['seq'];
+
 		# Make our anchor point & stash it for possible use in backlinks when the
-		# footer list is generated later...
+		# citation list is generated later...
 		$this->citations[$label]['refids'][] = $refid = uniqid(rand());
 
 		# Build the link (if any)...
