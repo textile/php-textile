@@ -578,28 +578,30 @@ class Textile
 		$pt = '';
 		foreach($text as $nr => $line) {
 			$nextline = isset($text[$nr+1]) ? $text[$nr+1] : false;
-			if (preg_match("/^([#*;:]+)($this->a$this->c) (.*)$/s", $line, $m)) {
+			if (preg_match("/^([#*;:]+)($this->a$this->c)\s(.*)$/s", $line, $m)) {
 				list(, $tl, $atts, $content) = $m;
+				$content = trim($content);
 				$nl = '';
 				$ltype = $this->lT($tl);
 				$litem = (strpos($tl, ';') !== false) ? 'dt' : ((strpos($tl, ':') !== false) ? 'dd' : 'li');
+				$showitem = (strlen($content) > 0);
 
-				if (preg_match("/^([#*;:]+)\s.*/", $nextline, $nm))
+				if (preg_match("/^([#*;:]+)($this->a$this->c)\s.*/", $nextline, $nm))
 					$nl = $nm[1];
 
 				if ((strpos($pt, ';') !== false) && (strpos($tl, ':') !== false)) {
 					$lists[$tl] = 2; // We're already in a <dl> so flag not to start another
 				}
 
+  			$atts = $this->pba($atts);
 				if (!isset($lists[$tl])) {
 					$lists[$tl] = 1;
-					$atts = $this->pba($atts);
-					$line = "\t<" . $ltype . "l$atts>\n\t\t<".$litem.">" . rtrim($content);
+					$line = "\t<" . $ltype . "l$atts>" . (($showitem) ? "\n\t\t<$litem>" . $content : '');
 				} else {
-					$line = "\t\t<".$litem.">" . rtrim($content);
+					$line = ($showitem) ? "\t\t<$litem$atts>" . $content : '';
 				}
 
-				if((strlen($nl) <= strlen($tl))) $line .= "</".$litem.">";
+				if((strlen($nl) <= strlen($tl))) $line .= (($showitem) ? "</$litem>" : '');
 				foreach(array_reverse($lists) as $k => $v) {
 					if(strlen($k) > strlen($nl)) {
 						$line .= ($v==2) ? '' : "\n\t</" . $this->lT($k) . "l>";
