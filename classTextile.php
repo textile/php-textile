@@ -498,7 +498,7 @@ class Textile
 	function table($text)
 	{
 		$text = $text . "\n\n";
-		return preg_replace_callback("/^(?:table(_?{$this->s}{$this->a}{$this->c})\.(.*)?\n)?^({$this->a}{$this->c}\.? ?\|.*\|)\n\n/smU",
+		return preg_replace_callback("/^(?:table(_?{$this->s}{$this->a}{$this->c})\.(.*)?\n)?^({$this->a}{$this->c}\.? ?\|.*\|)[\s]*\n\n/smU",
 		   array(&$this, "fTable"), $text);
 	}
 
@@ -507,14 +507,14 @@ class Textile
 	{
 		$tatts = $this->pba($matches[1], 'table');
 
-		$sum = $matches[2] ? ' summary="'.htmlspecialchars(trim($matches[2])).'"' : '';
+		$sum = trim($matches[2]) ? ' summary="'.htmlspecialchars(trim($matches[2])).'"' : '';
 		$cap = '';
 		$colgrp = $last_rgrp = '';
 		foreach(preg_split("/\|\s*?$/m", $matches[3], -1, PREG_SPLIT_NO_EMPTY) as $row) {
 			// Caption
 			if (preg_match("/^\|\=($this->s$this->a$this->c)\. ([^\|\n]*)(.*)/s", ltrim($row), $cmtch)) {
 				$capts = $this->pba($cmtch[1]);
-				$cap = "\t<caption".$capts.">".$cmtch[2]."</caption>\n";
+				$cap = "\t<caption".$capts.">".trim($cmtch[2])."</caption>\n";
 				$row = $cmtch[3];
 			}
 
@@ -530,7 +530,7 @@ class Textile
 				continue;
 			}
 
-			preg_match("/(:?^\|($this->vlgn)($this->s$this->a$this->c)\.$\n)?^(.*)/m", ltrim($row), $grpmatch);
+      preg_match("/(:?^\|($this->vlgn)($this->s$this->a$this->c)\.\s*$\n)?^(.*)/m", ltrim($row), $grpmatch);
 
 			// Row group
 			$rgrp = isset($grpmatch[2]) ? (($grpmatch[2] == '^') ? 'head' : ( ($grpmatch[2] == '~') ? 'foot' : (($grpmatch[2] == '-') ? 'body' : '' ) ) ) : '';
