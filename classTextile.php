@@ -284,7 +284,7 @@ class Textile
 
 		$this->url_schemes = array('http','https','ftp','mailto');
 
-		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', 'citelist');
+		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p' );
 
 		$this->glyph = array(
 		   'quote_single_open'  => txt_quote_single_open,
@@ -325,7 +325,7 @@ class Textile
 	{
 		$this->span_depth = 0;
 		$this->tag_index = 1;
-		$this->citations = array();
+		$this->citations = $this->unusedCitations = array();
 		$this->citation_index = 1;
 		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
 
@@ -343,9 +343,8 @@ class Textile
 			}
 
 			if (!$lite) {
-				$text = $this->parseCitationDefs($text);
+				$text = $this->parseCitations($text);
 				$text = $this->block($text);
-				$text = $this->retrieveCitations($text);
 			}
 
 			$text = $this->retrieve($text);
@@ -371,7 +370,7 @@ class Textile
 
 		$this->span_depth = 0;
 		$this->tag_index = 1;
-		$this->citations = array();
+		$this->citations = $this->unusedCitations = array();
 		$this->citation_index = 1;
 
 		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
@@ -385,9 +384,8 @@ class Textile
 				$text = $this->blockLite($text);
 			}
 			else {
-				$text = $this->parseCitationDefs($text);
+				$text = $this->parseCitations($text);
 				$text = $this->block($text);
-				$text = $this->retrieveCitations($text);
 			}
 
 			$text = $this->retrieve($text);
@@ -752,11 +750,6 @@ class Textile
 			$c1 = "</pre>";
 			$content = $this->shelve($this->r_encode_html(rtrim($content, "\n")."\n"));
 		}
-		elseif ($tag == 'citelist' ) {
-      $num = @$att[0];
-      if( $num != '^' && $num != '~' ) $num = '';
-			$content = "<ol$atts>\n[@citelist$num].\n\n</ol>";
-		}
 		elseif ($tag == 'notextile') {
 			$content = $this->shelve($content);
 			$o1 = $o2 = '';
@@ -788,7 +781,6 @@ class Textile
 		}
 
 		$text = $this->getRefs($text);
-		$text = $this->citations($text);
 		$text = $this->links($text);
 		if (!$this->noimage)
 			$text = $this->image($text);
@@ -903,8 +895,9 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function parseCitationDefs($text)
+	function parseCitations($text)
 	{
+	  # Parse the defs...
 		$text = preg_replace_callback("/
 			cite\#                #  start of citation def marker
 			([\w:-]+)             # !label
@@ -915,6 +908,34 @@ class Textile
 			[\n]*                 #  eat the newline(s)
 		/ux", array(&$this, "fParseCitationDefs"), $text."\n");
 
+    # Parse the refs, resolving sequence numbers for the citation list and showing the refs (linked if needed)...
+		$text = preg_replace_callback("/
+			\[                   #  start
+			({$this->c})         # !atts
+			\#
+			([^\]!]+?)           # !label
+			([!]?)               # !nolink
+			\]
+		/ux", array(&$this, "fParseCitationRefs"), $text);
+
+		# Sequence all referenced definitions...
+		foreach( $this->citations as $label=>$info ) {
+			$i = @$info['seq'];
+
+			if( !empty($i) ) {
+				$info['seq'] = $label;
+				$o[$i] = $info;
+			} else {
+				$this->unusedCitations[] = $info;  # unreferenced definitions go here for possible future use.
+			}
+		}
+		ksort($o);
+    $this->citations = $o;
+    unset($o);
+
+    # Replace citation list markers...
+    $text = $this->citationLists($text);
+
 		return $text;
 	}
 
@@ -923,7 +944,7 @@ class Textile
 	{
 		list(, $label, $link, $att, $content) = $m;
 
-		if( empty($this->citations[$label]['def']) )
+		if( empty($this->citations[$label]['def']) ) # Ignores subsequent defs using the same label
 		{
 			$this->citations[$label]['def'] = array(
 				'atts'    => $this->pba($att),
@@ -935,21 +956,8 @@ class Textile
 		return '';
 	}
 
-// -------------------------------------------------------------
-	function citations($text)
-	{
-		return preg_replace_callback('/
-			\[                   # start
-			(' . $this->c . ')   # $atts
-			\#
-			([^\]!]+?)           # $label
-			([!]?)               # $nolink
-			\]
-		/x', array(&$this, "fCitations"), $text);
-	}
-
-// -------------------------------------------------------------
-	function fCitations($m)
+// -------------------------------------------------------------// -------------------------------------------------------------
+	function fParseCitationRefs($m)
 	{
 		#   By the time this function is called, all the defs will have been processed
 		# into the citations array. So now we can resolve the link numbers in the order
@@ -984,64 +992,54 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function retrieveCitations($text)
+	function citationLists($text)
 	{
-		#   Previously, parseCitationDefs() will have processed the defs, citations() will have
-		# resolved the sequence numbers and inserted the superscript references as needed.
-		# Now it's time to output the definitions themselves.
-		#
-		#   They will go where the explicit citelist. marker is (if any), otherwise
-		# they get appended to the end of the text.
-
-		$_ = $o = $unused = array();
 		if( !empty($this->citations) ) {
-
-      $g_links = ''; # Default to no backlinks globally.
-      if( preg_match("/\[@citelist([\^~]?)\]\.\n/u", $text, $m) ) {
-  		  $g_links = $m[1];
-  		  }
-
-			# Sequence all referenced definitions...
-			foreach( $this->citations as $label=>$info ) {
-				$i = @$info['seq'];
-
-				if( !empty($i) ) {
-					$info['seq'] = $label;
-					$o[$i] = $info;
-				} else {
-					$unused[] = $info;  # unreferenced definitions go here for possible future use.
-				}
-			}
-			ksort($o);
-
-			# Construct the list of defs...
-			foreach($o as $seq=>$info) {
-				extract($info['def']);
-				$links = $this->makeBackrefLink($info, $g_links);
-				$_[] = "\t".'<li'.$atts.'>'.$links.'<span id="autofn'.$id.'"> </span>'.$content.'</li>';
-			}
-			$_ = join("\n",$_);
-
-			# Try replacing any citelist marker. If not successful, just append to text.
-			$g_links = preg_quote( $g_links, '\\');
-			$text = preg_replace( "/\[@citelist$g_links\]\.\n/u", $_, $text, 1, $n );
-			if( 0 == $n && !empty($_) )
-				$text = $text."\n<ol class=\"citations\">\n$_\n</ol>";
+      $text = preg_replace_callback("/citelist({$this->c})([\^!]?)\..*\n/u", array(&$this, "fCitationLists"), $text );
 		}
 
 		return $text;
 	}
+	
+// -------------------------------------------------------------
+	function fCitationLists($m)
+	{
+	  static $clists = array( '!'=>false, '~'=>false, '^'=>false );
+	  $_ = '';
+	  
+		if( !empty($this->citations) ) {
+  	  list(, $att, $g_links) = $m;
+      $list_atts = $this->pba($att);
 
+  	  if( !$clists[$g_links] ) { # If not in cache, build the entry...
+  	    $o = array();
+			  foreach($this->citations as $seq=>$info) {
+				  extract($info['def']);
+				  $links = $this->makeBackrefLink($info, $g_links);
+				  $o[] = "\t".'<li'.$atts.'>'.$links.'<span id="autofn'.$id.'"> </span>'.$content.'</li>';
+			  }
+			  $o = join("\n",$o);
+			  $clists[$g_links] = "<ol$list_atts>\n$o\n</ol>";
+  	  }
+
+	    $_ = $clists[$g_links];
+		}
+	  
+	  return ' '.$this->shelve($_)."\n";
+	}
+
+// -------------------------------------------------------------
   function makeBackrefLink( &$info, $g_links )
   {
     extract( $info['def'] );
     $backlink_type = ($link) ? $link : $g_links;
 	  $i = 'a';
-    
-		if( $backlink_type == '^' ) 
-		  return '<a href="#autofnref'.$info['refids'][0].'"><sup>'.$i.'</sup></a>';
 
-		if( $backlink_type == '~' ) {
+		if( $backlink_type == '!' )
+		  return '';
+		elseif( $backlink_type == '^' ) 
+		  return '<a href="#autofnref'.$info['refids'][0].'"><sup>'.$i.'</sup></a>';
+		else {
 		  $_ = array();
 		  foreach( $info['refids'] as $id )
  		    $_[] = '<a href="#autofnref'.$id.'"><sup>'.(string)($i++).'</sup></a>';
