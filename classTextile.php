@@ -124,26 +124,72 @@ ABC(Always Be Closing)	->	 <acronym title="Always Be Closing">ABC</acronym>
 
 
 Citation Links:
-  Allows the generation of an automated list of citations with links. Each
-  citation reference is marked with a superscript reference that links into the
-  automatically generated list of citation links.
+==============
 
-  Each list item links back to its source in the body text and also contains the
-  cited resource as a link.
+	Allows the generation of an automated list of citations with links. 
 
-  Syntax:
-    text[citation link text|citation link postamble]:url moretext
+	Citations are composed of three parts, a set of named _definitions_, a set of 
+	_references_ to those definitions and one or more _placeholders_ indicating where 
+	the consolidated list of definitions is to be placed in your document.
 
-  Example:
-    Scientists say["Proof" of a small moon.|Copyright(c) author]:url the moon is small.
-      ->
-    <p>Scientists say<sup><a href="cite_def_x" id="cite_src_x">x</sup> the moon is small.</p>
+	Definitions.
+	-----------
 
-   And at the end of your text you get an ordered list of citation footnotes with links...
+	Each citation definition must occur on a new line and should look like this...
 
-   <ol class="citation_footnotes">
-    <li id="cite_def_x" ><a href="cite_src_x">^</a> <a href="url">"Proof"" of a small moon.</a> Copyright(c) author</li>
-   </ol>
+	cite#mycitationlabel. Your definition text here.
+
+	You are free to use whatever label you wish after the # as long as it is made up
+	of letters, numbers, colon(:) or dash(-).
+
+	References.
+	----------
+
+	Each citation reference is marked in your text like this[#mycitationlabel] and
+	it will be replaced with a superscript reference that links into the list of 
+	citation definitions.
+
+	Placeholder(s).
+	--------------
+
+	The citation list can go anywhere in your document. You have to indicate where
+	like this...
+
+	citelist.
+
+	citelist can take attributes (class#id) like this: citelist(class#id).
+
+	By default, the citation list will show each definition in the order that they 
+	are referenced in the text by the _references_. It will show each definition with 
+	a full list of backlinks to each reference. If you do not want this, you can choose 
+	to override the backlinks like this...
+
+	citelist(class#id)!.    Produces a list with no backlinks.
+	citelist(class#id)^.    Produces a list with only the first backlink.
+
+	Should you wish to have a specific definition display backlinks differently to this
+	then you can override the backlink method by appending a link override to the 
+	_definition_ you wish to customise.
+
+	cite#label.    Uses the citelist's setting for backlinks.
+	cite#label!.   Causes that definition to have no backlinks.
+	cite#label^.   Causes that definition to have one backlink (to the first ref.)
+	cite#label*.   Causes that definition to have all backlinks.
+
+	Example...
+		Scientists say[#lavader] the moon is small.
+
+		cite#lavader(myliclass). "Proof":url of a small moon.
+ 
+		citelist(myclass#myid).
+
+		Would output (the actual IDs used would be randomised)...
+
+		<p>Scientists say<sup><a href="#def_id_1" id="ref_id_1a">1</sup> the moon is small.</p>
+
+		<ol class="myclass" id="myid">
+			<li class="myliclass"><a href="#ref_id_1a"><sup>a</sup></a><span id="def_id_1"> </span><a herf="url">Proof</a> of a small moon.</li>
+		</ol>
 
 
 Table syntax:
@@ -326,7 +372,7 @@ class Textile
 		$this->span_depth = 0;
 		$this->tag_index = 1;
 		$this->citations = $this->unusedCitations = array();
-	  $this->clists = array( '!'=>false, ''=>false, '^'=>false );
+		$this->clists = array( '!'=>false, ''=>false, '^'=>false );
 		$this->citation_index = 1;
 		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
 
@@ -372,7 +418,7 @@ class Textile
 		$this->span_depth = 0;
 		$this->tag_index = 1;
 		$this->citations = $this->unusedCitations = array();
-	  $this->clists = array( '!'=>false, ''=>false, '^'=>false );
+		$this->clists = array( '!'=>false, ''=>false, '^'=>false );
 		$this->citation_index = 1;
 
 		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
@@ -499,7 +545,7 @@ class Textile
 	{
 		$text = $text . "\n\n";
 		return preg_replace_callback("/^(?:table(_?{$this->s}{$this->a}{$this->c})\.(.*)?\n)?^({$this->a}{$this->c}\.? ?\|.*\|)[\s]*\n\n/smU",
-		   array(&$this, "fTable"), $text);
+			 array(&$this, "fTable"), $text);
 	}
 
 // -------------------------------------------------------------
@@ -530,7 +576,7 @@ class Textile
 				continue;
 			}
 
-      preg_match("/(:?^\|($this->vlgn)($this->s$this->a$this->c)\.\s*$\n)?^(.*)/m", ltrim($row), $grpmatch);
+			preg_match("/(:?^\|($this->vlgn)($this->s$this->a$this->c)\.\s*$\n)?^(.*)/m", ltrim($row), $grpmatch);
 
 			// Row group
 			$rgrp = isset($grpmatch[2]) ? (($grpmatch[2] == '^') ? 'head' : ( ($grpmatch[2] == '~') ? 'foot' : (($grpmatch[2] == '-') ? 'body' : '' ) ) ) : '';
@@ -593,7 +639,7 @@ class Textile
 					$lists[$tl] = 2; // We're already in a <dl> so flag not to start another
 				}
 
-  			$atts = $this->pba($atts);
+				$atts = $this->pba($atts);
 				if (!isset($lists[$tl])) {
 					$lists[$tl] = 1;
 					$line = "\t<" . $ltype . "l$atts>" . (($showitem) ? "\n\t\t<$litem>" . $content : '');
@@ -654,7 +700,7 @@ class Textile
 		$text = explode("\n\n", $text);
 
 		$tag = 'p';
-		$atts = $cite = $graf = $ext  = '';
+		$atts = $cite = $graf = $ext = '';
 
 		foreach($text as $line) {
 			$anon = 0;
@@ -686,7 +732,7 @@ class Textile
 					}
 				}
 				else {
-				   $line = $this->graf($line);
+				  $line = $this->graf($line);
 				}
 			}
 
@@ -766,7 +812,7 @@ class Textile
 		else {
 			$o2 = "\t<$tag$atts>";
 			$c2 = "</$tag>";
-		  }
+			}
 
 		$content = $this->graf($content);
 
@@ -810,15 +856,15 @@ class Textile
 			foreach($qtags as $f)
 			{
 				$text = preg_replace_callback("/
-				  (^|(?<=[\s>$pnct\(])|[{[])            # pre
-				  ($f)(?!$f)                            # tag
-				  ({$this->c})                          # atts
-				  (?::(\S+))?                           # cite
-				  ([^\s$f]+|\S.*?[^\s$f\n])             # content
-				  ([$pnct]*)                            # end
-				  $f
-				  ($|[\]}]|(?=[[:punct:]]{1,2}|\s|\)))  # tail
-			  /x", array(&$this, "fSpan"), $text);
+					(^|(?<=[\s>$pnct\(])|[{[])            # pre
+					($f)(?!$f)                            # tag
+					({$this->c})                          # atts
+					(?::(\S+))?                           # cite
+					([^\s$f]+|\S.*?[^\s$f\n])             # content
+					([$pnct]*)                            # end
+					$f
+					($|[\]}]|(?=[[:punct:]]{1,2}|\s|\)))  # tail
+				/x", array(&$this, "fSpan"), $text);
 			}
 		}
 		$this->span_depth--;
@@ -849,7 +895,7 @@ class Textile
 
 		$content = $this->span($content);
 
-		$opentag  = '<'.$tag.$atts.'>';
+		$opentag = '<'.$tag.$atts.'>';
 		$closetag = '</'.$tag.'>';
 		$tags = $this->storeTags($opentag, $closetag);
 		$out = "{$tags['open']}{$content}{$end}{$tags['close']}";
@@ -868,8 +914,8 @@ class Textile
 		$key = str_pad( (string)$key, 10, '0', STR_PAD_LEFT ); # $key must be of fixed length to allow proper matching in retrieveTags
 		$this->tagCache[$key] = array('open'=>$opentag, 'close'=>$closetag);
 		$tags = array(
-		  'open'  => "textileopentag{$key} ",
-		  'close' => " textileclosetag{$key}",
+			'open'  => "textileopentag{$key} ",
+			'close' => " textileclosetag{$key}",
 		);
 		return $tags;
 	}
@@ -899,7 +945,7 @@ class Textile
 // -------------------------------------------------------------
 	function parseCitations($text)
 	{
-	  # Parse the defs...
+		# Parse the defs...
 		$text = preg_replace_callback("/
 			cite\#                #  start of citation def marker
 			([\w:-]+)             # !label
@@ -910,7 +956,7 @@ class Textile
 			[\n]*                 #  eat the newline(s)
 		/ux", array(&$this, "fParseCitationDefs"), $text."\n");
 
-    # Parse the refs, resolving sequence numbers for the citation list and showing the refs (linked if needed)...
+		# Parse the refs, resolving sequence numbers for the citation list and showing the refs (linked if needed)...
 		$text = preg_replace_callback("/
 			\[                   #  start
 			({$this->c})         # !atts
@@ -932,11 +978,11 @@ class Textile
 			}
 		}
 		ksort($o);
-    $this->citations = $o;
-    unset($o);
+		$this->citations = $o;
+		unset($o);
 
-    # Replace citation list markers...
-    $text = $this->citationLists($text);
+		# Replace citation list markers...
+		$text = $this->citationLists($text);
 
 		return $text;
 	}
@@ -997,7 +1043,7 @@ class Textile
 	function citationLists($text)
 	{
 		if( !empty($this->citations) ) {
-      $text = preg_replace_callback("/citelist({$this->c})([\^!]?)\..*\n/u", array(&$this, "fCitationLists"), $text );
+			$text = preg_replace_callback("/citelist({$this->c})([\^!]?)\..*\n/u", array(&$this, "fCitationLists"), $text );
 		}
 
 		return $text;
@@ -1006,50 +1052,50 @@ class Textile
 // -------------------------------------------------------------
 	function fCitationLists($m)
 	{
-	  $_ = '';
-	  
+		$_ = '';
+
 		if( !empty($this->citations) ) {
-  	  list(, $att, $g_links) = $m;
-      $list_atts = $this->pba($att);
+			list(, $att, $g_links) = $m;
+			$list_atts = $this->pba($att);
 
-  	  if( !$this->clists[$g_links] ) { # If not in cache, build the entry...
-  	    $o = array();
-			  foreach($this->citations as $seq=>$info) {
-				  extract($info['def']);
-				  $links = $this->makeBackrefLink($info, $g_links);
-				  $o[] = "\t".'<li'.$atts.'>'.$links.'<span id="autofn'.$id.'"> </span>'.$content.'</li>';
-			  }
-			  $o = join("\n",$o);
-			  $this->clists[$g_links] = "<ol$list_atts>\n$o\n</ol>";
-  	  }
+			if( !$this->clists[$g_links] ) { # If not in cache, build the entry...
+				$o = array();
+				foreach($this->citations as $seq=>$info) {
+					extract($info['def']);
+					$links = $this->makeBackrefLink($info, $g_links);
+					$o[] = "\t".'<li'.$atts.'>'.$links.'<span id="autofn'.$id.'"> </span>'.$content.'</li>';
+				}
+				$o = join("\n",$o);
+				$this->clists[$g_links] = "<ol$list_atts>\n$o\n</ol>";
+			}
 
-	    $_ = $this->clists[$g_links];
+			$_ = $this->clists[$g_links];
 		}
-	  
-	  return ' '.$this->shelve($_)."\n";
+
+		return ' '.$this->shelve($_)."\n";
 	}
 
 // -------------------------------------------------------------
-  function makeBackrefLink( &$info, $g_links )
-  {
-    extract( $info['def'] );
-    $backlink_type = ($link) ? $link : $g_links;
-	  $i = 'a';
+	function makeBackrefLink( &$info, $g_links )
+	{
+		extract( $info['def'] );
+		$backlink_type = ($link) ? $link : $g_links;
+		$i = 'a';
 
 		if( $backlink_type == '!' )
-		  return '';
+			return '';
 		elseif( $backlink_type == '^' ) 
-		  return '<a href="#autofnref'.$info['refids'][0].'"><sup>'.$i.'</sup></a>';
+			return '<a href="#autofnref'.$info['refids'][0].'"><sup>'.$i.'</sup></a>';
 		else {
-		  $_ = array();
-		  foreach( $info['refids'] as $id )
- 		    $_[] = '<a href="#autofnref'.$id.'"><sup>'.(string)($i++).'</sup></a>';
-		  $_ = join( ' ', $_ );
-		  return $_;
+			$_ = array();
+			foreach( $info['refids'] as $id )
+ 				$_[] = '<a href="#autofnref'.$id.'"><sup>'.(string)($i++).'</sup></a>';
+			$_ = join( ' ', $_ );
+			return $_;
 		}
 		
 		return '';
-  }
+	}
 
 // -------------------------------------------------------------
 	function links($text)
@@ -1151,7 +1197,7 @@ class Textile
 			 preg_match('/^\w/', @$parts['path']))
 			$url = $this->hu.$url;
 		if ($this->restricted and !empty($parts['scheme']) and
-			  !in_array($parts['scheme'], $this->url_schemes))
+				!in_array($parts['scheme'], $this->url_schemes))
 			return '#';
 		return $url;
 	}
@@ -1218,15 +1264,15 @@ class Textile
 // -------------------------------------------------------------
 	function fCode($m)
 	{
-	  @list(, $before, $text, $after) = $m;
-	  return $before.$this->shelve('<code>'.$this->r_encode_html($text).'</code>').$after;
+		@list(, $before, $text, $after) = $m;
+		return $before.$this->shelve('<code>'.$this->r_encode_html($text).'</code>').$after;
 	}
 
 // -------------------------------------------------------------
 	function fPre($m)
 	{
-	  @list(, $before, $text, $after) = $m;
-	  return $before.'<pre>'.$this->shelve($this->r_encode_html($text)).'</pre>'.$after;
+		@list(, $before, $text, $after) = $m;
+		return $before.'<pre>'.$this->shelve($this->r_encode_html($text)).'</pre>'.$after;
 	}
 // -------------------------------------------------------------
 	function shelve($val)
@@ -1287,7 +1333,7 @@ class Textile
 // -------------------------------------------------------------
 	function doSpecial($text, $start, $end, $method='fSpecial')
 	{
-	  return preg_replace_callback('/(^|\s|[[({>])'.preg_quote($start, '/').'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}])?/ms',
+		return preg_replace_callback('/(^|\s|[[({>])'.preg_quote($start, '/').'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}])?/ms',
 			array(&$this, $method), $text);
 	}
 
@@ -1295,7 +1341,7 @@ class Textile
 	function fSpecial($m)
 	{
 		// A special block like notextile or code
-	  @list(, $before, $text, $after) = $m;
+		@list(, $before, $text, $after) = $m;
 		return $before.$this->shelve($this->encode_html($text)).$after;
 	}
 
