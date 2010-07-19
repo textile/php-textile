@@ -326,6 +326,7 @@ class Textile
 		$this->span_depth = 0;
 		$this->tag_index = 1;
 		$this->citations = $this->unusedCitations = array();
+	  $this->clists = array( '!'=>false, ''=>false, '^'=>false );
 		$this->citation_index = 1;
 		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
 
@@ -371,6 +372,7 @@ class Textile
 		$this->span_depth = 0;
 		$this->tag_index = 1;
 		$this->citations = $this->unusedCitations = array();
+	  $this->clists = array( '!'=>false, ''=>false, '^'=>false );
 		$this->citation_index = 1;
 
 		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
@@ -901,7 +903,7 @@ class Textile
 		$text = preg_replace_callback("/
 			cite\#                #  start of citation def marker
 			([\w:-]+)             # !label
-			([\^~]?)              # !link
+			([*!^]?)              # !link
 			({$this->c})          # !att
 			\.[\s]+               #  end of def marker
 			([^\n]*)              # !content
@@ -1004,14 +1006,13 @@ class Textile
 // -------------------------------------------------------------
 	function fCitationLists($m)
 	{
-	  static $clists = array( '!'=>false, '~'=>false, '^'=>false );
 	  $_ = '';
 	  
 		if( !empty($this->citations) ) {
   	  list(, $att, $g_links) = $m;
       $list_atts = $this->pba($att);
 
-  	  if( !$clists[$g_links] ) { # If not in cache, build the entry...
+  	  if( !$this->clists[$g_links] ) { # If not in cache, build the entry...
   	    $o = array();
 			  foreach($this->citations as $seq=>$info) {
 				  extract($info['def']);
@@ -1019,10 +1020,10 @@ class Textile
 				  $o[] = "\t".'<li'.$atts.'>'.$links.'<span id="autofn'.$id.'"> </span>'.$content.'</li>';
 			  }
 			  $o = join("\n",$o);
-			  $clists[$g_links] = "<ol$list_atts>\n$o\n</ol>";
+			  $this->clists[$g_links] = "<ol$list_atts>\n$o\n</ol>";
   	  }
 
-	    $_ = $clists[$g_links];
+	    $_ = $this->clists[$g_links];
 		}
 	  
 	  return ' '.$this->shelve($_)."\n";
