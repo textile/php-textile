@@ -753,7 +753,7 @@ class Textile
 			$content = $this->shelve($this->r_encode_html(rtrim($content, "\n")."\n"));
 		}
 		elseif ($tag == 'citelist' ) {
-      $num = $att[0];
+      $num = @$att[0];
       if( $num != '^' && $num != '~' ) $num = '';
 			$content = "<ol$atts>\n[@citelist$num].\n\n</ol>";
 		}
