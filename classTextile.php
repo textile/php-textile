@@ -123,21 +123,21 @@ Phrase modifier syntax:
 ABC(Always Be Closing)	->	 <acronym title="Always Be Closing">ABC</acronym>
 
 
-Citation Links:
-==============
+Linked Notes:
+============
 
-	Allows the generation of an automated list of citations with links. 
+	Allows the generation of an automated list of notes with links. 
 
-	Citations are composed of three parts, a set of named _definitions_, a set of 
+	Linked notes are composed of three parts, a set of named _definitions_, a set of 
 	_references_ to those definitions and one or more _placeholders_ indicating where 
-	the consolidated list of definitions is to be placed in your document.
+	the consolidated list of notes is to be placed in your document.
 
 	Definitions.
 	-----------
 
-	Each citation definition must occur on a new line and should look like this...
+	Each note definition must occur on a new line and should look like this...
 
-	cite#mycitationlabel. Your definition text here.
+	note#mycitationlabel. Your definition text here.
 
 	You are free to use whatever label you wish after the # as long as it is made up
 	of letters, numbers, colon(:) or dash(-).
@@ -145,43 +145,53 @@ Citation Links:
 	References.
 	----------
 
-	Each citation reference is marked in your text like this[#mycitationlabel] and
+	Each note reference is marked in your text like this[#mynotelabel] and
 	it will be replaced with a superscript reference that links into the list of 
-	citation definitions.
+	note definitions.
 
-	Placeholder(s).
-	--------------
+	List Placeholder(s).
+	-------------------
 
-	The citation list can go anywhere in your document. You have to indicate where
+	The note list can go anywhere in your document. You have to indicate where
 	like this...
 
-	citelist.
+	notelist.
 
-	citelist can take attributes (class#id) like this: citelist(class#id).
+	notelist can take attributes (class#id) like this: notelist(class#id).
 
-	By default, the citation list will show each definition in the order that they 
+	By default, the note list will show each definition in the order that they 
 	are referenced in the text by the _references_. It will show each definition with 
 	a full list of backlinks to each reference. If you do not want this, you can choose 
 	to override the backlinks like this...
 
-	citelist(class#id)!.    Produces a list with no backlinks.
-	citelist(class#id)^.    Produces a list with only the first backlink.
+	notelist(class#id)!.    Produces a list with no backlinks.
+	notelist(class#id)^.    Produces a list with only the first backlink.
 
 	Should you wish to have a specific definition display backlinks differently to this
 	then you can override the backlink method by appending a link override to the 
 	_definition_ you wish to customise.
 
-	cite#label.    Uses the citelist's setting for backlinks.
-	cite#label!.   Causes that definition to have no backlinks.
-	cite#label^.   Causes that definition to have one backlink (to the first ref.)
-	cite#label*.   Causes that definition to have all backlinks.
+	note#label.    Uses the citelist's setting for backlinks.
+	note#label!.   Causes that definition to have no backlinks.
+	note#label^.   Causes that definition to have one backlink (to the first ref.)
+	note#label*.   Causes that definition to have all backlinks.
+
+	Any unreferenced notes will be left out of the list unless you explicitly state
+	you want them by adding a '+'. Like this...
+
+	notelist(class#id)!+. Giving a list of all notes without any backlinks.
+
+	You can mix and match the list backlink control and unreferenced links controls
+	but the backlink control (if any) must go first. Like so: notelist^+. , not 
+	like this: notelist+^.
 
 	Example...
 		Scientists say[#lavader] the moon is small.
 
-		cite#lavader(myliclass). "Proof":url of a small moon.
+		note#other. An unreferenced note.
+		note#lavader(myliclass). "Proof":url of a small moon.
  
-		citelist(myclass#myid).
+		notelist(myclass#myid)+.
 
 		Would output (the actual IDs used would be randomised)...
 
@@ -189,6 +199,7 @@ Citation Links:
 
 		<ol class="myclass" id="myid">
 			<li class="myliclass"><a href="#ref_id_1a"><sup>a</sup></a><span id="def_id_1"> </span><a herf="url">Proof</a> of a small moon.</li>
+			<li>An unreferenced note.</li>
 		</ol>
 
 
@@ -371,8 +382,7 @@ class Textile
 	{
 		$this->span_depth = 0;
 		$this->tag_index = 1;
-		$this->citations = $this->unusedCitations = array();
-		$this->clists = array( '!'=>false, ''=>false, '^'=>false );
+		$this->notes = $this->unreferencedNotes = $this->notelist_cache = array();
 		$this->citation_index = 1;
 		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
 
@@ -390,7 +400,7 @@ class Textile
 			}
 
 			if (!$lite) {
-				$text = $this->parseCitations($text);
+				$text = $this->parseNotes($text);
 				$text = $this->block($text);
 			}
 
@@ -417,8 +427,7 @@ class Textile
 
 		$this->span_depth = 0;
 		$this->tag_index = 1;
-		$this->citations = $this->unusedCitations = array();
-		$this->clists = array( '!'=>false, ''=>false, '^'=>false );
+		$this->notes = $this->unreferencedNotes = $this->notelist_cache = array();
 		$this->citation_index = 1;
 
 		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
@@ -432,7 +441,7 @@ class Textile
 				$text = $this->blockLite($text);
 			}
 			else {
-				$text = $this->parseCitations($text);
+				$text = $this->parseNotes($text);
 				$text = $this->block($text);
 			}
 
@@ -732,7 +741,7 @@ class Textile
 					}
 				}
 				else {
-				  $line = $this->graf($line);
+					$line = $this->graf($line);
 				}
 			}
 
@@ -943,18 +952,18 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function parseCitations($text)
+	function parseNotes($text)
 	{
 		# Parse the defs...
 		$text = preg_replace_callback("/
-			cite\#                #  start of citation def marker
+			note\#                #  start of citation def marker
 			([\w:-]+)             # !label
 			([*!^]?)              # !link
 			({$this->c})          # !att
 			\.[\s]+               #  end of def marker
 			([^\n]*)              # !content
 			[\n]*                 #  eat the newline(s)
-		/ux", array(&$this, "fParseCitationDefs"), $text."\n");
+		/ux", array(&$this, "fParseNoteDefs"), $text."\n");
 
 		# Parse the refs, resolving sequence numbers for the citation list and showing the refs (linked if needed)...
 		$text = preg_replace_callback("/
@@ -964,37 +973,37 @@ class Textile
 			([^\]!]+?)           # !label
 			([!]?)               # !nolink
 			\]
-		/ux", array(&$this, "fParseCitationRefs"), $text);
+		/ux", array(&$this, "fParseNoteRefs"), $text);
 
 		# Sequence all referenced definitions...
-		foreach( $this->citations as $label=>$info ) {
+		foreach( $this->notes as $label=>$info ) {
 			$i = @$info['seq'];
 
 			if( !empty($i) ) {
 				$info['seq'] = $label;
 				$o[$i] = $info;
 			} else {
-				$this->unusedCitations[] = $info;  # unreferenced definitions go here for possible future use.
+				$this->unreferencedNotes[] = $info;  # unreferenced definitions go here for possible future use.
 			}
 		}
 		ksort($o);
-		$this->citations = $o;
+		$this->notes = $o;
 		unset($o);
 
 		# Replace citation list markers...
-		$text = $this->citationLists($text);
+		$text = $this->noteLists($text);
 
 		return $text;
 	}
 
 // -------------------------------------------------------------
-	function fParseCitationDefs($m)
+	function fParseNoteDefs($m)
 	{
 		list(, $label, $link, $att, $content) = $m;
 
-		if( empty($this->citations[$label]['def']) ) # Ignores subsequent defs using the same label
+		if( empty($this->notes[$label]['def']) ) # Ignores subsequent defs using the same label
 		{
-			$this->citations[$label]['def'] = array(
+			$this->notes[$label]['def'] = array(
 				'atts'    => $this->pba($att),
 				'content' => $this->graf($content),
 				'id'      => uniqid(rand()),
@@ -1005,7 +1014,7 @@ class Textile
 	}
 
 // -------------------------------------------------------------// -------------------------------------------------------------
-	function fParseCitationRefs($m)
+	function fParseNoteRefs($m)
 	{
 		#   By the time this function is called, all the defs will have been processed
 		# into the citations array. So now we can resolve the link numbers in the order
@@ -1016,22 +1025,22 @@ class Textile
 		$nolink = ($nolink === '!');
 
 		# Wipe this reference if no matching def has been processed for it...
-		if( empty( $this->citations[$label]) )
+		if( empty( $this->notes[$label]) )
 			return '';
 
 		# Assign a sequence number to this reference if there isn't one already...
-		if( empty( $this->citations[$label]['seq'] ) )
-			$this->citations[$label]['seq'] = ($this->citation_index++);
-		$num = $this->citations[$label]['seq'];
+		if( empty( $this->notes[$label]['seq'] ) )
+			$this->notes[$label]['seq'] = ($this->citation_index++);
+		$num = $this->notes[$label]['seq'];
 
 		# Make our anchor point & stash it for possible use in backlinks when the
 		# citation list is generated later...
-		$this->citations[$label]['refids'][] = $refid = uniqid(rand());
+		$this->notes[$label]['refids'][] = $refid = uniqid(rand());
 
 		# Build the link (if any)...
 		$_ = '<span id="autofnref'.$refid.'">'.$num.'</span>';
 		if( !$nolink )
-			$_ = '<a href="#autofn'.$this->citations[$label]['def']['id'].'">'.$_.'</a>';
+			$_ = '<a href="#autofn'.$this->notes[$label]['def']['id'].'">'.$_.'</a>';
 
 		# Build the reference...
 			$_ = '<sup'.$atts.'>'.$_.'</sup>';
@@ -1040,36 +1049,44 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function citationLists($text)
+	function noteLists($text)
 	{
-		if( !empty($this->citations) ) {
-			$text = preg_replace_callback("/citelist({$this->c})([\^!]?)\..*\n/u", array(&$this, "fCitationLists"), $text );
+		if( !empty($this->notes) ) {
+			$text = preg_replace_callback("/notelist({$this->c})([\^!]?)(\+?)\..*\n/u", array(&$this, "fNoteLists"), $text );
 		}
 
 		return $text;
 	}
 	
 // -------------------------------------------------------------
-	function fCitationLists($m)
+	function fNoteLists($m)
 	{
 		$_ = '';
 
-		if( !empty($this->citations) ) {
-			list(, $att, $g_links) = $m;
+		if( !empty($this->notes) ) {
+			list(, $att, $g_links, $extras) = $m;
 			$list_atts = $this->pba($att);
 
-			if( !$this->clists[$g_links] ) { # If not in cache, build the entry...
+			if( !$this->notelist_cache[$g_links.$extras] ) { # If not in cache, build the entry...
 				$o = array();
-				foreach($this->citations as $seq=>$info) {
+				foreach($this->notes as $seq=>$info) {
 					extract($info['def']);
 					$links = $this->makeBackrefLink($info, $g_links);
 					$o[] = "\t".'<li'.$atts.'>'.$links.'<span id="autofn'.$id.'"> </span>'.$content.'</li>';
 				}
-				$o = join("\n",$o);
-				$this->clists[$g_links] = "<ol$list_atts>\n$o\n</ol>";
+
+				if( '+' == $extras ) {
+					foreach($this->unreferencedNotes as $seq=>$info) {
+						extract($info['def']);
+						$o[] = "\t".'<li'.$atts.'>'.$content.'</li>';
+					}
+				}
+
+				$this->notelist_cache[$g_links.$extras] = join("\n",$o);
 			}
 
-			$_ = $this->clists[$g_links];
+			$index = $g_links.$extras;
+			$_ = "<ol$list_atts>\n{$this->notelist_cache[$index]}\n</ol>";
 		}
 
 		return ' '.$this->shelve($_)."\n";
