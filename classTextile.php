@@ -198,7 +198,7 @@ Linked Notes:
 		<p>Scientists say<sup><a href="#def_id_1" id="ref_id_1a">1</sup> the moon is small.</p>
 
 		<ol class="myclass" id="myid">
-			<li class="myliclass"><a href="#ref_id_1a"><sup>a</sup></a><span id="def_id_1"> </span><a herf="url">Proof</a> of a small moon.</li>
+			<li class="myliclass"><a href="#ref_id_1a"><sup>a</sup></a><span id="def_id_1"> </span><a href="url">Proof</a> of a small moon.</li>
 			<li>An unreferenced note.</li>
 		</ol>
 
