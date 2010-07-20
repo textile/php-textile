@@ -975,20 +975,22 @@ class Textile
 			\]
 		/ux", array(&$this, "fParseNoteRefs"), $text);
 
-		# Sequence all referenced definitions...
-		foreach( $this->notes as $label=>$info ) {
-			$i = @$info['seq'];
+		if( !empty($this->notes) ) {
+					# Sequence all referenced definitions...
+				foreach( $this->notes as $label=>$info ) {
+				$i = @$info['seq'];
 
-			if( !empty($i) ) {
-				$info['seq'] = $label;
-				$o[$i] = $info;
-			} else {
-				$this->unreferencedNotes[] = $info;  # unreferenced definitions go here for possible future use.
+				if( !empty($i) ) {
+					$info['seq'] = $label;
+					$o[$i] = $info;
+				} else {
+					$this->unreferencedNotes[] = $info;  # unreferenced definitions go here for possible future use.
+				}
 			}
+			ksort($o);
+			$this->notes = $o;
+			unset($o);
 		}
-		ksort($o);
-		$this->notes = $o;
-		unset($o);
 
 		# Replace citation list markers...
 		$text = $this->noteLists($text);
