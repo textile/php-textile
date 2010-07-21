@@ -1054,7 +1054,7 @@ class Textile
 	function noteLists($text)
 	{
 		if( !empty($this->notes) ) {
-			$text = preg_replace_callback("/notelist({$this->c})([\^!]?)(\+?)\..*\n/u", array(&$this, "fNoteLists"), $text );
+			$text = preg_replace_callback("/\nnotelist({$this->c})([\^!]?)(\+?)\..*\n/u", array(&$this, "fNoteLists"), $text );
 		}
 
 		return $text;
