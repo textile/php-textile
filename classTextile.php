@@ -1091,7 +1091,7 @@ class Textile
 			$_ = "<ol$list_atts>\n{$this->notelist_cache[$index]}\n</ol>";
 		}
 
-		return ' '.$this->shelve($_)."\n";
+		return "\n ".$this->shelve($_)."\n";
 	}
 
 // -------------------------------------------------------------
