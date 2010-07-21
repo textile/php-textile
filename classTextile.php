@@ -963,7 +963,7 @@ class Textile
 			\.[\s]+               #  end of def marker
 			([^\n]*)              # !content
 			[\n]*                 #  eat the newline(s)
-		/ux", array(&$this, "fParseNoteDefs"), $text."\n");
+		/x", array(&$this, "fParseNoteDefs"), $text."\n");
 
 		# Parse the refs, resolving sequence numbers for the citation list and showing the refs (linked if needed)...
 		$text = preg_replace_callback("/
@@ -973,7 +973,7 @@ class Textile
 			([^\]!]+?)           # !label
 			([!]?)               # !nolink
 			\]
-		/ux", array(&$this, "fParseNoteRefs"), $text);
+		/x", array(&$this, "fParseNoteRefs"), $text);
 
 		if( !empty($this->notes) ) {
 					# Sequence all referenced definitions...
@@ -1054,7 +1054,7 @@ class Textile
 	function noteLists($text)
 	{
 		if( !empty($this->notes) ) {
-			$text = preg_replace_callback("/\nnotelist({$this->c})([\^!]?)(\+?)\..*\n/u", array(&$this, "fNoteLists"), $text );
+			$text = preg_replace_callback("/\nnotelist({$this->c})([\^!]?)(\+?)\..*\n/", array(&$this, "fNoteLists"), $text );
 		}
 
 		return $text;
@@ -1416,22 +1416,24 @@ class Textile
 			$abr = '\p{Lu}';
 			$nab = '\p{Ll}';
 			$wrd = '(?:\p{L}|\p{M}|\p{N}|\p{Pc})';
+			$mod = 'u'; # Make sure to mark the unicode patterns as such, Some servers seem to need this.
 		} else {
 			$acr = 'A-Z0-9';
 			$abr = 'A-Z';
 			$nab = 'a-z';
 			$wrd = '\w';
+			$mod = '';
 		}
 
 		$glyph_search = array(
-			'/('.$wrd.')\'('.$wrd.')/',        // I'm an apostrophe
-			'/(\s)\'(\d+'.$wrd.'?)\b(?!\')/',  // back in '88
+			'/('.$wrd.')\'('.$wrd.')/'.$mod,        // I'm an apostrophe
+			'/(\s)\'(\d+'.$wrd.'?)\b(?!\')/'.$mod,  // back in '88
 			'/(\S)\'(?=\s|'.$pnc.'|<|$)/',     // single closing
 			'/\'/',                            // single opening
 			'/(\S)\"(?=\s|'.$pnc.'|<|$)/',     // double closing
 			'/"/',                             // double opening
-			'/\b(['.$abr.']['.$acr.']{2,})\b(?:[(]([^)]*)[)])/',  // 3+ uppercase acronym
-			'/(?<=\s|^|[>(;-])(['.$abr.']{3,})(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/',  // 3+ uppercase
+			'/\b(['.$abr.']['.$acr.']{2,})\b(?:[(]([^)]*)[)])/'.$mod,  // 3+ uppercase acronym
+			'/(?<=\s|^|[>(;-])(['.$abr.']{3,})(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod,  // 3+ uppercase
 			'/([^.]?)\.{3}/',                  // ellipsis
 			'/(\s?)--(\s?)/',                  // em dash
 			'/\s-(?:\s|$)/',                   // en dash
