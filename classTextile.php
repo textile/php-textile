@@ -360,6 +360,24 @@ class Textile
 		   'copyright'          => txt_copyright,
 		);
 
+		if (txt_has_unicode) {
+	    $this->regex_snippets = array(
+			  'acr' => '\p{Lu}\p{Nd}',
+			  'abr' => '\p{Lu}',
+			  'nab' => '\p{Ll}',
+			  'wrd' => '(?:\p{L}|\p{M}|\p{N}|\p{Pc})',
+			  'mod' => 'u', # Make sure to mark the unicode patterns as such, Some servers seem to need this.
+	    );
+	  } else {
+	    $this->regex_snippets = array(
+			  'acr' => 'A-Z0-9',
+			  'abr' => 'A-Z',
+			  'nab' => 'a-z',
+			  'wrd' => '\w',
+			  'mod' => '',
+	    );
+	  }
+
 		if (defined('hu'))
 			$this->hu = hu;
 
@@ -954,16 +972,18 @@ class Textile
 // -------------------------------------------------------------
 	function parseNotes($text)
 	{
+	  extract($this->regex_snippets);
+
 		# Parse the defs...
 		$text = preg_replace_callback("/
 			note\#                #  start of citation def marker
-			([\w:-]+)             # !label
+			([$wrd:-]+)           # !label
 			([*!^]?)              # !link
 			({$this->c})          # !att
 			\.[\s]+               #  end of def marker
 			([^\n]*)              # !content
 			[\n]*                 #  eat the newline(s)
-		/x", array(&$this, "fParseNoteDefs"), $text."\n");
+		/x$mod", array(&$this, "fParseNoteDefs"), $text."\n");
 
 		# Parse the refs, resolving sequence numbers for the citation list and showing the refs (linked if needed)...
 		$text = preg_replace_callback("/
@@ -973,7 +993,7 @@ class Textile
 			([^\]!]+?)           # !label
 			([!]?)               # !nolink
 			\]
-		/x", array(&$this, "fParseNoteRefs"), $text);
+		/ux", array(&$this, "fParseNoteRefs"), $text);
 
 		if( !empty($this->notes) ) {
 					# Sequence all referenced definitions...
@@ -1054,7 +1074,8 @@ class Textile
 	function noteLists($text)
 	{
 		if( !empty($this->notes) ) {
-			$text = preg_replace_callback("/\nnotelist({$this->c})([\^!]?)(\+?)\..*\n/", array(&$this, "fNoteLists"), $text );
+		  extract($this->regex_snippets);
+			$text = preg_replace_callback("/\nnotelist({$this->c})(?:\:($wrd))?([\^!]?)(\+?)\..*\n/$mod", array(&$this, "fNoteLists"), $text );
 		}
 
 		return $text;
@@ -1066,14 +1087,16 @@ class Textile
 		$_ = '';
 
 		if( !empty($this->notes) ) {
-			list(, $att, $g_links, $extras) = $m;
+			list(, $att, $start_char, $g_links, $extras) = $m;
 			$list_atts = $this->pba($att);
+			if( !$start_char ) 
+			  $start_char = 'a';
 
 			if( !$this->notelist_cache[$g_links.$extras] ) { # If not in cache, build the entry...
 				$o = array();
 				foreach($this->notes as $seq=>$info) {
 					extract($info['def']);
-					$links = $this->makeBackrefLink($info, $g_links);
+					$links = $this->makeBackrefLink($info, $g_links, $start_char );
 					$o[] = "\t".'<li'.$atts.'>'.$links.'<span id="autofn'.$id.'"> </span>'.$content.'</li>';
 				}
 
@@ -1095,20 +1118,24 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function makeBackrefLink( &$info, $g_links )
+	function makeBackrefLink( &$info, $g_links, $i )
 	{
 		extract( $info['def'] );
 		$backlink_type = ($link) ? $link : $g_links;
-		$i = 'a';
 
-		if( $backlink_type == '!' )
+    $i_ = strtr( $this->encode_high($i) , array('&'=>'', ';'=>'', '#'=>''));
+    $decode = (strlen($i) !== strlen($i_));
+
+		if( $backlink_type === '!' )
 			return '';
-		elseif( $backlink_type == '^' ) 
+		elseif( $backlink_type === '^' ) 
 			return '<a href="#autofnref'.$info['refids'][0].'"><sup>'.$i.'</sup></a>';
 		else {
 			$_ = array();
-			foreach( $info['refids'] as $id )
- 				$_[] = '<a href="#autofnref'.$id.'"><sup>'.(string)($i++).'</sup></a>';
+			foreach( $info['refids'] as $id ) {
+ 				$_[] = '<a href="#autofnref'.$id.'"><sup>'. ( ($decode) ? $this->decode_high('&#'.$i_.';') : $i_ ) .'</sup></a>';
+			  $i_++;
+			}
 			$_ = join( ' ', $_ );
 			return $_;
 		}
@@ -1119,7 +1146,7 @@ class Textile
 // -------------------------------------------------------------
 	function links($text)
 	{
-		return preg_replace_callback('/
+		return preg_replace_callback('/   # $pnct on next line appears to be undefined to me!
 			(^|(?<=[\s>.$pnct\(])|[{[]) # $pre
 			"							 # start
 			(' . $this->c . ')			 # $atts
@@ -1411,19 +1438,7 @@ class Textile
 		$text = preg_replace('/"\z/', "\" ", $text);
 		$pnc = '[[:punct:]]';
 
-		if (txt_has_unicode) {
-			$acr = '\p{Lu}\p{Nd}';
-			$abr = '\p{Lu}';
-			$nab = '\p{Ll}';
-			$wrd = '(?:\p{L}|\p{M}|\p{N}|\p{Pc})';
-			$mod = 'u'; # Make sure to mark the unicode patterns as such, Some servers seem to need this.
-		} else {
-			$acr = 'A-Z0-9';
-			$abr = 'A-Z';
-			$nab = 'a-z';
-			$wrd = '\w';
-			$mod = '';
-		}
+	  extract($this->regex_snippets);
 
 		$glyph_search = array(
 			'/('.$wrd.')\'('.$wrd.')/'.$mod,        // I'm an apostrophe
