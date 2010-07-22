@@ -117,7 +117,7 @@ Phrase modifier syntax:
      "$(title)":url  ->  <a href="url" title="title">url</a>
 
 		   !imageurl!	->	 <img src="imageurl" />
-  !imageurl(alt text)!	->	 <img src="imageurl" alt="alt text" />
+	!imageurl(alt text)!	->	 <img src="imageurl" alt="alt text" />
 	!imageurl!:linkurl	->	 <a href="linkurl"><img src="imageurl" /></a>
 
 ABC(Always Be Closing)	->	 <acronym title="Always Be Closing">ABC</acronym>
@@ -361,22 +361,22 @@ class Textile
 		);
 
 		if (txt_has_unicode) {
-	    $this->regex_snippets = array(
-			  'acr' => '\p{Lu}\p{Nd}',
-			  'abr' => '\p{Lu}',
-			  'nab' => '\p{Ll}',
-			  'wrd' => '(?:\p{L}|\p{M}|\p{N}|\p{Pc})',
-			  'mod' => 'u', # Make sure to mark the unicode patterns as such, Some servers seem to need this.
-	    );
-	  } else {
-	    $this->regex_snippets = array(
-			  'acr' => 'A-Z0-9',
-			  'abr' => 'A-Z',
-			  'nab' => 'a-z',
-			  'wrd' => '\w',
-			  'mod' => '',
-	    );
-	  }
+			$this->regex_snippets = array(
+				'acr' => '\p{Lu}\p{Nd}',
+				'abr' => '\p{Lu}',
+				'nab' => '\p{Ll}',
+				'wrd' => '(?:\p{L}|\p{M}|\p{N}|\p{Pc})',
+				'mod' => 'u', # Make sure to mark the unicode patterns as such, Some servers seem to need this.
+			);
+		} else {
+			$this->regex_snippets = array(
+				'acr' => 'A-Z0-9',
+				'abr' => 'A-Z',
+				'nab' => 'a-z',
+				'wrd' => '\w',
+				'mod' => '',
+			);
+		}
 
 		if (defined('hu'))
 			$this->hu = hu;
@@ -972,7 +972,7 @@ class Textile
 // -------------------------------------------------------------
 	function parseNotes($text)
 	{
-	  extract($this->regex_snippets);
+		extract($this->regex_snippets);
 
 		# Parse the defs...
 		$text = preg_replace_callback("/
@@ -1074,7 +1074,7 @@ class Textile
 	function noteLists($text)
 	{
 		if( !empty($this->notes) ) {
-		  extract($this->regex_snippets);
+			extract($this->regex_snippets);
 			$text = preg_replace_callback("/\nnotelist({$this->c})(?:\:($wrd))?([\^!]?)(\+?)\..*\n/$mod", array(&$this, "fNoteLists"), $text );
 		}
 
@@ -1090,7 +1090,7 @@ class Textile
 			list(, $att, $start_char, $g_links, $extras) = $m;
 			$list_atts = $this->pba($att);
 			if( !$start_char ) 
-			  $start_char = 'a';
+				$start_char = 'a';
 
 			if( !$this->notelist_cache[$g_links.$extras] ) { # If not in cache, build the entry...
 				$o = array();
@@ -1123,8 +1123,8 @@ class Textile
 		extract( $info['def'] );
 		$backlink_type = ($link) ? $link : $g_links;
 
-    $i_ = strtr( $this->encode_high($i) , array('&'=>'', ';'=>'', '#'=>''));
-    $decode = (strlen($i) !== strlen($i_));
+		$i_ = strtr( $this->encode_high($i) , array('&'=>'', ';'=>'', '#'=>''));
+		$decode = (strlen($i) !== strlen($i_));
 
 		if( $backlink_type === '!' )
 			return '';
@@ -1134,7 +1134,7 @@ class Textile
 			$_ = array();
 			foreach( $info['refids'] as $id ) {
  				$_[] = '<a href="#autofnref'.$id.'"><sup>'. ( ($decode) ? $this->decode_high('&#'.$i_.';') : $i_ ) .'</sup></a>';
-			  $i_++;
+				$i_++;
 			}
 			$_ = join( ' ', $_ );
 			return $_;
@@ -1438,7 +1438,7 @@ class Textile
 		$text = preg_replace('/"\z/', "\" ", $text);
 		$pnc = '[[:punct:]]';
 
-	  extract($this->regex_snippets);
+		extract($this->regex_snippets);
 
 		$glyph_search = array(
 			'/('.$wrd.')\'('.$wrd.')/'.$mod,        // I'm an apostrophe
