@@ -137,7 +137,7 @@ Linked Notes:
 
 	Each note definition must occur on a new line and should look like this...
 
-	note#mycitationlabel. Your definition text here.
+	note#mynotelabel. Your definition text here.
 
 	You are free to use whatever label you wish after the # as long as it is made up
 	of letters, numbers, colon(:) or dash(-).
@@ -401,7 +401,7 @@ class Textile
 		$this->span_depth = 0;
 		$this->tag_index = 1;
 		$this->notes = $this->unreferencedNotes = $this->notelist_cache = array();
-		$this->citation_index = 1;
+		$this->note_index = 1;
 		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
 
 		$this->lite = $lite;
@@ -446,7 +446,7 @@ class Textile
 		$this->span_depth = 0;
 		$this->tag_index = 1;
 		$this->notes = $this->unreferencedNotes = $this->notelist_cache = array();
-		$this->citation_index = 1;
+		$this->note_index = 1;
 
 		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
 
@@ -976,7 +976,7 @@ class Textile
 
 		# Parse the defs...
 		$text = preg_replace_callback("/
-			note\#                #  start of citation def marker
+			note\#                #  start of note def marker
 			([$wrd:-]+)           # !label
 			([*!^]?)              # !link
 			({$this->c})          # !att
@@ -985,7 +985,7 @@ class Textile
 			[\n]*                 #  eat the newline(s)
 		/x$mod", array(&$this, "fParseNoteDefs"), $text."\n");
 
-		# Parse the refs, resolving sequence numbers for the citation list and showing the refs (linked if needed)...
+		# Parse the refs, resolving sequence numbers for the list and show the refs (linked if needed)...
 		$text = preg_replace_callback("/
 			\[                   #  start
 			({$this->c})         # !atts
@@ -993,7 +993,7 @@ class Textile
 			([^\]!]+?)           # !label
 			([!]?)               # !nolink
 			\]
-		/ux", array(&$this, "fParseNoteRefs"), $text);
+		/x$mod", array(&$this, "fParseNoteRefs"), $text);
 
 		if( !empty($this->notes) ) {
 					# Sequence all referenced definitions...
@@ -1012,7 +1012,7 @@ class Textile
 			unset($o);
 		}
 
-		# Replace citation list markers...
+		# Replace list markers...
 		$text = $this->noteLists($text);
 
 		return $text;
@@ -1039,7 +1039,7 @@ class Textile
 	function fParseNoteRefs($m)
 	{
 		#   By the time this function is called, all the defs will have been processed
-		# into the citations array. So now we can resolve the link numbers in the order
+		# into the notes array. So now we can resolve the link numbers in the order
 		# we process the refs...
 
 		list(, $atts, $label, $nolink) = $m;
@@ -1052,11 +1052,11 @@ class Textile
 
 		# Assign a sequence number to this reference if there isn't one already...
 		if( empty( $this->notes[$label]['seq'] ) )
-			$this->notes[$label]['seq'] = ($this->citation_index++);
+			$this->notes[$label]['seq'] = ($this->note_index++);
 		$num = $this->notes[$label]['seq'];
 
 		# Make our anchor point & stash it for possible use in backlinks when the
-		# citation list is generated later...
+		# note list is generated later...
 		$this->notes[$label]['refids'][] = $refid = uniqid(rand());
 
 		# Build the link (if any)...
