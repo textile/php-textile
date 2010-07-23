@@ -418,8 +418,8 @@ class Textile
 			}
 
 			if (!$lite) {
-				$text = $this->parseNotes($text);
 				$text = $this->block($text);
+				$text = $this->placeNoteLists($text);
 			}
 
 			$text = $this->retrieve($text);
@@ -459,8 +459,8 @@ class Textile
 				$text = $this->blockLite($text);
 			}
 			else {
-				$text = $this->parseNotes($text);
 				$text = $this->block($text);
+				$text = $this->placeNoteLists($text);
 			}
 
 			$text = $this->retrieve($text);
@@ -728,6 +728,7 @@ class Textile
 
 		$tag = 'p';
 		$atts = $cite = $graf = $ext = '';
+		$eat = false;
 
 		foreach($text as $line) {
 			$anon = 0;
@@ -737,7 +738,7 @@ class Textile
 					$out[count($out)-1] .= $c1;
 				// new block
 				list(,$tag,$atts,$ext,$cite,$graf) = $m;
-				list($o1, $o2, $content, $c2, $c1) = $this->fBlock(array(0,$tag,$atts,$ext,$cite,$graf));
+				list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0,$tag,$atts,$ext,$cite,$graf));
 
 				// leave off c1 if this block is extended, we'll close it at the start of the next block
 				if ($ext)
@@ -749,7 +750,7 @@ class Textile
 				// anonymous block
 				$anon = 1;
 				if ($ext or !preg_match('/^ /', $line)) {
-					list($o1, $o2, $content, $c2, $c1) = $this->fBlock(array(0,$tag,$atts,$ext,$cite,$line));
+					list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0,$tag,$atts,$ext,$cite,$line));
 					// skip $o1/$c1 because this is part of a continuing extended block
 					if ($tag == 'p' and !$this->hasRawText($content)) {
 						$line = $content;
@@ -768,7 +769,7 @@ class Textile
 
 			if ($ext and $anon)
 				$out[count($out)-1] .= "\n".$line;
-			else
+			elseif(!$eat)
 				$out[] = $line;
 
 			if (!$ext) {
@@ -776,6 +777,7 @@ class Textile
 				$atts = '';
 				$cite = '';
 				$graf = '';
+				$eat  = false;
 			}
 		}
 		if ($ext) $out[count($out)-1] .= $c1;
@@ -785,10 +787,25 @@ class Textile
 // -------------------------------------------------------------
 	function fBlock($m)
 	{
+		extract($this->regex_snippets);
 		list(, $tag, $att, $ext, $cite, $content) = $m;
 		$atts = $this->pba($att);
 
 		$o1 = $o2 = $c2 = $c1 = '';
+		
+		if( $tag === 'p' ) {
+			# Swallow note definitions...
+			$notedef = preg_replace_callback("/
+					^note\#               #  start of note def marker
+					([$wrd:-]+)           # !label
+					([*!^]?)              # !link
+					({$this->c})          # !att
+					\.[\s]+               #  end of def marker
+					(.*)$                 # !content
+				/x$mod", array(&$this, "fParseNoteDefs"), $content);
+			if( empty($notedef) )
+				return array($o1, $o2, $notedef, $c2, $c1, true);
+			}
 
 		if (preg_match("/fn(\d+)/", $tag, $fns)) {
 			$tag = 'p';
@@ -843,7 +860,7 @@ class Textile
 
 		$content = $this->graf($content);
 
-		return array($o1, $o2, $content, $c2, $c1);
+		return array($o1, $o2, $content, $c2, $c1, false);
 	}
 
 // -------------------------------------------------------------
@@ -867,6 +884,7 @@ class Textile
 
 		$text = $this->span($text);
 		$text = $this->footnoteRef($text);
+		$text = $this->noteRef($text);
 		$text = $this->glyphs($text);
 		return rtrim($text, "\n");
 	}
@@ -970,42 +988,9 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function parseNotes($text)
+	function placeNoteLists($text)
 	{
 		extract($this->regex_snippets);
-		$textlines = explode("\n", $text."\n");
-		$tmplines = array();
-
-		# Parse the defs...
-		foreach( $textlines as $l ) {
-			if( empty($l) )
-				$tmplines[] = $l;
-			else {
-				$l = preg_replace_callback("/
-						^note\#               #  start of note def marker
-						([$wrd:-]+)           # !label
-						([*!^]?)              # !link
-						({$this->c})          # !att
-						\.[\s]+               #  end of def marker
-						(.*)                  # !content
-					/x$mod", array(&$this, "fParseNoteDefs"), $l);
-
-				if( !empty($l) )
-					$tmplines[] = $l; # only include the line if a note def wasn't swallowed.
-			}
-		}
-
-		# Parse the refs, resolving sequence numbers for the list and show the refs (linked if needed)...
-		foreach( $tmplines as &$l ) {
-			$l = preg_replace_callback("/
-				\[                   #  start
-				({$this->c})         # !atts
-				\#
-				([^\]!]+?)           # !label
-				([!]?)               # !nolink
-				\]
-			/Ux$mod", array(&$this, "fParseNoteRefs"), $l);
-		}
 
 		# Sequence all referenced definitions...
 		if( !empty($this->notes) ) {
@@ -1024,14 +1009,7 @@ class Textile
 		}
 
 		# Replace list markers...
-		foreach( $tmplines as &$l ) {
-			$l = preg_replace_callback("/^notelist({$this->c})(?:\:($wrd))?([\^!]?)(\+?)\..*/U$mod", array(&$this, "fNoteLists"), $l );
-		}
-
-		$text = join("\n", $tmplines);
-
-		# Cleanup any dangling triple newlines so block() can correctly chunk things again...
-		$text = strtr($text, array("\n\n\n"=>"\n\n"));
+		$text = preg_replace_callback("@<p>notelist({$this->c})(?:\:($wrd))?([\^!]?)(\+?)\.[\s]*</p>@U$mod", array(&$this, "fNoteLists"), $text );
 
 		return $text;
 	}
@@ -1054,6 +1032,20 @@ class Textile
 	}
 
 // -------------------------------------------------------------
+	function noteRef($text)
+	{
+		$text = preg_replace_callback("/
+			\[                   #  start
+			({$this->c})         # !atts
+			\#
+			([^\]!]+?)           # !label
+			([!]?)               # !nolink
+			\]
+		/Ux$mod", array(&$this, "fParseNoteRefs"), $text);
+		return $text;
+	}
+
+// -------------------------------------------------------------
 	function fParseNoteRefs($m)
 	{
 		#   By the time this function is called, all the defs will have been processed
@@ -1063,10 +1055,6 @@ class Textile
 		list(, $atts, $label, $nolink) = $m;
 		$atts = $this->pba($atts);
 		$nolink = ($nolink === '!');
-
-		# Wipe this reference if no matching def has been processed for it...
-		if( empty( $this->notes[$label]) )
-			return '';
 
 		# Assign a sequence number to this reference if there isn't one already...
 		if( empty( $this->notes[$label]['seq'] ) )
@@ -1100,15 +1088,19 @@ class Textile
 
 			if( !empty($this->notes)) {
 				foreach($this->notes as $seq=>$info) {
-					extract($info['def']);
-					$links = $this->makeBackrefLink($info, $g_links, $start_char );
-					$o[] = "\t".'<li'.$atts.'>'.$links.'<span id="autofn'.$id.'"> </span>'.$content.'</li>';
+					if( !empty($info['def'])) {
+						extract($info['def']);
+						$links = $this->makeBackrefLink($info, $g_links, $start_char );
+						$o[] = "\t".'<li'.$atts.'>'.$links.'<span id="autofn'.$id.'"> </span>'.$content.'</li>';
+					}
 				}
 			}
 			if( '+' == $extras && !empty($this->unreferencedNotes) ) {
 				foreach($this->unreferencedNotes as $seq=>$info) {
-					extract($info['def']);
-					$o[] = "\t".'<li'.$atts.'>'.$content.'</li>';
+					if( !empty($info['def'])) {
+						extract($info['def']);
+						$o[] = "\t".'<li'.$atts.'>'.$content.'</li>';
+					}
 				}
 			}
 
@@ -1128,6 +1120,7 @@ class Textile
 // -------------------------------------------------------------
 	function makeBackrefLink( &$info, $g_links, $i )
 	{
+		$atts = $content = $id = $link = '';
 		extract( $info['def'] );
 		$backlink_type = ($link) ? $link : $g_links;
 
@@ -1541,14 +1534,14 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-// NOTE: deprecated
+// NOTE: used in notelists
 	function encode_high($text, $charset = "UTF-8")
 	{
 		return mb_encode_numericentity($text, $this->cmap(), $charset);
 	}
 
 // -------------------------------------------------------------
-// NOTE: deprecated
+// NOTE: used in notelists
 	function decode_high($text, $charset = "UTF-8")
 	{
 		return mb_decode_numericentity($text, $this->cmap(), $charset);
