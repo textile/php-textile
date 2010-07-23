@@ -991,7 +991,7 @@ class Textile
 					/x$mod", array(&$this, "fParseNoteDefs"), $l);
 
 				if( !empty($l) )
-					$tmplines[] = $l;
+					$tmplines[] = $l; # only include the line if a note def wasn't swallowed.
 			}
 		}
 
