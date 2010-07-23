@@ -341,7 +341,7 @@ class Textile
 
 		$this->url_schemes = array('http','https','ftp','mailto');
 
-		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p' );
+		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', '###' );
 
 		$this->glyph = array(
 		   'quote_single_open'  => txt_quote_single_open,
@@ -730,6 +730,8 @@ class Textile
 		$atts = $cite = $graf = $ext = '';
 		$eat = false;
 
+		$out = array();
+
 		foreach($text as $line) {
 			$anon = 0;
 			if (preg_match("/^($tre)($this->a$this->c)\.(\.?)(?::(\S+))? (.*)$/s", $line, $m)) {
@@ -792,7 +794,8 @@ class Textile
 		$atts = $this->pba($att);
 
 		$o1 = $o2 = $c2 = $c1 = '';
-		
+		$eat = false;
+
 		if( $tag === 'p' ) {
 			# Swallow note definitions...
 			$notedef = preg_replace_callback("/
@@ -853,14 +856,17 @@ class Textile
 			$o2 = $c2 = '';
 			$c1 = "</pre>";
 		}
+		elseif ($tag == '###') {
+			$eat = true;
+		}
 		else {
 			$o2 = "\t<$tag$atts>";
 			$c2 = "</$tag>";
 			}
 
-		$content = $this->graf($content);
+		$content = (!$eat) ? $this->graf($content) : '';
 
-		return array($o1, $o2, $content, $c2, $c1, false);
+		return array($o1, $o2, $content, $c2, $c1, $eat);
 	}
 
 // -------------------------------------------------------------
