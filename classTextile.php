@@ -1088,10 +1088,12 @@ class Textile
 
 			if( !empty($this->notes)) {
 				foreach($this->notes as $seq=>$info) {
+					$links = $this->makeBackrefLink($info, $g_links, $start_char );
 					if( !empty($info['def'])) {
 						extract($info['def']);
-						$links = $this->makeBackrefLink($info, $g_links, $start_char );
 						$o[] = "\t".'<li'.$atts.'>'.$links.'<span id="autofn'.$id.'"> </span>'.$content.'</li>';
+					} else {
+						$o[] = "\t".'<li'.$atts.'>'.$links.' Undefined Note [#'.$info['seq'].'].</li>';
 					}
 				}
 			}
@@ -1121,7 +1123,7 @@ class Textile
 	function makeBackrefLink( &$info, $g_links, $i )
 	{
 		$atts = $content = $id = $link = '';
-		extract( $info['def'] );
+		@extract( $info['def'] );
 		$backlink_type = ($link) ? $link : $g_links;
 
 		$i_ = strtr( $this->encode_high($i) , array('&'=>'', ';'=>'', '#'=>''));
