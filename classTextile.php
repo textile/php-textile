@@ -1019,12 +1019,16 @@ class Textile
 	{
 		list(, $label, $link, $att, $content) = $m;
 
+		# Assign an id if the note reference parse hasn't found the label yet.
+		$id = @$this->notes[$label]['id'];
+		if( !$id )
+			$this->notes[$label]['id'] = uniqid(rand());
+
 		if( empty($this->notes[$label]['def']) ) # Ignores subsequent defs using the same label
 		{
 			$this->notes[$label]['def'] = array(
 				'atts'    => $this->pba($att),
 				'content' => $this->graf($content),
-				'id'      => uniqid(rand()),
 				'link'    => $link,
 			);
 		}
@@ -1041,7 +1045,7 @@ class Textile
 			([^\]!]+?)           # !label
 			([!]?)               # !nolink
 			\]
-		/Ux$mod", array(&$this, "fParseNoteRefs"), $text);
+		/Ux", array(&$this, "fParseNoteRefs"), $text);
 		return $text;
 	}
 
@@ -1057,23 +1061,28 @@ class Textile
 		$nolink = ($nolink === '!');
 
 		# Assign a sequence number to this reference if there isn't one already...
-		if( empty( $this->notes[$label]['seq'] ) )
-			$this->notes[$label]['seq'] = ($this->note_index++);
-		$num = $this->notes[$label]['seq'];
+		$num = @$this->notes[$label]['seq'];
+		if( !$num )
+			$num = $this->notes[$label]['seq'] = ($this->note_index++);
 
 		# Make our anchor point & stash it for possible use in backlinks when the
 		# note list is generated later...
 		$this->notes[$label]['refids'][] = $refid = uniqid(rand());
 
+		# If we are referencing a note that hasn't had the definition parsed yet, then assign it an ID...
+		$id = @$this->notes[$label]['id'];
+		if( !$id )
+			$id = $this->notes[$label]['id'] = uniqid(rand());
+
 		# Build the link (if any)...
 		$_ = '<span id="autofnref'.$refid.'">'.$num.'</span>';
 		if( !$nolink )
-			$_ = '<a href="#autofn'.$this->notes[$label]['def']['id'].'">'.$_.'</a>';
+			$_ = '<a href="#autofn'.$id.'">'.$_.'</a>';
 
 		# Build the reference...
 		$_ = '<sup'.$atts.'>'.$_.'</sup>';
 
-		return $this->shelve($_);
+		return $_;
 	}
 
 // -------------------------------------------------------------
@@ -1082,7 +1091,7 @@ class Textile
 		list(, $att, $start_char, $g_links, $extras) = $m;
 		$index = $g_links.$extras;
 
-		if( !$this->notelist_cache[$index] ) { # If not in cache, build the entry...
+		if( empty($this->notelist_cache[$index]) ) { # If not in cache, build the entry...
 			$o = array();
 			if( !$start_char ) $start_char = 'a';
 
@@ -1090,6 +1099,7 @@ class Textile
 				foreach($this->notes as $seq=>$info) {
 					$links = $this->makeBackrefLink($info, $g_links, $start_char );
 					if( !empty($info['def'])) {
+						$id = $info['id'];
 						extract($info['def']);
 						$o[] = "\t".'<li'.$atts.'>'.$links.'<span id="autofn'.$id.'"> </span>'.$content.'</li>';
 					} else {
