@@ -797,7 +797,7 @@ class Textile
 		$eat = false;
 
 		if( $tag === 'p' ) {
-			# Swallow note definitions...
+			# Is this an anonymous block with a note definition?
 			$notedef = preg_replace_callback("/
 					^note\#               #  start of note def marker
 					([$wrd:-]+)           # !label
@@ -806,7 +806,7 @@ class Textile
 					\.[\s]+               #  end of def marker
 					(.*)$                 # !content
 				/x$mod", array(&$this, "fParseNoteDefs"), $content);
-			if( empty($notedef) )
+			if( empty($notedef) ) # It will be empty if the regex matched and ate it.
 				return array($o1, $o2, $notedef, $c2, $c1, true);
 			}
 
@@ -1081,9 +1081,9 @@ class Textile
 			$id = $this->notes[$label]['id'] = uniqid(rand());
 
 		# Build the link (if any)...
-		$_ = '<span id="autofnref'.$refid.'">'.$num.'</span>';
+		$_ = '<span id="noteref'.$refid.'">'.$num.'</span>';
 		if( !$nolink )
-			$_ = '<a href="#autofn'.$id.'">'.$_.'</a>';
+			$_ = '<a href="#note'.$id.'">'.$_.'</a>';
 
 		# Build the reference...
 		$_ = '<sup'.$atts.'>'.$_.'</sup>';
@@ -1107,7 +1107,7 @@ class Textile
 					if( !empty($info['def'])) {
 						$id = $info['id'];
 						extract($info['def']);
-						$o[] = "\t".'<li'.$atts.'>'.$links.'<span id="autofn'.$id.'"> </span>'.$content.'</li>';
+						$o[] = "\t".'<li'.$atts.'>'.$links.'<span id="note'.$id.'"> </span>'.$content.'</li>';
 					} else {
 						$o[] = "\t".'<li'.$atts.'>'.$links.' Undefined Note [#'.$info['seq'].'].</li>';
 					}
@@ -1148,11 +1148,11 @@ class Textile
 		if( $backlink_type === '!' )
 			return '';
 		elseif( $backlink_type === '^' ) 
-			return '<a href="#autofnref'.$info['refids'][0].'"><sup>'.$i.'</sup></a>';
+			return '<a href="#noteref'.$info['refids'][0].'"><sup>'.$i.'</sup></a>';
 		else {
 			$_ = array();
 			foreach( $info['refids'] as $id ) {
- 				$_[] = '<a href="#autofnref'.$id.'"><sup>'. ( ($decode) ? $this->decode_high('&#'.$i_.';') : $i_ ) .'</sup></a>';
+ 				$_[] = '<a href="#noteref'.$id.'"><sup>'. ( ($decode) ? $this->decode_high('&#'.$i_.';') : $i_ ) .'</sup></a>';
 				$i_++;
 			}
 			$_ = join( ' ', $_ );
@@ -1165,8 +1165,8 @@ class Textile
 // -------------------------------------------------------------
 	function links($text)
 	{
-		return preg_replace_callback('/   # $pnct on next line appears to be undefined to me!
-			(^|(?<=[\s>.$pnct\(])|[{[]) # $pre
+		return preg_replace_callback('/
+			(^|(?<=[\s>.\(])|[{[]) # $pre
 			"							 # start
 			(' . $this->c . ')			 # $atts
 			([^"]+?)					 # $text
