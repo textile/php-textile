@@ -126,16 +126,16 @@ ABC(Always Be Closing)	->	 <acronym title="Always Be Closing">ABC</acronym>
 Linked Notes:
 ============
 
-	Allows the generation of an automated list of notes with links. 
+	Allows the generation of an automated list of notes with links.
 
-	Linked notes are composed of three parts, a set of named _definitions_, a set of 
-	_references_ to those definitions and one or more _placeholders_ indicating where 
+	Linked notes are composed of three parts, a set of named _definitions_, a set of
+	_references_ to those definitions and one or more _placeholders_ indicating where
 	the consolidated list of notes is to be placed in your document.
 
 	Definitions.
 	-----------
 
-	Each note definition must occur on a new line and should look like this...
+	Each note definition must occur in its own paragraph and should look like this...
 
 	note#mynotelabel. Your definition text here.
 
@@ -146,7 +146,7 @@ Linked Notes:
 	----------
 
 	Each note reference is marked in your text like this[#mynotelabel] and
-	it will be replaced with a superscript reference that links into the list of 
+	it will be replaced with a superscript reference that links into the list of
 	note definitions.
 
 	List Placeholder(s).
@@ -159,16 +159,16 @@ Linked Notes:
 
 	notelist can take attributes (class#id) like this: notelist(class#id).
 
-	By default, the note list will show each definition in the order that they 
-	are referenced in the text by the _references_. It will show each definition with 
-	a full list of backlinks to each reference. If you do not want this, you can choose 
+	By default, the note list will show each definition in the order that they
+	are referenced in the text by the _references_. It will show each definition with
+	a full list of backlinks to each reference. If you do not want this, you can choose
 	to override the backlinks like this...
 
 	notelist(class#id)!.    Produces a list with no backlinks.
 	notelist(class#id)^.    Produces a list with only the first backlink.
 
 	Should you wish to have a specific definition display backlinks differently to this
-	then you can override the backlink method by appending a link override to the 
+	then you can override the backlink method by appending a link override to the
 	_definition_ you wish to customise.
 
 	note#label.    Uses the citelist's setting for backlinks.
@@ -182,15 +182,16 @@ Linked Notes:
 	notelist(class#id)!+. Giving a list of all notes without any backlinks.
 
 	You can mix and match the list backlink control and unreferenced links controls
-	but the backlink control (if any) must go first. Like so: notelist^+. , not 
+	but the backlink control (if any) must go first. Like so: notelist^+. , not
 	like this: notelist+^.
 
 	Example...
 		Scientists say[#lavader] the moon is small.
 
 		note#other. An unreferenced note.
+
 		note#lavader(myliclass). "Proof":url of a small moon.
- 
+
 		notelist(myclass#myid)+.
 
 		Would output (the actual IDs used would be randomised)...
@@ -202,6 +203,10 @@ Linked Notes:
 			<li>An unreferenced note.</li>
 		</ol>
 
+		The 'a b c' backlink characters can be altered too.
+		For example if you wanted the notes to have numeric backlinks starting from 1:
+
+		notelist:1.
 
 Table syntax:
 
@@ -210,14 +215,41 @@ Table syntax:
 		|a|simple|table|row|
 		|And|Another|table|row|
 
+		|=. My table caption goes here
 		|_. A|_. table|_. header|_.row|
 		|A|simple|table|row|
 
 	Tables with attributes:
 
-		table{border:1px solid black}.
+		table{border:1px solid black}. My table summary here
 		{background:#ddd;color:red}. |{}| | | |
 
+	To specify thead / tfoot / tbody groups, add one of these on its own line
+	above the row(s) you wish to wrap (you may specify attributes before the dot):
+
+		|^.     # thead
+		|-.     # tbody
+		|~.     # tfoot
+
+	Column groups:
+
+		|:\3. 100
+
+		Becomes:
+			<colgroup span="3" width="100"></colgroup>
+
+		You can omit either of the \N or width values. You may also
+		add cells after the colgroup definition to specify span/width/attributes:
+
+		|:\5. 50 |(firstcol). |\2. 250||300|
+
+		Becomes:
+			<colgroup span="5" width="50">
+				<col class="firstcol" />
+				<col span="2" width="250" />
+				<col />
+				<col width="300" />
+			</colgroup>
 
 Applying Attributes:
 
@@ -407,17 +439,17 @@ class Textile
 		$this->lite = $lite;
 		$this->noimage = $noimage;
 
-		if ($encode) {
-		 $text = $this->incomingEntities($text);
+		if ($encode)
+		{
+			$text = $this->incomingEntities($text);
 			$text = str_replace("x%x%", "&amp;", $text);
 			return $text;
 		} else {
-
 			if(!$strict) {
 				$text = $this->cleanWhiteSpace($text);
 			}
 
-			if (!$lite) {
+			if(!$lite) {
 				$text = $this->block($text);
 				$text = $this->placeNoteLists($text);
 			}
@@ -450,29 +482,28 @@ class Textile
 
 		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
 
-			// escape any raw html
-			$text = $this->encode_html($text, 0);
+		// escape any raw html
+		$text = $this->encode_html($text, 0);
 
-			$text = $this->cleanWhiteSpace($text);
+		$text = $this->cleanWhiteSpace($text);
 
-			if ($lite) {
-				$text = $this->blockLite($text);
-			}
-			else {
-				$text = $this->block($text);
-				$text = $this->placeNoteLists($text);
-			}
+		if($lite) {
+			$text = $this->blockLite($text);
+		} else {
+			$text = $this->block($text);
+			$text = $this->placeNoteLists($text);
+		}
 
-			$text = $this->retrieve($text);
-			$text = $this->replaceGlyphs($text);
-			$text = $this->retrieveTags($text);
-			$text = $this->retrieveURLs($text);
-			$this->span_depth = 0;
+		$text = $this->retrieve($text);
+		$text = $this->replaceGlyphs($text);
+		$text = $this->retrieveTags($text);
+		$text = $this->retrieveURLs($text);
+		$this->span_depth = 0;
 
-			// just to be tidy
-			$text = str_replace("<br />", "<br />\n", $text);
+		// just to be tidy
+		$text = str_replace("<br />", "<br />\n", $text);
 
-			return $text;
+		return $text;
 	}
 
 // -------------------------------------------------------------
@@ -521,7 +552,6 @@ class Textile
 			}
 
 			if (preg_match("/([)]+)/", $matched, $pr)) {
-				// $this->dump($pr);
 				$style[] = "padding-right:" . strlen($pr[1]) . "em;";
 				$matched = str_replace($pr[0], '', $matched);
 			}
@@ -862,7 +892,7 @@ class Textile
 		else {
 			$o2 = "\t<$tag$atts>";
 			$c2 = "</$tag>";
-			}
+		}
 
 		$content = (!$eat) ? $this->graf($content) : '';
 
@@ -1005,7 +1035,7 @@ class Textile
 				$i = @$info['seq'];
 				if( !empty($i) ) {
 					$info['seq'] = $label;
-					$o[$i] = $info; 
+					$o[$i] = $info;
 				} else {
 					$this->unreferencedNotes[] = $info;	# unreferenced definitions go here for possible future use.
 				}
@@ -1147,7 +1177,7 @@ class Textile
 
 		if( $backlink_type === '!' )
 			return '';
-		elseif( $backlink_type === '^' ) 
+		elseif( $backlink_type === '^' )
 			return '<a href="#noteref'.$info['refids'][0].'"><sup>'.$i.'</sup></a>';
 		else {
 			$_ = array();
@@ -1158,7 +1188,7 @@ class Textile
 			$_ = join( ' ', $_ );
 			return $_;
 		}
-		
+
 		return '';
 	}
 
@@ -1167,14 +1197,14 @@ class Textile
 	{
 		return preg_replace_callback('/
 			(^|(?<=[\s>.\(])|[{[]) # $pre
-			"							 # start
-			(' . $this->c . ')			 # $atts
-			([^"]+?)					 # $text
-			(?:\(([^)]+?)\)(?="))?		 # $title
+			"                      # start
+			(' . $this->c . ')     # $atts
+			([^"]+?)               # $text
+			(?:\(([^)]+?)\)(?="))? # $title
 			":
-			('.$this->urlch.'+?)		 # $url
-			(\/)?						 # $slash
-			([^\w\/;]*?)				 # $post
+			('.$this->urlch.'+?)   # $url
+			(\/)?                  # $slash
+			([^\w\/;]*?)           # $post
 			([\]}]|(?=\s|$|\)))
 		/x', array(&$this, "fLink"), $text);
 	}
@@ -1339,6 +1369,7 @@ class Textile
 		@list(, $before, $text, $after) = $m;
 		return $before.'<pre>'.$this->shelve($this->r_encode_html($text)).'</pre>'.$after;
 	}
+
 // -------------------------------------------------------------
 	function shelve($val)
 	{
@@ -1462,19 +1493,19 @@ class Textile
 		$glyph_search = array(
 			'/('.$wrd.')\'('.$wrd.')/'.$mod,        // I'm an apostrophe
 			'/(\s)\'(\d+'.$wrd.'?)\b(?!\')/'.$mod,  // back in '88
-			'/(\S)\'(?=\s|'.$pnc.'|<|$)/',     // single closing
-			'/\'/',                            // single opening
-			'/(\S)\"(?=\s|'.$pnc.'|<|$)/',     // double closing
-			'/"/',                             // double opening
+			'/(\S)\'(?=\s|'.$pnc.'|<|$)/',          // single closing
+			'/\'/',                                 // single opening
+			'/(\S)\"(?=\s|'.$pnc.'|<|$)/',          // double closing
+			'/"/',                                  // double opening
 			'/\b(['.$abr.']['.$acr.']{2,})\b(?:[(]([^)]*)[)])/'.$mod,  // 3+ uppercase acronym
 			'/(?<=\s|^|[>(;-])(['.$abr.']{3,})(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod,  // 3+ uppercase
-			'/([^.]?)\.{3}/',                  // ellipsis
-			'/(\s?)--(\s?)/',                  // em dash
-			'/\s-(?:\s|$)/',                   // en dash
-			'/(\d+)( ?)x( ?)(?=\d+)/',         // dimension sign
-			'/(\b ?|\s|^)[([]TM[])]/i',        // trademark
-			'/(\b ?|\s|^)[([]R[])]/i',         // registered
-			'/(\b ?|\s|^)[([]C[])]/i',         // copyright
+			'/([^.]?)\.{3}/',                       // ellipsis
+			'/(\s?)--(\s?)/',                       // em dash
+			'/\s-(?:\s|$)/',                        // en dash
+			'/(\d+)( ?)x( ?)(?=\d+)/',              // dimension sign
+			'/(\b ?|\s|^)[([]TM[])]/i',             // trademark
+			'/(\b ?|\s|^)[([]R[])]/i',              // registered
+			'/(\b ?|\s|^)[([]C[])]/i',              // copyright
 		 );
 
 		extract($this->glyph, EXTR_PREFIX_ALL, 'txt');
