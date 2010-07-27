@@ -671,17 +671,18 @@ class Textile
 // -------------------------------------------------------------
 	function lists($text)
 	{
-		return preg_replace_callback("/^([#*;:]+$this->c .*)$(?![^#*;:])/smU", array(&$this, "fList"), $text);
+		return preg_replace_callback("/^([#*;:]+$this->c[ .].*)$(?![^#*;:])/smU", array(&$this, "fList"), $text);
 	}
 
 // -------------------------------------------------------------
 	function fList($m)
 	{
 		$text = preg_split('/\n(?=[*#;:])/m', $m[0]);
+		
 		$pt = '';
 		foreach($text as $nr => $line) {
 			$nextline = isset($text[$nr+1]) ? $text[$nr+1] : false;
-			if (preg_match("/^([#*;:]+)($this->a$this->c)\s(.*)$/s", $line, $m)) {
+			if (preg_match("/^([#*;:]+)($this->a$this->c)[ .](.*)$/s", $line, $m)) {
 				list(, $tl, $atts, $content) = $m;
 				$content = trim($content);
 				$nl = '';
@@ -689,7 +690,7 @@ class Textile
 				$litem = (strpos($tl, ';') !== false) ? 'dt' : ((strpos($tl, ':') !== false) ? 'dd' : 'li');
 				$showitem = (strlen($content) > 0);
 
-				if (preg_match("/^([#*;:]+)($this->a$this->c)\s.*/", $nextline, $nm))
+				if (preg_match("/^([#*;:]+)($this->a$this->c)[ .].*/", $nextline, $nm))
 					$nl = $nm[1];
 
 				if ((strpos($pt, ';') !== false) && (strpos($tl, ':') !== false)) {
