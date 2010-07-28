@@ -573,7 +573,7 @@ class Textile
 			}
 
 			if ($this->restricted)
-				return ($lang)	  ? ' lang="'	 . $lang			.'"':'';
+				return ($lang)	  ? ' lang="'	. $lang . '"':'';
 
       $o = '';
       if( $style ) {
