@@ -359,14 +359,15 @@ class Textile
 	{
 		$this->hlgn = "(?:\<(?!>)|(?<!<)\>|\<\>|\=|[()]+(?! ))";
 		$this->vlgn = "[\-^~]";
-		$this->clas = "(?:\([^)]+\))";
-		$this->lnge = "(?:\[[^]]+\])";
-		$this->styl = "(?:\{[^}]+\})";
+		$this->clas = "(?:\([^)\n]+\))";  # Don't allow classes/ids/languages/styles to span across newlines
+		$this->lnge = "(?:\[[^]\n]+\])";
+		$this->styl = "(?:\{[^}\n]+\})";
 		$this->cspn = "(?:\\\\\d+)";
 		$this->rspn = "(?:\/\d+)";
-		$this->a = "(?:{$this->hlgn}|{$this->vlgn})*";
-		$this->s = "(?:{$this->cspn}|{$this->rspn})*";
-		$this->c = "(?:{$this->clas}|{$this->styl}|{$this->lnge}|{$this->hlgn})*";
+		$this->a  = "(?:{$this->hlgn}|{$this->vlgn})*";
+		$this->s  = "(?:{$this->cspn}|{$this->rspn})*";
+		$this->c  = "(?:{$this->clas}|{$this->styl}|{$this->lnge}|{$this->hlgn})*";
+		$this->lc = "(?:{$this->clas}|{$this->styl}|{$this->lnge})*";
 
 		$this->pnct = '[\!"#\$%&\'()\*\+,\-\./:;<=>\?@\[\\\]\^_`{\|}\~]';
 		$this->urlch = '[\w"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
@@ -671,7 +672,7 @@ class Textile
 // -------------------------------------------------------------
 	function lists($text)
 	{
-		return preg_replace_callback("/^([#*;:]+$this->c[ .].*)$(?![^#*;:])/smU", array(&$this, "fList"), $text);
+		return preg_replace_callback("/^([#*;:]+$this->lc[ .].*)$(?![^#*;:])/smU", array(&$this, "fList"), $text);
 	}
 
 // -------------------------------------------------------------
@@ -682,7 +683,7 @@ class Textile
 		$pt = '';
 		foreach($text as $nr => $line) {
 			$nextline = isset($text[$nr+1]) ? $text[$nr+1] : false;
-			if (preg_match("/^([#*;:]+)($this->a$this->c)[ .](.*)$/s", $line, $m)) {
+			if (preg_match("/^([#*;:]+)($this->lc)[ .](.*)$/s", $line, $m)) {
 				list(, $tl, $atts, $content) = $m;
 				$content = trim($content);
 				$nl = '';
@@ -690,7 +691,7 @@ class Textile
 				$litem = (strpos($tl, ';') !== false) ? 'dt' : ((strpos($tl, ':') !== false) ? 'dd' : 'li');
 				$showitem = (strlen($content) > 0);
 
-				if (preg_match("/^([#*;:]+)($this->a$this->c)[ .].*/", $nextline, $nm))
+				if (preg_match("/^([#*;:]+)($this->lc)[ .].*/", $nextline, $nm))
 					$nl = $nm[1];
 
 				if ((strpos($pt, ';') !== false) && (strpos($tl, ':') !== false)) {
