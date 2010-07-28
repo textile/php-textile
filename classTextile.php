@@ -529,11 +529,11 @@ class Textile
 
 			if ($element == 'td' or $element == 'tr') {
 				if (preg_match("/($this->vlgn)/", $matched, $vert))
-					$style[] = "vertical-align:" . $this->vAlign($vert[1]) . ";";
+					$style[] = "vertical-align:" . $this->vAlign($vert[1]);
 			}
 
 			if (preg_match("/\{([^}]*)\}/", $matched, $sty)) {
-				$style[] = rtrim($sty[1], ';') . ';';
+				$style[] = rtrim($sty[1], ';');
 				$matched = str_replace($sty[0], '', $matched);
 			}
 
@@ -548,17 +548,17 @@ class Textile
 			}
 
 			if (preg_match("/([(]+)/", $matched, $pl)) {
-				$style[] = "padding-left:" . strlen($pl[1]) . "em;";
+				$style[] = "padding-left:" . strlen($pl[1]) . "em";
 				$matched = str_replace($pl[0], '', $matched);
 			}
 
 			if (preg_match("/([)]+)/", $matched, $pr)) {
-				$style[] = "padding-right:" . strlen($pr[1]) . "em;";
+				$style[] = "padding-right:" . strlen($pr[1]) . "em";
 				$matched = str_replace($pr[0], '', $matched);
 			}
 
 			if (preg_match("/($this->hlgn)/", $matched, $horiz))
-				$style[] = "text-align:" . $this->hAlign($horiz[1]) . ";";
+				$style[] = "text-align:" . $this->hAlign($horiz[1]);
 
 			if (preg_match("/^(.*)#(.*)$/", $class, $ids)) {
 				$id = $ids[2];
@@ -575,15 +575,25 @@ class Textile
 			if ($this->restricted)
 				return ($lang)	  ? ' lang="'	 . $lang			.'"':'';
 
+      $o = '';
+      if( $style ) {
+        foreach($style as $s) {
+          $s = trim($s);
+          if( !empty( $s ) )
+            $o .= $s.'; ';
+        }
+      }
+      $style = trim( strtr($o, array("\n"=>'',';;'=>';')) );
+
 			return join('',array(
-				($style)   ? ' style="'   . join("", $style) .'"':'',
-				($class)   ? ' class="'   . $class           .'"':'',
-				($lang)    ? ' lang="'    . $lang            .'"':'',
-				($id and $include_id) ? ' id="' . $id        .'"':'',
-				($colspan) ? ' colspan="' . $colspan         .'"':'',
-				($rowspan) ? ' rowspan="' . $rowspan         .'"':'',
-				($span)    ? ' span="'    . $span            .'"':'',
-				($width)   ? ' width="'   . $width           .'"':'',
+				($style)   ? ' style="'   . $style    .'"':'',
+				($class)   ? ' class="'   . $class    .'"':'',
+				($lang)    ? ' lang="'    . $lang     .'"':'',
+				($id and $include_id) ? ' id="' . $id .'"':'',
+				($colspan) ? ' colspan="' . $colspan  .'"':'',
+				($rowspan) ? ' rowspan="' . $rowspan  .'"':'',
+				($span)    ? ' span="'    . $span     .'"':'',
+				($width)   ? ' width="'   . $width    .'"':'',
 			));
 		}
 		return '';
