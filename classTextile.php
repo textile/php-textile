@@ -689,7 +689,7 @@ class Textile
 	function fList($m)
 	{
 		$text = preg_split('/\n(?=[*#;:])/m', $m[0]);
-		
+		# $out = array();
 		$pt = '';
 		foreach($text as $nr => $line) {
 			$nextline = isset($text[$nr+1]) ? $text[$nr+1] : false;
@@ -756,7 +756,8 @@ class Textile
 // -------------------------------------------------------------
 	function fPBr($m)
 	{
-		# Less restrictive version of fBr() ... used only in paragraph where the next row may start with a smiley or perhaps something like '#8 bolt...' or '*** stars...'
+		# Less restrictive version of fBr() ... used only in paragraphs where the next
+		# row may start with a smiley or perhaps something like '#8 bolt...' or '*** stars...'
 		$content = preg_replace("@(.+)(?<!<br>|<br />)\n(?![\s|])@", '$1<br />', $m[3]);
 		return '<'.$m[1].$m[2].'>'.$content.$m[4];
 	}
