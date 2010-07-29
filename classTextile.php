@@ -359,7 +359,7 @@ class Textile
 	{
 		$this->hlgn = "(?:\<(?!>)|(?<!<)\>|\<\>|\=|[()]+(?! ))";
 		$this->vlgn = "[\-^~]";
-		$this->clas = "(?:\([^)\n]+\))";  # Don't allow classes/ids/languages/styles to span across newlines
+		$this->clas = "(?:\([^)\n]+\))";	# Don't allow classes/ids/languages/styles to span across newlines
 		$this->lnge = "(?:\[[^]\n]+\])";
 		$this->styl = "(?:\{[^}\n]+\})";
 		$this->cspn = "(?:\\\\\d+)";
@@ -575,15 +575,15 @@ class Textile
 			if ($this->restricted)
 				return ($lang)	  ? ' lang="'	. $lang . '"':'';
 
-      $o = '';
-      if( $style ) {
-        foreach($style as $s) {
-          $s = trim($s);
-          if( !empty( $s ) )
-            $o .= $s.'; ';
-        }
-      }
-      $style = trim( strtr($o, array("\n"=>'',';;'=>';')) );
+			$o = '';
+			if( $style ) {
+				foreach($style as $s) {
+					$s = trim($s);
+					if( !empty( $s ) )
+						$o .= $s.'; ';
+				}
+			}
+			$style = trim( strtr($o, array("\n"=>'',';;'=>';')) );
 
 			return join('',array(
 				($style)   ? ' style="'   . $style    .'"':'',
@@ -744,17 +744,25 @@ class Textile
 // -------------------------------------------------------------
 	function doTagBr($tag, $in)
 	{
-		return preg_replace_callback('@<('.preg_quote($tag).')([^>]*?)>(.*)(</\1>)@s', array(&$this, 'doBr'), $in);
+		return preg_replace_callback('@<('.preg_quote($tag).')([^>]*?)>(.*)(</\1>)@s', array(&$this, 'fBr'), $in);
 	}
 
 // -------------------------------------------------------------
 	function doPBr($in)
 	{
-		return $this->doTagBr('p', $in);
+		return preg_replace_callback('@<(p)([^>]*?)>(.*)(</\1>)@s', array(&$this, 'fPBr'), $in);
+	}
+	
+// -------------------------------------------------------------
+	function fPBr($m)
+	{
+		# Less restrictive version of fBr() ... used only in paragraph where the next row may start with a smiley or perhaps something like '#8 bolt...' or '*** stars...'
+		$content = preg_replace("@(.+)(?<!<br>|<br />)\n(?![\s|])@", '$1<br />', $m[3]);
+		return '<'.$m[1].$m[2].'>'.$content.$m[4];
 	}
 
 // -------------------------------------------------------------
-	function doBr($m)
+	function fBr($m)
 	{
 		$content = preg_replace("@(.+)(?<!<br>|<br />)\n(?![#*;:\s|])@", '$1<br />', $m[3]);
 		return '<'.$m[1].$m[2].'>'.$content.$m[4];
@@ -821,7 +829,7 @@ class Textile
 				$atts = '';
 				$cite = '';
 				$graf = '';
-				$eat  = false;
+				$eat = false;
 			}
 		}
 		if ($ext) $out[count($out)-1] .= $c1;
