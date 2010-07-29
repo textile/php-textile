@@ -582,8 +582,8 @@ class Textile
 					if( !empty( $s ) )
 						$o .= $s.'; ';
 				}
+				$style = trim( strtr($o, array("\n"=>'',';;'=>';')) );
 			}
-			$style = trim( strtr($o, array("\n"=>'',';;'=>';')) );
 
 			return join('',array(
 				($style)   ? ' style="'   . $style    .'"':'',
