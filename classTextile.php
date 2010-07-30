@@ -396,24 +396,6 @@ class Textile
 		}
     extract( $this->regex_snippets );
 
-/*
-		$this->glyph = array(
-		   'quote_single_open'  => txt_quote_single_open,
-		   'quote_single_close' => txt_quote_single_close,
-		   'quote_double_open'  => txt_quote_double_open,
-		   'quote_double_close' => txt_quote_double_close,
-		   'apostrophe'         => txt_apostrophe,
-		   'prime'              => txt_prime,
-		   'prime_double'       => txt_prime_double,
-		   'ellipsis'           => txt_ellipsis,
-		   'emdash'             => txt_emdash,
-		   'endash'             => txt_endash,
-		   'dimension'          => txt_dimension,
-		   'trademark'          => txt_trademark,
-		   'registered'         => txt_registered,
-		   'copyright'          => txt_copyright,
-		);
-*/
 		$this->glyph_search = array(
 			'/('.$wrd.')\'('.$wrd.')/'.$mod,        // I'm an apostrophe
 			'/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod,	// back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
