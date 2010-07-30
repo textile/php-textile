@@ -445,7 +445,6 @@ class Textile
 			$this->doc_root = @$_SERVER['PATH_TRANSLATED']; // IIS
 
 		$this->doc_root = rtrim($this->doc_root, $this->ds).$this->ds;
-
 	}
 
 // -------------------------------------------------------------
@@ -713,7 +712,6 @@ class Textile
 	function fList($m)
 	{
 		$text = preg_split('/\n(?=[*#;:])/m', $m[0]);
-		# $out = array();
 		$pt = '';
 		foreach($text as $nr => $line) {
 			$nextline = isset($text[$nr+1]) ? $text[$nr+1] : false;
