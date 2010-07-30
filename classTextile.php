@@ -369,29 +369,13 @@ class Textile
 		$this->c  = "(?:{$this->clas}|{$this->styl}|{$this->lnge}|{$this->hlgn})*";
 		$this->lc = "(?:{$this->clas}|{$this->styl}|{$this->lnge})*";
 
-		$this->pnct = '[\!"#\$%&\'()\*\+,\-\./:;<=>\?@\[\\\]\^_`{\|}\~]';
+		$this->pnct  = '[\!"#\$%&\'()\*\+,\-\./:;<=>\?@\[\\\]\^_`{\|}\~]';
 		$this->urlch = '[\w"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
+		$pnc = '[[:punct:]]';
 
 		$this->url_schemes = array('http','https','ftp','mailto');
 
 		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', '###' );
-
-		$this->glyph = array(
-		   'quote_single_open'  => txt_quote_single_open,
-		   'quote_single_close' => txt_quote_single_close,
-		   'quote_double_open'  => txt_quote_double_open,
-		   'quote_double_close' => txt_quote_double_close,
-		   'apostrophe'         => txt_apostrophe,
-		   'prime'              => txt_prime,
-		   'prime_double'       => txt_prime_double,
-		   'ellipsis'           => txt_ellipsis,
-		   'emdash'             => txt_emdash,
-		   'endash'             => txt_endash,
-		   'dimension'          => txt_dimension,
-		   'trademark'          => txt_trademark,
-		   'registered'         => txt_registered,
-		   'copyright'          => txt_copyright,
-		);
 
 		if (txt_has_unicode) {
 			$this->regex_snippets = array(
@@ -410,6 +394,61 @@ class Textile
 				'mod' => '',
 			);
 		}
+    extract( $this->regex_snippets );
+
+/*
+		$this->glyph = array(
+		   'quote_single_open'  => txt_quote_single_open,
+		   'quote_single_close' => txt_quote_single_close,
+		   'quote_double_open'  => txt_quote_double_open,
+		   'quote_double_close' => txt_quote_double_close,
+		   'apostrophe'         => txt_apostrophe,
+		   'prime'              => txt_prime,
+		   'prime_double'       => txt_prime_double,
+		   'ellipsis'           => txt_ellipsis,
+		   'emdash'             => txt_emdash,
+		   'endash'             => txt_endash,
+		   'dimension'          => txt_dimension,
+		   'trademark'          => txt_trademark,
+		   'registered'         => txt_registered,
+		   'copyright'          => txt_copyright,
+		);
+*/
+		$this->glyph_search = array(
+			'/('.$wrd.')\'('.$wrd.')/'.$mod,        // I'm an apostrophe
+			'/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod,	// back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
+			'/(\S)\'(?=\s|'.$pnc.'|<|$)/',          // single closing
+			'/\'/',                                 // single opening
+			'/(\S)\"(?=\s|'.$pnc.'|<|$)/',          // double closing
+			'/"/',                                  // double opening
+			'/\b(['.$abr.']['.$acr.']{2,})\b(?:[(]([^)]*)[)])/'.$mod,  // 3+ uppercase acronym
+			'/(?<=\s|^|[>(;-])(['.$abr.']{3,})(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod,  // 3+ uppercase
+			'/([^.]?)\.{3}/',                       // ellipsis
+			'/(\s?)--(\s?)/',                       // em dash
+			'/\s-(?:\s|$)/',                        // en dash
+			'/(\d+)( ?)x( ?)(?=\d+)/',              // dimension sign
+			'/(\b ?|\s|^)[([]TM[])]/i',             // trademark
+			'/(\b ?|\s|^)[([]R[])]/i',              // registered
+			'/(\b ?|\s|^)[([]C[])]/i',              // copyright
+		);
+
+		$this->glyph_replace = array(
+			'$1'.txt_apostrophe.'$2',              // I'm an apostrophe
+			'$1'.txt_apostrophe.'$2',              // back in '88
+			'$1'.txt_quote_single_close,           // single closing
+			txt_quote_single_open,                 // single opening
+			'$1'.txt_quote_double_close,           // double closing
+			txt_quote_double_open,                 // double opening
+			'<acronym title="$2">$1</acronym>',     // 3+ uppercase acronym
+			'<span class="caps">glyph:$1</span>$2', // 3+ uppercase
+			'$1'.txt_ellipsis,                     // ellipsis
+			'$1'.txt_emdash.'$2',                  // em dash
+			' '.txt_endash.' ',                    // en dash
+			'$1$2'.txt_dimension.'$3',             // dimension sign
+			'$1'.txt_trademark,                    // trademark
+			'$1'.txt_registered,                   // registered
+			'$1'.txt_copyright,                    // copyright
+		);
 
 		if (defined('hu'))
 			$this->hu = hu;
@@ -1505,65 +1544,24 @@ class Textile
 // -------------------------------------------------------------
 	function glyphs($text)
 	{
-		// fix: hackish
+		// fix: hackish -- adds a space if final char of text is a double quote.
 		$text = preg_replace('/"\z/', "\" ", $text);
-		$pnc = '[[:punct:]]';
 
-		extract($this->regex_snippets);
-
-		$glyph_search = array(
-			'/('.$wrd.')\'('.$wrd.')/'.$mod,        // I'm an apostrophe
-			'/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod,  // back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
-			'/(\S)\'(?=\s|'.$pnc.'|<|$)/',          // single closing
-			'/\'/',                                 // single opening
-			'/(\S)\"(?=\s|'.$pnc.'|<|$)/',          // double closing
-			'/"/',                                  // double opening
-			'/\b(['.$abr.']['.$acr.']{2,})\b(?:[(]([^)]*)[)])/'.$mod,  // 3+ uppercase acronym
-			'/(?<=\s|^|[>(;-])(['.$abr.']{3,})(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod,  // 3+ uppercase
-			'/([^.]?)\.{3}/',                       // ellipsis
-			'/(\s?)--(\s?)/',                       // em dash
-			'/\s-(?:\s|$)/',                        // en dash
-			'/(\d+)( ?)x( ?)(?=\d+)/',              // dimension sign
-			'/(\b ?|\s|^)[([]TM[])]/i',             // trademark
-			'/(\b ?|\s|^)[([]R[])]/i',              // registered
-			'/(\b ?|\s|^)[([]C[])]/i',              // copyright
-		 );
-
-		extract($this->glyph, EXTR_PREFIX_ALL, 'txt');
-
-		$glyph_replace = array(
-			'$1'.$txt_apostrophe.'$2',              // I'm an apostrophe
-			'$1'.$txt_apostrophe.'$2',              // back in '88
-			'$1'.$txt_quote_single_close,           // single closing
-			$txt_quote_single_open,                 // single opening
-			'$1'.$txt_quote_double_close,           // double closing
-			$txt_quote_double_open,                 // double opening
-			'<acronym title="$2">$1</acronym>',     // 3+ uppercase acronym
-			'<span class="caps">glyph:$1</span>$2', // 3+ uppercase
-			'$1'.$txt_ellipsis,                     // ellipsis
-			'$1'.$txt_emdash.'$2',                  // em dash
-			' '.$txt_endash.' ',                    // en dash
-			'$1$2'.$txt_dimension.'$3',             // dimension sign
-			'$1'.$txt_trademark,                    // trademark
-			'$1'.$txt_registered,                   // registered
-			'$1'.$txt_copyright,                    // copyright
-		 );
-
-		 $text = preg_split("@(<[\w/!?].*>)@Us", $text, -1, PREG_SPLIT_DELIM_CAPTURE);
-		 $i = 0;
-		 foreach($text as $line) {
-			 // text tag text tag text ...
-			 if (++$i % 2) {
-				 // raw < > & chars are already entity encoded in restricted mode
-				 if (!$this->restricted) {
-					 $line = $this->encode_raw_amp($line);
-					 $line = $this->encode_lt_gt($line);
-				 }
-				 $line = preg_replace($glyph_search, $glyph_replace, $line);
-			 }
-			  $glyph_out[] = $line;
-		 }
-		 return join('', $glyph_out);
+		$text = preg_split("@(<[\w/!?].*>)@Us", $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$i = 0;
+		foreach($text as $line) {
+			// text tag text tag text ...
+			if (++$i % 2) {
+				// raw < > & chars are already entity encoded in restricted mode
+				if (!$this->restricted) {
+					$line = $this->encode_raw_amp($line);
+					$line = $this->encode_lt_gt($line);
+				}
+				$line = preg_replace($this->glyph_search, $this->glyph_replace, $line);
+			}
+			$glyph_out[] = $line;
+		}
+		return join('', $glyph_out);
 	}
 
 // -------------------------------------------------------------
