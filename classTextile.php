@@ -599,13 +599,12 @@ class Textile
 			$o = '';
 			if( $style ) {
 				foreach($style as $s) {
-			$this->dump($s);
-				  $parts = split(';', $s);
-				  foreach( $parts as $p ) {
-					  $p = trim($p, '; ');
-					  if( !empty( $p ) )
-						  $o .= $p.'; ';
-				  }
+					$parts = split(';', $s);
+					foreach( $parts as $p ) {
+						$p = trim($p, '; ');
+						if( !empty( $p ) )
+							$o .= $p.'; ';
+					}
 				}
 				$style = trim( strtr($o, array("\n"=>'',';;'=>';')) );
 			}
