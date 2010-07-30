@@ -394,7 +394,7 @@ class Textile
 				'mod' => '',
 			);
 		}
-    extract( $this->regex_snippets );
+		extract( $this->regex_snippets );
 
 		$this->glyph_search = array(
 			'/('.$wrd.')\'('.$wrd.')/'.$mod,        // I'm an apostrophe
