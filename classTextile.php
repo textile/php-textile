@@ -322,6 +322,11 @@ Applying Attributes:
 @define('txt_trademark',          '&#8482;');
 @define('txt_registered',         '&#174;');
 @define('txt_copyright',          '&#169;');
+@define('txt_half',               '&#189;');
+@define('txt_quarter',            '&#188;');
+@define('txt_threequarters',      '&#190;');
+@define('txt_degrees',            '&#176;');
+@define('txt_plusminus',          '&#177;');
 @define('txt_has_unicode',        @preg_match('/\pL/u', 'a')); // Detect if Unicode is compiled into PCRE
 
 class Textile
@@ -412,6 +417,11 @@ class Textile
 			'/(\b ?|\s|^)[([]TM[])]/i',             // trademark
 			'/(\b ?|\s|^)[([]R[])]/i',              // registered
 			'/(\b ?|\s|^)[([]C[])]/i',              // copyright
+			'/(\b ?|\s|^)[([]1\/4[])]/i',           // 1/4
+			'/(\b ?|\s|^)[([]1\/2[])]/i',           // 1/2
+			'/(\b ?|\s|^)[([]3\/4[])]/i',           // 3/2
+			'/(\b ?|\s|^)[([]o[])]/i',              // degrees -- that's a small 'oh'
+			'/(\b ?|\s|^)[([]\+\/-[])]/i',          // plus minus
 		);
 
 		$this->glyph_replace = array(
@@ -430,6 +440,11 @@ class Textile
 			'$1'.txt_trademark,                    // trademark
 			'$1'.txt_registered,                   // registered
 			'$1'.txt_copyright,                    // copyright
+			'$1'.txt_quarter,                      // 1/4
+			'$1'.txt_half,                         // 1/2
+			'$1'.txt_threequarters,                // 3/4
+			'$1'.txt_degrees,                      // degrees
+			'$1'.txt_plusminus,                    // plus minus
 		);
 
 		if (defined('hu'))
