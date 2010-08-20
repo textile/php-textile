@@ -417,11 +417,11 @@ class Textile
 			'/(\b ?|\s|^)[([]TM[])]/i',             // trademark
 			'/(\b ?|\s|^)[([]R[])]/i',              // registered
 			'/(\b ?|\s|^)[([]C[])]/i',              // copyright
-			'/(\b ?|\s|^)[([]1\/4[])]/i',           // 1/4
-			'/(\b ?|\s|^)[([]1\/2[])]/i',           // 1/2
-			'/(\b ?|\s|^)[([]3\/4[])]/i',           // 3/2
-			'/(\b ?|\s|^)[([]o[])]/i',              // degrees -- that's a small 'oh'
-			'/(\b ?|\s|^)[([]\+\/-[])]/i',          // plus minus
+			'/[([]1\/4[])]/',                       // 1/4
+			'/[([]1\/2[])]/',                       // 1/2
+			'/[([]3\/4[])]/',                       // 3/2
+			'/[([]o[])]/',                          // degrees -- that's a small 'oh'
+			'/[([]\+\/-[])]/',                      // plus minus
 		);
 
 		$this->glyph_replace = array(
@@ -440,11 +440,11 @@ class Textile
 			'$1'.txt_trademark,                    // trademark
 			'$1'.txt_registered,                   // registered
 			'$1'.txt_copyright,                    // copyright
-			'$1'.txt_quarter,                      // 1/4
-			'$1'.txt_half,                         // 1/2
-			'$1'.txt_threequarters,                // 3/4
-			'$1'.txt_degrees,                      // degrees
-			'$1'.txt_plusminus,                    // plus minus
+			txt_quarter,                           // 1/4
+			txt_half,                              // 1/2
+			txt_threequarters,                     // 3/4
+			txt_degrees,                           // degrees
+			txt_plusminus,                         // plus minus
 		);
 
 		if (defined('hu'))
@@ -789,7 +789,7 @@ class Textile
 	{
 		return preg_replace_callback('@<(p)([^>]*?)>(.*)(</\1>)@s', array(&$this, 'fPBr'), $in);
 	}
-	
+
 // -------------------------------------------------------------
 	function fPBr($m)
 	{
