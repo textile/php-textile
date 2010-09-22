@@ -1187,11 +1187,11 @@ class Textile
 	function fNoteLists($m)
 	{
 		list(, $att, $start_char, $g_links, $extras) = $m;
-		$index = $g_links.$extras;
+		if( !$start_char ) $start_char = 'a';
+		$index = $g_links.$extras.$start_char;
 
 		if( empty($this->notelist_cache[$index]) ) { # If not in cache, build the entry...
 			$o = array();
-			if( !$start_char ) $start_char = 'a';
 
 			if( !empty($this->notes)) {
 				foreach($this->notes as $seq=>$info) {
