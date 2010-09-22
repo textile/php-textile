@@ -20,7 +20,7 @@ T E X T I L E
 
 A Humane Web Text Generator
 
-Version 2.2 beta
+Version 2.2
 
 Copyright (c) 2003-2004, Dean Allen <dean@textism.com>
 All rights reserved.
@@ -214,6 +214,7 @@ Table syntax:
 
 		|a|simple|table|row|
 		|And|Another|table|row|
+		|With an||empty|cell|
 
 		|=. My table caption goes here
 		|_. A|_. table|_. header|_.row|
@@ -354,7 +355,7 @@ class Textile
 	var $hu = '';
 	var $max_span_depth = 5;
 
-	var $ver = '2.2.0 beta';
+	var $ver = '2.2.0';
 	var $rev = '$Rev: 3359 $';
 
 	var $doc_root;
@@ -695,6 +696,7 @@ class Textile
 			} else $ratts = '';
 
 			$cells = array();
+			$cellctr = 0;
 			foreach(explode("|", $row) as $cell) {
 				$ctyp = "d";
 				if (preg_match("/^_/", $cell)) $ctyp = "h";
@@ -705,8 +707,10 @@ class Textile
 
 				$cell = $this->graf($cell);
 
-				if (trim($cell) != '')
+				if ($cellctr>0) // Ignore first 'cell': it precedes the opening pipe
 					$cells[] = $this->doTagBr("t$ctyp", "\t\t\t<t$ctyp$catts>$cell</t$ctyp>");
+
+				$cellctr++;
 			}
 			$grp = (($rgrp && $last_rgrp) ? "\t</t".$last_rgrp.">\n" : '') . (($rgrp) ? "\t<t".$rgrp.$rgrpatts.">\n" : '');
 			$last_rgrp = ($rgrp) ? $rgrp : $last_rgrp;
