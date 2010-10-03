@@ -1262,7 +1262,8 @@ class Textile
 			"                      # start
 			(' . $this->c . ')     # $atts
 			([^"]+?)               # $text
-			(?:\(([^)]+?)\)(?="))? # $title
+			(?:\(([^)]+?)\)(?=["<]))? # $title
+			(?:\<([^>]+?)\>(?="))? # $rel
 			":
 			('.$this->urlch.'+?)   # $url
 			(\/)?                  # $slash
@@ -1274,9 +1275,10 @@ class Textile
 // -------------------------------------------------------------
 	function fLink($m)
 	{
-		list(, $pre, $atts, $text, $title, $url, $slash, $post, $tail) = $m;
+		list(, $pre, $atts, $text, $title, $rel, $url, $slash, $post, $tail) = $m;
 
 		if( '$' === $text ) $text = $url;
+		if( '!' === $rel  ) $rel = 'nofollow';
 
 		$atts = $this->pba($atts);
 		$atts .= ($title != '') ? ' title="' . $this->encode_html($title) . '"' : '';
@@ -1288,7 +1290,16 @@ class Textile
 		$text = $this->glyphs($text);
 		$url = $this->shelveURL($url.$slash);
 
-		$opentag = '<a href="' . $url . '"' . $atts . $this->rel . '>';
+		if (!empty($rel))
+		{
+			$rel = trim(strip_tags($rel));
+			if ($this->rel)
+				$atts .= preg_replace('/"$/', ' '.$rel.'"', $this->rel);
+			else
+				$atts .= ' rel="' . $rel . '"';
+		}
+
+		$opentag = '<a href="' . $url . '"' . $atts . '>';
 		$closetag = '</a>';
 		$tags = $this->storeTags($opentag, $closetag);
 		$out = $tags['open'].trim($text).$tags['close'];
