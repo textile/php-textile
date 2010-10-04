@@ -1258,16 +1258,16 @@ class Textile
 	function links($text)
 	{
 		return preg_replace_callback('/
-			(^|(?<=[\s>.\(])|[{[]) # $pre
-			"                      # start
-			(' . $this->c . ')     # $atts
-			([^"]+?)               # $text
-			(?:\(([^)]+?)\)(?=["<]))? # $title
-			(?:\<([^>]+?)\>(?="))? # $rel
+			(^|(?<=[\s>.\(])|[{[])    # $pre
+			"                         # start
+			(' . $this->c . ')        # $atts
+			([^"]+?)                  # $text
+			(?:\(([^)]+?)\)(?=["{]))? # $title
+			(?:\{([^>]+?)\}(?="))?    # $rel
 			":
-			('.$this->urlch.'+?)   # $url
-			(\/)?                  # $slash
-			([^\w\/;]*?)           # $post
+			('.$this->urlch.'+?)      # $url
+			(\/)?                     # $slash
+			([^\w\/;]*?)              # $post
 			([\]}]|(?=\s|$|\)))
 		/x', array(&$this, "fLink"), $text);
 	}
