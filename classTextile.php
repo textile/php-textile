@@ -29,6 +29,8 @@ Thanks to Carlo Zottmann <carlo@g-blog.net> for refactoring
 Textile's procedural code into a class framework
 
 Additions and fixes Copyright (c) 2006 Alex Shiels http://thresholdstate.com/
+Additions and fixes Copyright (c) 2010 Stef Dawson http://stefdawson.com/
+Additions and fixes Copyright (c) 2010 Netcarver   http://github.com/netcarver
 
 _____________
 L I C E N S E
