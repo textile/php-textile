@@ -1381,17 +1381,19 @@ class Textile
 	function image($text)
 	{
 		return preg_replace_callback("/
-			(?:[[{])?		   # pre
-			\!				   # opening !
-			(\<|\=|\>)? 	   # optional alignment atts
-			($this->c)		   # optional style,class atts
-			(?:\. )?		   # optional dot-space
-			([^\s(!]+)		   # presume this is the src
-			\s? 			   # optional space
-			(?:\(([^\)]+)\))?  # optional title
-			\!				   # closing
-			(?::(\S+))? 	   # optional href
-			(?:[\]}]|(?=\s|$|\))) # lookahead: space or end of string
+			(?:[[{])?                  # pre
+			\!                         # opening !
+			(\<|\=|\>)?                # optional alignment atts
+			($this->c)                 # optional style,class atts
+			(?:\. )?                   # optional dot-space
+			([^\s(!]+)                 # presume this is the src
+			\s?                        # optional space
+			(?:\(([^\)]+)\))?          # optional title
+			\s?                        # optional space
+			(?:\{([^\}]+)\})?          # optional rel
+			\!                         # closing !
+			(?::(\S+))?                # optional href
+			(?:[\]}]|(?=\s|$|\)))      # lookahead: space or end of string
 		/x", array(&$this, "fImage"), $text);
 	}
 
@@ -1401,18 +1403,21 @@ class Textile
 		list(, $algn, $atts, $url) = $m;
 		$atts  = $this->pba($atts);
 		$atts .= ($algn != '')	? ' align="' . $this->iAlign($algn) . '"' : '';
-		$atts .= (isset($m[4])) ? ' title="' . $m[4] . '"' : '';
-		$atts .= (isset($m[4])) ? ' alt="'	 . $m[4] . '"' : ' alt=""';
+		$atts .= (isset($m[4])) ? ' alt="'   . $m[4] . '"' : ' alt=""';
+		$title = (isset($m[4])) ? ' title="' . $m[4] . '"' : '';
+		$atts = $title . $atts;
+		$rel = (isset($m[5]) && !empty($m[5])) ? ' rel="' . $this->encode_html($m[5]) . '"' : '';
+
 		$size = false;
 		if ($this->isRelUrl($url))
 			$size = @getimagesize(realpath($this->doc_root.ltrim($url, $this->ds)));
 		if ($size) $atts .= " $size[3]";
 
-		$href = (isset($m[5])) ? $this->shelveURL($m[5]) : '';
+		$href = (isset($m[6])) ? $this->shelveURL($m[6]) : '';
 		$url = $this->shelveURL($url);
 
 		$out = array(
-			($href) ? '<a href="' . $href . '">' : '',
+			($href) ? '<a href="' . $href . '"' . $rel .'>' : '',
 			'<img src="' . $url . '"' . $atts . ' />',
 			($href) ? '</a>' : ''
 		);
