@@ -548,6 +548,9 @@ class Textile
 // -------------------------------------------------------------
 	function pba($in, $element = "", $include_id = 1) // "parse block attributes"
 	{
+		if ($this->restricted)
+			return '';
+
 		$style = '';
 		$class = '';
 		$lang = '';
