@@ -546,11 +546,29 @@ class Textile
 	}
 
 // -------------------------------------------------------------
+	function cleanba( $in )
+	{
+	  $tmp    = $in;
+	  $before = -1;
+	  $after  = 0;
+	  while( $after != $before )
+	  {
+  	  $before = strlen( $tmp );
+  	  $tmp    = rawurldecode($tmp);
+	    $after  = strlen( $tmp );
+	  }
+
+		$out = strtr( $tmp, array(
+			'"'=>'',
+			"'"=>'',
+			'='=>'',
+			));
+		return $out;
+	}
+
+// -------------------------------------------------------------
 	function pba($in, $element = "", $include_id = 1) // "parse block attributes"
 	{
-		if ($this->restricted)
-			return '';
-
 		$style = '';
 		$class = '';
 		$lang = '';
@@ -578,12 +596,13 @@ class Textile
 				$matched = str_replace($sty[0], '', $matched);
 			}
 
-			if (preg_match("/\[([^]]+)\]/U", $matched, $lng)) {
+			if (preg_match("/\[([a-zA-Z]{2}(?:\-[a-zA-Z]{2})?)\]/U", $matched, $lng)) {
 				$lang = $lng[1];
 				$matched = str_replace($lng[0], '', $matched);
 			}
 
-			if (preg_match("/\(([^()]+)\)/U", $matched, $cls)) {
+			# Only allow a restricted subset of the CSS standard characters for classes/ids. No encoding markers allowed...
+			if (preg_match("/\(([-a-zA-Z0-9_\.\:\#]+)\)/U", $matched, $cls)) {
 				$class = $cls[1];
 				$matched = str_replace($cls[0], '', $matched);
 			}
@@ -601,7 +620,8 @@ class Textile
 			if (preg_match("/($this->hlgn)/", $matched, $horiz))
 				$style[] = "text-align:" . $this->hAlign($horiz[1]);
 
-			if (preg_match("/^(.*)#(.*)$/", $class, $ids)) {
+      # If a textile class block attribute was found, split it into the css class and css id (if any)...
+			if (preg_match("/^([-a-zA-Z0-9_]*)#([-a-zA-Z0-9_\.\:]*)$/", $class, $ids)) {
 				$id = $ids[2];
 				$class = $ids[1];
 			}
@@ -614,7 +634,7 @@ class Textile
 			}
 
 			if ($this->restricted)
-				return ($lang)	  ? ' lang="'	. $lang . '"':'';
+				return ($lang)	  ? ' lang="'	. $this->cleanba($lang) . '"':'';
 
 			$o = '';
 			if( $style ) {
@@ -630,14 +650,14 @@ class Textile
 			}
 
 			return join('',array(
-				($style)   ? ' style="'   . $style    .'"':'',
-				($class)   ? ' class="'   . $class    .'"':'',
-				($lang)    ? ' lang="'    . $lang     .'"':'',
-				($id and $include_id) ? ' id="' . $id .'"':'',
-				($colspan) ? ' colspan="' . $colspan  .'"':'',
-				($rowspan) ? ' rowspan="' . $rowspan  .'"':'',
-				($span)    ? ' span="'    . $span     .'"':'',
-				($width)   ? ' width="'   . $width    .'"':'',
+				($style)   ? ' style="'   . $this->cleanba($style)    .'"':'',
+				($class)   ? ' class="'   . $this->cleanba($class)    .'"':'',
+				($lang)    ? ' lang="'    . $this->cleanba($lang)     .'"':'',
+				($id and $include_id) ? ' id="' . $this->cleanba($id) .'"':'',
+				($colspan) ? ' colspan="' . $this->cleanba($colspan)  .'"':'',
+				($rowspan) ? ' rowspan="' . $this->cleanba($rowspan)  .'"':'',
+				($span)    ? ' span="'    . $this->cleanba($span)     .'"':'',
+				($width)   ? ' width="'   . $this->cleanba($width)    .'"':'',
 			));
 		}
 		return '';
