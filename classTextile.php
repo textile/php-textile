@@ -923,7 +923,8 @@ class Textile
 					\.[\s]+               #  end of def marker
 					(.*)$                 # !content
 				/x$mod", array(&$this, "fParseNoteDefs"), $content);
-			if( empty($notedef) ) # It will be empty if the regex matched and ate it.
+
+			if( '' === $notedef ) # It will be empty if the regex matched and ate it.
 				return array($o1, $o2, $notedef, $c2, $c1, true);
 			}
 
@@ -1009,6 +1010,7 @@ class Textile
 		$text = $this->footnoteRef($text);
 		$text = $this->noteRef($text);
 		$text = $this->glyphs($text);
+
 		return rtrim($text, "\n");
 	}
 
@@ -1141,7 +1143,6 @@ class Textile
 	function fParseNoteDefs($m)
 	{
 		list(, $label, $link, $att, $content) = $m;
-
 		# Assign an id if the note reference parse hasn't found the label yet.
 		$id = @$this->notes[$label]['id'];
 		if( !$id )
