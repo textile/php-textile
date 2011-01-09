@@ -323,7 +323,7 @@ URLs as non-links :
     <p>&#8220;http://cnn.com(is a website)&#8221;</p>
 
 Self-Hyperlink :
-  notes  : A new feature.
+  notes  : A new feature in v2.2.
   input  : |
     An auto-hyperlink to "$":http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown is -not- possible.
 
@@ -357,11 +357,13 @@ Links :
 
     "link text(with title)":mailto:contact@example.com
 
+    Self-link with no-follow rel "${!}":http://textpattern.com
+
     "(class#id)[de-de]$(title){!}":http://textpattern.com
 
     "(class#id)[en-gb]{text-transform:uppercase}Try this link(Link title){!}":http://textile.sitemonks.com
 
-    "(linkclass#linkid)[de-de]!(imgclass#imgid)imgurl(img/link text)!(Link Title){met friend}":linkurl
+    "(linkclass#linkid)[de-de]!(imgclass#imgid)imgurl(img/link text)!(Link Title){index}":linkurl
 
   expect : |
     <p><a href="http://example.com/">link text</a></p>
@@ -380,11 +382,13 @@ Links :
 
     <p><a href="mailto:contact@example.com" title="with title">link text</a></p>
 
+    <p>Self-link with no-follow rel <a href="http://textpattern.com" rel="nofollow">http://textpattern.com</a></p>
+
     <p><a href="http://textpattern.com" class="class" lang="de-de" id="id" title="title" rel="nofollow">http://textpattern.com</a></p>
 
     <p><a href="http://textile.sitemonks.com" style="text-transform:uppercase;" class="class" lang="en-gb" id="id" title="Link title" rel="nofollow">Try this link</a></p>
 
-    <p><a href="linkurl" class="linkclass" lang="de-de" id="linkid" title="Link Title" rel="met friend"><img src="imgurl" title="img/link text" class="imgclass" id="imgid" alt="img/link text" /></a></p>
+    <p><a href="linkurl" class="linkclass" lang="de-de" id="linkid" title="Link Title" rel="index"><img src="imgurl" title="img/link text" class="imgclass" id="imgid" alt="img/link text" /></a></p>
 
 Mixed XHTML and Textile Links :
   assert : skip
