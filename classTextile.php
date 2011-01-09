@@ -1346,7 +1346,7 @@ class Textile
 // -------------------------------------------------------------
 	function shelveURL($text)
 	{
-		if (!$text) return '';
+		if ('' === $text) return '';
 		$ref = md5($text);
 		$this->urlshelf[$ref] = $text;
 		return 'urlref:'.$ref;
