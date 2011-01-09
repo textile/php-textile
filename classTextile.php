@@ -1298,6 +1298,8 @@ class Textile
 			else
 				$atts .= ' rel="' . $rel . '"';
 		}
+		elseif( !empty( $this->rel ) )
+		  $atts .= $this->rel;
 
 		$opentag = '<a href="' . $url . '"' . $atts . '>';
 		$closetag = '</a>';
