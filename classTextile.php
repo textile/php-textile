@@ -111,14 +111,19 @@ Phrase modifier syntax:
 
 		==notextile==	->	 leave text alone (do not format)
 
-	   "linktext":url	->	 <a href="url">linktext</a>
- "linktext(title)":url	->	 <a href="url" title="title">linktext</a>
+	      "linktext":url	 ->	 <a href="url">linktext</a>
+   "linktext(title)":url	->	 <a href="url" title="title">linktext</a>
+"linktext(title){rel}":url	->	 <a href="url" title="title" rel="rel" >linktext</a>
+ "linktext(title){!}":url	->	 <a href="url" title="title" rel="nofollow" >linktext</a>
             "$":url  ->  <a href="url">url</a>
      "$(title)":url  ->  <a href="url" title="title">url</a>
 
 		   !imageurl!	->	 <img src="imageurl" />
 	!imageurl(alt text)!	->	 <img src="imageurl" alt="alt text" />
 	!imageurl!:linkurl	->	 <a href="linkurl"><img src="imageurl" /></a>
+
+"!imageurl(alt text)!(title){rel}":linkurl -> 
+                     <a href="linkurl" title="title" rel="rel"><img src="imageurl" /></a>
 
 ABC(Always Be Closing)	->	 <acronym title="Always Be Closing">ABC</acronym>
 
