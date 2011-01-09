@@ -688,13 +688,15 @@ class Textile
 		$sum = trim($matches[2]) ? ' summary="'.htmlspecialchars(trim($matches[2])).'"' : '';
 		$cap = '';
 		$colgrp = $last_rgrp = '';
+		$c_row = 1;
 		foreach(preg_split("/\|\s*?$/m", $matches[3], -1, PREG_SPLIT_NO_EMPTY) as $row) {
-			// Caption
-			if (preg_match("/^\|\=($this->s$this->a$this->c)\. ([^\|\n]*)(.*)/s", ltrim($row), $cmtch)) {
+			// Caption -- can only occur on row 1, otherwise treat '|=. foo |...' as a normal center-aligned cell.
+			if ( ($c_row <= 1) && preg_match("/^\|\=($this->s$this->a$this->c)\. ([^\|\n]*)(.*)/s", ltrim($row), $cmtch)) {
 				$capts = $this->pba($cmtch[1]);
 				$cap = "\t<caption".$capts.">".trim($cmtch[2])."</caption>\n";
 				$row = $cmtch[3];
 			}
+			$c_row += 1;
 
 			// Colgroup
 			if (preg_match("/^\|:($this->s$this->a$this->c\. .*)/m", ltrim($row), $gmtch)) {
