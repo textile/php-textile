@@ -690,8 +690,8 @@ class Textile
 		$colgrp = $last_rgrp = '';
 		$c_row = 1;
 		foreach(preg_split("/\|\s*?$/m", $matches[3], -1, PREG_SPLIT_NO_EMPTY) as $row) {
-			// Caption -- can only occur on row 1 or row 2, otherwise treat '|=. foo |' as a normal center-aligned cell.
-			if ( ($c_row <= 2) && preg_match("/^\|\=($this->s$this->a$this->c)\. ([^\|\n]*)(.*)/s", ltrim($row), $cmtch)) {
+			// Caption -- can only occur on row 1, otherwise treat '|=. foo |...' as a normal center-aligned cell.
+			if ( ($c_row <= 1) && preg_match("/^\|\=($this->s$this->a$this->c)\. ([^\|\n]*)(.*)/s", ltrim($row), $cmtch)) {
 				$capts = $this->pba($cmtch[1]);
 				$cap = "\t<caption".$capts.">".trim($cmtch[2])."</caption>\n";
 				$row = $cmtch[3];
