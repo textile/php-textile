@@ -362,6 +362,9 @@ class Textile
 
 	var $doc_root;
 
+	var $block_handlers = array();
+
+
 // -------------------------------------------------------------
 	function Textile()
 	{
@@ -384,6 +387,7 @@ class Textile
 		$this->url_schemes = array('http','https','ftp','mailto');
 
 		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', '###' );
+		$this->btag = array('bq', 'h[1-6]', 'fn\d+', 'p'  );
 
 		if (txt_has_unicode) {
 			$this->regex_snippets = array(
@@ -546,6 +550,20 @@ class Textile
 	}
 
 // -------------------------------------------------------------
+
+	function RegisterBlockHandler( $block, $callback )
+	{
+		if( !is_string( $block ) || '' === $block )
+			return false;
+		$tmp = @$this->block_handlers[$block];
+		if( isset($tmp) && is_callable( $tmp ) )
+		  return false;
+		$this->block_handlers[$block] = $callback;
+		return true;
+	}
+
+// -------------------------------------------------------------
+
 	function cleanba( $in )
 	{
 	  $tmp    = $in;
@@ -841,7 +859,17 @@ class Textile
 	function block($text)
 	{
 		$find = $this->btag;
-		$tre = join('|', $find);
+
+		if( $this->lite === '' ) {
+			$this->RegisterBlockHandler( '###', 			array( $this, '_comment_block_handler' ) );
+			$this->RegisterBlockHandler( 'pre', 			array( $this, '_pre_block_handler' ) );
+			$this->RegisterBlockHandler( 'notextile', array( $this, '_notextile_block_handler' ) );
+			$this->RegisterBlockHandler( 'bc', 				array( $this, '_bc_block_handler' ) );
+			$this->RegisterBlockHandler( 'hr', 				array( $this, '_hr_block_handler' ) );
+			$this->RegisterBlockHandler( 'section',   null );	# Register "section." as a simple wrapper (just like a p block)
+			$find = array_merge( $find, array_keys( $this->block_handlers ) );
+		}
+		$tre  = join('|', $find);
 
 		$text = explode("\n\n", $text);
 
@@ -950,7 +978,7 @@ class Textile
 			$content = $sup . ' ' . $content;
 		}
 
-		if ($tag == "bq") {
+		if ($tag == "bq") {	# bq. still handled here as it's used in lite mode (where we won't be loading plugin handlers)
 			$cite = $this->shelveURL($cite);
 			$cite = ($cite != '') ? ' cite="' . $cite . '"' : '';
 			$o1 = "\t<blockquote$cite$atts>\n";
@@ -958,30 +986,15 @@ class Textile
 			$c2 = "</p>";
 			$c1 = "\n\t</blockquote>";
 		}
-		elseif ($tag == 'bc') {
-			$o1 = "<pre$atts>";
-			$o2 = "<code".$this->pba($att, '', 0).">";
-			$c2 = "</code>";
-			$c1 = "</pre>";
-			$content = $this->shelve($this->r_encode_html(rtrim($content, "\n")."\n"));
-		}
-		elseif ($tag == 'notextile') {
-			$content = $this->shelve($content);
-			$o1 = $o2 = '';
-			$c1 = $c2 = '';
-		}
-		elseif ($tag == 'pre') {
-			$content = $this->shelve($this->r_encode_html(rtrim($content, "\n")."\n"));
-			$o1 = "<pre$atts>";
-			$o2 = $c2 = '';
-			$c1 = "</pre>";
-		}
-		elseif ($tag == '###') {
-			$eat = true;
-		}
 		else {
-			$o2 = "\t<$tag$atts>";
-			$c2 = "</$tag>";
+			if( ($this->lite === '') && array_key_exists( $tag, $this->block_handlers ) && is_callable($this->block_handlers[$tag]) ) {
+				# Pass control to the installed block handler...
+				list( $o1, $o2, $content, $c2, $c1, $eat ) = call_user_func( $this->block_handlers[$tag], $this, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat );
+			}
+			else {
+				$o2 = "\t<$tag$atts>";
+				$c2 = "</$tag>";
+			}
 		}
 
 		$content = (!$eat) ? $this->graf($content) : '';
@@ -990,6 +1003,78 @@ class Textile
 	}
 
 // -------------------------------------------------------------
+
+	function _hr_block_handler( $textile, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat )
+	{
+		if( $tag === 'hr' ) 
+		{
+      $o1 = "<hr$atts";
+      $c1 = ' />';
+			$o2 = $c2 = '';
+			$content = rtrim( $content );
+      if( $content !== '' )
+      {
+        $o2 = ' title="';
+        $c2 = '"';
+        $content = $textile->shelve($textile->r_encode_html($content));
+      }
+		}
+		return array($o1, $o2, $content, $c2, $c1, $eat);
+	}
+
+// -------------------------------------------------------------
+
+	function _comment_block_handler( $textile, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat )
+	{
+		if( $tag !== '###' ) 
+			return array( $o1, $o2, $content, $c2, $c1, $eat );
+		return array( '', '', $content, '', '', true );
+	}
+
+// -------------------------------------------------------------
+
+	function _bc_block_handler( $textile, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat )
+	{
+		if( $tag === 'bc' ) 
+		{
+			$o1 = "<pre$atts>";
+			$o2 = "<code".$textile->pba($att, '', 0).">";
+			$c2 = "</code>";
+			$c1 = "</pre>";
+			$content = $textile->shelve($textile->r_encode_html(rtrim($content, "\n")."\n"));
+		}
+		return array($o1, $o2, $content, $c2, $c1, $eat);
+	}
+
+// -------------------------------------------------------------
+
+	function _notextile_block_handler( $textile, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat )
+	{
+		if( $tag === 'notextile' )
+		{
+			$content = $textile->shelve($content);
+			$o1 = $o2 = '';
+			$c1 = $c2 = '';
+		}
+		return array($o1, $o2, $content, $c2, $c1, $eat);
+	}
+
+// -------------------------------------------------------------
+
+	function _pre_block_handler( $textile, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat )
+	{
+		if( $tag === 'pre' )
+		{
+			$content = $textile->shelve($textile->r_encode_html(rtrim($content, "\n")."\n"));
+			$o1 = "<pre$atts>";
+			$o2 = $c2 = '';
+			$c1 = "</pre>";
+		}
+		return array($o1, $o2, $content, $c2, $c1, $eat);
+	}
+
+// -------------------------------------------------------------
+
 	function graf($text)
 	{
 		// handle normal paragraph text

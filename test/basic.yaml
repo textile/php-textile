@@ -163,11 +163,54 @@ Dashes & Elipsis:
 
     <p>You know the Italian proverb&#8230;Chi ha compagno ha padrone.</p>
 
-Notextile - in-line :
+Notextile :
   input  : |
     ==*no* <b>textile</b>==
+
+    notextile. Do **NOT** textilize this.
   expect : |
     <p>*no* <b>textile</b></p>
+
+    Do **NOT** textilize this.
+
+HTML5 - Section :
+  notes : Should wrap the block just like a 'p.' element.
+  input :  |
+    section. Here is my text.
+
+    section(class#id)[en]. Here is my text.
+
+  expect : |
+    <section>Here is my text.</section>
+
+    <section class="class" lang="en" id="id">Here is my text.</section>
+
+Pre Blocks :
+  input  : |
+    pre. Here is some
+    pre-formatted text.
+
+    pre. Do *not* change __me__ please.
+
+  expect : |
+    <pre>Here is some
+    pre-formatted text.
+    </pre>
+
+    <pre>Do *not* change __me__ please.
+    </pre>
+
+hr. Block Handler :
+  notes : An empty hr. needs a space after it to work.
+  input :  |
+    hr. ``
+
+    hr(myclass){margin:10px}. some text
+
+  expect: |
+    <hr />
+
+    <hr style="margin:10px;" class="myclass" title="some text" />
 
 Headers 1-6 :
   input  : |
