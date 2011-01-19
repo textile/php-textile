@@ -407,7 +407,6 @@ class Textile
 
 		$this->url_schemes = array('http','https','ftp','mailto');
 
-		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', '###' );
 		$this->btag = array('bq', 'h[1-6]', 'fn\d+', 'p'  );
 
 		if (txt_has_unicode) {
