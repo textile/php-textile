@@ -236,23 +236,27 @@ Table syntax:
 
 	Column groups:
 
-		|:\3. 100
+		|:\3. 100|
 
 		Becomes:
 			<colgroup span="3" width="100"></colgroup>
 
-		You can omit either of the \N or width values. You may also
-		add cells after the colgroup definition to specify span/width/attributes:
+		You can omit either or both of the \N or width values. You may also
+		add cells after the colgroup definition to specify col elements with
+		span, width, or standard Textile attributes:
 
-		|:\5. 50 |(firstcol). |\2. 250||300|
+		|:. 50|(firstcol). |\2. 250||300|
 
 		Becomes:
-			<colgroup span="5" width="50">
+			<colgroup width="50">
 				<col class="firstcol" />
 				<col span="2" width="250" />
 				<col />
 				<col width="300" />
 			</colgroup>
+		
+		(Note that, per the HTML specification, you should not add span
+		to the colgroup if specifying col elements.)
 
 Applying Attributes:
 
