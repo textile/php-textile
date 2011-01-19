@@ -1,0 +1,38 @@
+Extending Textile
+=================
+
+You can add your own block handers to textile by writing php implementations 
+and making your files available in the 'textplugs-enabled' directory (or 
+where-ever you have defined the directory to be.)
+
+The distribution has some example textplugs in the 'textplugs-available' 
+directory. You don't have to use any of these textplugs but you can if you want.
+
+
+Enabling textplug extensions
+----------------------------
+
+To enable a textplug, either...
+
+  * Copy it, preserving the filename, to the 'textplugs-enabled' directory 
+
+	--or--
+
+	* Create a symlink in 'textplugs-enabled' with exactly the same name as the 
+	  source file.
+
+
+Naming your textplug files
+--------------------------
+
+If you write a new textplug then your file name must follow a string filename 
+convention.
+
+{plugname}.textplug.php
+
+Where {plugname} is definable by the textplug author but, in the case of 
+block-level textplugs, this should match the name of the block being added.
+
+The php file is included just once and should call Textile::RegisterBlockHandler() 
+to get the handler(s) they implement registered with Textile.
+

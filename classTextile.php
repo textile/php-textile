@@ -313,7 +313,17 @@ Extending Textile
 =================
 
 You can add your own block handers to textile by writing php implementations and 
-saving the files into the textplug directory (or where-ever you have defined the directory to be.)
+making your files available in the 'textplugs-enabled' directory (or where-ever you have defined the directory to be.)
+
+The distribution has some example textplugs in the 'textplugs-available' directory. You don't have to use any of these textplugs but you can if you want.
+
+To enable a textplug, either...
+
+  * Copy it, preserving the filename, to the 'textplugs-enabled' directory  --or--
+	* Create a symlink in 'textplugs-enabled' with exactly the same name as the source file.
+
+
+Naming textplug files.
 
 Each textplug must follow a string filename convention.
 
