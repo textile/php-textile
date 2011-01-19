@@ -312,16 +312,24 @@ Applying Attributes:
 Extending Textile
 =================
 
-You can add your own block handers to textile by writing php implementations 
-and making your files available in the 'textplugs-enabled' directory (or 
-where-ever you have defined the directory to be.)
+Textile can be extended through the use of textile-plugins called *textplugs*.
 
-The distribution has some example textplugs in the 'textplugs-available' 
+You can add your own textplugs to textile by writing php implementations 
+and making your files available in the 'textplugs-enabled' directory or 
+where-ever you define the directory to be in the 'txt_plugin_directory' define.
+
+We recommend having classTextile.php and it's support directories outside of your 
+site root folder if at all possible.
+
+The standard distribution has some example textplugs in the 'textplugs-available' 
 directory. You don't have to use any of these textplugs but you can if you want.
 
+|-- textplugs-available                 (holds officially maintained textplugs)
+            |-- external             (holds non-maintained, example, textplugs)
 
-Enabling textplug extensions
-----------------------------
+
+Enabling textplugs
+------------------
 
 To enable a textplug, either...
 
@@ -329,8 +337,11 @@ To enable a textplug, either...
 
 	--or--
 
-  * Create a symlink in 'textplugs-enabled' with exactly the same name as the 
-    source file.
+  * Create a symlink to it in 'textplugs-enabled' with exactly the same name as 
+    the source file.
+
+If you change the txt_plugin_directory define from the default location use 
+your prefered location for the copy-or-link actions.
 
 
 Naming your textplug files
@@ -349,8 +360,7 @@ to get the handler(s) they implement registered with Textile.
 
 */
 
-// define the textplugs directory...
-@define('txt_plugin_directory',   'textplugs-enabled'); # I recommend having classTextile.php and it's support directories outside of your site root folder.
+@define('txt_plugin_directory',   'textplugs-enabled'); 
 
 // define these before including this file to override the standard glyphs
 @define('txt_quote_single_open',  '&#8216;');
