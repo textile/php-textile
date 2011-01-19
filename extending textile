@@ -18,8 +18,8 @@ To enable a textplug, either...
 
 	--or--
 
-	* Create a symlink in 'textplugs-enabled' with exactly the same name as the 
-	  source file.
+  * Create a symlink in 'textplugs-enabled' with exactly the same name as the 
+    source file.
 
 
 Naming your textplug files
