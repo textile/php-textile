@@ -308,7 +308,26 @@ Applying Attributes:
 		It goes like this, %{color:red}the fourth the fifth%
 			  -> It goes like this, <span style="color:red">the fourth the fifth</span>
 
+
+Extending Textile
+=================
+
+You can add your own block handers to textile by writing php implementations and 
+saving the files into the textplug directory (or where-ever you have defined the directory to be.)
+
+Each textplug must follow a string filename convention.
+
+{plugname}.textplug.php
+
+Where {plugname} is definable by the textplug author but, in the case of block-level textplugs, this should
+match the name of the block being added.
+
+The php file is included once and should call Textile::RegisterBlockHandler() to get the included handler(s) registered with Textile.
+
 */
+
+// define the textplugs directory...
+@define('txt_plugin_directory',   'textplugs'); # I recommend having classTextile.php and it's support directories outside of your site root folder.
 
 // define these before including this file to override the standard glyphs
 @define('txt_quote_single_open',  '&#8216;');
@@ -331,6 +350,8 @@ Applying Attributes:
 @define('txt_degrees',            '&#176;');
 @define('txt_plusminus',          '&#177;');
 @define('txt_has_unicode',        @preg_match('/\pL/u', 'a')); // Detect if Unicode is compiled into PCRE
+
+class TextileProgrammerException extends Exception {};
 
 class Textile
 {
@@ -362,8 +383,8 @@ class Textile
 
 	var $doc_root;
 
-	var $block_handlers = array();
-
+	static protected $block_handlers = array();
+	
 
 // -------------------------------------------------------------
 	function Textile()
@@ -467,6 +488,68 @@ class Textile
 			$this->doc_root = @$_SERVER['PATH_TRANSLATED']; // IIS
 
 		$this->doc_root = rtrim($this->doc_root, $this->ds).$this->ds;
+
+	}
+
+// -------------------------------------------------------------
+
+  /**
+	 *	Loads all textile plugins of the given type in non-lite modes. Plugins are loaded from the textplug directory.
+	 */
+	protected function LoadTextplugs( $quiet=true )
+	{
+		if( $this->lite )
+			return;
+
+		$cwd = getcwd();
+		$textplugs = txt_plugin_directory;
+
+		if (!is_dir($textplugs)) {
+		  if(!$quiet)
+				throw new TextileProgrammerException ( "Textplug location '{$textplugs}' is not a directory (or doesn't exist.)" );
+			else
+			  return;
+		}
+		elseif( !is_readable($textplugs)) {
+		  if(!$quiet)
+				throw new TextileProgrammerException ( "Textplug directory '{$textplugs}' is not readable." );
+			else
+			  return;
+		}
+
+		if( !chdir($textplugs) ) {
+		  if(!$quiet)
+				throw new TextileProgrammerException( "Couldn't chdir to '{$textplugs}'." );
+			return;
+		}
+
+		if(!$quiet) $this->dump("Textplug directory '$textplugs'");
+
+		foreach (glob("*.textplug.php") as $textplug) {
+		  if(!$quiet) $this->dump( "Loading textplug '$textplug'..." );
+			$current_config = include_once($textplug);
+		}
+
+		chdir($cwd);
+	}
+
+// -------------------------------------------------------------
+
+  /**
+	 *	Plugins can call this (statically) to register new blocks and the
+	 * callback handlers for them.
+	 *
+	 * @example: Textile::RegisterBlockHandler( 'hr', '_textile_hr_block_handler' );
+	 */
+	static public function RegisterBlockHandler( $block, $callback )
+	{
+		if( !is_string( $block ) || '' === $block )
+			return false;
+		$tmp = @self::$block_handlers[$block];
+		if( isset($tmp) && is_callable( $tmp ) )
+		  return false;
+		self::$block_handlers[$block] = $callback;
+		return true;
 	}
 
 // -------------------------------------------------------------
@@ -481,6 +564,10 @@ class Textile
 
 		$this->lite = $lite;
 		$this->noimage = $noimage;
+
+		if( !$lite ) {
+			$this->LoadTextplugs();
+		}
 
 		if ($encode)
 		{
@@ -547,19 +634,6 @@ class Textile
 		$text = str_replace("<br />", "<br />\n", $text);
 
 		return $text;
-	}
-
-// -------------------------------------------------------------
-
-	function RegisterBlockHandler( $block, $callback )
-	{
-		if( !is_string( $block ) || '' === $block )
-			return false;
-		$tmp = @$this->block_handlers[$block];
-		if( isset($tmp) && is_callable( $tmp ) )
-		  return false;
-		$this->block_handlers[$block] = $callback;
-		return true;
 	}
 
 // -------------------------------------------------------------
@@ -861,13 +935,12 @@ class Textile
 		$find = $this->btag;
 
 		if( $this->lite === '' ) {
-			$this->RegisterBlockHandler( '###', 			array( $this, '_comment_block_handler' ) );
-			$this->RegisterBlockHandler( 'pre', 			array( $this, '_pre_block_handler' ) );
-			$this->RegisterBlockHandler( 'notextile', array( $this, '_notextile_block_handler' ) );
-			$this->RegisterBlockHandler( 'bc', 				array( $this, '_bc_block_handler' ) );
-			$this->RegisterBlockHandler( 'hr', 				array( $this, '_hr_block_handler' ) );
-			$this->RegisterBlockHandler( 'section',   null );	# Register "section." as a simple wrapper (just like a p block)
-			$find = array_merge( $find, array_keys( $this->block_handlers ) );
+			self::RegisterBlockHandler( '###', 			 'Textile::_comment_block_handler' );
+			self::RegisterBlockHandler( 'pre', 			 'Textile::_pre_block_handler' );
+			self::RegisterBlockHandler( 'notextile', 'Textile::_notextile_block_handler');
+			self::RegisterBlockHandler( 'bc', 			 'Textile::_bc_block_handler');
+			self::RegisterBlockHandler( 'section',   null );	# Register "section." as a simple wrapper (just like a p block)
+			$find = array_merge( $find, array_keys( self::$block_handlers ) );
 		}
 		$tre  = join('|', $find);
 
@@ -987,9 +1060,9 @@ class Textile
 			$c1 = "\n\t</blockquote>";
 		}
 		else {
-			if( ($this->lite === '') && array_key_exists( $tag, $this->block_handlers ) && is_callable($this->block_handlers[$tag]) ) {
+			if( ($this->lite === '') && array_key_exists( $tag, self::$block_handlers ) && is_callable(self::$block_handlers[$tag]) ) {
 				# Pass control to the installed block handler...
-				list( $o1, $o2, $content, $c2, $c1, $eat ) = call_user_func( $this->block_handlers[$tag], $this, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat );
+				list( $o1, $o2, $content, $c2, $c1, $eat ) = call_user_func( self::$block_handlers[$tag], $this, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat );
 			}
 			else {
 				$o2 = "\t<$tag$atts>";
@@ -1004,27 +1077,7 @@ class Textile
 
 // -------------------------------------------------------------
 
-	function _hr_block_handler( $textile, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat )
-	{
-		if( $tag === 'hr' ) 
-		{
-      $o1 = "<hr$atts";
-      $c1 = ' />';
-			$o2 = $c2 = '';
-			$content = rtrim( $content );
-      if( $content !== '' )
-      {
-        $o2 = ' title="';
-        $c2 = '"';
-        $content = $textile->shelve($textile->r_encode_html($content));
-      }
-		}
-		return array($o1, $o2, $content, $c2, $c1, $eat);
-	}
-
-// -------------------------------------------------------------
-
-	function _comment_block_handler( $textile, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat )
+	static protected function _comment_block_handler( $textile, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat )
 	{
 		if( $tag !== '###' ) 
 			return array( $o1, $o2, $content, $c2, $c1, $eat );
@@ -1033,7 +1086,7 @@ class Textile
 
 // -------------------------------------------------------------
 
-	function _bc_block_handler( $textile, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat )
+	static protected function _bc_block_handler( $textile, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat )
 	{
 		if( $tag === 'bc' ) 
 		{
@@ -1048,7 +1101,7 @@ class Textile
 
 // -------------------------------------------------------------
 
-	function _notextile_block_handler( $textile, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat )
+	static protected function _notextile_block_handler( $textile, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat )
 	{
 		if( $tag === 'notextile' )
 		{
@@ -1061,7 +1114,7 @@ class Textile
 
 // -------------------------------------------------------------
 
-	function _pre_block_handler( $textile, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat )
+	static protected function _pre_block_handler( $textile, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat )
 	{
 		if( $tag === 'pre' )
 		{
