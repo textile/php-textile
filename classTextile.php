@@ -939,7 +939,6 @@ class Textile
 			self::RegisterBlockHandler( 'pre', 			 'Textile::_pre_block_handler' );
 			self::RegisterBlockHandler( 'notextile', 'Textile::_notextile_block_handler');
 			self::RegisterBlockHandler( 'bc', 			 'Textile::_bc_block_handler');
-			self::RegisterBlockHandler( 'section',   null );	# Register "section." as a simple wrapper (just like a p block)
 			$find = array_merge( $find, array_keys( self::$block_handlers ) );
 		}
 		$tre  = join('|', $find);
