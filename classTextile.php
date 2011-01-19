@@ -327,7 +327,7 @@ The php file is included once and should call Textile::RegisterBlockHandler() to
 */
 
 // define the textplugs directory...
-@define('txt_plugin_directory',   'textplugs'); # I recommend having classTextile.php and it's support directories outside of your site root folder.
+@define('txt_plugin_directory',   'textplugs-enabled'); # I recommend having classTextile.php and it's support directories outside of your site root folder.
 
 // define these before including this file to override the standard glyphs
 @define('txt_quote_single_open',  '&#8216;');
