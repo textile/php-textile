@@ -795,7 +795,7 @@ Table alignments:
     |<. align left |
     |>. align right|
     |=. center |
-    |<>. justify |
+    |<>. justify me|
     |^. valign top |
     |~. bottom |
   expect: |
@@ -813,13 +813,101 @@ Table alignments:
     <td style="text-align:center;">center </td>
     </tr>
     <tr>
-    <td style="text-align:justify;">justify </td>
+    <td style="text-align:justify;">justify me</td>
     </tr>
     <tr>
     <td style="vertical-align:top;">valign top </td>
     </tr>
     <tr>
     <td style="vertical-align:bottom;">bottom </td>
+    </tr>
+    </table>
+
+Table colgroups:
+  input  : |
+    |=. Testing colgroup and col syntax
+    |:\5. 80|
+    |a|b|c|d|e|
+
+    |=. Testing colgroup and col syntax
+    |:\5. 80
+    |a|b|c|d|e|
+
+    |=. Testing colgroup and col syntax
+    |:\5. 80``
+    |a|b|c|d|e|
+
+    |=. Testing colgroup and col syntax
+    |:\5. 80``|
+    |a|b|c|d|e|
+
+    |=. Testing colgroup and col syntax``
+    |:\5. 80``|``
+    |a|b|c|d|e|``
+
+  expect : |
+    <table>
+    <caption>Testing colgroup and col syntax</caption>
+    <colgroup span="5" width="80">
+    </colgroup>
+    <tr>
+    <td>a</td>
+    <td>b</td>
+    <td>c</td>
+    <td>d</td>
+    <td>e</td>
+    </tr>
+    </table>
+
+    <table>
+    <caption>Testing colgroup and col syntax</caption>
+    <colgroup span="5" width="80">
+    </colgroup>
+    <tr>
+    <td>a</td>
+    <td>b</td>
+    <td>c</td>
+    <td>d</td>
+    <td>e</td>
+    </tr>
+    </table>
+
+    <table>
+    <caption>Testing colgroup and col syntax</caption>
+    <colgroup span="5" width="80">
+    </colgroup>
+    <tr>
+    <td>a</td>
+    <td>b</td>
+    <td>c</td>
+    <td>d</td>
+    <td>e</td>
+    </tr>
+    </table>
+
+    <table>
+    <caption>Testing colgroup and col syntax</caption>
+    <colgroup span="5" width="80">
+    </colgroup>
+    <tr>
+    <td>a</td>
+    <td>b</td>
+    <td>c</td>
+    <td>d</td>
+    <td>e</td>
+    </tr>
+    </table>
+
+    <table>
+    <caption>Testing colgroup and col syntax</caption>
+    <colgroup span="5" width="80">
+    </colgroup>
+    <tr>
+    <td>a</td>
+    <td>b</td>
+    <td>c</td>
+    <td>d</td>
+    <td>e</td>
     </tr>
     </table>
 
