@@ -84,17 +84,17 @@ Block modifier syntax:
 	Example: fn1. Footnote... -> <p id="fn1">Footnote...</p>
 
 	Numeric list: #, ##
-	Consecutive paragraphs beginning with # are wrapped in ordered list tags.
+	Consecutive lines beginning with # are wrapped in ordered list tags.
 	Example: <ol><li>ordered list</li></ol>
 
 	Bulleted list: *, **
-	Consecutive paragraphs beginning with * are wrapped in unordered list tags.
+	Consecutive lines beginning with * are wrapped in unordered list tags.
 	Example: <ul><li>unordered list</li></ul>
 
 	Definition list:
 		Terms ;, ;;
 		Definitions :, ::
-	Consecutive paragraphs beginning with ; or : are wrapped in definition list tags.
+	Consecutive lines beginning with ; or : are wrapped in definition list tags.
 	Example: <dl><dt>term</dt><dd>definition</dd></dl>
 
 Phrase modifier syntax:
@@ -104,22 +104,22 @@ Phrase modifier syntax:
 			 *strong*	->	 <strong>strong</strong>
 			 **bold**	->	 <b>bold</b>
 		 ??citation??	->	 <cite>citation</cite>
-	   -deleted text-	->	 <del>deleted</del>
-	  +inserted text+	->	 <ins>inserted</ins>
+	   -deleted text-	->	 <del>deleted text</del>
+	  +inserted text+	->	 <ins>inserted text</ins>
 		^superscript^	->	 <sup>superscript</sup>
 		  ~subscript~	->	 <sub>subscript</sub>
-			   @code@	->	 <code>computer code</code>
+	  @computer code@	->	 <code>computer code</code>
 		  %(bob)span%	->	 <span class="bob">span</span>
 
-		==notextile==	->	 leave text alone (do not format)
+ ==textile disabled==	->	 textile disabled
 
 	   "linktext":url	->	 <a href="url">linktext</a>
- "linktext(title)":url	->	 <a href="url" title="title">linktext</a>
-            "$":url  ->  <a href="url">url</a>
-     "$(title)":url  ->  <a href="url" title="title">url</a>
+"linktext(title)":url	->	 <a href="url" title="title">linktext</a>
+			  "$":url	->   <a href="url">url</a>
+       "$(title)":url  	->   <a href="url" title="title">url</a>
 
 		   !imageurl!	->	 <img src="imageurl" />
-	!imageurl(alt text)!	->	 <img src="imageurl" alt="alt text" />
+ !imageurl(alt text)!	->	 <img src="imageurl" alt="alt text" />
 	!imageurl!:linkurl	->	 <a href="linkurl"><img src="imageurl" /></a>
 
 ABC(Always Be Closing)	->	 <acronym title="Always Be Closing">ABC</acronym>
