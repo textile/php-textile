@@ -78,6 +78,13 @@ _________
 U S A G E
 
 Block modifier syntax:
+	
+	General notes:
+	* Blocks (other than list items) must be separated by a blank line.
+	* A block identifier must begin its line (no white space beforehand), and,
+	  except for list items, be followed by a dot and a space.
+	* A block identifier followed by two dots (and a space) is an extended block.
+	  It will continue, spanning blank lines, until the next block identifier.
 
 	Header: h(1-6).
 	Paragraphs beginning with 'hn. ' (where n is 1-6) are wrapped in header tags.
