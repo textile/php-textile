@@ -61,6 +61,19 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
+_______________
+O V E R V I E W
+
+Textile consists of two components: a lightweight markup language, and a
+processor for converting that language into XHTML.
+
+Textile, the language, is a simple shorthand for marking up the most common
+XHTML elements and entities. It is designed to be easy to edit and read in plain
+text, while offering a versatile feature set.
+
+Textile, the processor, has been ported from the original PHP to several other
+programming languages. This is the PHP version of Textile.
+
 _________
 U S A G E
 
