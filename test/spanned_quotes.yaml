@@ -1,0 +1,45 @@
+adaptor: textile
+options:
+  showfailures: true
+  showpasses: true
+  showdiffs: true
+  debug: false
+  format: html
+  adaptor_options:
+    restricted: false
+
+Non-English Punctuation and spans:
+  notes  : Should be able to span around non-English quotes...
+  input  : |
+    ‹abc›
+
+    *‹abc›*
+
+    «abc»
+
+    _«abc»_
+
+    p{font-size:160%}. [*xyz*][^«_abc_»^]
+
+    %[fr-fr]« abc »%
+
+    p{font-size:160%}. „_abc_“
+
+    p{font-size:160%}. ‚**abc**‘
+
+  expect : |
+    <p>‹abc›</p>
+
+    <p><strong>‹abc›</strong></p>
+
+    <p>«abc»</p>
+
+    <p><em>«abc»</em></p>
+
+    <p style="font-size:160%;"><strong>xyz</strong><sup>«<em>abc</em>»</sup></p>
+
+    <p><span lang="fr-fr">« abc »</span></p>
+
+    <p style="font-size:160%;">„<em>abc</em>“</p>
+
+    <p style="font-size:160%;">‚<b>abc</b>‘</p>
