@@ -116,6 +116,23 @@ Block modifier syntax:
 		Definitions :, ::
 	Consecutive lines beginning with ; or : are wrapped in definition list tags.
 	Example: <dl><dt>term</dt><dd>definition</dd></dl>
+	
+	Preformatted text: pre.
+	Block code: bc.
+	Both types create a <pre> block, and convert all special characters to HTML entities.
+	Examples: 
+		pre. <html> -> <pre>&lt;html&gt;</pre>
+		bc. $text->TextileThis(... -> <pre><code>$text-&gt;TextileThis(...</code></pre>
+	
+	Block with Textile disabled: notextile.
+	Example: notextile. Textile automatically converts '&' to '&amp;', but not here.
+	
+	Textile partially disabled:
+	A block beginning with whitespace will not be converted to a block element, but will
+	still undergo phrase modifier and entity conversion
+	
+	Comment: ###.
+	Example: ###. This is a comment block. It will not appear in the XHTML output.
 
 Phrase modifier syntax:
 
