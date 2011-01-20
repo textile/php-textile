@@ -694,16 +694,20 @@ class Textile
 		$colgrp = $last_rgrp = '';
 		$c_row = 1;
 		foreach(preg_split("/\|\s*?$/m", $matches[3], -1, PREG_SPLIT_NO_EMPTY) as $row) {
+
+			$row = ltrim($row);
+
 			// Caption -- can only occur on row 1, otherwise treat '|=. foo |...' as a normal center-aligned cell.
 			if ( ($c_row <= 1) && preg_match("/^\|\=($this->s$this->a$this->c)\. ([^\|\n]*)(.*)/s", ltrim($row), $cmtch)) {
 				$capts = $this->pba($cmtch[1]);
 				$cap = "\t<caption".$capts.">".trim($cmtch[2])."</caption>\n";
-				$row = $cmtch[3];
+				$row = ltrim($cmtch[3]);
 			}
 			$c_row += 1;
 
 			// Colgroup
 			if (preg_match("/^\|:($this->s$this->a$this->c\. .*)/m", ltrim($row), $gmtch)) {
+				$nl = strpos($row,"\n");	# Is this colgroup def missing a closing pipe? If so, there will be a newline in the middle of $row somewhere.
 				$idx=0;
 				foreach (explode('|', str_replace('.', '', $gmtch[1])) as $col) {
 					$gatts = $this->pba(trim($col), 'col');
@@ -711,7 +715,13 @@ class Textile
 					$idx++;
 				}
 				$colgrp .= "\t</colgroup>\n";
-				continue;
+
+				if($nl === false) {
+				  continue;
+				}
+				else {
+				  $row = ltrim(substr( $row, $nl ));		# Recover from our missing pipe and process the rest of the line...
+	      }
 			}
 
 			preg_match("/(:?^\|($this->vlgn)($this->s$this->a$this->c)\.\s*$\n)?^(.*)/sm", ltrim($row), $grpmatch);
