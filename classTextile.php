@@ -157,10 +157,28 @@ Phrase modifier syntax:
 
 		   !imageurl!	->	 <img src="imageurl" />
  !imageurl(alt text)!	->	 <img src="imageurl" alt="alt text" />
-	!imageurl!:linkurl	->	 <a href="linkurl"><img src="imageurl" /></a>
+   !imageurl!:linkurl	->	 <a href="linkurl"><img src="imageurl" /></a>
 
-ABC(Always Be Closing)	->	 <acronym title="Always Be Closing">ABC</acronym>
+  ALT(At Least Three)	->	 <acronym title="At Least Three"><span class="caps">ALT</span></acronym>
+			  WYSIWYG	->	 <span class="caps">WYSIWYG</span>
+	 NA is No Acronym	->	 NA is No Acronym
 
+XHTML entity conversion:
+	
+					'Smart' "quotes"	->	 &#8216;Smart&#8217; &#8220;quotes&#8221;
+	 en - dash; em -- dash; em--dash	->	 en &#8211; dash; em &#8212; dash; em&#8212;dash
+				  It's an apostrophe	->	 It&#8217;s an apostrophe
+	  An ampersand & an ellipsis ...	->	 An ampersand &amp; an ellipsis &#8230;
+	Fractions: (1/2) + (1/4) = (3/4)	->	 Fractions: &#189; + &#188; = &#190;
+		 also: [1/2] + [1/4] = [3/4]	->	 also: &#189; + &#188; = &#190;
+   212[o] Farenheit = 100(o) Celcius	->	 212&#176; Farenheit = 100&#176; Celcius
+			  Trademark (TM) or [TM]	->	 Trademark &#8482; or &#8482;
+			   Registered (R) or [R]	->	 Registered &#174; or &#174;
+				Copyright (C) or [C]	->	 Copyright &#169; or &#169;
+				Plus or minus: (+/-)	->	 Plus or minus: &#177; 
+				Plus or minus: [+/-]	->	 Plus or minus: &#177; 
+					  3 x 5 (or 3x5)	->	 3 &#215; 5 (or 3&#215;5)
+	 Isolated < or >, but not <html>	->	 Isolated &lt; or &gt;, but not <html>
 
 Linked Notes:
 ============
