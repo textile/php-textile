@@ -823,26 +823,26 @@ Table alignments:
     </tr>
     </table>
 
-Table colgroups:
+Table colgroups and captions:
   input  : |
-    |=. Testing colgroup and col syntax
-    |:\5. 80|
-    |a|b|c|d|e|
-
     |=. Testing colgroup and col syntax
     |:\5. 80
     |a|b|c|d|e|
 
-    |=. Testing colgroup and col syntax
-    |:\5. 80``
-    |a|b|c|d|e|
-
-    |=. Testing colgroup and col syntax
-    |:\5. 80``|
+    |=. Testing colgroup and col syntax|
+    |:\5. 80|
     |a|b|c|d|e|
 
     |=. Testing colgroup and col syntax``
-    |:\5. 80``|``
+    |:\5. 80``
+    |a|b|c|d|e|
+
+    |=. Testing colgroup and col syntax|``
+    |:\5. 80|``
+    |a|b|c|d|e|
+
+    |=. Testing colgroup and col syntax |``
+    |:\5. 80 |``
     |a|b|c|d|e|``
 
   expect : |
