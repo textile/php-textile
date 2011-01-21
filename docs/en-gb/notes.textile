@@ -70,7 +70,7 @@ Note definitions not actually referenced in the document will be left out
 pre. 
 notelist+.      (list all notes, even unreferenced ones)
 
-When applying multiple controls to a notelist, put them in this order:
+When applying multiple controls to a note list, put them in this order:
 
 * standard attributes
 * backlink setting
@@ -101,7 +101,8 @@ bc. <p>Scientists say<sup><a href="#note194377">
 <li>An unreferenced note.</li>
 </ol>
 
-The 'a b c' backlink characters can be altered too.
-For example if you wanted the notes to have numeric backlinks starting from 1:
+The 'a b c' backlink characters can be customised.
+For example, to have numeric backlinks starting from 1:
 
+pre. 
 notelist:1.
