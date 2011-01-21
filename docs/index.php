@@ -1,16 +1,18 @@
 <?php
 	
-	class sourceFile
+	class SourceFile
 	{
 		protected $name;
 		protected $page_title;
 		protected $sort_order;
 		protected $source;
-		protected $textile;
+		protected $html;
+		private $textile;
 		
-		public function __construct($name, $file_path)
+		public function __construct($name, $file_path, $textile)
 		{
 			$this->name = $name;
+			$this->textile = $textile;
 			if ( file_exists($file_path) )
 			{
 				$this->source = file_get_contents($file_path);
@@ -56,12 +58,12 @@
 		
 		public function get_code()
 		{
-			return htmlspecialchars($this->_get_textile());
+			return htmlspecialchars($this->_get_html());
 		}
 		
 		public function get_web()
 		{
-			return $this->_get_textile();
+			return $this->_get_html();
 		}
 		
 		public function get_source()
@@ -69,27 +71,35 @@
 			return $this->source;
 		}
 		
-		private function _get_textile()
+		private function _get_html()
 		{
-			if ( ! $this->textile )
+			if ( ! $this->html )
 			{
-				$textile = new Textile;
-				$this->textile = $textile->textileThis($this->source);
+				$this->html = $this->textile->textileThis($this->source);
 			}
-			return $this->textile;
+			return $this->html;
 		}
 		
 	}
 
 	define('DOCS_DIR', dirname(__FILE__));
 	define('SOURCE_FILE_EXT', 'textile');
-	include(dirname(DOCS_DIR) . DIRECTORY_SEPARATOR . 'classTextile.php');
+	
+	set_include_path(get_include_path() . PATH_SEPARATOR . 
+		DOCS_DIR . DIRECTORY_SEPARATOR . 'inc' . PATH_SEPARATOR . 
+		dirname(DOCS_DIR));
+	function __autoload($class)
+	{
+		include 'class' . $class . '.php';
+	}
+	
+	$textile = new Textile;
 	$files = array();
 	$display_modes = array('web', 'code', 'source');
 	
 	foreach ( scandir(DOCS_DIR) as $file )
 		if ( preg_match('/^(.+)\.' . SOURCE_FILE_EXT . '$/', $file, $match) )
-			$files[end($match)] = new sourceFile(end($match), DOCS_DIR . DIRECTORY_SEPARATOR . $file);
+			$files[end($match)] = new sourceFile(end($match), DOCS_DIR . DIRECTORY_SEPARATOR . $file, $textile);
 	if ( $files ) 
 	{
 		foreach ( $files as $file )
