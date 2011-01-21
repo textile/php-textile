@@ -98,7 +98,7 @@
 				echo '<dt>', $file->pagelink('web', $file->page_title), '</dt>';
 		echo '</dl>';
 	}
-	if ( $langs )
+	if ( count($langs) > 1 )
 	{
 ?>
 <form name="select_lang" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="get">
