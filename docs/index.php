@@ -1,27 +1,48 @@
 <?php
 	
-	define('DOCS_DIR', dirname(__FILE__));
-	define('SOURCE_FILE_EXT', 'textile');
-	define('DEFAULT_LANG', 'en-gb');
-	defined('LANG') || define('LANG', DEFAULT_LANG);
-	
-	set_include_path(get_include_path() . PATH_SEPARATOR . 
-		DOCS_DIR . DIRECTORY_SEPARATOR . 'inc' . PATH_SEPARATOR . 
-		dirname(DOCS_DIR));
 	function __autoload($class)
 	{
 		include 'class' . $class . '.php';
 	}
+
+	function is_lang($lang)
+	{
+		return preg_match('/^[a-z]{2,2}-[a-z]{2,2}$/', $lang);
+	}
+		
+	define('DOCS_DIR', dirname(__FILE__));
+	define('SOURCE_FILE_EXT', 'textile');
+	set_include_path(get_include_path() . PATH_SEPARATOR . 
+		DOCS_DIR . DIRECTORY_SEPARATOR . 'inc' . PATH_SEPARATOR . 
+		dirname(DOCS_DIR));
+	
+	define('DEFAULT_LANG', 'en-gb');
+	foreach ( scandir(DOCS_DIR) as $file )
+		if ( is_dir($file) && is_lang($file) )
+			$langs[] = $file;
+	if ( isset($_GET['lang']) && is_lang($_GET['lang']) )
+		define('LANG', $_GET['lang']);
+	else
+		define('LANG', DEFAULT_LANG);
 	
 	$textile = new Textile;
 	$files = array();
 	$display_modes = array('web', 'html', 'source');
 	
-	foreach ( scandir(DOCS_DIR) as $file )
-		if ( preg_match('/^(.+)\.' . SOURCE_FILE_EXT . '$/', $file, $match) )
-			$files[end($match)] = new sourceFile(end($match), DOCS_DIR . DIRECTORY_SEPARATOR . $file, $textile);
+	if ( is_dir(LANG) ) 
+	{
+		foreach ( scandir(LANG) as $file )
+			if ( preg_match('/^(.+)\.' . SOURCE_FILE_EXT . '$/', $file, $match) )
+				$files[end($match)] = new sourceFile(end($match), LANG . DIRECTORY_SEPARATOR . $file, $textile, LANG);
+	}
+	
 	if ( $files ) 
 	{
+		if ( isset($files['tagline']) )
+		{
+			$tagline = clone $files['tagline'];
+			unset($files['tagline']);
+		}
 		foreach ( $files as $file )
 			$sort[$file->name] = $file->sort_order;
 		array_multisort($sort, $files);
@@ -52,34 +73,28 @@
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Textile Viewer<?php echo $page_title; ?></title>
+<title>Textile<?php echo $page_title, " ($display_mode)"; ?></title>
 <link rel="stylesheet" type="text/css" href="./textile.css" />
 </head>
 <body>
-<p id="tagline">
-<b>TEXTILE:</b> THE HUMANE WEB TEXT GENERATOR
-</p>
+<?php echo $tagline->web; ?>
 <div id="menu">
 <?php
 	if ( $files )
 	{
 		echo '<dl id="file-menu">';
 		foreach ( $files as $filename => $file )
-		{
 			if ( $display_page === $file->name )
 			{
 				echo '<dt class="here">', $file->page_title, '</dt>';
 				foreach ( $display_modes as $mode )
-				{
 					if ( $mode === $display_mode && $display_page === $file->name )
 						echo '<dd class="here">', $mode, '</dd>';
 					else
-						echo '<dd><a href="./?', $mode, '=' . $file->name . '">', $mode, '</a>';
-				}
+						echo '<dd>', $file->pagelink($mode), '</dd>';
 			}
 			else
-				echo '<dt><a href="./?web=', $file->name, '">', $file->page_title, '</a></dt>';
-		}
+				echo '<dt>', $file->pagelink('web', $file->page_title), '</dt>';
 		echo '</dl>';
 	}
 ?>

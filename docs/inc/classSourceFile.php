@@ -2,21 +2,24 @@
 	
 	class SourceFile
 	{
-		protected $name;
 		protected $page_title;
 		protected $sort_order;
-		protected $source;
-		protected $html;
-		private $textile;
+
+		private $_name;
+		private $_source;
+		private $_html;
+		private $_textile;
+		private $_lang;
 		
-		public function __construct($name, $file_path, $textile)
+		public function __construct($name, $file_path, $textile, $lang)
 		{
-			$this->name = $name;
-			$this->textile = $textile;
+			$this->_name = $name;
+			$this->_textile = $textile;
+			$this->_lang = $lang;
 			if ( file_exists($file_path) )
 			{
-				$this->source = file_get_contents($file_path);
-				$lines = explode("\n", $this->source);
+				$this->_source = file_get_contents($file_path);
+				$lines = explode("\n", $this->_source);
 				foreach ( $lines as $line )
 				{
 					if ( preg_match('/^\s*$/', $line) )
@@ -31,7 +34,7 @@
 				}
 			}
 			else
-				exit;
+				exit('File not found');
 		}
 		
 		public function __get($property)
@@ -53,7 +56,7 @@
 		
 		public function get_name()
 		{
-			return $this->name;
+			return $this->_name;
 		}
 		
 		public function get_html()
@@ -68,16 +71,26 @@
 		
 		public function get_source()
 		{
-			return $this->source;
+			return $this->_source;
 		}
 		
 		private function _get_html()
 		{
-			if ( ! $this->html )
+			if ( ! $this->_html )
 			{
-				$this->html = $this->textile->textileThis($this->source);
+				$this->_html = $this->_textile->textileThis($this->_source);
 			}
-			return $this->html;
+			return $this->_html;
+		}
+		
+		public function pagelink($mode, $text = '')
+		{
+			if ( ! $text ) $text = $mode;
+			$qs[] = $mode . '=' . $this->_name;
+			if ( $this->_lang !== DEFAULT_LANG )
+				$qs[] = 'lang=' . $this->_lang;
+			$qs = '?' . implode('&amp;', $qs);
+			return '<a href="./' . $qs . '">' . $text . '</a>';
 		}
 		
 	}
