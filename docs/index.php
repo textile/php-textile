@@ -17,6 +17,7 @@
 		dirname(DOCS_DIR));
 	
 	define('DEFAULT_LANG', 'en-gb');
+	$langs = array();
 	foreach ( scandir(DOCS_DIR) as $file )
 		if ( is_dir($file) && is_lang($file) )
 			$langs[] = $file;
@@ -96,6 +97,24 @@
 			else
 				echo '<dt>', $file->pagelink('web', $file->page_title), '</dt>';
 		echo '</dl>';
+	}
+	if ( $langs )
+	{
+?>
+<form name="select_lang" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="get">
+<div>
+<select name="lang" onchange="select_lang.submit()">
+<?php
+		foreach ( $langs as $lang )
+		{
+			$selected = $lang === LANG ? ' selected="selected"' : '';
+			echo "<option{$selected}>{$lang}</option>\n";
+		}
+?>
+</select>
+</div>
+</form>
+<?php
 	}
 ?>
 </div>
