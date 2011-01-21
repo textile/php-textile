@@ -9,13 +9,13 @@ h1. Extending Textile
 Textile can be extended through the use of textile-plugins called *textplugs*.
 
 You can add your own textplugs to textile by writing php implementations 
-and making your files available in the 'textplugs-enabled' directory or 
-where-ever you define the directory to be in the 'txt_plugin_directory' define.
+and making your files available in the @textplugs-enabled@ directory or 
+where-ever you define the directory to be in the @txt_plugin_directory@ define.
 
 We recommend having classTextile.php and it's support directories outside of your 
 site root folder if at all possible.
 
-The standard distribution has some example textplugs in the 'textplugs-available' 
+The standard distribution has some example textplugs in the @textplugs-available@
 directory. You don't have to use any of these textplugs but you can if you want.
 
 bc.. |-- textplugs-available (holds officially maintained textplugs)
@@ -27,10 +27,10 @@ h2. Enabling textplugs
 
 To enable a textplug, either...
 
-* Copy it, preserving the filename, to the 'textplugs-enabled' directory  --or--
-* Create a symlink to it in 'textplugs-enabled' with exactly the same name as the source file.
+* Copy it, preserving the filename, to the @textplugs-enabled@ directory  _or_
+* Create a symlink to it in @textplugs-enabled@ with exactly the same name as the source file.
 
-If you change the txt_plugin_directory define from the default location use 
+If you change the @txt_plugin_directory@ define from the default location use 
 your prefered location for the copy-or-link actions.
 
 
