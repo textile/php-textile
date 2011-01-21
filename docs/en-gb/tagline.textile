@@ -1,1 +1,1 @@
-p(#tagline). *TEXTILE:* THE HUMANE WEB TEXT GENERATOR
+p(#tagline). TEXTILE: The Humane Web Text Generator

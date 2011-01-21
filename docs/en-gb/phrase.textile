@@ -1,0 +1,123 @@
+###. This block is used by the Help File generator -- #####
+you don't need to include it in your own Textile documents.
+page_title => Phrases
+sort_order => 30
+###########################################################
+
+h1. Phrase modifier syntax
+
+h2. Normal vs. alternate syntax
+
+The normal syntax is to surround the word or phrase with Textile
+ identifiers, using whitespace to separate the phrase from other characters.
+ The alternate syntax adds square brackets; this allows you to do without
+ the surrounding whitespace:
+
+pre. 
+ *T*extile
+
+bc.  *T*extile
+
+pre. 
+ [*T*]extile
+
+bc.  <strong>T</strong>extile
+
+h2. Nested phrases
+
+You can nest Textile phrase modifiers:
+
+pre. 
+ [-*Teztile*-][*Textile*] is a lightweight markup language.
+
+bc.  <del><strong>Teztile</strong></del><strong>Textile</strong> is a lightweight markup language.
+  
+###. The Textile synax examples below are enclosed in <pre> blocks. 
+     This is so the Textile markup can be seen in the HTML output
+     from this file.
+
+h2. Presentational markup
+
+pre. 
+ __in italics__ or **in boldface**;
+ ^superscript^ or ~subscript~
+
+bc.  <i>in italics</i> or <b>in boldface</b>;
+ <sup>superscript</sup> or <sub>subscript</sub>
+
+h2. Emphasis
+
+pre. 
+ _emphasis_ or *strong emphasis*
+
+bc.  <em>emphasis</em> or <strong>strong emphasis</strong>
+
+h2. Editorial markup
+
+pre. 
+ ??citation??, -deleted text-, or +inserted text+
+
+bc.  <cite>citation</cite>, <del>deleted text</del>, or <ins>inserted text</ins>
+
+h2. Computer code
+
+*(note) Textile attribute syntax is disabled for @code@ phrase markup.
+* All special characters, including tag brackets, are converted to XHTML entities.
+
+pre. 
+ @[a-z]{1,}>Textile@
+
+bc.  <code>[a-z]{1,}&gt;Textile</code>
+
+h2. Arbitrary span
+
+pre. 
+ %arbitrary span%
+
+bc.  <span>arbitrary span</span>
+
+h2. Textile disabled
+
+pre. 
+ ==no *Textile* @processing@ ~happens~ here==
+
+bc.  no *Textile* @processing@ ~happens~ here
+
+h2. Links
+
+pre. 
+ "Plain link":url
+ "Link with title(mytitle)":url
+ "$":URL
+ "$(mytitle)":URL
+
+bc.  <a href="url">Plain link</a>
+ <a href="url" title="mytitle">Link with title</a>
+ <a href="URL">URL</a>
+ <a href="URL" title="mytitle">URL</a>
+
+h2. Images
+
+pre. 
+ !imageurl!
+ !imageurl(alt text)!
+
+bc.  <img src="imageurl" />
+ <img src="imageurl" alt="alt text" />
+
+h2. Acronyms
+
+Three or more capital letters are enclosed in a @span class="caps"@ element.
+ If a title attribute is provided, the span is enclosed in an @acronym@ element
+ with that title.
+
+pre. 
+ ALT(At Least Three)
+ WYSIWYG
+ NA is No Acronym
+
+bc.  <acronym title="At Least Three"><span class="caps">ALT</span></acronym>
+ <span class="caps">WYSIWYG</span>
+ NA is No Acronym
+
+

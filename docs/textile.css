@@ -7,13 +7,40 @@ body
 h1 { font-size: 1.6em; }
 h2 { font-size: 1.2em; }
 h3, h4, h5, h6 { font-size: 1em; }
-
+pre, code
+{
+	font-family: "Andale Mono", Monaco, monospace;
+	font-size: 9pt;
+}
+select
+{
+	background-color: #fff;
+	border: 0.1em #aaa solid;
+}
 
 p#tagline
 {
 	font-size: 0.8em;
-	letter-spacing: 1.5em;
+	letter-spacing: 1.4em;
+	font-variant: small-caps;
 }
+p#tagline span.caps { font-weight: bold; }
+
+div#web dt
+{
+	font-weight: bold;
+	margin-bottom: 0.3em;
+}
+div#web dd
+{
+	margin-left: 2em;
+}
+div#web dd + dt
+{
+	margin-top: 0.6em;
+}
+
+
 
 dl#file-menu
 {
@@ -52,4 +79,11 @@ pre code
 {
 	background: #fec;
 	display: block;
+}
+
+.note
+{
+	color: #777;
+	font-style: oblique;
+	font-size: 0.9em;
 }
