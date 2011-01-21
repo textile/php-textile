@@ -1,0 +1,158 @@
+###. This block is used by the Help File generator -- #####
+you don't need to include it in your own Textile documents.
+page_title => Block syntax
+sort_order => 20
+###########################################################
+
+h1. Block modifier syntax
+
+h2. General notes
+
+* Blocks (other than list items) must be separated by a blank line.
+* A block identifier must begin its line (no white space beforehand), and,
+  except for list items, be followed by a dot and a space.
+* A block identifier followed by two dots (and a space) is an extended block.
+  It will continue, spanning blank lines, until the next block identifier.
+  
+###. The Textile synax examples below are escaped in <pre> blocks. 
+     This is so the Textile markup can be seen in the HTML output
+     from this file.
+
+h2. Headers: h1, h2, h3, h4, h5, h6
+
+pre. 
+h1. Example header
+
+bc. <h1>Example header</h1>
+ 
+h2. Paragraph: p (optional)
+
+pre. 
+p. A paragraph
+
+bc. <p>A paragraph</p>
+
+pre. 
+Also a paragraph
+
+bc. <p>Also a paragraph</p>
+
+h2. Blockquote: bq
+
+pre. 
+bq. Block quotation...
+
+bc. <blockquote>Block quotation...</blockquote>
+
+pre. 
+bq.:http://textism.com/ Text...
+
+bc. <blockquote cite="http://textism.com">Text...</blockquote>
+
+h2. Footnote: fn(1-100)
+
+pre. 
+fn1. Footnote... 
+
+bc. <p id="fn1">Footnote...</p>
+
+h2. Lists
+
+List items appear on consecutive lines. Lists may be nested by repeating
+ the list item identifier. There is no dot after the identifier.
+
+h3. Numeric list: #
+
+pre. 
+# First item
+# Second list item
+## First nested item
+## Second nested item
+# Third item
+
+bc. <ol>
+	<li>First item</li>
+	<li>Second list item
+	<ol>
+		<li>First nested item</li>
+		<li>Second nested item</li>
+	</ol></li>
+	<li>Third item</li>
+</ol>    
+    
+h3. Bulleted list: *
+
+pre. 
+* First item
+* Second list item
+** First nested item
+** Second nested item
+* Third item
+
+bc. <ul>
+	<li>First item</li>
+	<li>Second list item
+	<ul>
+		<li>First nested item</li>
+		<li>Second nested item</li>
+	</ul></li>
+	<li>Third item</li>
+</ul>    
+
+h3. Definition list:
+
+* Term ;
+* Definition :
+
+pre. 
+; A term
+: A definition
+;; Nested list term
+:: Nested list definition
+; Another term
+: Another definition
+
+bc. <dl>
+	<dt>A term</dt>
+	<dd>A definition
+	<dl>
+		<dt>Nested list term</dt>
+		<dd>Nested list definition</dd>
+	</dl></dd>
+	<dt>Another term</dt>
+	<dd>Another definition</dd>
+</dl>
+
+h2. Preformatted text: pre and bc
+
+pre. 
+pre. <html>
+
+bc. <pre>&lt;html&gt;</pre>
+
+pre. 
+bc. $text->TextileThis(... 
+
+bc. <pre><code>$text-&gt;TextileThis(...</code></pre>
+
+h2. Block with Textile disabled: notextile
+
+pre. 
+notextile. Textile automatically converts '&' to '&amp;', but not here.
+
+bc. Textile automatically converts '&' to '&amp;', but not here.
+
+h2. Textile partially disabled:
+
+A block beginning with whitespace will not be converted to a block element,
+ but will still undergo phrase modifier and entity conversion
+
+pre. 
+ No block element, but HTML special characters such as < are still converted.
+
+bc. No block element, but HTML special characters such as &lt; are still converted.
+
+h2. Comment: ###
+
+pre. 
+###. This is a comment block. It will not appear in the XHTML output.

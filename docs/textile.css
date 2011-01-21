@@ -1,0 +1,55 @@
+body
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande";
+	font-size: 10pt;
+	padding: 2em;
+}
+h1 { font-size: 1.6em; }
+h2 { font-size: 1.2em; }
+h3, h4, h5, h6 { font-size: 1em; }
+
+
+p#tagline
+{
+	font-size: 0.8em;
+	letter-spacing: 1.5em;
+}
+
+dl#file-menu
+{
+	border: solid #aaa;
+	border-width: 1px 1px 1px 0;
+	color: #777;
+	padding: 0.3em 0;
+}
+
+dl#file-menu dt, dl#file-menu dd
+{
+	display: inline;
+	margin: 0 0.5em 0 0;
+	padding: 0.3em 0;
+}
+dl#file-menu dt
+{
+	font-weight: bold;
+	padding-left: 0.5em;
+	border-left: 1px solid #aaa;
+}
+
+dl#file-menu dt.here { color: #000; }
+dl#file-menu dd
+{
+	font-style: oblique;
+	font-size: 0.8em;
+}
+dl#file-menu dd.here { color: #000; }
+pre
+{
+	border: dotted 1px #ccc;
+	background: #dfb;
+}
+pre code
+{
+	background: #fec;
+	display: block;
+}
