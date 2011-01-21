@@ -87,6 +87,8 @@ An ordered list can be nested in a bulleted list item, and vice versa:
 pre. 
 # Choose a platform
 ** PHP
+### Version 4
+### Version 5
 ** Ruby
 # Choose a markup language
 ** Textile
@@ -95,7 +97,11 @@ pre.
 bc. <ol>
     <li>Choose a platform
     <ul>
-        <li><span class="caps">PHP</span></li>
+        <li><span class="caps">PHP</span>
+        <ol>
+            <li>Version 4</li>
+            <li>Version 5</li>
+        </ol></li>
         <li>Ruby</li>
     </ul></li>
     <li>Choose a markup language
