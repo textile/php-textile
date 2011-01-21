@@ -59,6 +59,7 @@ notelist(class#id)^.    (only the first backlink)
 
 Backlinking settings can also be applied to individual note definitions:
 
+pre. 
 note#label!.    (no backlinks)
 note#label^.    (first backlink only)
 note#label*.    (all backlinks, even if note list has backlinking disabled)
@@ -68,10 +69,6 @@ Note definitions not actually referenced in the document will be left out
 
 pre. 
 notelist+.      (list all notes, even unreferenced ones)
-
-You can mix and match the list backlink control and unreferenced links controls
-but the backlink control (if any) must go first. Like so: notelist^+. , not
-like this: notelist+^.
 
 When applying multiple controls to a notelist, put them in this order:
 
