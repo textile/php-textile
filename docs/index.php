@@ -101,8 +101,9 @@
 	if ( count($langs) > 1 )
 	{
 ?>
-<form name="select_lang" action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="get">
+<form name="select_lang" action="./" method="get">
 <div>
+<input type="hidden" name="<?php echo $display_mode; ?>" value="<?php echo $display_page; ?>" />
 <select name="lang" onchange="select_lang.submit()">
 <?php
 		foreach ( $langs as $lang )
