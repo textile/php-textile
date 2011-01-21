@@ -16,10 +16,10 @@ Textile, the language, is a simple shorthand for marking up the most common
 Textile, the processor, has been ported from the original PHP version to
  several other programming languages. This is the PHP version of Textile.
 
-This document is written in Textile. If you are viewing this in the web
- version included with the Textile distribution, you can view each page
- of the document in any of three modes, via the links in the menu bar:
+This document is written in Textile. If you are viewing this in the 
+ browser-based viewer included with the Textile distribution, you can view
+ each page in any of three modes, via the links in the menu bar:
 
-* web (normal HTML view)
-* code (HTML code view)
+* web (normal web view)
+* html (HTML code view)
 * source (Textile source view)

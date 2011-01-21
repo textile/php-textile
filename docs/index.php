@@ -2,6 +2,8 @@
 	
 	define('DOCS_DIR', dirname(__FILE__));
 	define('SOURCE_FILE_EXT', 'textile');
+	define('DEFAULT_LANG', 'en-gb');
+	defined('LANG') || define('LANG', DEFAULT_LANG);
 	
 	set_include_path(get_include_path() . PATH_SEPARATOR . 
 		DOCS_DIR . DIRECTORY_SEPARATOR . 'inc' . PATH_SEPARATOR . 
@@ -13,7 +15,7 @@
 	
 	$textile = new Textile;
 	$files = array();
-	$display_modes = array('web', 'code', 'source');
+	$display_modes = array('web', 'html', 'source');
 	
 	foreach ( scandir(DOCS_DIR) as $file )
 		if ( preg_match('/^(.+)\.' . SOURCE_FILE_EXT . '$/', $file, $match) )
@@ -89,8 +91,8 @@
 		case 'web':
 			echo $source_file->web;
 			break;
-		case 'code':
-			echo "<pre><code>\n", $source_file->code, "</code></pre>\n";
+		case 'html':
+			echo "<pre><code>\n", $source_file->html, "</code></pre>\n";
 			break;
 		case 'source':
 			echo "<pre>\n", htmlspecialchars($source_file->source), "</pre>\n";

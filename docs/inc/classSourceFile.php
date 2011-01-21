@@ -56,7 +56,7 @@
 			return $this->name;
 		}
 		
-		public function get_code()
+		public function get_html()
 		{
 			return htmlspecialchars($this->_get_html());
 		}
