@@ -1,5 +1,4 @@
-Extending Textile
-=================
+h1. Extending Textile
 
 Textile can be extended through the use of textile-plugins called *textplugs*.
 
@@ -13,12 +12,12 @@ site root folder if at all possible.
 The standard distribution has some example textplugs in the 'textplugs-available' 
 directory. You don't have to use any of these textplugs but you can if you want.
 
-|-- textplugs-available                 (holds officially maintained textplugs)
-            |-- external             (holds non-maintained, example, textplugs)
+bc.. |-- textplugs-available                 (holds officially maintained textplugs)
+                 |-- external             (holds non-maintained, example, textplugs)
 
 
-Enabling textplugs
-------------------
+
+h2. Enabling textplugs
 
 To enable a textplug, either...
 
@@ -33,17 +32,17 @@ If you change the txt_plugin_directory define from the default location use
 your prefered location for the copy-or-link actions.
 
 
-Naming your textplug files
---------------------------
+
+h2. Naming your textplug files
 
 If you write a new textplug then your file name must follow a string filename 
 convention.
 
-{plugname}.textplug.php
+@{plugname}.textplug.php@
 
-Where {plugname} is definable by the textplug author but, in the case of 
+Where @{plugname}@ is definable by the textplug author but, in the case of 
 block-level textplugs, this should match the name of the block being added.
 
-The php file is included just once and should call Textile::RegisterBlockHandler() 
+The php file is included just once and should call @Textile::RegisterBlockHandler()@ 
 to get the handler(s) they implement registered with Textile.
 
