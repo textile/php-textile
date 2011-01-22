@@ -59,6 +59,7 @@
 	
 	$textile = new Textile;
 	$files = array();
+	$message_files = array('translate', 'tagline');
 	
 	if ( is_dir(LANG) ) 
 	{
@@ -83,12 +84,12 @@
 	}
 	
 	sort_source_files($files);
-
-	if ( isset($files['tagline']) )
-	{
-		$tagline = $files['tagline'];
-		unset($files['tagline']);
-	}
+	foreach ( $message_files as $message_file )
+		if ( isset($files[$message_file]) )
+		{
+			$$message_file = $files[$message_file];
+			unset($files[$message_file]);
+		}
 	define('DEFAULT_DISPLAY_PAGE', current(array_keys($files)));
 	
 	foreach ( $display_modes as $mode )
@@ -169,14 +170,14 @@
 </form>
 <?php
 	}
-	if ( $source_file->is_untranslated() )
-	{
-?>
-<p class="notice">This file has not yet been translated to <strong><?php echo LANG; ?></strong> &#8212; you are now viewing the help file for <strong><?php echo DEFAULT_LANG; ?></strong>.</p>
-<?php
-	}
 ?>
 </div>
+<?php
+	if ( $source_file->is_untranslated() )
+	{
+		echo $translate->web;
+	}
+?>
 <div id="<?php echo $display_mode; ?>">
 <?php
 	switch ( $display_mode )

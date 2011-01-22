@@ -90,11 +90,11 @@ pre code
 	font-style: oblique;
 	font-size: 0.9em;
 }
-p.notice
+div.notice
 {
 	background: #fee;
 	border: dotted 1px #cbb;
-	padding: 1em;
+	padding: 0 1em;
 	font-style: oblique;
-	font-size: 1em;
+	margin-top: 1em;
 }
