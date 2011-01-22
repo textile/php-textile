@@ -31,6 +31,12 @@
 			array_multisort($sort, $files);
 		}
 	}
+	
+	function script_name()
+	{
+		$script = basename($_SERVER['SCRIPT_FILENAME']);
+		return ( 'index.php' === $script ) ? '' : $script;
+	}
 		
 	define('DOCS_DIR', dirname(__FILE__));
 	define('SOURCE_FILE_EXT', 'textile');
@@ -137,11 +143,12 @@
 	if ( count($langs) > 1 )
 	{
 ?>
-<form name="select_lang" action="./" method="get">
+<form name="select_lang" action="./<?php echo script_name(); ?>" method="get">
 <div>
 <input type="hidden" name="<?php echo $display_mode; ?>" value="<?php echo $display_page; ?>" />
 <select name="lang" onchange="select_lang.submit()">
 <?php
+		
 		foreach ( $langs as $lang )
 		{
 			$selected = $lang === LANG ? ' selected="selected"' : '';

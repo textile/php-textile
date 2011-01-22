@@ -103,16 +103,12 @@
 		
 		public function pagelink($mode, $text = '')
 		{
-			$script = basename($_SERVER['SCRIPT_FILENAME']);
-			if( 'index.php' === $script )
-				$script = '';
-
 			if ( ! $text ) $text = $mode;
 			$qs[] = $mode . '=' . $this->_name;
 			if ( $this->_lang !== DEFAULT_LANG )
 				$qs[] = 'lang=' . $this->_lang;
 			$qs = '?' . implode('&amp;', $qs);
-			return '<a href="./' . $script . $qs . '">' . $text . '</a>';
+			return '<a href="./' . script_name() . $qs . '">' . $text . '</a>';
 		}
 		
 	}
