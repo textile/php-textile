@@ -104,6 +104,23 @@ h1=. centered text
 
 bc. <h1 style="text-align:center;">centered text</h1>
 
+h3. Padding shortcuts: @(@ and @)@
+
+pre. 
+p(. Paragraph with left-side padding
+
+bc. p style="padding-left:1em;">Paragraph with left-side padding</p>
+
+pre. 
+p)). Or right-side padding
+
+bc. p style="padding-right:2em;">Or right-side padding</p>
+
+pre. 
+p((()). Some of each
+
+bc. <p style="padding-left:3em; padding-right:2em;">Some of each</p>
+
 h2. Language
 
 Square brackets apply the @lang@ attribute:

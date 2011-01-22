@@ -14,7 +14,7 @@ Textile note syntax allows you to apply linked notes throughout a document,
  leaving Textile to automatically generate a consolidated note list. Linked 
  notes are composed of three parts:
 
-* a set of named _definitions_
+* a set of named [_definitions_]
 * a set of _references_ to those definitions
 * one or more _placeholders_ for the generated note lists
 
