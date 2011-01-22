@@ -54,9 +54,11 @@
 	else
 		define('LANG', DEFAULT_LANG);
 	
+	$display_modes = array('web', 'html', 'source');
+	define('DEFAULT_DISPLAY_MODE', current($display_modes));
+	
 	$textile = new Textile;
 	$files = array();
-	$display_modes = array('web', 'html', 'source');
 	
 	if ( is_dir(LANG) ) 
 	{
@@ -87,16 +89,23 @@
 		$tagline = $files['tagline'];
 		unset($files['tagline']);
 	}
+	define('DEFAULT_DISPLAY_PAGE', current(array_keys($files)));
 	
 	foreach ( $display_modes as $mode )
 	{
 		if ( isset($_GET[$mode]) )
 		{
-			if ( ! array_key_exists($_GET[$mode], $files) )
-				exit;
-			$display_mode = $mode;
-			$display_page = $_GET[$mode];
-			break;
+			if ( array_key_exists($_GET[$mode], $files) )
+			{
+				$display_mode = $mode;
+				$display_page = $_GET[$mode];
+				break;
+			}
+			else
+			{
+				$display_mode = DEFAULT_DISPLAY_MODE;
+				$display_page = DEFAULT_DISPLAY_PAGE;
+			}
 		}
 	}
 	

@@ -34,8 +34,6 @@
 					}
 				}
 			}
-			else
-				exit('File not found');
 		}
 		
 		public function __get($property)
