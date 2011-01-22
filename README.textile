@@ -1,0 +1,28 @@
+h1. TEXTILE
+
+p=. *A Humane Web Text Generator*
+
+p=. A lightweight markup language that takes (almost) plaintext and converts it into well formed HTML.
+
+
+h2. Installation
+
+The only file that is necessary for the correct operation of Textile is @classTextile.php@ from the project root directory. However, to use additional features you may need to install other files from the project tree.
+
+For live installations only files and subdirectories from the *@master@* branch should be used. _Code from other branches should *never* be used on live sites._
+
+
+h2. Usage
+
+Simply create an instance of class @Textile@ and pass it what you want to convert. Like so...
+
+bc.. include "classTextile.php"; # adjust paths if needed.
+$textile = new Textile();
+$output = $textile->TextileThis( $trusted_input );
+
+p. If you are using Textile to format user-supplied input, for blog comments for instance, use the restricted mode call...
+
+bc.. include "classTextile.php"; # adjust paths if needed.
+$textile = new Textile();
+$output = $textile->TextileRestricted( $untrusted_input );
+
