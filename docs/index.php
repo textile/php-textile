@@ -41,7 +41,7 @@
 	{
 		if ( isset($files['tagline']) )
 		{
-			$tagline = clone $files['tagline'];
+			$tagline = $files['tagline'];
 			unset($files['tagline']);
 		}
 		foreach ( $files as $file )
