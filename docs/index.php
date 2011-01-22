@@ -9,6 +9,28 @@
 	{
 		return preg_match('/^[a-z]{2,2}-[a-z]{2,2}$/', $lang);
 	}
+	
+	function get_source_files($lang, $textile)
+	{
+		$out = array();
+		if ( is_dir($lang) )
+		{
+			foreach ( scandir($lang) as $file )
+				if ( preg_match('/^(.+)\.' . SOURCE_FILE_EXT . '$/', $file, $match) )
+					$out[$match{1}] = new SourceFile($match[1], $lang . DIRECTORY_SEPARATOR . $file, $textile, $lang);
+		}
+		return $out;
+	}
+	
+	function sort_source_files(&$files)
+	{
+		if ( $files ) 
+		{
+			foreach ( $files as $file )
+				$sort[$file->name] = $file->sort_order;
+			array_multisort($sort, $files);
+		}
+	}
 		
 	define('DOCS_DIR', dirname(__FILE__));
 	define('SOURCE_FILE_EXT', 'textile');
@@ -37,16 +59,27 @@
 				$files[end($match)] = new SourceFile(end($match), LANG . DIRECTORY_SEPARATOR . $file, $textile, LANG);
 	}
 	
-	if ( $files ) 
+	$files = get_source_files(LANG, $textile);
+		
+	if ( LANG !== DEFAULT_LANG )
 	{
-		if ( isset($files['tagline']) )
+		$default_files = get_source_files(DEFAULT_LANG, $textile);
+		foreach ( $default_files as $name => $file )
 		{
-			$tagline = $files['tagline'];
-			unset($files['tagline']);
+			if ( empty($files[$name]) )
+			{
+				$file->set_lang(LANG)->set_untranslated(true);
+				$files[$name] = $file;
+			}
 		}
-		foreach ( $files as $file )
-			$sort[$file->name] = $file->sort_order;
-		array_multisort($sort, $files);
+	}
+	
+	sort_source_files($files);
+
+	if ( isset($files['tagline']) )
+	{
+		$tagline = $files['tagline'];
+		unset($files['tagline']);
 	}
 	
 	foreach ( $display_modes as $mode )
@@ -95,7 +128,10 @@
 						echo '<dd>', $file->pagelink($mode), '</dd>';
 			}
 			else
-				echo '<dt>', $file->pagelink('web', $file->page_title), '</dt>';
+			{
+				$class = $file->is_untranslated() ? ' class="untranslated"' : '';
+				echo "<dt{$class}>", $file->pagelink('web', $file->page_title), '</dt>';
+			}
 		echo '</dl>';
 	}
 	if ( count($langs) > 1 )
@@ -115,6 +151,12 @@
 </select>
 </div>
 </form>
+<?php
+	}
+	if ( $source_file->is_untranslated() )
+	{
+?>
+<p class="notice">This file has not yet been translated to <?php echo LANG; ?>.</p>
 <?php
 	}
 ?>

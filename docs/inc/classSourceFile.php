@@ -10,6 +10,7 @@
 		private $_html;
 		private $_textile;
 		private $_lang;
+		private $_untranslated = false;
 		
 		public function __construct($name, $file_path, $textile, $lang)
 		{
@@ -81,6 +82,23 @@
 				$this->_html = $this->_textile->textileThis($this->_source);
 			}
 			return $this->_html;
+		}
+		
+		public function set_lang($lang)
+		{
+			$this->_lang = $lang;
+			return $this;
+		}
+		
+		public function set_untranslated($bool)
+		{
+			$this->_untranslated = $bool;
+			return $this;
+		}
+		
+		public function is_untranslated()
+		{
+			return $this->_untranslated;
 		}
 		
 		public function pagelink($mode, $text = '')

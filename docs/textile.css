@@ -62,6 +62,7 @@ dl#file-menu dt
 }
 
 dl#file-menu dt.here { color: #000; }
+dl#file-menu dt.untranslated a { color: #999; }
 
 dl#file-menu dd
 {
@@ -88,4 +89,12 @@ pre code
 	color: #777;
 	font-style: oblique;
 	font-size: 0.9em;
+}
+p.notice
+{
+	background: #fee;
+	border: dotted 1px #cbb;
+	padding: 1em;
+	font-style: oblique;
+	font-size: 1em;
 }

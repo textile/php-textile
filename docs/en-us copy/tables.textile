@@ -1,0 +1,159 @@
+###. This block is used by the Help File generator -- #####
+you don't need to include it in your own Textile documents.
+page_title => Tables
+sort_order => 60
+###########################################################
+
+h1. Table syntax
+
+* Table rows appear on consecutive lines.
+* Rows are the only required element, but there are several optional elements.
+  
+###. The Textile synax examples below are enclosed in <pre> blocks. 
+     This is so the Textile markup can be seen in the HTML output
+     from this file.
+
+h2. Simple tables
+
+The @|@ character is used to identify table rows and to separate table cells:
+
+pre. 
+|Five|Cells|In|This|Row|
+|Row|With||Empty|Cell|
+
+bc. <table>
+    <tr>
+        <td>Five</td><td>Cells</td><td>In</td><td>This</td><td>Row</td>
+    </tr>
+    <tr>
+        <td>Row</td><td>With</td><td></td><td>Empty</td><td>Cell</td>
+    </tr>
+</table>
+
+Header cells: @_.@
+
+pre. 
+|_. A|_. Header|_. Row|
+|just|data|cells|
+
+bc. <table>
+    <tr>
+        <th>A</th><th>Header</th><th>Row</th>
+    </tr>
+    <tr>
+        <td>just</td><td>data</td><td>cells</td>
+    </tr>
+</table>
+
+h3. Attributes
+
+Use dot-space syntax to add attributes to table-data cells:
+
+pre. 
+|(col1). One|Two|Three|
+
+bc. <table>
+    <tr>
+        <td class="col1">One</td><td>Two</td><td>Three</td>
+    </tr>
+</table>
+
+@rowspan@ (@\@) and @colspan@ (@/@):
+
+pre. 
+|\2. Spans both columns|
+|Left column|Right column|
+|/2. Spans two rows in left column|Right column|
+|Right column|
+
+bc. <table>
+    <tr>
+        <td colspan="2">Spans both columns</td>
+    </tr>
+    <tr>
+        <td>Left column</td><td>Right column</td>
+    </tr>
+    <tr>
+        <td rowspan="2">Spans two rows in left column</td><td>Right column</td>
+    </tr>
+    <tr>
+        <td>Right column</td>
+    </tr>
+</table>
+
+Declare table-row attributes at the start of the line:
+
+pre. 
+(numbers). |One|Two|Three|
+
+bc. <table>
+    <tr class="numbers">
+        <td>One</td><td>Two</td><td>Three</td>
+    </tr>
+</table>
+
+Explicitly declare the table to apply attributes to it:
+
+pre. 
+table(#results).
+|One|Two|Three|
+
+bc. <table id="results">
+    <tr>
+        <td>One</td><td>Two</td><td>Three</td>
+    </tr>
+</table>
+
+h2. Optional elements
+
+A complex table including @summary@, @caption@, @colgroup@ with @col@s,
+ @thead@, @tfoot@, and two @tbody@ elements.
+
+pre. 
+table. The summary
+|=. The caption
+|:. 40|\2. 60||
+|^. 
+|_. The|_. Header|_. Row|
+|~. 
+|\3. Footer spanning all columns|
+|-. 
+|@tbody@ #1|First|Row|
+|@tbody@ #1|Second|Row|
+|-. 
+|@tbody@ #2|First|Row|
+|@tbody@ #2|Second|Row|
+
+bc. <table summary="The summary">
+<caption>The caption</caption>
+<colgroup width="40">
+    <col span="2" width="60" />
+    <col />
+</colgroup>
+<thead>
+    <tr>
+        <th>The</th><th>Header</th><th>Row</th>
+    </tr>
+</thead>
+<tfoot>
+    <tr>
+        <td colspan="3">Footer spanning all columns</td>
+    </tr>
+</tfoot>
+<tbody>
+    <tr>
+        <td><code>tbody</code> #1</td><td>First</td><td>Row</td>
+    </tr>
+    <tr>
+        <td><code>tbody</code> #1</td><td>Second</td><td>Row</td>
+    </tr>
+</tbody>
+<tbody>
+    <tr>
+        <td><code>tbody</code> #2</td><td>First</td><td>Row</td>
+    </tr>
+    <tr>
+        <td><code>tbody</code> #2</td><td>Second</td><td>Row</td>
+    </tr>
+</tbody>
+</table>
