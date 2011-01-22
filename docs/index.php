@@ -172,7 +172,7 @@
 	if ( $source_file->is_untranslated() )
 	{
 ?>
-<p class="notice">This file has not yet been translated to <?php echo LANG; ?>.</p>
+<p class="notice">This file has not yet been translated to <strong><?php echo LANG; ?></strong> &#8212; you are now viewing the help file for <strong><?php echo DEFAULT_LANG; ?></strong>.</p>
 <?php
 	}
 ?>
