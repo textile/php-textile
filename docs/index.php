@@ -34,7 +34,7 @@
 	{
 		foreach ( scandir(LANG) as $file )
 			if ( preg_match('/^(.+)\.' . SOURCE_FILE_EXT . '$/', $file, $match) )
-				$files[end($match)] = new sourceFile(end($match), LANG . DIRECTORY_SEPARATOR . $file, $textile, LANG);
+				$files[end($match)] = new SourceFile(end($match), LANG . DIRECTORY_SEPARATOR . $file, $textile, LANG);
 	}
 	
 	if ( $files ) 
