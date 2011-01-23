@@ -30,9 +30,10 @@ h3. New Features.
 
 * YAML formatted test cases added to project.
 * Improved spanning within non-English quotation marks.
-* Documentation overhaul...
-** Seperated example documentation from classTextile.php.
-** Help viewing system added.
+* Seperated example documentation from classTextile.php.
+
+h3. Related Developments...
+* Jeff Soo added help "viewing system":https://github.com/jsoo/Textviewer.
 
 
 ###. ######################################################
