@@ -9,20 +9,21 @@ h2. Installation
 
 The only file that is necessary for the correct operation of Textile is @classTextile.php@ from the project root directory. However, to use additional features you may need to install other files from the project tree.
 
-For live installations only files and subdirectories from the *@master@* branch should be used. _Code from other branches should *never* be used on live sites._
+For live installations only files and subdirectories from the @master@ branch should be used. _Code from other branches should not be used on live sites._
 
 
 h2. Usage
 
-Simply create an instance of class @Textile@ and pass it what you want to convert. Like so...
+You'll need to include the source file and instantiate a parser...
 
 bc.. include "classTextile.php"; # adjust paths if needed.
 $textile = new Textile();
-$output = $textile->TextileThis( $trusted_input );
 
-p. If you are using Textile to format user-supplied input, for blog comments for instance, use the restricted mode call...
+p. Then, for input that you control, pass it to @TextileThis()@. Like so...
 
-bc.. include "classTextile.php"; # adjust paths if needed.
-$textile = new Textile();
-$output = $textile->TextileRestricted( $untrusted_input );
+bc. $output = $textile->TextileThis( $trusted_input );
+
+If you are using Textile to format user-supplied input, blog comments for instance, use a @TextileRestricted()@ call...
+
+bc. $output = $textile->TextileRestricted( $untrusted_input );
 
