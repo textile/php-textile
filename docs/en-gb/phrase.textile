@@ -6,6 +6,10 @@ sort_order => 30
 
 h1. Phrase modifier syntax
 
+###. The Textile synax examples below are enclosed in <pre> blocks. 
+     This is so the Textile markup can be seen in the HTML output
+     from this file.
+
 h2. Normal vs. alternate syntax
 
 The normal syntax is to surround the word or phrase with Textile
@@ -32,10 +36,6 @@ pre.
 
 bc.  <del><strong>Teztile</strong></del><strong>Textile</strong> is a lightweight markup language.
   
-###. The Textile synax examples below are enclosed in <pre> blocks. 
-     This is so the Textile markup can be seen in the HTML output
-     from this file.
-
 h2. Presentational markup
 
 pre. 
