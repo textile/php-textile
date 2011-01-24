@@ -1,9 +1,7 @@
 <?php
 
-Textile::RegisterBlockHandler( 'bcphp', '_textile_bcphp_block_handler' );
-
 /**
- * Example block-level plugin for Textile.
+ * @copyright Copyright (c) Jdlx 2011, https://github.com/jdlx.
  * 
  * Adds support for syntax highlighted PHP code via bcphp. blocks.
  *
@@ -17,6 +15,8 @@ ini_set ('highlight.keyword', '#FFFFFF');
 ini_set ('highlight.bg',      '#FFFFFF');
 ini_set ('highlight.default', '#FFFFFF');
 ini_set ('highlight.html',    '#FFFFFF');*/
+
+Textile::RegisterBlockHandler( 'bcphp', '_textile_bcphp_block_handler' );
 
 function _textile_bcphp_block_handler( $textile, $tag, $att, $atts, $ext, $cite, $o1, $o2, $content, $c2, $c1, $eat )
 {
@@ -35,7 +35,7 @@ function _textile_bcphp_block_handler( $textile, $tag, $att, $atts, $ext, $cite,
 		$content = highlight_string($content, TRUE);
 		$content = preg_replace('/&lt;\?php/', '', $content, 1);
 		$content = preg_replace('/\?&gt;(?!.*\?&gt;)/', '', $content);
-		$content = $textile->shelve($content.'<br  /><br  />');
+		$content = $textile->shelve($content);
 	}
 	return array($o1, $o2, $content, $c2, $c1, $eat);
 }
