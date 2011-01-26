@@ -360,7 +360,6 @@ to get the handler(s) they implement registered with Textile.
 
 */
 
-@define('txt_plugin_directory',   'textplugs-enabled'); 
 
 // define these before including this file to override the standard glyphs
 @define('txt_quote_single_open',  '&#8216;');
@@ -515,7 +514,10 @@ class Textile
 		else
 			$this->ds = '/';
 
+		@define('txt_plugin_directory',   dirname(__FILE__) . $this->ds . 'textplugs-enabled'); 		
+		
 		$this->doc_root = @$_SERVER['DOCUMENT_ROOT'];
+
 		if (!$this->doc_root)
 			$this->doc_root = @$_SERVER['PATH_TRANSLATED']; // IIS
 
