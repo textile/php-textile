@@ -560,6 +560,9 @@ class Textile
 		if(!$quiet) $this->dump("Textplug directory '$textplugs'");
 
 		foreach (glob("*.textplug.php") as $textplug) {
+		  if( is_dir($textplug) )
+				continue;
+
 		  if(!$quiet) $this->dump( "Loading textplug '$textplug'..." );
 			$current_config = include_once($textplug);
 		}
