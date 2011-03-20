@@ -336,6 +336,9 @@ Applying Attributes:
 @define('txt_plusminus',          '&#177;');
 @define('txt_has_unicode',        @preg_match('/\pL/u', 'a')); // Detect if Unicode is compiled into PCRE
 
+// add emspace and enspace character codes
+@define('txt_emspace',            '&#8195;');
+
 class Textile
 {
 	var $hlgn;
@@ -420,6 +423,7 @@ class Textile
 			'/([^.]?)\.{3}/',                       // ellipsis
 			'/(\s?)--(\s?)/',                       // em dash
 			'/\s-(?:\s|$)/',                        // en dash
+			'/(\s?)\ \ (\s?)/',                     // em space
 			'/(\d+)( ?)x( ?)(?=\d+)/',              // dimension sign
 			'/(\b ?|\s|^)[([]TM[])]/i',             // trademark
 			'/(\b ?|\s|^)[([]R[])]/i',              // registered
@@ -443,6 +447,7 @@ class Textile
 			'$1'.txt_ellipsis,                     // ellipsis
 			'$1'.txt_emdash.'$2',                  // em dash
 			' '.txt_endash.' ',                    // en dash
+			'$1'.txt_emspace.'$2',                 // em space
 			'$1$2'.txt_dimension.'$3',             // dimension sign
 			'$1'.txt_trademark,                    // trademark
 			'$1'.txt_registered,                   // registered
