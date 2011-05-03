@@ -336,6 +336,23 @@ Applying Attributes:
 @define('txt_plusminus',          '&#177;');
 @define('txt_has_unicode',        @preg_match('/\pL/u', 'a')); // Detect if Unicode is compiled into PCRE
 
+# CodeIgniter Helper class
+@define( 'TEXTILE_PARSER_CLASS',  'Textile' );
+function Textile($text) {
+#
+# Initialize the parser and return the result of its transform method.
+#
+	# Setup static parser variable.
+	static $parser;
+	if (!isset($parser)) {
+		$parser_class = TEXTILE_PARSER_CLASS;
+		$parser = new $parser_class;
+	}
+
+	# Transform text using parser.
+	return $parser->TextileThis($text);
+}
+
 class Textile
 {
 	var $hlgn;
