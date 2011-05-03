@@ -14,7 +14,7 @@ For live installations only files and subdirectories from the @master@ branch sh
 
 
 
-h2. Usage
+h2. General Usage
 
 You'll need to include the source file and instantiate a parser...
 
@@ -28,6 +28,15 @@ bc. $output = $textile->TextileThis( $trusted_input );
 If you are using Textile to format user-supplied input, blog comments for instance, use a @TextileRestricted()@ call...
 
 bc. $output = $textile->TextileRestricted( $untrusted_input );
+
+h2. CodeIgniter Helper Usage
+
+Copy @classTextile.php@ to @/application/helpers/textile_helper.php@
+
+Then simply use textile as follows:
+
+bc.. $this->load->helper('textile');
+$text = Textile("Dude this is *my* code!");
 
 
 
