@@ -1,0 +1,102 @@
+###. This block is used by the Help File generator -- #####
+you don't need to include it in your own Textile documents.
+page_title => Blocks
+sort_order => 20
+###########################################################
+
+h1. Block modifier syntax
+
+h2. General notes
+
+* Blocks must be separated by a blank line.
+* A block identifier must begin its line (no white space beforehand), and,
+  except for list items, be followed by a dot and a space.
+* A block identifier followed by two dots (and a space) is an extended block.
+  It will continue, spanning blank lines, until the next block identifier.
+* A line break within a block is converted to an XHTML break.
+  
+###. The Textile synax examples below are enclosed in <pre> blocks. 
+     This is so the Textile markup can be seen in the HTML output
+     from this file.
+
+h2. Headers: h1, h2, h3, h4, h5, h6
+
+pre. 
+h1. Example header
+
+bc. <h1>Example header</h1>
+ 
+h2. Paragraph: p (optional)
+
+pre. 
+p. A paragraph
+
+bc. <p>A paragraph</p>
+
+pre. 
+Also a paragraph,
+with a line break
+
+bc. <p>Also a paragraph,<br />
+with a line break</p>
+
+h2. Blockquote: bq
+
+pre. 
+bq. Block quotation...
+
+bc. <blockquote>
+    <p>Block quotation&#8230;</p>
+</blockquote>
+
+pre. 
+bq.:http://textism.com/ Textile ...
+
+bc. <blockquote cite="http://textism.com/">
+    <p>Textile &#8230;</p>
+</blockquote>
+
+h2. Footnote: fn(1-100)
+
+pre. 
+fn1. Footnote... 
+
+bc. <p id="fn1">Footnote...</p>
+
+h2. Preformatted text: pre and bc
+
+p(note). XHTML tag brackets will be converted to XHTML entities.
+
+pre. 
+pre. <html>
+
+bc. <pre>&lt;html&gt;</pre>
+
+pre. 
+bc. $text->TextileThis(... 
+
+bc. <pre><code>$text-&gt;TextileThis(...</code></pre>
+
+h2. Textile disabled: notextile
+
+pre. 
+notextile. Textile automatically converts '&' to '&amp;', but not here.
+
+bc. Textile automatically converts '&' to '&amp;', but not here.
+
+h2. Textile partially disabled:
+
+A block beginning with whitespace will not be converted to a block element,
+ but will still undergo phrase modifier and entity conversion
+
+pre. 
+ No block element, but special characters such as < are still converted 
+to HTML entities.
+
+bc. No block element, but special characters such as &lt; are still converted
+to <span class="caps">HTML</span> entities.
+
+h2. Comment: ###
+
+pre. 
+###. This is a comment block. It will not appear in the XHTML output.

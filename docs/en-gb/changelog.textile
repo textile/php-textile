@@ -1,0 +1,59 @@
+###. This block is used by the Help File generator -- #####
+page_title => Change History 
+sort_order => 5000
+###########################################################
+
+h1. Change History
+
+Summary of changes to textile by release version.
+
+###. ######################################################
+
+h2. Version ?.? (To be announced.)
+
+h3. Bug-Fixes
+
+* Unescaped output.
+* Table Colgroups + captions without closing pipes.
+* Centred table cells treated as table captions.
+* Referenced links with index 0 (zero) not shown.
+* PHP 5.3 compatibility.
+* Only well formed language attributes allowed in restricted mode.
+
+h3. Project Management Changes
+
+* Project decoupled from "Textpattern":http://textpattern.com
+* Textile repo moved to "Github":https://github.com/netcarver/textile
+* IRC Channel (_#textile_ on "freenode.net") added.
+
+h3. New Features.
+
+* YAML formatted test cases added to project.
+* Improved spanning within non-English quotation marks.
+* Seperated example documentation from classTextile.php.
+
+h3. Related Developments...
+* Jeff Soo added help "viewing system":https://github.com/jsoo/Textviewer.
+
+
+###. ######################################################
+
+h2. Version 2.2
+
+h3. *Bug-Fixes*
+
+* Duplicate IDs in footnotes.
+* Apostrophe's and emphasized text.
+* Caps spans in table cells.
+* Caps spans around non-latin uppercase characters.
+
+h3. *New Features*
+
+* Support for utf-8 regexes.
+* Auto-numbered notelists.
+* Attributes for list items.
+* Extended support for tables; thead, tbody, tfoot, captions, summary, colgroups, cols.
+* Definition lists.
+* Textile comments.
+* Self-hyperlinks.
+* Finer controls on footnote linking and backlinking.
