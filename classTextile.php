@@ -600,15 +600,19 @@ class Textile
 				$matched = str_replace($sty[0], '', $matched);
 			}
 
-			if (preg_match("/\[([a-zA-Z]{2}(?:\-[a-zA-Z]{2})?)\]/U", $matched, $lng)) {
-				$lang = $lng[1];
-				$matched = str_replace($lng[0], '', $matched);
+			if (preg_match("/\[([^]]+)\]/U", $matched, $lng)) {
+				$matched = str_replace($lng[0], '', $matched);	# Consume entire lang block -- valid or invalid...
+				if (preg_match("/\[([a-zA-Z]{2}(?:[\-\_][a-zA-Z]{2})?)\]/U", $lng[0], $lng)) {
+					$lang = $lng[1];
+				}
 			}
 
-			# Only allow a restricted subset of the CSS standard characters for classes/ids. No encoding markers allowed...
-			if (preg_match("/\(([-a-zA-Z0-9_\.\:\#]+)\)/U", $matched, $cls)) {
-				$class = $cls[1];
-				$matched = str_replace($cls[0], '', $matched);
+			if (preg_match("/\(([^()]+)\)/U", $matched, $cls)) {
+				$matched = str_replace($cls[0], '', $matched);	# Consume entire class block -- valid or invalid...
+				# Only allow a restricted subset of the CSS standard characters for classes/ids. No encoding markers allowed...
+				if (preg_match("/\(([-a-zA-Z0-9_\.\:\#]+)\)/U", $cls[0], $cls)) {
+					$class = $cls[1];
+				}
 			}
 
 			if (preg_match("/([(]+)/", $matched, $pl)) {
@@ -624,7 +628,7 @@ class Textile
 			if (preg_match("/($this->hlgn)/", $matched, $horiz))
 				$style[] = "text-align:" . $this->hAlign($horiz[1]);
 
-      # If a textile class block attribute was found, split it into the css class and css id (if any)...
+      		# If a textile class block attribute was found, split it into the css class and css id (if any)...
 			if (preg_match("/^([-a-zA-Z0-9_]*)#([-a-zA-Z0-9_\.\:]*)$/", $class, $ids)) {
 				$id = $ids[2];
 				$class = $ids[1];
@@ -1158,77 +1162,6 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function fParseNoteDefs($m)
-	{
-		list(, $label, $link, $att, $content) = $m;
-
-		# Assign an id if the note reference parse hasn't found the label yet.
-		$id = @$this->notes[$label]['id'];
-		if( !$id )
-			$this->notes[$label]['id'] = uniqid(rand());
-
-		if( empty($this->notes[$label]['def']) ) # Ignores subsequent defs using the same label
-		{
-			$this->notes[$label]['def'] = array(
-				'atts'    => $this->pba($att),
-				'content' => $this->graf($content),
-				'link'    => $link,
-			);
-		}
-		return '';
-	}
-
-// -------------------------------------------------------------
-	function noteRef($text)
-	{
-		$text = preg_replace_callback("/
-			\[                   #  start
-			({$this->c})         # !atts
-			\#
-			([^\]!]+?)           # !label
-			([!]?)               # !nolink
-			\]
-		/Ux", array(&$this, "fParseNoteRefs"), $text);
-		return $text;
-	}
-
-// -------------------------------------------------------------
-	function fParseNoteRefs($m)
-	{
-		#   By the time this function is called, all the defs will have been processed
-		# into the notes array. So now we can resolve the link numbers in the order
-		# we process the refs...
-
-		list(, $atts, $label, $nolink) = $m;
-		$atts = $this->pba($atts);
-		$nolink = ($nolink === '!');
-
-		# Assign a sequence number to this reference if there isn't one already...
-		$num = @$this->notes[$label]['seq'];
-		if( !$num )
-			$num = $this->notes[$label]['seq'] = ($this->note_index++);
-
-		# Make our anchor point & stash it for possible use in backlinks when the
-		# note list is generated later...
-		$this->notes[$label]['refids'][] = $refid = uniqid(rand());
-
-		# If we are referencing a note that hasn't had the definition parsed yet, then assign it an ID...
-		$id = @$this->notes[$label]['id'];
-		if( !$id )
-			$id = $this->notes[$label]['id'] = uniqid(rand());
-
-		# Build the link (if any)...
-		$_ = '<span id="noteref'.$refid.'">'.$num.'</span>';
-		if( !$nolink )
-			$_ = '<a href="#note'.$id.'">'.$_.'</a>';
-
-		# Build the reference...
-		$_ = '<sup'.$atts.'>'.$_.'</sup>';
-
-		return $_;
-	}
-
-// -------------------------------------------------------------
 	function fNoteLists($m)
 	{
 		list(, $att, $start_char, $g_links, $extras) = $m;
@@ -1297,6 +1230,78 @@ class Textile
 		}
 
 		return '';
+	}
+
+
+// -------------------------------------------------------------
+	function fParseNoteDefs($m)
+	{
+		list(, $label, $link, $att, $content) = $m;
+
+		# Assign an id if the note reference parse hasn't found the label yet.
+		$id = @$this->notes[$label]['id'];
+		if( !$id )
+			$this->notes[$label]['id'] = uniqid(rand());
+
+		if( empty($this->notes[$label]['def']) ) # Ignores subsequent defs using the same label
+		{
+			$this->notes[$label]['def'] = array(
+				'atts'    => $this->pba($att),
+				'content' => $this->graf($content),
+				'link'    => $link,
+			);
+		}
+		return '';
+	}
+
+// -------------------------------------------------------------
+	function noteRef($text)
+	{
+		$text = preg_replace_callback("/
+			\[                   #  start
+			({$this->c})         # !atts
+			\#
+			([^\]!]+?)           # !label
+			([!]?)               # !nolink
+			\]
+		/Ux", array(&$this, "fParseNoteRefs"), $text);
+		return $text;
+	}
+
+// -------------------------------------------------------------
+	function fParseNoteRefs($m)
+	{
+		#   By the time this function is called, all the defs will have been processed
+		# into the notes array. So now we can resolve the link numbers in the order
+		# we process the refs...
+
+		list(, $atts, $label, $nolink) = $m;
+		$atts = $this->pba($atts);
+		$nolink = ($nolink === '!');
+
+		# Assign a sequence number to this reference if there isn't one already...
+		$num = @$this->notes[$label]['seq'];
+		if( !$num )
+			$num = $this->notes[$label]['seq'] = ($this->note_index++);
+
+		# Make our anchor point & stash it for possible use in backlinks when the
+		# note list is generated later...
+		$this->notes[$label]['refids'][] = $refid = uniqid(rand());
+
+		# If we are referencing a note that hasn't had the definition parsed yet, then assign it an ID...
+		$id = @$this->notes[$label]['id'];
+		if( !$id )
+			$id = $this->notes[$label]['id'] = uniqid(rand());
+
+		# Build the link (if any)...
+		$_ = '<span id="noteref'.$refid.'">'.$num.'</span>';
+		if( !$nolink )
+			$_ = '<a href="#note'.$id.'">'.$_.'</a>';
+
+		# Build the reference...
+		$_ = '<sup'.$atts.'>'.$_.'</sup>';
+
+		return $_;
 	}
 
 // -------------------------------------------------------------
@@ -1693,6 +1698,12 @@ class Textile
 	}
 
 // -------------------------------------------------------------
+	function encode_quot($text)
+	{
+		return str_replace('"', '&quot;', $text);
+	}
+
+// -------------------------------------------------------------
 	function encode_html($str, $quotes=1)
 	{
 		$a = array(
@@ -1711,9 +1722,9 @@ class Textile
 // -------------------------------------------------------------
 	function r_encode_html($str, $quotes=1)
 	{
-		// in restricted mode, input has already been escaped
+		// in restricted mode, all input but quotes has already been escaped
 		if ($this->restricted)
-			return $str;
+			return $this->encode_quot($str);
 		return $this->encode_html($str, $quotes);
 	}
 
