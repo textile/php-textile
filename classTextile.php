@@ -9,18 +9,13 @@
  */
 
 /*
-$HeadURL: http://textpattern.googlecode.com/svn/development/4.x/textpattern/lib/classTextile.php $
-$LastChangedRevision: 3359 $
-*/
-
-/*
 
 _____________
 T E X T I L E
 
 A Humane Web Text Generator
 
-Version 2.2
+Version 2.3
 
 Copyright (c) 2003-2004, Dean Allen <dean@textism.com>
 All rights reserved.
@@ -28,9 +23,9 @@ All rights reserved.
 Thanks to Carlo Zottmann <carlo@g-blog.net> for refactoring
 Textile's procedural code into a class framework
 
-Additions and fixes Copyright (c) 2006 Alex Shiels http://thresholdstate.com/
-Additions and fixes Copyright (c) 2010 Stef Dawson http://stefdawson.com/
-Additions and fixes Copyright (c) 2010 Netcarver   http://github.com/netcarver
+Additions and fixes Copyright (c) 2006    Alex Shiels http://thresholdstate.com/
+Additions and fixes Copyright (c) 2010    Stef Dawson http://stefdawson.com/
+Additions and fixes Copyright (c) 2010-11 Netcarver   http://github.com/netcarver
 
 _____________
 L I C E N S E
