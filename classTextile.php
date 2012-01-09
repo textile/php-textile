@@ -550,25 +550,31 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function cleanba( $in )
-	{
-	  $tmp    = $in;
-	  $before = -1;
-	  $after  = 0;
-	  while( $after != $before )
-	  {
-  	  $before = strlen( $tmp );
-  	  $tmp    = rawurldecode($tmp);
-	    $after  = strlen( $tmp );
-	  }
+    function cleanba( $in )
+    {
+        $tmp    = $in;
+        $before = -1;
+        $after  =  0;
+        $max    =  3;
+        $i      =  0;
+        while( ($after != $before) && ($i < $max) )
+        {
+            $before = strlen( $tmp );
+            $tmp    = rawurldecode($tmp);
+            $after  = strlen( $tmp );
+            $i++;
+        }
 
-		$out = strtr( $tmp, array(
-			'"'=>'',
-			"'"=>'',
-			'='=>'',
-			));
-		return $out;
-	}
+        if( $i === $max ) # If we hit the max allowed decodes, assume the input is tainted and consume it.
+            $out = '';
+        else
+            $out = strtr( $tmp, array(
+                '"'=>'',
+                "'"=>'',
+                '='=>'',
+            ));
+        return $out;
+    }
 
 // -------------------------------------------------------------
 	function pba($in, $element = "", $include_id = 1) // "parse block attributes"
