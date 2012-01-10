@@ -25,7 +25,8 @@ Textile's procedural code into a class framework
 
 Additions and fixes Copyright (c) 2006    Alex Shiels http://thresholdstate.com/
 Additions and fixes Copyright (c) 2010    Stef Dawson http://stefdawson.com/
-Additions and fixes Copyright (c) 2010-11 Netcarver   http://github.com/netcarver
+Additions and fixes Copyright (c) 2010-12 Netcarver   http://github.com/netcarver
+Additions and fixes Copyright (c) 2012    Robert Wetzlmayr 	http://wetzlmayr.com/
 
 _____________
 L I C E N S E
@@ -1460,7 +1461,7 @@ class Textile
 		$url = $this->shelveURL($url);
 
 		$out = array(
-			($href) ? '<a href="' . $href . '">' : '',
+			($href) ? '<a href="' . $href . '"' . $this->rel .'>' : '',
 			'<img src="' . $url . '"' . $atts . ' />',
 			($href) ? '</a>' : ''
 		);
