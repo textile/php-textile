@@ -251,7 +251,7 @@ Table syntax:
 				<col />
 				<col width="300" />
 			</colgroup>
-		
+
 		(Note that, per the HTML specification, you should not add span
 		to the colgroup if specifying col elements.)
 
@@ -613,7 +613,7 @@ class Textile
 			if (preg_match("/\(([^()]+)\)/U", $matched, $cls)) {
 				$matched = str_replace($cls[0], '', $matched);	# Consume entire class block -- valid or invalid...
 				# Only allow a restricted subset of the CSS standard characters for classes/ids. No encoding markers allowed...
-				if (preg_match("/\(([-a-zA-Z0-9_\.\:\#]+)\)/U", $cls[0], $cls)) {
+				if (preg_match("/\(([-a-zA-Z 0-9_\.\:\#]+)\)/U", $cls[0], $cls)) {
 					$class = $cls[1];
 				}
 			}
@@ -632,7 +632,7 @@ class Textile
 				$style[] = "text-align:" . $this->hAlign($horiz[1]);
 
       		# If a textile class block attribute was found, split it into the css class and css id (if any)...
-			if (preg_match("/^([-a-zA-Z0-9_]*)#([-a-zA-Z0-9_\.\:]*)$/", $class, $ids)) {
+			if (preg_match("/^([-a-zA-Z 0-9_]*)#([-a-zA-Z0-9_\.\:]*)$/", $class, $ids)) {
 				$id = $ids[2];
 				$class = $ids[1];
 			}

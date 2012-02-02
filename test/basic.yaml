@@ -10,11 +10,11 @@ options:
 
 Styled numbers:
   input : |
-    _(class)1_ *[en]2* **(#id)3** ??4?? __5__ %6% +7+ -8- ~9~ ^10^
+    _(class1 class2)1_ *[en]2* **(#id)3** ??4?? __5__ %6% +7+ -8- ~9~ ^10^
 
     1[^st^], 2[^nd^], 3[^rd^]
   expect: |
-    <p><em class="class">1</em> <strong lang="en">2</strong> <b id="id">3</b> <cite>4</cite> <i>5</i> <span>6</span> <ins>7</ins> <del>8</del> <sub>9</sub> <sup>10</sup></p>
+    <p><em class="class1 class2">1</em> <strong lang="en">2</strong> <b id="id">3</b> <cite>4</cite> <i>5</i> <span>6</span> <ins>7</ins> <del>8</del> <sub>9</sub> <sup>10</sup></p>
 
     <p>1<sup>st</sup>, 2<sup>nd</sup>, 3<sup>rd</sup></p>
 
