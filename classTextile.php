@@ -9,6 +9,11 @@
  */
 
 /*
+$HeadURL: https://textpattern.googlecode.com/svn/development/4.x/textpattern/lib/classTextile.php $
+$LastChangedRevision: 3629 $
+*/
+
+/*
 
 _____________
 T E X T I L E
@@ -348,6 +353,7 @@ class Textile
 	var $pnct;
 	var $rel;
 	var $fn;
+	var $h5;
 
 	var $shelf = array();
 	var $restricted = false;
@@ -358,13 +364,13 @@ class Textile
 	var $hu = '';
 	var $max_span_depth = 5;
 
-	var $ver = '2.2.0';
-	var $rev = '$Rev: 3359 $';
+	var $ver = '2.3.0';
+	var $rev = '$Rev: 3629 $';
 
 	var $doc_root;
 
 // -------------------------------------------------------------
-	function Textile()
+	function Textile($doctype = 'xhtml')
 	{
 		$this->hlgn = "(?:\<(?!>)|(?<!<)\>|\<\>|\=|[()]+(?! ))";
 		$this->vlgn = "[\-^~]";
@@ -383,6 +389,8 @@ class Textile
 		$pnc = '[[:punct:]]';
 
 		$this->url_schemes = array('http','https','ftp','mailto');
+
+		$this->h5 = ($doctype == 'html5');
 
 		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', '###' );
 
@@ -435,7 +443,7 @@ class Textile
 			txt_quote_single_open,                 // single opening
 			'$1'.txt_quote_double_close,           // double closing
 			txt_quote_double_open,                 // double opening
-			'<acronym title="$2">$1</acronym>',     // 3+ uppercase acronym
+			($this->h5 ? '<abbr title="$2">$1</abbr>' : '<acronym title="$2">$1</acronym>'),     // 3+ uppercase acronym/abbr
 			'<span class="caps">glyph:$1</span>$2', // 3+ uppercase
 			'$1'.txt_ellipsis,                     // ellipsis
 			'$1'.txt_emdash.'$2',                  // em dash
@@ -1450,7 +1458,17 @@ class Textile
 		list(, $algn, $atts, $url) = $m;
 		$url = htmlspecialchars($url);
 		$atts  = $this->pba($atts);
-		$atts .= ($algn != '')	? ' align="' . $this->iAlign($algn) . '"' : '';
+		if ($algn != '') {
+			if ($this->h5) {
+				if (strstr($atts, 'class="') === false) {  // fugly hack
+					$atts .= ' class="align-' . $this->iAlign($algn) . '"';
+				} else {
+					$atts = preg_replace('/class="(.*?)"/', 'class="$1 align-' . $this->iAlign($algn) . '"', $atts);
+				}
+			} else {
+				$atts .= ' align="' . $this->iAlign($algn) . '"';
+			}
+		}
 
  		if(isset($m[4]))
  		{
