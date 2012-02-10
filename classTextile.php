@@ -10,7 +10,7 @@
 
 /*
 $HeadURL: https://textpattern.googlecode.com/svn/development/4.x/textpattern/lib/classTextile.php $
-$LastChangedRevision: 3627 $
+$LastChangedRevision: 3629 $
 */
 
 /*
@@ -365,7 +365,7 @@ class Textile
 	var $max_span_depth = 5;
 
 	var $ver = '2.3.0';
-	var $rev = '$Rev: 3627 $';
+	var $rev = '$Rev: 3629 $';
 
 	var $doc_root;
 
@@ -1066,7 +1066,7 @@ class Textile
 					([^\s$f]+|\S.*?[^\s$f\n])             # content
 					([$pnct]*)                            # end
 					$f
-					($|[\]}]|(?=[$pnct]{1,2}|\s|\)))  # tail
+					($|[\]}<]|(?=[$pnct]{1,2}|\s|\)))  # tail
 				/xu", array(&$this, "fSpan"), $text);
 			}
 		}
