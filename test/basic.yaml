@@ -12,8 +12,12 @@ Mixed HTML & Textile:
   input : |
     <p>*foo*</p>
 
+    <p>*foo*[^2^]</p>
+
   expect: |
     <p><strong>foo</strong></p>
+
+    <p><strong>foo</strong><sup>2</sup></p>
 
 Styled numbers:
   input : |

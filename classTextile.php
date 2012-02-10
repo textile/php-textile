@@ -1065,7 +1065,7 @@ class Textile
 					([^\s$f]+|\S.*?[^\s$f\n])             # content
 					([$pnct]*)                            # end
 					$f
-					($|[\]}<]|(?=[$pnct]{1,2}|\s|\)))  # tail
+					($|[\[\]}<]|(?=[$pnct]{1,2}|\s|\)))  # tail
 				/xu", array(&$this, "fSpan"), $text);
 			}
 		}
