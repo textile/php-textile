@@ -615,6 +615,17 @@ class Textile
 				# Only allow a restricted subset of the CSS standard characters for classes/ids. No encoding markers allowed...
 				if (preg_match("/\(([-a-zA-Z 0-9_\.\:\#]+)\)/U", $cls[0], $cls)) {
 					$class = $cls[1];
+					$hashpos = strpos( $class, '#' );
+					# If a textile class block attribute was found with a '#' in it
+					# split it into the css class and css id...
+					if( false !== $hashpos ) {
+						if (preg_match("/^([-a-zA-Z 0-9_]*)/", substr( $cls[1], 0, $hashpos ), $ids)) {
+							$class = $ids[1];
+						}
+						if (preg_match("/#([-a-zA-Z0-9_\.\:]*)$/", substr( $cls[1], $hashpos ), $ids)) {
+							$id = $ids[1];
+						}
+					}
 				}
 			}
 
@@ -630,12 +641,6 @@ class Textile
 
 			if (preg_match("/($this->hlgn)/", $matched, $horiz))
 				$style[] = "text-align:" . $this->hAlign($horiz[1]);
-
-      		# If a textile class block attribute was found, split it into the css class and css id (if any)...
-			if (preg_match("/^([-a-zA-Z 0-9_]*)#([-a-zA-Z0-9_\.\:]*)$/", $class, $ids)) {
-				$id = $ids[2];
-				$class = $ids[1];
-			}
 
 			if ($element == 'col') {
 				if (preg_match("/(?:\\\\(\d+))?\s*(\d+)?/", $matched, $csp)) {
