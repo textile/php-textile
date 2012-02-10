@@ -8,6 +8,13 @@ options:
   adaptor_options:
     restricted: false
 
+Mixed HTML & Textile:
+  input : |
+    <p>*foo*</p>
+
+  expect: |
+    <p><strong>foo</strong></p>
+
 Styled numbers:
   input : |
     _(class1 class2#id1)1_ *[en]2* **(#id)3** ??4?? __5__ %6% +7+ -(foobarbaz#boom bang)8- ~9~ ^10^
