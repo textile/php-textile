@@ -363,9 +363,20 @@ class Textile
 
 	var $doc_root;
 
+	var $doctype;
+
 // -------------------------------------------------------------
-	function Textile()
+	function Textile( $doctype = 'xhtml' )
 	{
+		$doctype_whitelist = array(
+			'xhtml',
+			'html5',
+		);
+		if( !in_array( $doctype, $doctype_whitelist ) )
+			$this->doctype = 'xhtml';
+		else
+			$this->doctype = $doctype;
+
 		$this->hlgn = "(?:\<(?!>)|(?<!<)\>|\<\>|\=|[()]+(?! ))";
 		$this->vlgn = "[\-^~]";
 		$this->clas = "(?:\([^)\n]+\))";	# Don't allow classes/ids/languages/styles to span across newlines
@@ -435,7 +446,7 @@ class Textile
 			txt_quote_single_open,                 // single opening
 			'$1'.txt_quote_double_close,           // double closing
 			txt_quote_double_open,                 // double opening
-			'<acronym title="$2">$1</acronym>',     // 3+ uppercase acronym
+			(('html5' === $this->doctype) ? '<abbr title="$2">$1</abbr>' : '<acronym title="$2">$1</acronym>'),     // 3+ uppercase acronym
 			'<span class="caps">glyph:$1</span>$2', // 3+ uppercase
 			'$1'.txt_ellipsis,                     // ellipsis
 			'$1'.txt_emdash.'$2',                  // em dash
