@@ -368,10 +368,11 @@ class Textile
 // -------------------------------------------------------------
 	function Textile( $doctype = 'xhtml' )
 	{
-		$doctype_whitelist = array(
+		$doctype_whitelist = array( # All lower case please...
 			'xhtml',
 			'html5',
 		);
+		$doctype = strtolower( $doctype );
 		if( !in_array( $doctype, $doctype_whitelist ) )
 			$this->doctype = 'xhtml';
 		else
