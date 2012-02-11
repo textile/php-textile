@@ -4,7 +4,8 @@ options:
   showpasses: true
   showdiffs: true
   debug: false
-  format: html
+  format: html          # Tester output format
+  doctype: xhtml        # Unit under test document output format
   adaptor_options:
     restricted: false
 
