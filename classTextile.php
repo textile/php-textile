@@ -590,6 +590,7 @@ class Textile
 	{
 		$style = '';
 		$class = '';
+		$autoclass = '';
 		$lang = '';
 		$colspan = '';
 		$rowspan = '';
@@ -650,10 +651,8 @@ class Textile
 					'=' => 'center',
 					'>' => 'right');
 				if ( isset($vals[$algn]) ) {
-					if( 'html5' === $this->doctype ) {
-						$class .= " align-{$vals[$algn]}";
-						$class = trim( $class );
-					}
+					if( 'html5' === $this->doctype )
+						$autoclass = " align-{$vals[$algn]}";
 					else
 						$align = $vals[$algn];
 				}
@@ -679,8 +678,15 @@ class Textile
 				}
 			}
 
-			if ($this->restricted)
-				return ($lang)	  ? ' lang="'	. $this->cleanba($lang) . '"': '';
+			if ($this->restricted) {
+				$class = trim( $autoclass );
+				return join( '', array(
+					($lang)  ? ' lang="'  . $this->cleanba($lang)  . '"': '',
+					($class) ? ' class="' . $this->cleanba($class) . '"': '',
+				));
+			}
+			else
+				$class = trim( $class . $autoclass );
 
 			$o = '';
 			if( $style ) {
