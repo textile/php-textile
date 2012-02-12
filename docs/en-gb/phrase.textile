@@ -88,13 +88,23 @@ h2. Links
 pre. 
  "Plain link":url
  "Link with title(mytitle)":url
+ "(myclass)Link with class":url
+ "(#myid)Link with ID":url
+ "(myclass#myid)Link with class, ID, and title(myTitle)":url
  "$":URL
  "$(mytitle)":URL
+ "Link with alias cited in square brackets":myAlias
+
+ [myAlias]URL
 
 bc.  <a href="url">Plain link</a>
  <a href="url" title="mytitle">Link with title</a>
+ <a href="url" class="myclass">Link with class</a>
+ <a href="url" id="myid">Link with ID</a>
+ <a href="url" class="myclass" id="myid" title="mytitle">Link with class, ID, and title</a>
  <a href="URL">URL</a>
  <a href="URL" title="mytitle">URL</a>
+ <a href="URL">Link with alias cited in square brackets</a>
 
 h2. Images
 
