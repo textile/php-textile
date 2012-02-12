@@ -586,7 +586,7 @@ class Textile
     }
 
 // -------------------------------------------------------------
-	function pba($in, $element = "", $include_id = 1) // "parse block attributes"
+	function pba($in, $element = "", $include_id = 1, $algn = '') // "parse block attributes"
 	{
 		$style = '';
 		$class = '';
@@ -597,6 +597,7 @@ class Textile
 		$width = '';
 		$id = '';
 		$atts = '';
+		$align = '';
 
 		if (!empty($in)) {
 			$matched = $in;
@@ -643,6 +644,19 @@ class Textile
 				}
 			}
 
+			if( 'image' === $element && '' !== $algn ) {
+				$vals = array(
+					'<' => 'left',
+					'=' => 'center',
+					'>' => 'right');
+				if ( isset($vals[$algn]) ) {
+					if( 'html5' === $this->doctype )
+						$class .= " textile-img-align-{$vals[$algn]}";
+					else
+						$align = $vals[$algn];
+				}
+			}
+
 			if (preg_match("/([(]+)/", $matched, $pl)) {
 				$style[] = "padding-left:" . strlen($pl[1]) . "em";
 				$matched = str_replace($pl[0], '', $matched);
@@ -664,7 +678,7 @@ class Textile
 			}
 
 			if ($this->restricted)
-				return ($lang)	  ? ' lang="'	. $this->cleanba($lang) . '"':'';
+				return ($lang)	  ? ' lang="'	. $this->cleanba($lang) . '"': '';
 
 			$o = '';
 			if( $style ) {
@@ -680,14 +694,15 @@ class Textile
 			}
 
 			return join('',array(
-				($style)   ? ' style="'   . $this->cleanba($style)    .'"':'',
-				($class)   ? ' class="'   . $this->cleanba($class)    .'"':'',
-				($lang)    ? ' lang="'    . $this->cleanba($lang)     .'"':'',
-				($id and $include_id) ? ' id="' . $this->cleanba($id) .'"':'',
-				($colspan) ? ' colspan="' . $this->cleanba($colspan)  .'"':'',
-				($rowspan) ? ' rowspan="' . $this->cleanba($rowspan)  .'"':'',
-				($span)    ? ' span="'    . $this->cleanba($span)     .'"':'',
-				($width)   ? ' width="'   . $this->cleanba($width)    .'"':'',
+				($style)   ? ' style="'   . $this->cleanba($style)    .'"' : '',
+				($class)   ? ' class="'   . $this->cleanba($class)    .'"' : '',
+				($lang)    ? ' lang="'    . $this->cleanba($lang)     .'"' : '',
+				($id and $include_id) ? ' id="' . $this->cleanba($id) .'"' : '',
+				($colspan) ? ' colspan="' . $this->cleanba($colspan)  .'"' : '',
+				($rowspan) ? ' rowspan="' . $this->cleanba($rowspan)  .'"' : '',
+				($span)    ? ' span="'    . $this->cleanba($span)     .'"' : '',
+				($width)   ? ' width="'   . $this->cleanba($width)    .'"' : '',
+				($align)   ? ' align="'   . $this->cleanba($align)    .'"' : '',
 			));
 		}
 		return '';
@@ -1461,8 +1476,7 @@ class Textile
 	{
 		list(, $algn, $atts, $url) = $m;
 		$url = htmlspecialchars($url);
-		$atts  = $this->pba($atts);
-		$atts .= ($algn != '')	? ' align="' . $this->iAlign($algn) . '"' : '';
+		$atts  = $this->pba($atts , 'image' , 1 , $algn);
 
  		if(isset($m[4]))
  		{
@@ -1650,16 +1664,6 @@ class Textile
 	function replaceGlyphs($text)
 	{
 		return preg_replace('/glyph:([^<]+)/','$1',$text);
-	}
-
-// -------------------------------------------------------------
-	function iAlign($in)
-	{
-		$vals = array(
-			'<' => 'left',
-			'=' => 'center',
-			'>' => 'right');
-		return (isset($vals[$in])) ? $vals[$in] : '';
 	}
 
 // -------------------------------------------------------------
