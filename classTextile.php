@@ -651,7 +651,7 @@ class Textile
 					'>' => 'right');
 				if ( isset($vals[$algn]) ) {
 					if( 'html5' === $this->doctype ) {
-						$class .= " textile-img-align-{$vals[$algn]}";
+						$class .= " align-{$vals[$algn]}";
 						$class = trim( $class );
 					}
 					else
