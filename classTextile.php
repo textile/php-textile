@@ -1710,7 +1710,6 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-// NOTE: deprecated
 	function cmap()
 	{
 		$f = 0xffff;
