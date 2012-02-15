@@ -369,9 +369,21 @@ class Textile
 
 	var $doc_root;
 
+	var $doctype;
+
 // -------------------------------------------------------------
-	function Textile($doctype = 'xhtml')
+	function Textile( $doctype = 'xhtml' )
 	{
+		$doctype_whitelist = array( # All lower case please...
+			'xhtml',
+			'html5',
+		);
+		$doctype = strtolower( $doctype );
+		if( !in_array( $doctype, $doctype_whitelist ) )
+			$this->doctype = 'xhtml';
+		else
+			$this->doctype = $doctype;
+
 		$this->hlgn = "(?:\<(?!>)|(?<!<)\>|\<\>|\=|[()]+(?! ))";
 		$this->vlgn = "[\-^~]";
 		$this->clas = "(?:\([^)\n]+\))";	# Don't allow classes/ids/languages/styles to span across newlines
@@ -443,7 +455,7 @@ class Textile
 			txt_quote_single_open,                 // single opening
 			'$1'.txt_quote_double_close,           // double closing
 			txt_quote_double_open,                 // double opening
-			($this->h5 ? '<abbr title="$2">$1</abbr>' : '<acronym title="$2">$1</acronym>'),     // 3+ uppercase acronym/abbr
+			(('html5' === $this->doctype) ? '<abbr title="$2">$1</abbr>' : '<acronym title="$2">$1</acronym>'),     // 3+ uppercase acronym
 			'<span class="caps">glyph:$1</span>$2', // 3+ uppercase
 			'$1'.txt_ellipsis,                     // ellipsis
 			'$1'.txt_emdash.'$2',                  // em dash
@@ -582,10 +594,11 @@ class Textile
     }
 
 // -------------------------------------------------------------
-	function pba($in, $element = "", $include_id = 1) // "parse block attributes"
+	function pba($in, $element = "", $include_id = 1, $algn = '') // "parse block attributes"
 	{
 		$style = '';
 		$class = '';
+		$autoclass = '';
 		$lang = '';
 		$colspan = '';
 		$rowspan = '';
@@ -593,6 +606,7 @@ class Textile
 		$width = '';
 		$id = '';
 		$atts = '';
+		$align = '';
 
 		if (!empty($in)) {
 			$matched = $in;
@@ -639,6 +653,19 @@ class Textile
 				}
 			}
 
+			if( 'image' === $element && '' !== $algn ) {
+				$vals = array(
+					'<' => 'left',
+					'=' => 'center',
+					'>' => 'right');
+				if ( isset($vals[$algn]) ) {
+					if( 'html5' === $this->doctype )
+						$autoclass = " align-{$vals[$algn]}";
+					else
+						$align = $vals[$algn];
+				}
+			}
+
 			if (preg_match("/([(]+)/", $matched, $pl)) {
 				$style[] = "padding-left:" . strlen($pl[1]) . "em";
 				$matched = str_replace($pl[0], '', $matched);
@@ -659,8 +686,15 @@ class Textile
 				}
 			}
 
-			if ($this->restricted)
-				return ($lang)	  ? ' lang="'	. $this->cleanba($lang) . '"':'';
+			if ($this->restricted) {
+				$class = trim( $autoclass );
+				return join( '', array(
+					($lang)  ? ' lang="'  . $this->cleanba($lang)  . '"': '',
+					($class) ? ' class="' . $this->cleanba($class) . '"': '',
+				));
+			}
+			else
+				$class = trim( $class . $autoclass );
 
 			$o = '';
 			if( $style ) {
@@ -676,14 +710,15 @@ class Textile
 			}
 
 			return join('',array(
-				($style)   ? ' style="'   . $this->cleanba($style)    .'"':'',
-				($class)   ? ' class="'   . $this->cleanba($class)    .'"':'',
-				($lang)    ? ' lang="'    . $this->cleanba($lang)     .'"':'',
-				($id and $include_id) ? ' id="' . $this->cleanba($id) .'"':'',
-				($colspan) ? ' colspan="' . $this->cleanba($colspan)  .'"':'',
-				($rowspan) ? ' rowspan="' . $this->cleanba($rowspan)  .'"':'',
-				($span)    ? ' span="'    . $this->cleanba($span)     .'"':'',
-				($width)   ? ' width="'   . $this->cleanba($width)    .'"':'',
+				($style)   ? ' style="'   . $this->cleanba($style)    .'"' : '',
+				($class)   ? ' class="'   . $this->cleanba($class)    .'"' : '',
+				($lang)    ? ' lang="'    . $this->cleanba($lang)     .'"' : '',
+				($id and $include_id) ? ' id="' . $this->cleanba($id) .'"' : '',
+				($colspan) ? ' colspan="' . $this->cleanba($colspan)  .'"' : '',
+				($rowspan) ? ' rowspan="' . $this->cleanba($rowspan)  .'"' : '',
+				($span)    ? ' span="'    . $this->cleanba($span)     .'"' : '',
+				($width)   ? ' width="'   . $this->cleanba($width)    .'"' : '',
+				($align)   ? ' align="'   . $this->cleanba($align)    .'"' : '',
 			));
 		}
 		return '';
@@ -1457,18 +1492,7 @@ class Textile
 	{
 		list(, $algn, $atts, $url) = $m;
 		$url = htmlspecialchars($url);
-		$atts  = $this->pba($atts);
-		if ($algn != '') {
-			if ($this->h5) {
-				if (strstr($atts, 'class="') === false) {  // fugly hack
-					$atts .= ' class="align-' . $this->iAlign($algn) . '"';
-				} else {
-					$atts = preg_replace('/class="(.*?)"/', 'class="$1 align-' . $this->iAlign($algn) . '"', $atts);
-				}
-			} else {
-				$atts .= ' align="' . $this->iAlign($algn) . '"';
-			}
-		}
+		$atts  = $this->pba($atts , 'image' , 1 , $algn);
 
  		if(isset($m[4]))
  		{
@@ -1659,16 +1683,6 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function iAlign($in)
-	{
-		$vals = array(
-			'<' => 'left',
-			'=' => 'center',
-			'>' => 'right');
-		return (isset($vals[$in])) ? $vals[$in] : '';
-	}
-
-// -------------------------------------------------------------
 	function hAlign($in)
 	{
 		$vals = array(
@@ -1704,7 +1718,6 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-// NOTE: deprecated
 	function cmap()
 	{
 		$f = 0xffff;
