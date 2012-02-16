@@ -374,6 +374,8 @@ Links :
     "(class#id)[en-gb]{text-transform:uppercase}Try this link(Link title)":http://textile.sitemonks.com
 
     "(linkclass#linkid)[de-de]!(imgclass#imgid)imgurl(img/link text)!(Link Title)":linkurl
+    
+    "Übermensch":https://de.wikipedia.org/wiki/Übermensch
 
   expect : |
     <p><a href="http://example.com/">link text</a></p>
