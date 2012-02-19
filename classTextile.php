@@ -1263,7 +1263,7 @@ class Textile
 		if( $backlink_type === '!' )
 			return '';
 		elseif( $backlink_type === '^' )
-			return '<a href="#noteref'.$info['refids'][0].'"><sup>'.$i.'</sup></a>';
+			return '<sup><a href="#noteref'.$info['refids'][0].'">'.$i.'</a></sup>';
 		else {
 			$_ = array();
 			foreach( $info['refids'] as $id ) {
