@@ -1341,6 +1341,8 @@ Simple Note Links:
 
     notelist{padding:1em; margin:1em; border-bottom:1px solid gray}.
 
+    notelist{padding:1em; margin:1em; border-bottom:1px solid gray}:‡.
+
   expect: |
     <p>Scientists say<sup><a href="#note"><span id="noteref">1</span></a></sup> the moon is quite small. But I, for one, don&#8217;t believe them. Others claim it to be made of cheese<sup><a href="#note"><span id="noteref">2</span></a></sup>. If this proves true I suspect we are in for troubled times<sup><a href="#note"><span id="noteref">3</span></a></sup> as people argue over their &#8220;share&#8221; of the moon&#8217;s cheese. In the end, its limited size<sup><a href="#note"><span id="noteref">1</span></a></sup> may prove problematic.</p>
 
@@ -1350,6 +1352,11 @@ Simple Note Links:
     <li><sup><a href="#noteref">a</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
     </ol>
 
+    <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
+    <li class="noteclass"><sup><a href="#noteref">‡</a></sup> <sup><a href="#noteref">‡</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    <li id="noteid"><sup><a href="#noteref">‡</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    <li><sup><a href="#noteref">‡</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    </ol>
 
 Note Links.:
   input: |
