@@ -1579,6 +1579,52 @@ Classes/ids/langs on phrase modifiers :
 
     <p><code>(c#id)[Whatever]My text</code></p>
 
+Github Issue 50 (en-dash & strike) :
+  input:  |
+    fjfhfjhf
+    fhfhfh
+    xyz
+
+    - fjfhfjhf
+    - fhfhfh
+    - xyz
+
+    a -b-
+    a -b-``
+    a - b
+    a -b
+    a- b
+    a-b
+    -b
+    a-
+    b
+    a -
+    b
+    a -``
+    b
+  expect: |
+    <p>fjfhfjhf<br />
+    fhfhfh<br />
+    xyz</p>
+
+    <p>- fjfhfjhf<br />
+    - fhfhfh<br />
+    - xyz</p>
+
+    <p>a <del>b</del><br />
+    a <del>b</del> <br />
+    a &#8211; b<br />
+    a -b<br />
+    a- b<br />
+    a-b<br />
+    -b<br />
+    a-<br />
+    b<br />
+    a -<br />
+    b<br />
+    a &#8211; <br />
+    b</p>
+
 Empty things... :
   input:  |
     ''
@@ -1766,7 +1812,7 @@ Empty things... :
 
     <p>_ _</p>
 
-    <p>- &#8211; </p>
+    <p>- -</p>
 
     <p>+ +</p>
 
