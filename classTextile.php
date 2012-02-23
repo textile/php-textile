@@ -1025,7 +1025,7 @@ class Textile
 		}
 		elseif ($tag == 'bc') {
 			$o1 = "<pre$atts>";
-			$o2 = "<code".$this->pba($att, '', 0).">";
+			$o2 = "<code>";
 			$c2 = "</code>";
 			$c1 = "</pre>";
 			$content = $this->shelve($this->r_encode_html(rtrim($content, "\n")."\n"));
