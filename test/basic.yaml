@@ -631,12 +631,12 @@ Code blocks, pre and exclusions :
 
     p(regular#somestuff). _Aaaand_, *__relax__*.
   expect : |
-    <pre class="input"><code class="input">You can&#39;t _*touch*_ *_this_*... Hammer time.
+    <pre class="input"><code>You can&#39;t _*touch*_ *_this_*... Hammer time.
     </code></pre>
 
     <p>And keep your <code>(expect)mitts _*off*_ *_me_*</code> as well. About the <code>&lt;hr /&gt;</code> tag.</p>
 
-    <pre class="block"><code class="block">As for the stuff in my *bold*, _emphasised_ &amp; __italic__ codeblock, I think you&#39;ll find these tags entertaining:
+    <pre class="block"><code>As for the stuff in my *bold*, _emphasised_ &amp; __italic__ codeblock, I think you&#39;ll find these tags entertaining:
     &lt;txp:linklist /&gt;
     &lt;txp:image_list category=&quot;squid&quot;&gt;
     &lt;txp:image class=&quot;prawns&quot; something=&quot;summat else&quot; /&gt;
