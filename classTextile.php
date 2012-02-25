@@ -1350,6 +1350,65 @@ class Textile
 	}
 
 // -------------------------------------------------------------
+	/**
+	 * Parse URI
+	 *
+	 * Regex taken from the RFC at http://tools.ietf.org/html/rfc3986#appendix-B
+	 **/
+	function parseURI( $uri, &$m )
+	{
+		$r = "@^((?<scheme>[^:/?#]+):)?(//(?<authority>[^/?#]*))?(?<path>[^?#]*)(\?(?<query>[^#]*))?(#(?<fragment>.*))?@";
+		#       12                     3  4                      5              6  7                8 9
+		#
+		#	scheme    = $2
+		#	authority = $4
+		# 	path      = $5
+		#	query     = $7
+		#	fragment  = $9
+
+		$ok = preg_match( $r, $uri, $m );
+		return $ok;
+	}
+
+	protected static function addPart( &$mask, $name, &$parts ) {
+		return (in_array($name, $mask) && isset( $parts[$name]) && !empty($parts[$name]));
+	}
+
+
+// -------------------------------------------------------------
+	/**
+	 * Rebuild a URI from parsed parts and a mask.
+	 *
+	 * Algorithm based on example from http://tools.ietf.org/html/rfc3986#section-5.3
+	 **/
+	function rebuildURI( $parts, $mask = 'scheme,authority,path,query,fragment' )
+	{
+		$mask = explode( ',', $mask );
+		$out  = '';
+
+		if( self::addPart( $mask, 'scheme', $parts ) ) {
+			$out .= $parts['scheme'] . ':';
+		}
+
+		if( self::addPart( $mask, 'authority', $parts) ) {
+			$out .= '//' . $parts['authority'];
+		}
+
+		if( self::addPart( $mask, 'path', $parts ) )
+			$out .= $parts['path'];
+
+		if( self::addPart( $mask, 'query', $parts ) ) {
+			$out .= '?' . $parts['query'];
+		}
+
+		if( self::addPart( $mask, 'fragment', $parts ) ) {
+			$out .= '#' . $parts['fragment'];
+		}
+
+		return $out;
+	}
+
+// -------------------------------------------------------------
 	function links($text)
 	{
 		return preg_replace_callback('/
@@ -1371,7 +1430,15 @@ class Textile
 	{
 		list(, $pre, $atts, $text, $title, $url, $slash, $post, $tail) = $m;
 
-		if( '$' === $text ) $text = $url;
+		$uri_parts = array();
+		$this->parseURI( $url, $uri_parts );
+
+		if( '$' === $text ) {
+			if( in_array( $uri_parts['scheme'] , array('http', 'https', 'mailto') ) )
+				$text = trim( $this->rebuildURI( $uri_parts, 'authority,path,query,fragment'), '/' );
+			else
+				$text = $url;
+		}
 
 		$atts = $this->pba($atts);
 		$atts .= ($title != '') ? ' title="' . $this->encode_html($title) . '"' : '';
