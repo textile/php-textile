@@ -386,6 +386,16 @@ Links :
     "(class#id)[en-gb]{text-transform:uppercase}Try this link(Link title)":http://textile.sitemonks.com
 
     "(linkclass#linkid)[de-de]!(imgclass#imgid)imgurl(img/link text)!(Link Title)":linkurl
+    
+    "Übermensch":https://de.wikipedia.org/wiki/Übermensch
+
+    "福島駅":http://ja.wikipedia.org/wiki/福島駅_(大阪府) this is a test -- no trailing slash.
+
+    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash":https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ
+
+    "福島駅":http://ja.wikipedia.org/wiki/福島駅_(大阪府)/ this is a test -- with a trailing slash.
+
+    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash":https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ/
 
   expect : |
     <p><a href="http://example.com/">link text</a></p>
@@ -409,6 +419,12 @@ Links :
     <p><a href="http://textile.sitemonks.com" style="text-transform:uppercase;" class="class" lang="en-gb" id="id" title="Link title">Try this link</a></p>
 
     <p><a href="linkurl" class="linkclass" lang="de-de" id="linkid" title="Link Title"><img src="imgurl" class="imgclass" id="imgid" title="img/link text" alt="img/link text" /></a></p>
+
+    <p><a href="https://de.wikipedia.org/wiki/">Übermensch</a></p>
+
+    <p><a href=""></a> this is a test.</p>
+
+    <p><a href=""></a>äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ</p>
 
 Mixed XHTML and Textile Links :
   assert : skip

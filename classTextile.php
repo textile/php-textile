@@ -391,7 +391,6 @@ class Textile
 		$this->lc = "(?:{$this->clas}|{$this->styl}|{$this->lnge})*";
 
 		$this->pnct  = '[\!"#\$%&\'()\*\+,\-\./:;<=>\?@\[\\\]\^_`{\|}\~]';
-		$this->urlch = '[\w"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
 		$pnc = '[[:punct:]]';
 
 		$this->url_schemes = array('http','https','ftp','mailto');
@@ -416,6 +415,7 @@ class Textile
 			);
 		}
 		extract( $this->regex_snippets );
+		$this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
 
 		$this->glyph_search = array(
 			'/('.$wrd.')\'('.$wrd.')/'.$mod,        // I'm an apostrophe
@@ -1422,7 +1422,7 @@ class Textile
 			(\/)?                  # $slash
 			([^\w\/;]*?)           # $post
 			([\]}]|(?=\s|$|\)))
-		/x', array(&$this, "fLink"), $text);
+		/x'.$this->regex_snippets['mod'], array(&$this, "fLink"), $text);
 	}
 
 // -------------------------------------------------------------
@@ -1448,7 +1448,30 @@ class Textile
 
 		$text = $this->span($text);
 		$text = $this->glyphs($text);
-		$url = $this->shelveURL($url.$slash);
+		$url = $this->shelveURL(
+			strtr(rawurlencode($url.$slash),
+			array(
+				'%3A'=>':',
+				'%21'=>'!',
+				'%23'=>'#',
+				'%24'=>'$',
+				'%26'=>'&',
+				'%27'=>"'",
+				'%28'=>'(',
+				'%29'=>')',
+				'%2A'=>'*',
+				'%2B'=>'+',
+				'%2C'=>',',
+				'%2F'=>'/',
+				'%3A'=>':',
+				'%3B'=>';',
+				'%3D'=>'=',
+				'%3F'=>'?',
+				'%40'=>'@',
+				'%5B'=>'[',
+				'%5D'=>']',
+			)
+		) );
 
 		$opentag = '<a href="' . $url . '"' . $atts . $this->rel . '>';
 		$closetag = '</a>';
