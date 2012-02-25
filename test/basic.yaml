@@ -337,17 +337,29 @@ URLs as non-links :
 Self-Hyperlink :
   notes  : A new feature.
   input  : |
+    Relative link to "$":testit.php?testfilename=textile/basic.
+
+    Relative link to "$":/testit.php?testfilename=textile/basic.
+
+    Send spam to "$":mailto://blackhole@sun.comet please!
+
     An auto-hyperlink to "$":http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown is -not- possible.
 
     An auto-hyperlink (with title) to "$(Comparison of Textile2 and Markdown)":http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown is -not- possible.
 
     An auto-hyperlink (with atts) to "(class#id)[en-au]$(Comparison of Textile2 and Markdown)":http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown is -not- possible.
   expect : |
-    <p>An auto-hyperlink to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown">http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
+    <p>Relative link to <a href="testit.php?testfilename=textile/basic">testit.php?testfilename=textile/basic</a>.</p>
 
-    <p>An auto-hyperlink (with title) to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown" title="Comparison of Textile2 and Markdown">http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
+    <p>Relative link to <a href="/testit.php?testfilename=textile/basic">/testit.php?testfilename=textile/basic</a>.</p>
 
-    <p>An auto-hyperlink (with atts) to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown" class="class" lang="en-au" id="id" title="Comparison of Textile2 and Markdown">http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
+    <p>Send spam to <a href="mailto://blackhole@sun.comet">blackhole@sun.comet</a> please!</p>
+
+    <p>An auto-hyperlink to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown">mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
+
+    <p>An auto-hyperlink (with title) to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown" title="Comparison of Textile2 and Markdown">mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
+
+    <p>An auto-hyperlink (with atts) to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown" class="class" lang="en-au" id="id" title="Comparison of Textile2 and Markdown">mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
 
 Links :
   input  : |
@@ -392,7 +404,7 @@ Links :
 
     <p><a href="mailto:contact@example.com" title="with title">link text</a></p>
 
-    <p><a href="http://textpattern.com" class="class" lang="de-de" id="id" title="title">http://textpattern.com</a></p>
+    <p><a href="http://textpattern.com" class="class" lang="de-de" id="id" title="title">textpattern.com</a></p>
 
     <p><a href="http://textile.sitemonks.com" style="text-transform:uppercase;" class="class" lang="en-gb" id="id" title="Link title">Try this link</a></p>
 
