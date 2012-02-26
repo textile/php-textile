@@ -1364,7 +1364,7 @@ class Textile
 	 *
 	 * Algorithm based on example from http://tools.ietf.org/html/rfc3986#section-5.3
 	 **/
-	function rebuildURI( $parts, $mask = 'scheme,authority,path,query,fragment' )
+	function rebuildURI( $parts, $mask='scheme,authority,path,query,fragment', $encode=true )
 	{
 		$mask = explode( ',', $mask );
 		$out  = '';
@@ -1377,8 +1377,19 @@ class Textile
 			$out .= '//' . $parts['authority'];
 		}
 
-		if( self::addPart( $mask, 'path', $parts ) )
-			$out .= $parts['path'];
+		if( self::addPart( $mask, 'path', $parts ) ) {
+			if( !$encode )
+				$out .= $parts['path'];
+			else {
+				$pp = explode( '/', $parts['path'] );
+				foreach( $pp as &$p ) {
+					$p = strtr( rawurlencode( $p ), array( '%40' => '@' ) );
+				}
+
+				$pp = implode( '/', $pp );
+				$out .= $pp;
+			}
+		}
 
 		if( self::addPart( $mask, 'query', $parts ) ) {
 			$out .= '?' . $parts['query'];
@@ -1425,7 +1436,7 @@ class Textile
 
 		if( '$' === $text ) {
 			if( $scheme_in_list )
-				$text = trim( $this->rebuildURI( $uri_parts, 'authority,path,query,fragment'), '/' );
+				$text = ltrim( $this->rebuildURI( $uri_parts, 'authority,path,query,fragment', false ), '/' );
 			else
 				$text = $url;
 		}
@@ -1438,35 +1449,12 @@ class Textile
 
 		$text = $this->span($text);
 		$text = $this->glyphs($text);
-		$url = $this->shelveURL(
-			strtr(rawurlencode($url.$slash),
-			array(
-				'%3A'=>':',
-				'%21'=>'!',
-				'%23'=>'#',
-				'%24'=>'$',
-				'%26'=>'&',
-				'%27'=>"'",
-				'%28'=>'(',
-				'%29'=>')',
-				'%2A'=>'*',
-				'%2B'=>'+',
-				'%2C'=>',',
-				'%2F'=>'/',
-				'%3A'=>':',
-				'%3B'=>';',
-				'%3D'=>'=',
-				'%3F'=>'?',
-				'%40'=>'@',
-				'%5B'=>'[',
-				'%5D'=>']',
-			)
-		) );
+		$url  = $this->shelveURL( $this->rebuildURI( $uri_parts ) . $slash );
 
-		$opentag = '<a href="' . $url . '"' . $atts . $this->rel . '>';
+		$opentag  = '<a href="' . $url . '"' . $atts . $this->rel . '>';
 		$closetag = '</a>';
-		$tags = $this->storeTags($opentag, $closetag);
-		$out = $tags['open'].trim($text).$tags['close'];
+		$tags     = $this->storeTags($opentag, $closetag);
+		$out      = $tags['open'].trim($text).$tags['close'];
 
 		if (($pre and !$tail) or ($tail and !$pre))
 		{
