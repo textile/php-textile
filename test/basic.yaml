@@ -465,8 +465,17 @@ Links with quoted text :
 Image :
   input  : |
     !http://textpattern.com/favicon.ico!
+
+    !<http://textpattern.com/favicon.ico!
+
+    !>http://textpattern.com/favicon.ico!
+
   expect : |
     <p><img src="http://textpattern.com/favicon.ico" alt="" /></p>
+
+    <p><img src="http://textpattern.com/favicon.ico" align="left" alt="" /></p>
+
+    <p><img src="http://textpattern.com/favicon.ico" align="right" alt="" /></p>
 
 Images with links :
   input  : |
