@@ -1433,8 +1433,15 @@ class Textile
 		$uri_parts = array();
 		$this->parseURI( $url, $uri_parts );
 
+		$scheme         = $uri_parts['scheme'];
+		$scheme_in_list = in_array( $scheme, $this->url_schemes );
+		$scheme_ok = '' === $scheme || $scheme_in_list;
+
+		if( !$scheme_ok )
+			return $m[0];
+
 		if( '$' === $text ) {
-			if( in_array( $uri_parts['scheme'] , array('http', 'https', 'mailto') ) )
+			if( $scheme_in_list )
 				$text = trim( $this->rebuildURI( $uri_parts, 'authority,path,query,fragment'), '/' );
 			else
 				$text = $url;
