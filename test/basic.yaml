@@ -386,16 +386,6 @@ Links :
     "(class#id)[en-gb]{text-transform:uppercase}Try this link(Link title)":http://textile.sitemonks.com
 
     "(linkclass#linkid)[de-de]!(imgclass#imgid)imgurl(img/link text)!(Link Title)":linkurl
-    
-    "Übermensch":https://de.wikipedia.org/wiki/Übermensch
-
-    "福島駅":http://ja.wikipedia.org/wiki/福島駅_(大阪府) this is a test -- no trailing slash.
-
-    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash":https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ
-
-    "福島駅":http://ja.wikipedia.org/wiki/福島駅_(大阪府)/ this is a test -- with a trailing slash.
-
-    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash":https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ/
 
   expect : |
     <p><a href="http://example.com/">link text</a></p>
@@ -420,11 +410,35 @@ Links :
 
     <p><a href="linkurl" class="linkclass" lang="de-de" id="linkid" title="Link Title"><img src="imgurl" class="imgclass" id="imgid" title="img/link text" alt="img/link text" /></a></p>
 
-    <p><a href="https://de.wikipedia.org/wiki/">Übermensch</a></p>
+Unicode Links :
+  input  : |
+    "Übermensch":https://de.wikipedia.org/wiki/Übermensch
 
-    <p><a href=""></a> this is a test.</p>
+    "福島駅":http://ja.wikipedia.org/wiki/福島駅_(大阪府) this is a test -- no trailing slash.
 
-    <p><a href=""></a>äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ</p>
+    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash":https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ
+
+    "福島駅":http://ja.wikipedia.org/wiki/福島駅_(大阪府)/ this is a test -- with a trailing slash.
+
+    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash":https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ/
+
+  expect : |
+    <p><a href="https://de.wikipedia.org/wiki/%C3%9Cbermensch" class="https">Übermensch</a></p>
+
+    <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_(%E5%A4%A7%E9%98%AA%E5%BA%9C)" class="http">福島駅</a> this is a test &#8212; no trailing slash.</p>
+
+    <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F" class="https">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash</a></p>
+
+    <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_(%E5%A4%A7%E9%98%AA%E5%BA%9C)/" class="http">福島駅</a> this is a test &#8212; with a trailing slash.</p>
+
+    <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F/" class="https">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash</a></p>
+
+Non-whitelisted link schemes :
+  input :  |
+    "I'm a bad link":parp://parp.com
+
+  expect : |
+    <p>&#8220;I&#8217;m a bad link&#8221;:parp://parp.com</p>
 
 Mixed XHTML and Textile Links :
   assert : skip
