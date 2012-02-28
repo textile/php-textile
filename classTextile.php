@@ -586,11 +586,11 @@ class Textile
     }
 
 // -------------------------------------------------------------
-	function pba($in, $element = "", $include_id = 1, $algn = '') // "parse block attributes"
+	function pba($in, $element = "", $include_id = 1, $a_classes = '') // "parse block attributes"
 	{
 		$style = '';
 		$class = '';
-		$autoclass = '';
+		$autoclass = $a_classes;
 		$lang = '';
 		$colspan = '';
 		$rowspan = '';
@@ -600,7 +600,6 @@ class Textile
 		$atts = '';
 		$align = '';
 
-		if (!empty($in)) {
 			$matched = $in;
 			if ($element == 'td') {
 				if (preg_match("/\\\\(\d+)/", $matched, $csp)) $colspan = $csp[1];
@@ -645,19 +644,6 @@ class Textile
 				}
 			}
 
-			if( 'image' === $element && '' !== $algn ) {
-				$vals = array(
-					'<' => 'left',
-					'=' => 'center',
-					'>' => 'right');
-				if ( isset($vals[$algn]) ) {
-					if( 'html5' === $this->doctype )
-						$autoclass = " align-{$vals[$algn]}";
-					else
-						$align = $vals[$algn];
-				}
-			}
-
 			if (preg_match("/([(]+)/", $matched, $pl)) {
 				$style[] = "padding-left:" . strlen($pl[1]) . "em";
 				$matched = str_replace($pl[0], '', $matched);
@@ -686,7 +672,7 @@ class Textile
 				));
 			}
 			else
-				$class = trim( $class . $autoclass );
+			$class = trim( $class . ' ' . $autoclass );
 
 			$o = '';
 			if( $style ) {
@@ -710,10 +696,7 @@ class Textile
 				($rowspan) ? ' rowspan="' . $this->cleanba($rowspan)  .'"' : '',
 				($span)    ? ' span="'    . $this->cleanba($span)     .'"' : '',
 				($width)   ? ' width="'   . $this->cleanba($width)    .'"' : '',
-				($align)   ? ' align="'   . $this->cleanba($align)    .'"' : '',
 			));
-		}
-		return '';
 	}
 
 // -------------------------------------------------------------
@@ -1421,7 +1404,7 @@ class Textile
 			('.$this->urlch.'+?)   # $url
 			(\/)?                  # $slash
 			([^\w\/;]*?)           # $post
-			([\]}]|(?=\s|$|\)))
+			([\]}]|(?=\s|$|\)))	   # $tail
 		/x'.$this->regex_snippets['mod'], array(&$this, "fLink"), $text);
 	}
 
@@ -1581,7 +1564,21 @@ class Textile
 	{
 		list(, $algn, $atts, $url) = $m;
 		$url = htmlspecialchars($url);
-		$atts  = $this->pba($atts , 'image' , 1 , $algn);
+
+		$extras = $align = '';
+		if( '' !== $algn ) {
+			$vals = array(
+				'<' => 'left',
+				'=' => 'center',
+				'>' => 'right');
+			if ( isset($vals[$algn]) ) {
+				if( 'html5' === $this->doctype )
+					$extras = "align-{$vals[$algn]}";
+				else
+					$align = " align=\"{$vals[$algn]}\"";
+			}
+		}
+		$atts  = $this->pba($atts , '' , 1 , $extras) . $align;
 
  		if(isset($m[4]))
  		{
