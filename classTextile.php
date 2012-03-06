@@ -392,6 +392,7 @@ class Textile
 
 		$this->pnct  = '[\!"#\$%&\'()\*\+,\-\./:;<=>\?@\[\\\]\^_`{\|}\~]';
 		$this->urlch = '[\w"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
+		$this->syms  = '¤§µ¶†‡•∗∴◊♠♣♥♦';
 		$pnc = '[[:punct:]]';
 
 		$this->url_schemes = array('http','https','ftp','mailto');
@@ -1201,7 +1202,7 @@ class Textile
 		}
 
 		# Replace list markers...
-		$text = preg_replace_callback("@<p>notelist({$this->c})(?:\:($wrd))?([\^!]?)(\+?)\.[\s]*</p>@U$mod", array(&$this, "fNoteLists"), $text );
+		$text = preg_replace_callback("@<p>notelist({$this->c})(?:\:([$wrd|{$this->syms}]))?([\^!]?)(\+?)\.[\s]*</p>@U$mod", array(&$this, "fNoteLists"), $text );
 
 		return $text;
 	}
@@ -1256,6 +1257,7 @@ class Textile
 		$atts = $content = $id = $link = '';
 		@extract( $info['def'] );
 		$backlink_type = ($link) ? $link : $g_links;
+		$allow_inc = (false === strpos( $this->syms, $i ) );
 
 		$i_ = strtr( $this->encode_high($i) , array('&'=>'', ';'=>'', '#'=>''));
 		$decode = (strlen($i) !== strlen($i_));
@@ -1268,7 +1270,8 @@ class Textile
 			$_ = array();
 			foreach( $info['refids'] as $id ) {
 				$_[] = '<sup><a href="#noteref'.$id.'">'. ( ($decode) ? $this->decode_high('&#'.$i_.';') : $i_ ) .'</a></sup>';
-				$i_++;
+				if( $allow_inc )
+					$i_++;
 			}
 			$_ = join( ' ', $_ );
 			return $_;
