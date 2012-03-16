@@ -397,7 +397,6 @@ class Textile
 		$this->lc = "(?:{$this->clas}|{$this->styl}|{$this->lnge})*";
 
 		$this->pnct  = '[\!"#\$%&\'()\*\+,\-\./:;<=>\?@\[\\\]\^_`{\|}\~]';
-		$this->urlch = '[\w"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
 		$pnc = '[[:punct:]]';
 
 		$this->url_schemes = array('http','https','ftp','mailto');
@@ -424,6 +423,7 @@ class Textile
 			);
 		}
 		extract( $this->regex_snippets );
+		$this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
 
 		$this->glyph_search = array(
 			'/('.$wrd.')\'('.$wrd.')/'.$mod,        // I'm an apostrophe
@@ -436,7 +436,7 @@ class Textile
 			'/(?<=\s|^|[>(;-])(['.$abr.']{3,})(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod,  // 3+ uppercase
 			'/([^.]?)\.{3}/',                       // ellipsis
 			'/(\s?)--(\s?)/',                       // em dash
-			'/\s-(?:\s|$)/',                        // en dash
+			'/( )-( )/',                            // en dash
 			'/(\d+)( ?)x( ?)(?=\d+)/',              // dimension sign
 			'/(\b ?|\s|^)[([]TM[])]/i',             // trademark
 			'/(\b ?|\s|^)[([]R[])]/i',              // registered
@@ -459,7 +459,7 @@ class Textile
 			'<span class="caps">glyph:$1</span>$2', // 3+ uppercase
 			'$1'.txt_ellipsis,                     // ellipsis
 			'$1'.txt_emdash.'$2',                  // em dash
-			' '.txt_endash.' ',                    // en dash
+			'$1'.txt_endash.'$2',                  // en dash
 			'$1$2'.txt_dimension.'$3',             // dimension sign
 			'$1'.txt_trademark,                    // trademark
 			'$1'.txt_registered,                   // registered
@@ -594,11 +594,11 @@ class Textile
     }
 
 // -------------------------------------------------------------
-	function pba($in, $element = "", $include_id = 1, $algn = '') // "parse block attributes"
+	function pba($in, $element = "", $include_id = 1, $a_classes = '') // "parse block attributes"
 	{
 		$style = '';
 		$class = '';
-		$autoclass = '';
+		$autoclass = $a_classes;
 		$lang = '';
 		$colspan = '';
 		$rowspan = '';
@@ -608,7 +608,6 @@ class Textile
 		$atts = '';
 		$align = '';
 
-		if (!empty($in)) {
 			$matched = $in;
 			if ($element == 'td') {
 				if (preg_match("/\\\\(\d+)/", $matched, $csp)) $colspan = $csp[1];
@@ -653,19 +652,6 @@ class Textile
 				}
 			}
 
-			if( 'image' === $element && '' !== $algn ) {
-				$vals = array(
-					'<' => 'left',
-					'=' => 'center',
-					'>' => 'right');
-				if ( isset($vals[$algn]) ) {
-					if( 'html5' === $this->doctype )
-						$autoclass = " align-{$vals[$algn]}";
-					else
-						$align = $vals[$algn];
-				}
-			}
-
 			if (preg_match("/([(]+)/", $matched, $pl)) {
 				$style[] = "padding-left:" . strlen($pl[1]) . "em";
 				$matched = str_replace($pl[0], '', $matched);
@@ -694,7 +680,7 @@ class Textile
 				));
 			}
 			else
-				$class = trim( $class . $autoclass );
+			$class = trim( $class . ' ' . $autoclass );
 
 			$o = '';
 			if( $style ) {
@@ -718,10 +704,7 @@ class Textile
 				($rowspan) ? ' rowspan="' . $this->cleanba($rowspan)  .'"' : '',
 				($span)    ? ' span="'    . $this->cleanba($span)     .'"' : '',
 				($width)   ? ' width="'   . $this->cleanba($width)    .'"' : '',
-				($align)   ? ' align="'   . $this->cleanba($align)    .'"' : '',
 			));
-		}
-		return '';
 	}
 
 // -------------------------------------------------------------
@@ -1033,7 +1016,7 @@ class Textile
 		}
 		elseif ($tag == 'bc') {
 			$o1 = "<pre$atts>";
-			$o2 = "<code".$this->pba($att, '', 0).">";
+			$o2 = "<code>";
 			$c2 = "</code>";
 			$c1 = "</pre>";
 			$content = $this->shelve($this->r_encode_html(rtrim($content, "\n")."\n"));
@@ -1271,11 +1254,11 @@ class Textile
 		if( $backlink_type === '!' )
 			return '';
 		elseif( $backlink_type === '^' )
-			return '<a href="#noteref'.$info['refids'][0].'"><sup>'.$i.'</sup></a>';
+			return '<sup><a href="#noteref'.$info['refids'][0].'">'.$i.'</a></sup>';
 		else {
 			$_ = array();
 			foreach( $info['refids'] as $id ) {
- 				$_[] = '<a href="#noteref'.$id.'"><sup>'. ( ($decode) ? $this->decode_high('&#'.$i_.';') : $i_ ) .'</sup></a>';
+				$_[] = '<sup><a href="#noteref'.$id.'">'. ( ($decode) ? $this->decode_high('&#'.$i_.';') : $i_ ) .'</a></sup>';
 				$i_++;
 			}
 			$_ = join( ' ', $_ );
@@ -1358,6 +1341,65 @@ class Textile
 	}
 
 // -------------------------------------------------------------
+	/**
+	 * Parse URI
+	 *
+	 * Regex taken from the RFC at http://tools.ietf.org/html/rfc3986#appendix-B
+	 **/
+	function parseURI( $uri, &$m )
+	{
+		$r = "@^((?<scheme>[^:/?#]+):)?(//(?<authority>[^/?#]*))?(?<path>[^?#]*)(\?(?<query>[^#]*))?(#(?<fragment>.*))?@";
+		#       12                     3  4                      5              6  7                8 9
+		#
+		#	scheme    = $2
+		#	authority = $4
+		# 	path      = $5
+		#	query     = $7
+		#	fragment  = $9
+
+		$ok = preg_match( $r, $uri, $m );
+		return $ok;
+	}
+
+	protected static function addPart( &$mask, $name, &$parts ) {
+		return (in_array($name, $mask) && isset( $parts[$name]) && '' !== $parts[$name]);
+	}
+
+
+// -------------------------------------------------------------
+	/**
+	 * Rebuild a URI from parsed parts and a mask.
+	 *
+	 * Algorithm based on example from http://tools.ietf.org/html/rfc3986#section-5.3
+	 **/
+	function rebuildURI( $parts, $mask = 'scheme,authority,path,query,fragment' )
+	{
+		$mask = explode( ',', $mask );
+		$out  = '';
+
+		if( self::addPart( $mask, 'scheme', $parts ) ) {
+			$out .= $parts['scheme'] . ':';
+		}
+
+		if( self::addPart( $mask, 'authority', $parts) ) {
+			$out .= '//' . $parts['authority'];
+		}
+
+		if( self::addPart( $mask, 'path', $parts ) )
+			$out .= $parts['path'];
+
+		if( self::addPart( $mask, 'query', $parts ) ) {
+			$out .= '?' . $parts['query'];
+		}
+
+		if( self::addPart( $mask, 'fragment', $parts ) ) {
+			$out .= '#' . $parts['fragment'];
+		}
+
+		return $out;
+	}
+
+// -------------------------------------------------------------
 	function links($text)
 	{
 		return preg_replace_callback('/
@@ -1370,8 +1412,8 @@ class Textile
 			('.$this->urlch.'+?)   # $url
 			(\/)?                  # $slash
 			([^\w\/;]*?)           # $post
-			([\]}]|(?=\s|$|\)))
-		/x', array(&$this, "fLink"), $text);
+			([\]}]|(?=\s|$|\)))	   # $tail
+		/x'.$this->regex_snippets['mod'], array(&$this, "fLink"), $text);
 	}
 
 // -------------------------------------------------------------
@@ -1379,7 +1421,22 @@ class Textile
 	{
 		list(, $pre, $atts, $text, $title, $url, $slash, $post, $tail) = $m;
 
-		if( '$' === $text ) $text = $url;
+		$uri_parts = array();
+		$this->parseURI( $url, $uri_parts );
+
+		$scheme         = $uri_parts['scheme'];
+		$scheme_in_list = in_array( $scheme, $this->url_schemes );
+		$scheme_ok = '' === $scheme || $scheme_in_list;
+
+		if( !$scheme_ok )
+			return $m[0];
+
+		if( '$' === $text ) {
+			if( $scheme_in_list )
+				$text = trim( $this->rebuildURI( $uri_parts, 'authority,path,query,fragment'), '/' );
+			else
+				$text = $url;
+		}
 
 		$atts = $this->pba($atts);
 		$atts .= ($title != '') ? ' title="' . $this->encode_html($title) . '"' : '';
@@ -1389,7 +1446,30 @@ class Textile
 
 		$text = $this->span($text);
 		$text = $this->glyphs($text);
-		$url = $this->shelveURL($url.$slash);
+		$url = $this->shelveURL(
+			strtr(rawurlencode($url.$slash),
+			array(
+				'%3A'=>':',
+				'%21'=>'!',
+				'%23'=>'#',
+				'%24'=>'$',
+				'%26'=>'&',
+				'%27'=>"'",
+				'%28'=>'(',
+				'%29'=>')',
+				'%2A'=>'*',
+				'%2B'=>'+',
+				'%2C'=>',',
+				'%2F'=>'/',
+				'%3A'=>':',
+				'%3B'=>';',
+				'%3D'=>'=',
+				'%3F'=>'?',
+				'%40'=>'@',
+				'%5B'=>'[',
+				'%5D'=>']',
+			)
+		) );
 
 		$opentag = '<a href="' . $url . '"' . $atts . $this->rel . '>';
 		$closetag = '</a>';
@@ -1492,7 +1572,21 @@ class Textile
 	{
 		list(, $algn, $atts, $url) = $m;
 		$url = htmlspecialchars($url);
-		$atts  = $this->pba($atts , 'image' , 1 , $algn);
+
+		$extras = $align = '';
+		if( '' !== $algn ) {
+			$vals = array(
+				'<' => 'left',
+				'=' => 'center',
+				'>' => 'right');
+			if ( isset($vals[$algn]) ) {
+				if( 'html5' === $this->doctype )
+					$extras = "align-{$vals[$algn]}";
+				else
+					$align = " align=\"{$vals[$algn]}\"";
+			}
+		}
+		$atts  = $this->pba($atts , '' , 1 , $extras) . $align;
 
  		if(isset($m[4]))
  		{

@@ -337,17 +337,29 @@ URLs as non-links :
 Self-Hyperlink :
   notes  : A new feature.
   input  : |
+    Relative link to "$":testit.php?testfilename=textile/basic.
+
+    Relative link to "$":/testit.php?testfilename=textile/basic.
+
+    Send spam to "$":mailto://blackhole@sun.comet please!
+
     An auto-hyperlink to "$":http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown is -not- possible.
 
     An auto-hyperlink (with title) to "$(Comparison of Textile2 and Markdown)":http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown is -not- possible.
 
     An auto-hyperlink (with atts) to "(class#id)[en-au]$(Comparison of Textile2 and Markdown)":http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown is -not- possible.
   expect : |
-    <p>An auto-hyperlink to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown">http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
+    <p>Relative link to <a href="testit.php?testfilename=textile/basic">testit.php?testfilename=textile/basic</a>.</p>
 
-    <p>An auto-hyperlink (with title) to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown" title="Comparison of Textile2 and Markdown">http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
+    <p>Relative link to <a href="/testit.php?testfilename=textile/basic">/testit.php?testfilename=textile/basic</a>.</p>
 
-    <p>An auto-hyperlink (with atts) to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown" class="class" lang="en-au" id="id" title="Comparison of Textile2 and Markdown">http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
+    <p>Send spam to <a href="mailto://blackhole@sun.comet">blackhole@sun.comet</a> please!</p>
+
+    <p>An auto-hyperlink to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown">mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
+
+    <p>An auto-hyperlink (with title) to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown" title="Comparison of Textile2 and Markdown">mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
+
+    <p>An auto-hyperlink (with atts) to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown" class="class" lang="en-au" id="id" title="Comparison of Textile2 and Markdown">mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
 
 Links :
   input  : |
@@ -392,11 +404,41 @@ Links :
 
     <p><a href="mailto:contact@example.com" title="with title">link text</a></p>
 
-    <p><a href="http://textpattern.com" class="class" lang="de-de" id="id" title="title">http://textpattern.com</a></p>
+    <p><a href="http://textpattern.com" class="class" lang="de-de" id="id" title="title">textpattern.com</a></p>
 
     <p><a href="http://textile.sitemonks.com" style="text-transform:uppercase;" class="class" lang="en-gb" id="id" title="Link title">Try this link</a></p>
 
     <p><a href="linkurl" class="linkclass" lang="de-de" id="linkid" title="Link Title"><img src="imgurl" class="imgclass" id="imgid" title="img/link text" alt="img/link text" /></a></p>
+
+Unicode Links :
+  input  : |
+    "Übermensch":https://de.wikipedia.org/wiki/Übermensch
+
+    "福島駅":http://ja.wikipedia.org/wiki/福島駅_(大阪府) this is a test -- no trailing slash.
+
+    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash":https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ
+
+    "福島駅":http://ja.wikipedia.org/wiki/福島駅_(大阪府)/ this is a test -- with a trailing slash.
+
+    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash":https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ/
+
+  expect : |
+    <p><a href="https://de.wikipedia.org/wiki/%C3%9Cbermensch" class="https">Übermensch</a></p>
+
+    <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_(%E5%A4%A7%E9%98%AA%E5%BA%9C)">福島駅</a> this is a test &#8212; no trailing slash.</p>
+
+    <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash</a></p>
+
+    <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_(%E5%A4%A7%E9%98%AA%E5%BA%9C)/">福島駅</a> this is a test &#8212; with a trailing slash.</p>
+
+    <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F/">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash</a></p>
+
+Non-whitelisted link schemes :
+  input :  |
+    "I'm a bad link":parp://parp.com
+
+  expect : |
+    <p>&#8220;I&#8217;m a bad link&#8221;:parp://parp.com</p>
 
 Mixed XHTML and Textile Links :
   assert : skip
@@ -423,8 +465,17 @@ Links with quoted text :
 Image :
   input  : |
     !http://textpattern.com/favicon.ico!
+
+    !<http://textpattern.com/favicon.ico!
+
+    !>http://textpattern.com/favicon.ico!
+
   expect : |
     <p><img src="http://textpattern.com/favicon.ico" alt="" /></p>
+
+    <p><img src="http://textpattern.com/favicon.ico" align="left" alt="" /></p>
+
+    <p><img src="http://textpattern.com/favicon.ico" align="right" alt="" /></p>
 
 Images with links :
   input  : |
@@ -631,12 +682,12 @@ Code blocks, pre and exclusions :
 
     p(regular#somestuff). _Aaaand_, *__relax__*.
   expect : |
-    <pre class="input"><code class="input">You can&#39;t _*touch*_ *_this_*... Hammer time.
+    <pre class="input"><code>You can&#39;t _*touch*_ *_this_*... Hammer time.
     </code></pre>
 
     <p>And keep your <code>(expect)mitts _*off*_ *_me_*</code> as well. About the <code>&lt;hr /&gt;</code> tag.</p>
 
-    <pre class="block"><code class="block">As for the stuff in my *bold*, _emphasised_ &amp; __italic__ codeblock, I think you&#39;ll find these tags entertaining:
+    <pre class="block"><code>As for the stuff in my *bold*, _emphasised_ &amp; __italic__ codeblock, I think you&#39;ll find these tags entertaining:
     &lt;txp:linklist /&gt;
     &lt;txp:image_list category=&quot;squid&quot;&gt;
     &lt;txp:image class=&quot;prawns&quot; something=&quot;summat else&quot; /&gt;
@@ -1345,9 +1396,9 @@ Simple Note Links:
     <p>Scientists say<sup><a href="#note"><span id="noteref">1</span></a></sup> the moon is quite small. But I, for one, don&#8217;t believe them. Others claim it to be made of cheese<sup><a href="#note"><span id="noteref">2</span></a></sup>. If this proves true I suspect we are in for troubled times<sup><a href="#note"><span id="noteref">3</span></a></sup> as people argue over their &#8220;share&#8221; of the moon&#8217;s cheese. In the end, its limited size<sup><a href="#note"><span id="noteref">1</span></a></sup> may prove problematic.</p>
 
     <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
-    <li class="noteclass"><a href="#noteref"><sup>a</sup></a> <a href="#noteref"><sup>b</sup></a><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
-    <li id="noteid"><a href="#noteref"><sup>a</sup></a><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
-    <li><a href="#noteref"><sup>a</sup></a><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    <li class="noteclass"><sup><a href="#noteref">a</a></sup> <sup><a href="#noteref">b</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    <li id="noteid"><sup><a href="#noteref">a</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    <li><sup><a href="#noteref">a</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
     </ol>
 
 
@@ -1370,9 +1421,9 @@ Note Links.:
     <h2>Here are my references.</h2>
 
     <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
-    <li><a href="#noteref"><sup>a</sup></a> <a href="#noteref"><sup>b</sup></a><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
-    <li><a href="#noteref"><sup>a</sup></a><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
-    <li><a href="#noteref"><sup>a</sup></a><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    <li><sup><a href="#noteref">a</a></sup> <sup><a href="#noteref">b</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    <li><sup><a href="#noteref">a</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    <li><sup><a href="#noteref">a</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
     </ol>
 
 
@@ -1393,9 +1444,9 @@ Unlinked Note References with backlinked and unreferenced defs.:
     <p>Scientists say<sup><span id="noteref">1</span></sup> the moon is quite small. But I, for one, don&#8217;t believe them. Others claim it to be made of cheese<sup><span id="noteref">2</span></sup>. If this proves true I suspect we are in for troubled times<sup><span id="noteref">3</span></sup> as people argue over their &#8220;share&#8221; of the moon&#8217;s cheese. In the end, its limited size<sup><span id="noteref">1</span></sup> may prove problematic.</p>
 
     <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
-    <li><a href="#noteref"><sup>α</sup></a><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
-    <li><a href="#noteref"><sup>α</sup></a><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
-    <li><a href="#noteref"><sup>α</sup></a><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    <li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    <li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    <li><sup><a href="#noteref">α</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
     <li>An unreferenced note.</li>
     </ol>
 
@@ -1578,6 +1629,52 @@ Classes/ids/langs on phrase modifiers :
     <p><i class="c" id="id">My text</i></p>
 
     <p><code>(c#id)[Whatever]My text</code></p>
+
+Github Issue 50 (en-dash & strike) :
+  input:  |
+    fjfhfjhf
+    fhfhfh
+    xyz
+
+    - fjfhfjhf
+    - fhfhfh
+    - xyz
+
+    a -b-
+    a -b-``
+    a - b
+    a -b
+    a- b
+    a-b
+    -b
+    a-
+    b
+    a -
+    b
+    a -``
+    b
+  expect: |
+    <p>fjfhfjhf<br />
+    fhfhfh<br />
+    xyz</p>
+
+    <p>- fjfhfjhf<br />
+    - fhfhfh<br />
+    - xyz</p>
+
+    <p>a <del>b</del><br />
+    a <del>b</del> <br />
+    a &#8211; b<br />
+    a -b<br />
+    a- b<br />
+    a-b<br />
+    -b<br />
+    a-<br />
+    b<br />
+    a -<br />
+    b<br />
+    a &#8211; <br />
+    b</p>
 
 Empty things... :
   input:  |
@@ -1766,7 +1863,7 @@ Empty things... :
 
     <p>_ _</p>
 
-    <p>- &#8211; </p>
+    <p>- -</p>
 
     <p>+ +</p>
 
