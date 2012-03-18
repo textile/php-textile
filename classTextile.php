@@ -672,7 +672,7 @@ class Textile
 				));
 			}
 			else
-			$class = trim( $class . ' ' . $autoclass );
+				$class = trim( $class . ' ' . $autoclass );
 
 			$o = '';
 			if( $style ) {
@@ -1403,9 +1403,9 @@ class Textile
 			":
 			('.$this->urlch.'+?)   # $url
 			(\/)?                  # $slash
-			([^\w\/;]*?)           # $post
+			([^'.$this->regex_snippets['wrd'].'\/;]*?)  # $post
 			([\]}]|(?=\s|$|\)))	   # $tail
-		/x'.$this->regex_snippets['mod'], array(&$this, "fLink"), $text);
+			/x'.$this->regex_snippets['mod'], array(&$this, "fLink"), $text);
 	}
 
 // -------------------------------------------------------------
