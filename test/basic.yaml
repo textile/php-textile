@@ -423,7 +423,7 @@ Unicode Links :
     "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash":https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ/
 
   expect : |
-    <p><a href="https://de.wikipedia.org/wiki/%C3%9Cbermensch" class="https">Übermensch</a></p>
+    <p><a href="https://de.wikipedia.org/wiki/%C3%9Cbermensch">Übermensch</a></p>
 
     <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_(%E5%A4%A7%E9%98%AA%E5%BA%9C)">福島駅</a> this is a test &#8212; no trailing slash.</p>
 
