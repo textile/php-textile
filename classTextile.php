@@ -396,6 +396,9 @@ class Textile
 		$this->lc = "(?:{$this->clas}|{$this->styl}|{$this->lnge})*";
 
 		$this->pnct  = '[\!"#\$%&\'()\*\+,\-\./:;<=>\?@\[\\\]\^_`{\|}\~]';
+		$this->urlch = '[\w"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
+		$this->syms  = '¤§µ¶†‡•∗∴◊♠♣♥♦';
+
 		$pnc = '[[:punct:]]';
 
 		$this->url_schemes = array('http','https','ftp','mailto');
@@ -677,7 +680,7 @@ class Textile
 				));
 			}
 			else
-			$class = trim( $class . ' ' . $autoclass );
+				$class = trim( $class . ' ' . $autoclass );
 
 			$o = '';
 			if( $style ) {
@@ -1189,7 +1192,7 @@ class Textile
 		}
 
 		# Replace list markers...
-		$text = preg_replace_callback("@<p>notelist({$this->c})(?:\:($wrd))?([\^!]?)(\+?)\.[\s]*</p>@U$mod", array(&$this, "fNoteLists"), $text );
+		$text = preg_replace_callback("@<p>notelist({$this->c})(?:\:([$wrd|{$this->syms}]))?([\^!]?)(\+?)\.[\s]*</p>@U$mod", array(&$this, "fNoteLists"), $text );
 
 		return $text;
 	}
@@ -1244,6 +1247,7 @@ class Textile
 		$atts = $content = $id = $link = '';
 		@extract( $info['def'] );
 		$backlink_type = ($link) ? $link : $g_links;
+		$allow_inc = (false === strpos( $this->syms, $i ) );
 
 		$i_ = strtr( $this->encode_high($i) , array('&'=>'', ';'=>'', '#'=>''));
 		$decode = (strlen($i) !== strlen($i_));
@@ -1256,7 +1260,8 @@ class Textile
 			$_ = array();
 			foreach( $info['refids'] as $id ) {
 				$_[] = '<sup><a href="#noteref'.$id.'">'. ( ($decode) ? $this->decode_high('&#'.$i_.';') : $i_ ) .'</a></sup>';
-				$i_++;
+				if( $allow_inc )
+					$i_++;
 			}
 			$_ = join( ' ', $_ );
 			return $_;
@@ -1369,7 +1374,7 @@ class Textile
 	 *
 	 * Algorithm based on example from http://tools.ietf.org/html/rfc3986#section-5.3
 	 **/
-	function rebuildURI( $parts, $mask = 'scheme,authority,path,query,fragment' )
+	function rebuildURI( $parts, $mask='scheme,authority,path,query,fragment', $encode=true )
 	{
 		$mask = explode( ',', $mask );
 		$out  = '';
@@ -1382,8 +1387,19 @@ class Textile
 			$out .= '//' . $parts['authority'];
 		}
 
-		if( self::addPart( $mask, 'path', $parts ) )
-			$out .= $parts['path'];
+		if( self::addPart( $mask, 'path', $parts ) ) {
+			if( !$encode )
+				$out .= $parts['path'];
+			else {
+				$pp = explode( '/', $parts['path'] );
+				foreach( $pp as &$p ) {
+					$p = strtr( rawurlencode( $p ), array( '%40' => '@' ) );
+				}
+
+				$pp = implode( '/', $pp );
+				$out .= $pp;
+			}
+		}
 
 		if( self::addPart( $mask, 'query', $parts ) ) {
 			$out .= '?' . $parts['query'];
@@ -1408,9 +1424,9 @@ class Textile
 			":
 			('.$this->urlch.'+?)   # $url
 			(\/)?                  # $slash
-			([^\w\/;]*?)           # $post
+			([^'.$this->regex_snippets['wrd'].'\/;]*?)  # $post
 			([\]}]|(?=\s|$|\)))	   # $tail
-		/x'.$this->regex_snippets['mod'], array(&$this, "fLink"), $text);
+			/x'.$this->regex_snippets['mod'], array(&$this, "fLink"), $text);
 	}
 
 // -------------------------------------------------------------
@@ -1430,7 +1446,7 @@ class Textile
 
 		if( '$' === $text ) {
 			if( $scheme_in_list )
-				$text = trim( $this->rebuildURI( $uri_parts, 'authority,path,query,fragment'), '/' );
+				$text = ltrim( $this->rebuildURI( $uri_parts, 'authority,path,query,fragment', false ), '/' );
 			else
 				$text = $url;
 		}
@@ -1443,35 +1459,12 @@ class Textile
 
 		$text = $this->span($text);
 		$text = $this->glyphs($text);
-		$url = $this->shelveURL(
-			strtr(rawurlencode($url.$slash),
-			array(
-				'%3A'=>':',
-				'%21'=>'!',
-				'%23'=>'#',
-				'%24'=>'$',
-				'%26'=>'&',
-				'%27'=>"'",
-				'%28'=>'(',
-				'%29'=>')',
-				'%2A'=>'*',
-				'%2B'=>'+',
-				'%2C'=>',',
-				'%2F'=>'/',
-				'%3A'=>':',
-				'%3B'=>';',
-				'%3D'=>'=',
-				'%3F'=>'?',
-				'%40'=>'@',
-				'%5B'=>'[',
-				'%5D'=>']',
-			)
-		) );
+		$url  = $this->shelveURL( $this->rebuildURI( $uri_parts ) . $slash );
 
-		$opentag = '<a href="' . $url . '"' . $atts . $this->rel . '>';
+		$opentag  = '<a href="' . $url . '"' . $atts . $this->rel . '>';
 		$closetag = '</a>';
-		$tags = $this->storeTags($opentag, $closetag);
-		$out = $tags['open'].trim($text).$tags['close'];
+		$tags     = $this->storeTags($opentag, $closetag);
+		$out      = $tags['open'].trim($text).$tags['close'];
 
 		if (($pre and !$tail) or ($tail and !$pre))
 		{
