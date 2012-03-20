@@ -1087,7 +1087,7 @@ class Textile
 					([$pnct]*)                            # end
 					$f
 					($|[\[\]}<]|(?=[$pnct]{1,2}|\s|\)))  # tail
-				/xu", array(&$this, "fSpan"), $text);
+				/x".$this->regex_snippets['mod'], array(&$this, "fSpan"), $text);
 			}
 		}
 		$this->span_depth--;
