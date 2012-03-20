@@ -1358,7 +1358,7 @@ class Textile
 		return $ok;
 	}
 
-	protected static function addPart( &$mask, $name, &$parts ) {
+	function addPart( &$mask, $name, &$parts ) {
 		return (in_array($name, $mask) && isset( $parts[$name]) && '' !== $parts[$name]);
 	}
 
