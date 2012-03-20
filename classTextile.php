@@ -9,11 +9,6 @@
  */
 
 /*
-$HeadURL: https://textpattern.googlecode.com/svn/development/4.x/textpattern/lib/classTextile.php $
-$LastChangedRevision: 3629 $
-*/
-
-/*
 
 _____________
 T E X T I L E
@@ -363,8 +358,8 @@ class Textile
 	var $hu = '';
 	var $max_span_depth = 5;
 
-	var $ver = '2.3.0';
-	var $rev = '$Rev: 3629 $';
+	var $ver = '2.2.0';
+	var $rev = '$Rev: 3359 $';
 
 	var $doc_root;
 
