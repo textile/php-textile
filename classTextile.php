@@ -363,8 +363,8 @@ class Textile
 	var $hu = '';
 	var $max_span_depth = 5;
 
-	var $ver = '2.3.0';
-	var $rev = '$Rev: 3668 $';
+	var $ver = '2.2.0';
+	var $rev = '$Rev: 3359 $';
 
 	var $doc_root;
 
@@ -397,6 +397,8 @@ class Textile
 
 		$this->pnct  = '[\!"#\$%&\'()\*\+,\-\./:;<=>\?@\[\\\]\^_`{\|}\~]';
 		$this->urlch = '[\w"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
+		$this->syms  = '¤§µ¶†‡•∗∴◊♠♣♥♦';
+
 		$pnc = '[[:punct:]]';
 
 		$this->url_schemes = array('http','https','ftp','mailto');
@@ -691,7 +693,7 @@ class Textile
 				));
 			}
 			else
-				$class = trim( $class . $autoclass );
+				$class = trim( $class . ' ' . $autoclass );
 
 			$o = '';
 			if( $style ) {
@@ -1206,7 +1208,7 @@ class Textile
 		}
 
 		# Replace list markers...
-		$text = preg_replace_callback("@<p>notelist({$this->c})(?:\:($wrd))?([\^!]?)(\+?)\.[\s]*</p>@U$mod", array(&$this, "fNoteLists"), $text );
+		$text = preg_replace_callback("@<p>notelist({$this->c})(?:\:([$wrd|{$this->syms}]))?([\^!]?)(\+?)\.[\s]*</p>@U$mod", array(&$this, "fNoteLists"), $text );
 
 		return $text;
 	}
@@ -1261,6 +1263,7 @@ class Textile
 		$atts = $content = $id = $link = '';
 		@extract( $info['def'] );
 		$backlink_type = ($link) ? $link : $g_links;
+		$allow_inc = (false === strpos( $this->syms, $i ) );
 
 		$i_ = strtr( $this->encode_high($i) , array('&'=>'', ';'=>'', '#'=>''));
 		$decode = (strlen($i) !== strlen($i_));
@@ -1272,8 +1275,9 @@ class Textile
 		else {
 			$_ = array();
 			foreach( $info['refids'] as $id ) {
-				$_[] = '<a href="#noteref'.$id.'"><sup>'. ( ($decode) ? $this->decode_high('&#'.$i_.';') : $i_ ) .'</sup></a>';
-				$i_++;
+				$_[] = '<sup><a href="#noteref'.$id.'">'. ( ($decode) ? $this->decode_high('&#'.$i_.';') : $i_ ) .'</a></sup>';
+				if( $allow_inc )
+					$i_++;
 			}
 			$_ = join( ' ', $_ );
 			return $_;
@@ -1355,6 +1359,76 @@ class Textile
 	}
 
 // -------------------------------------------------------------
+	/**
+	 * Parse URI
+	 *
+	 * Regex taken from the RFC at http://tools.ietf.org/html/rfc3986#appendix-B
+	 **/
+	function parseURI( $uri, &$m )
+	{
+		$r = "@^((?<scheme>[^:/?#]+):)?(//(?<authority>[^/?#]*))?(?<path>[^?#]*)(\?(?<query>[^#]*))?(#(?<fragment>.*))?@";
+		#       12                     3  4                      5              6  7                8 9
+		#
+		#	scheme    = $2
+		#	authority = $4
+		# 	path      = $5
+		#	query     = $7
+		#	fragment  = $9
+
+		$ok = preg_match( $r, $uri, $m );
+		return $ok;
+	}
+
+	protected static function addPart( &$mask, $name, &$parts ) {
+		return (in_array($name, $mask) && isset( $parts[$name]) && '' !== $parts[$name]);
+	}
+
+
+// -------------------------------------------------------------
+	/**
+	 * Rebuild a URI from parsed parts and a mask.
+	 *
+	 * Algorithm based on example from http://tools.ietf.org/html/rfc3986#section-5.3
+	 **/
+	function rebuildURI( $parts, $mask='scheme,authority,path,query,fragment', $encode=true )
+	{
+		$mask = explode( ',', $mask );
+		$out  = '';
+
+		if( self::addPart( $mask, 'scheme', $parts ) ) {
+			$out .= $parts['scheme'] . ':';
+		}
+
+		if( self::addPart( $mask, 'authority', $parts) ) {
+			$out .= '//' . $parts['authority'];
+		}
+
+		if( self::addPart( $mask, 'path', $parts ) ) {
+			if( !$encode )
+				$out .= $parts['path'];
+			else {
+				$pp = explode( '/', $parts['path'] );
+				foreach( $pp as &$p ) {
+					$p = strtr( rawurlencode( $p ), array( '%40' => '@' ) );
+				}
+
+				$pp = implode( '/', $pp );
+				$out .= $pp;
+			}
+		}
+
+		if( self::addPart( $mask, 'query', $parts ) ) {
+			$out .= '?' . $parts['query'];
+		}
+
+		if( self::addPart( $mask, 'fragment', $parts ) ) {
+			$out .= '#' . $parts['fragment'];
+		}
+
+		return $out;
+	}
+
+// -------------------------------------------------------------
 	function links($text)
 	{
 		return preg_replace_callback('/
@@ -1366,9 +1440,9 @@ class Textile
 			":
 			('.$this->urlch.'+?)   # $url
 			(\/)?                  # $slash
-			([^\w\/;]*?)           # $post
-			([\]}]|(?=\s|$|\)))
-		/x', array(&$this, "fLink"), $text);
+			([^'.$this->regex_snippets['wrd'].'\/;]*?)  # $post
+			([\]}]|(?=\s|$|\)))	   # $tail
+			/x'.$this->regex_snippets['mod'], array(&$this, "fLink"), $text);
 	}
 
 // -------------------------------------------------------------
@@ -1376,7 +1450,22 @@ class Textile
 	{
 		list(, $pre, $atts, $text, $title, $url, $slash, $post, $tail) = $m;
 
-		if( '$' === $text ) $text = $url;
+		$uri_parts = array();
+		$this->parseURI( $url, $uri_parts );
+
+		$scheme         = $uri_parts['scheme'];
+		$scheme_in_list = in_array( $scheme, $this->url_schemes );
+		$scheme_ok = '' === $scheme || $scheme_in_list;
+
+		if( !$scheme_ok )
+			return $m[0];
+
+		if( '$' === $text ) {
+			if( $scheme_in_list )
+				$text = ltrim( $this->rebuildURI( $uri_parts, 'authority,path,query,fragment', false ), '/' );
+			else
+				$text = $url;
+		}
 
 		$atts = $this->pba($atts);
 		$atts .= ($title != '') ? ' title="' . $this->encode_html($title) . '"' : '';
@@ -1386,12 +1475,12 @@ class Textile
 
 		$text = $this->span($text);
 		$text = $this->glyphs($text);
-		$url = $this->shelveURL($url.$slash);
+		$url  = $this->shelveURL( $this->rebuildURI( $uri_parts ) . $slash );
 
-		$opentag = '<a href="' . $url . '"' . $atts . $this->rel . '>';
+		$opentag  = '<a href="' . $url . '"' . $atts . $this->rel . '>';
 		$closetag = '</a>';
-		$tags = $this->storeTags($opentag, $closetag);
-		$out = $tags['open'].trim($text).$tags['close'];
+		$tags     = $this->storeTags($opentag, $closetag);
+		$out      = $tags['open'].trim($text).$tags['close'];
 
 		if (($pre and !$tail) or ($tail and !$pre))
 		{
