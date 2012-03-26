@@ -31,9 +31,13 @@ bc. $output = $textile->TextileRestricted( $untrusted_input );
 
 
 
-h2. Translations 
+h2. Doctypes
 
-The Textile project welcomes translations of the documentation found under the @docs\@ folder. For information on how to contribute translations please get in contact.
+From v2.3.2 onward, PHP Textile can target either XHTML or HTML5 output with XHTML being the default for backward compatibility. If you need HTML5 generation, just do...
+
+bc.. $textile = new Textile('html5');
+
+p. ...and you'll get @abbr@ instead of @acronym@ and if you use alignment markers on your images you'll have extra classes placed on them instead of xhtml's @align@ attribute.
 
 
 
