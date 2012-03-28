@@ -1374,15 +1374,15 @@ class Textile
 		$mask = explode( ',', $mask );
 		$out  = '';
 
-		if( self::addPart( $mask, 'scheme', $parts ) ) {
+		if( $this->addPart( $mask, 'scheme', $parts ) ) {
 			$out .= $parts['scheme'] . ':';
 		}
 
-		if( self::addPart( $mask, 'authority', $parts) ) {
+		if( $this->addPart( $mask, 'authority', $parts) ) {
 			$out .= '//' . $parts['authority'];
 		}
 
-		if( self::addPart( $mask, 'path', $parts ) ) {
+		if( $this->addPart( $mask, 'path', $parts ) ) {
 			if( !$encode )
 				$out .= $parts['path'];
 			else {
@@ -1396,11 +1396,11 @@ class Textile
 			}
 		}
 
-		if( self::addPart( $mask, 'query', $parts ) ) {
+		if( $this->addPart( $mask, 'query', $parts ) ) {
 			$out .= '?' . $parts['query'];
 		}
 
-		if( self::addPart( $mask, 'fragment', $parts ) ) {
+		if( $this->addPart( $mask, 'fragment', $parts ) ) {
 			$out .= '#' . $parts['fragment'];
 		}
 
