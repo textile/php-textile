@@ -20,7 +20,7 @@ T E X T I L E
 
 A Humane Web Text Generator
 
-Version 2.3
+Version 2.3.2
 
 Copyright (c) 2003-2004, Dean Allen <dean@textism.com>
 All rights reserved.
@@ -363,7 +363,7 @@ class Textile
 	var $hu = '';
 	var $max_span_depth = 5;
 
-	var $ver = '2.2.0';
+	var $ver = '2.3.2';
 	var $rev = '$Rev: 3359 $';
 
 	var $doc_root;
@@ -1108,7 +1108,7 @@ class Textile
 					([$pnct]*)                            # end
 					$f
 					($|[\[\]}<]|(?=[$pnct]{1,2}|\s|\)))  # tail
-				/xu", array(&$this, "fSpan"), $text);
+				/x".$this->regex_snippets['mod'], array(&$this, "fSpan"), $text);
 			}
 		}
 		$this->span_depth--;
@@ -1379,7 +1379,7 @@ class Textile
 		return $ok;
 	}
 
-	protected static function addPart( &$mask, $name, &$parts ) {
+	function addPart( &$mask, $name, &$parts ) {
 		return (in_array($name, $mask) && isset( $parts[$name]) && '' !== $parts[$name]);
 	}
 
@@ -1395,15 +1395,15 @@ class Textile
 		$mask = explode( ',', $mask );
 		$out  = '';
 
-		if( self::addPart( $mask, 'scheme', $parts ) ) {
+		if( $this->addPart( $mask, 'scheme', $parts ) ) {
 			$out .= $parts['scheme'] . ':';
 		}
 
-		if( self::addPart( $mask, 'authority', $parts) ) {
+		if( $this->addPart( $mask, 'authority', $parts) ) {
 			$out .= '//' . $parts['authority'];
 		}
 
-		if( self::addPart( $mask, 'path', $parts ) ) {
+		if( $this->addPart( $mask, 'path', $parts ) ) {
 			if( !$encode )
 				$out .= $parts['path'];
 			else {
@@ -1417,11 +1417,11 @@ class Textile
 			}
 		}
 
-		if( self::addPart( $mask, 'query', $parts ) ) {
+		if( $this->addPart( $mask, 'query', $parts ) ) {
 			$out .= '?' . $parts['query'];
 		}
 
-		if( self::addPart( $mask, 'fragment', $parts ) ) {
+		if( $this->addPart( $mask, 'fragment', $parts ) ) {
 			$out .= '#' . $parts['fragment'];
 		}
 
