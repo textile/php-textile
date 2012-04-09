@@ -5,7 +5,6 @@
  *
  *		  $textile = new Textile;
  *		  echo $textile->TextileThis($string);
- *
  */
 
 /*
@@ -602,103 +601,103 @@ class Textile
 		$atts = '';
 		$align = '';
 
-			$matched = $in;
-			if ($element == 'td') {
-				if (preg_match("/\\\\(\d+)/", $matched, $csp)) $colspan = $csp[1];
-				if (preg_match("/\/(\d+)/", $matched, $rsp)) $rowspan = $rsp[1];
-			}
+		$matched = $in;
+		if ($element == 'td') {
+			if (preg_match("/\\\\(\d+)/", $matched, $csp)) $colspan = $csp[1];
+			if (preg_match("/\/(\d+)/", $matched, $rsp)) $rowspan = $rsp[1];
+		}
 
-			if ($element == 'td' or $element == 'tr') {
-				if (preg_match("/($this->vlgn)/", $matched, $vert))
-					$style[] = "vertical-align:" . $this->vAlign($vert[1]);
-			}
+		if ($element == 'td' or $element == 'tr') {
+			if (preg_match("/($this->vlgn)/", $matched, $vert))
+				$style[] = "vertical-align:" . $this->vAlign($vert[1]);
+		}
 
-			if (preg_match("/\{([^}]*)\}/", $matched, $sty)) {
-				$style[] = rtrim($sty[1], ';');
-				$matched = str_replace($sty[0], '', $matched);
-			}
+		if (preg_match("/\{([^}]*)\}/", $matched, $sty)) {
+			$style[] = rtrim($sty[1], ';');
+			$matched = str_replace($sty[0], '', $matched);
+		}
 
-			if (preg_match("/\[([^]]+)\]/U", $matched, $lng)) {
-				$matched = str_replace($lng[0], '', $matched);	# Consume entire lang block -- valid or invalid...
-				if (preg_match("/\[([a-zA-Z]{2}(?:[\-\_][a-zA-Z]{2})?)\]/U", $lng[0], $lng)) {
-					$lang = $lng[1];
+		if (preg_match("/\[([^]]+)\]/U", $matched, $lng)) {
+			$matched = str_replace($lng[0], '', $matched);	# Consume entire lang block -- valid or invalid...
+			if (preg_match("/\[([a-zA-Z]{2}(?:[\-\_][a-zA-Z]{2})?)\]/U", $lng[0], $lng)) {
+				$lang = $lng[1];
+			}
+		}
+
+		if (preg_match("/\(([^()]+)\)/U", $matched, $cls)) {
+			$matched = str_replace($cls[0], '', $matched);	# Consume entire class block -- valid or invalid...
+			# Only allow a restricted subset of the CSS standard characters for classes/ids. No encoding markers allowed...
+			if (preg_match("/\(([-a-zA-Z 0-9_\.\:\#]+)\)/U", $cls[0], $cls)) {
+				$hashpos = strpos( $cls[1], '#' );
+				# If a textile class block attribute was found with a '#' in it
+				# split it into the css class and css id...
+				if( false !== $hashpos ) {
+					if (preg_match("/#([-a-zA-Z0-9_\.\:]*)$/", substr( $cls[1], $hashpos ), $ids))
+						$id = $ids[1];
+
+					if (preg_match("/^([-a-zA-Z 0-9_]*)/", substr( $cls[1], 0, $hashpos ), $ids))
+						$class = $ids[1];
+				}
+				else {
+					if (preg_match("/^([-a-zA-Z 0-9_]*)$/", $cls[1], $ids))
+						$class = $ids[1];
 				}
 			}
+		}
 
-			if (preg_match("/\(([^()]+)\)/U", $matched, $cls)) {
-				$matched = str_replace($cls[0], '', $matched);	# Consume entire class block -- valid or invalid...
-				# Only allow a restricted subset of the CSS standard characters for classes/ids. No encoding markers allowed...
-				if (preg_match("/\(([-a-zA-Z 0-9_\.\:\#]+)\)/U", $cls[0], $cls)) {
-					$hashpos = strpos( $cls[1], '#' );
-					# If a textile class block attribute was found with a '#' in it
-					# split it into the css class and css id...
-					if( false !== $hashpos ) {
-						if (preg_match("/#([-a-zA-Z0-9_\.\:]*)$/", substr( $cls[1], $hashpos ), $ids))
-							$id = $ids[1];
+		if (preg_match("/([(]+)/", $matched, $pl)) {
+			$style[] = "padding-left:" . strlen($pl[1]) . "em";
+			$matched = str_replace($pl[0], '', $matched);
+		}
 
-						if (preg_match("/^([-a-zA-Z 0-9_]*)/", substr( $cls[1], 0, $hashpos ), $ids))
-							$class = $ids[1];
-					}
-					else {
-						if (preg_match("/^([-a-zA-Z 0-9_]*)$/", $cls[1], $ids))
-							$class = $ids[1];
-					}
-				}
+		if (preg_match("/([)]+)/", $matched, $pr)) {
+			$style[] = "padding-right:" . strlen($pr[1]) . "em";
+			$matched = str_replace($pr[0], '', $matched);
+		}
+
+		if (preg_match("/($this->hlgn)/", $matched, $horiz))
+			$style[] = "text-align:" . $this->hAlign($horiz[1]);
+
+		if ($element == 'col') {
+			if (preg_match("/(?:\\\\(\d+))?\s*(\d+)?/", $matched, $csp)) {
+				$span = isset($csp[1]) ? $csp[1] : '';
+				$width = isset($csp[2]) ? $csp[2] : '';
 			}
+		}
 
-			if (preg_match("/([(]+)/", $matched, $pl)) {
-				$style[] = "padding-left:" . strlen($pl[1]) . "em";
-				$matched = str_replace($pl[0], '', $matched);
-			}
-
-			if (preg_match("/([)]+)/", $matched, $pr)) {
-				$style[] = "padding-right:" . strlen($pr[1]) . "em";
-				$matched = str_replace($pr[0], '', $matched);
-			}
-
-			if (preg_match("/($this->hlgn)/", $matched, $horiz))
-				$style[] = "text-align:" . $this->hAlign($horiz[1]);
-
-			if ($element == 'col') {
-				if (preg_match("/(?:\\\\(\d+))?\s*(\d+)?/", $matched, $csp)) {
-					$span = isset($csp[1]) ? $csp[1] : '';
-					$width = isset($csp[2]) ? $csp[2] : '';
-				}
-			}
-
-			if ($this->restricted) {
-				$class = trim( $autoclass );
-				return join( '', array(
-					($lang)  ? ' lang="'  . $this->cleanba($lang)  . '"': '',
-					($class) ? ' class="' . $this->cleanba($class) . '"': '',
-				));
-			}
-			else
-				$class = trim( $class . ' ' . $autoclass );
-
-			$o = '';
-			if( $style ) {
-				foreach($style as $s) {
-					$parts = explode(';', $s);
-					foreach( $parts as $p ) {
-						$p = trim($p, '; ');
-						if( !empty( $p ) )
-							$o .= $p.'; ';
-					}
-				}
-				$style = trim( strtr($o, array("\n"=>'',';;'=>';')) );
-			}
-
-			return join('',array(
-				($style)   ? ' style="'   . $this->cleanba($style)    .'"' : '',
-				($class)   ? ' class="'   . $this->cleanba($class)    .'"' : '',
-				($lang)    ? ' lang="'    . $this->cleanba($lang)     .'"' : '',
-				($id and $include_id) ? ' id="' . $this->cleanba($id) .'"' : '',
-				($colspan) ? ' colspan="' . $this->cleanba($colspan)  .'"' : '',
-				($rowspan) ? ' rowspan="' . $this->cleanba($rowspan)  .'"' : '',
-				($span)    ? ' span="'    . $this->cleanba($span)     .'"' : '',
-				($width)   ? ' width="'   . $this->cleanba($width)    .'"' : '',
+		if ($this->restricted) {
+			$class = trim( $autoclass );
+			return join( '', array(
+				($lang)  ? ' lang="'  . $this->cleanba($lang)  . '"': '',
+				($class) ? ' class="' . $this->cleanba($class) . '"': '',
 			));
+		}
+		else
+			$class = trim( $class . ' ' . $autoclass );
+
+		$o = '';
+		if( $style ) {
+			foreach($style as $s) {
+				$parts = explode(';', $s);
+				foreach( $parts as $p ) {
+					$p = trim($p, '; ');
+					if( !empty( $p ) )
+						$o .= $p.'; ';
+				}
+			}
+			$style = trim( strtr($o, array("\n"=>'',';;'=>';')) );
+		}
+
+		return join('',array(
+			($style)   ? ' style="'   . $this->cleanba($style)    .'"' : '',
+			($class)   ? ' class="'   . $this->cleanba($class)    .'"' : '',
+			($lang)    ? ' lang="'    . $this->cleanba($lang)     .'"' : '',
+			($id and $include_id) ? ' id="' . $this->cleanba($id) .'"' : '',
+			($colspan) ? ' colspan="' . $this->cleanba($colspan)  .'"' : '',
+			($rowspan) ? ' rowspan="' . $this->cleanba($rowspan)  .'"' : '',
+			($span)    ? ' span="'    . $this->cleanba($span)     .'"' : '',
+			($width)   ? ' width="'   . $this->cleanba($width)    .'"' : '',
+		));
 	}
 
 // -------------------------------------------------------------
@@ -737,7 +736,7 @@ class Textile
 				$cap = "\t<caption".$capts.">".trim($cmtch[2])."</caption>\n";
 				$row = ltrim($cmtch[3]);
 				if( empty($row) )
-				  continue;
+					continue;
 			}
 			$c_row += 1;
 
@@ -753,11 +752,11 @@ class Textile
 				$colgrp .= "\t</colgroup>\n";
 
 				if($nl === false) {
-				  continue;
+					continue;
 				}
 				else {
-				  $row = ltrim(substr( $row, $nl ));		# Recover from our missing pipe and process the rest of the line...
-	      }
+					$row = ltrim(substr( $row, $nl ));		# Recover from our missing pipe and process the rest of the line...
+				}
 			}
 
 			preg_match("/(:?^\|($this->vlgn)($this->s$this->a$this->c)\.\s*$\n)?^(.*)/sm", ltrim($row), $grpmatch);
