@@ -589,11 +589,10 @@ class Textile
     }
 
 // -------------------------------------------------------------
-	function pba($in, $element = "", $include_id = 1, $a_classes = '') // "parse block attributes"
+	function pba($in, $element = "", $include_id = 1, $autoclass = '') // "parse block attributes"
 	{
 		$style = '';
 		$class = '';
-		$autoclass = $a_classes;
 		$lang = '';
 		$colspan = '';
 		$rowspan = '';
