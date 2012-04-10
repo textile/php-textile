@@ -423,6 +423,7 @@ class Textile
 			);
 		}
 		extract( $this->regex_snippets );
+		$this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
 
 		$this->glyph_search = array(
 			'/('.$wrd.')\'('.$wrd.')/'.$mod,        // I'm an apostrophe
@@ -435,7 +436,7 @@ class Textile
 			'/(?<=\s|^|[>(;-])(['.$abr.']{3,})(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod,  // 3+ uppercase
 			'/([^.]?)\.{3}/',                       // ellipsis
 			'/(\s?)--(\s?)/',                       // em dash
-			'/\s-(?:\s|$)/',                        // en dash
+			'/( )-( )/',                            // en dash
 			'/(\d+)( ?)x( ?)(?=\d+)/',              // dimension sign
 			'/(\b ?|\s|^)[([]TM[])]/i',             // trademark
 			'/(\b ?|\s|^)[([]R[])]/i',              // registered
@@ -458,7 +459,7 @@ class Textile
 			'<span class="caps">glyph:$1</span>$2', // 3+ uppercase
 			'$1'.txt_ellipsis,                     // ellipsis
 			'$1'.txt_emdash.'$2',                  // em dash
-			' '.txt_endash.' ',                    // en dash
+			'$1'.txt_endash.'$2',                  // en dash
 			'$1$2'.txt_dimension.'$3',             // dimension sign
 			'$1'.txt_trademark,                    // trademark
 			'$1'.txt_registered,                   // registered
@@ -566,38 +567,37 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function cleanba( $in )
-	{
-		$tmp    = $in;
-		$before = -1;
-		$after  =  0;
-		$max    =  3;
-		$i      =  0;
-		while( ($after != $before) && ($i < $max) )
-		{
-			$before = strlen( $tmp );
-			$tmp    = rawurldecode($tmp);
-			$after  = strlen( $tmp );
-			$i++;
-		}
+    function cleanba( $in )
+    {
+        $tmp    = $in;
+        $before = -1;
+        $after  =  0;
+        $max    =  3;
+        $i      =  0;
+        while( ($after != $before) && ($i < $max) )
+        {
+            $before = strlen( $tmp );
+            $tmp    = rawurldecode($tmp);
+            $after  = strlen( $tmp );
+            $i++;
+        }
 
-		if( $i === $max ) # If we hit the max allowed decodes, assume the input is tainted and consume it.
-			$out = '';
-		else
-			$out = strtr( $tmp, array(
-				'"'=>'',
-				"'"=>'',
-				'='=>'',
-			));
-		return $out;
-	}
+        if( $i === $max ) # If we hit the max allowed decodes, assume the input is tainted and consume it.
+            $out = '';
+        else
+            $out = strtr( $tmp, array(
+                '"'=>'',
+                "'"=>'',
+                '='=>'',
+            ));
+        return $out;
+    }
 
 // -------------------------------------------------------------
-	function pba($in, $element = "", $include_id = 1, $algn = '') // "parse block attributes"
+	function pba($in, $element = "", $include_id = 1, $autoclass = '') // "parse block attributes"
 	{
 		$style = '';
 		$class = '';
-		$autoclass = '';
 		$lang = '';
 		$colspan = '';
 		$rowspan = '';
@@ -607,120 +607,103 @@ class Textile
 		$atts = '';
 		$align = '';
 
-		if (!empty($in)) {
-			$matched = $in;
-			if ($element == 'td') {
-				if (preg_match("/\\\\(\d+)/", $matched, $csp)) $colspan = $csp[1];
-				if (preg_match("/\/(\d+)/", $matched, $rsp)) $rowspan = $rsp[1];
-			}
+		$matched = $in;
+		if ($element == 'td') {
+			if (preg_match("/\\\\(\d+)/", $matched, $csp)) $colspan = $csp[1];
+			if (preg_match("/\/(\d+)/", $matched, $rsp)) $rowspan = $rsp[1];
+		}
 
-			if ($element == 'td' or $element == 'tr') {
-				if (preg_match("/($this->vlgn)/", $matched, $vert))
-					$style[] = "vertical-align:" . $this->vAlign($vert[1]);
-			}
+		if ($element == 'td' or $element == 'tr') {
+			if (preg_match("/($this->vlgn)/", $matched, $vert))
+				$style[] = "vertical-align:" . $this->vAlign($vert[1]);
+		}
 
-			if (preg_match("/\{([^}]*)\}/", $matched, $sty)) {
-				$style[] = rtrim($sty[1], ';');
-				$matched = str_replace($sty[0], '', $matched);
-			}
+		if (preg_match("/\{([^}]*)\}/", $matched, $sty)) {
+			$style[] = rtrim($sty[1], ';');
+			$matched = str_replace($sty[0], '', $matched);
+		}
 
-			if (preg_match("/\[([^]]+)\]/U", $matched, $lng)) {
-				$matched = str_replace($lng[0], '', $matched);	# Consume entire lang block -- valid or invalid...
-				if (preg_match("/\[([a-zA-Z]{2}(?:[\-\_][a-zA-Z]{2})?)\]/U", $lng[0], $lng)) {
-					$lang = $lng[1];
+		if (preg_match("/\[([^]]+)\]/U", $matched, $lng)) {
+			$matched = str_replace($lng[0], '', $matched);	# Consume entire lang block -- valid or invalid...
+			if (preg_match("/\[([a-zA-Z]{2}(?:[\-\_][a-zA-Z]{2})?)\]/U", $lng[0], $lng)) {
+				$lang = $lng[1];
+			}
+		}
+
+		if (preg_match("/\(([^()]+)\)/U", $matched, $cls)) {
+			$matched = str_replace($cls[0], '', $matched);	# Consume entire class block -- valid or invalid...
+			# Only allow a restricted subset of the CSS standard characters for classes/ids. No encoding markers allowed...
+			if (preg_match("/\(([-a-zA-Z 0-9_\.\:\#]+)\)/U", $cls[0], $cls)) {
+				$hashpos = strpos( $cls[1], '#' );
+				# If a textile class block attribute was found with a '#' in it
+				# split it into the css class and css id...
+				if( false !== $hashpos ) {
+					if (preg_match("/#([-a-zA-Z0-9_\.\:]*)$/", substr( $cls[1], $hashpos ), $ids))
+						$id = $ids[1];
+
+					if (preg_match("/^([-a-zA-Z 0-9_]*)/", substr( $cls[1], 0, $hashpos ), $ids))
+						$class = $ids[1];
+				}
+				else {
+					if (preg_match("/^([-a-zA-Z 0-9_]*)$/", $cls[1], $ids))
+						$class = $ids[1];
 				}
 			}
+		}
 
-			if (preg_match("/\(([^()]+)\)/U", $matched, $cls)) {
-				$matched = str_replace($cls[0], '', $matched);	# Consume entire class block -- valid or invalid...
-				# Only allow a restricted subset of the CSS standard characters for classes/ids. No encoding markers allowed...
-				if (preg_match("/\(([-a-zA-Z 0-9_\.\:\#]+)\)/U", $cls[0], $cls)) {
-					$hashpos = strpos( $cls[1], '#' );
-					# If a textile class block attribute was found with a '#' in it
-					# split it into the css class and css id...
-					if( false !== $hashpos ) {
-						if (preg_match("/#([-a-zA-Z0-9_\.\:]*)$/", substr( $cls[1], $hashpos ), $ids))
-							$id = $ids[1];
+		if (preg_match("/([(]+)/", $matched, $pl)) {
+			$style[] = "padding-left:" . strlen($pl[1]) . "em";
+			$matched = str_replace($pl[0], '', $matched);
+		}
 
-						if (preg_match("/^([-a-zA-Z 0-9_]*)/", substr( $cls[1], 0, $hashpos ), $ids))
-							$class = $ids[1];
-					}
-					else {
-						if (preg_match("/^([-a-zA-Z 0-9_]*)$/", $cls[1], $ids))
-							$class = $ids[1];
-					}
-				}
+		if (preg_match("/([)]+)/", $matched, $pr)) {
+			$style[] = "padding-right:" . strlen($pr[1]) . "em";
+			$matched = str_replace($pr[0], '', $matched);
+		}
+
+		if (preg_match("/($this->hlgn)/", $matched, $horiz))
+			$style[] = "text-align:" . $this->hAlign($horiz[1]);
+
+		if ($element == 'col') {
+			if (preg_match("/(?:\\\\(\d+))?\s*(\d+)?/", $matched, $csp)) {
+				$span = isset($csp[1]) ? $csp[1] : '';
+				$width = isset($csp[2]) ? $csp[2] : '';
 			}
+		}
 
-			if( 'image' === $element && '' !== $algn ) {
-				$vals = array(
-					'<' => 'left',
-					'=' => 'center',
-					'>' => 'right');
-				if ( isset($vals[$algn]) ) {
-					if( 'html5' === $this->doctype )
-						$autoclass = " align-{$vals[$algn]}";
-					else
-						$align = $vals[$algn];
-				}
-			}
-
-			if (preg_match("/([(]+)/", $matched, $pl)) {
-				$style[] = "padding-left:" . strlen($pl[1]) . "em";
-				$matched = str_replace($pl[0], '', $matched);
-			}
-
-			if (preg_match("/([)]+)/", $matched, $pr)) {
-				$style[] = "padding-right:" . strlen($pr[1]) . "em";
-				$matched = str_replace($pr[0], '', $matched);
-			}
-
-			if (preg_match("/($this->hlgn)/", $matched, $horiz))
-				$style[] = "text-align:" . $this->hAlign($horiz[1]);
-
-			if ($element == 'col') {
-				if (preg_match("/(?:\\\\(\d+))?\s*(\d+)?/", $matched, $csp)) {
-					$span = isset($csp[1]) ? $csp[1] : '';
-					$width = isset($csp[2]) ? $csp[2] : '';
-				}
-			}
-
-			if ($this->restricted) {
-				$class = trim( $autoclass );
-				return join( '', array(
-					($lang)  ? ' lang="'  . $this->cleanba($lang)  . '"': '',
-					($class) ? ' class="' . $this->cleanba($class) . '"': '',
-				));
-			}
-			else
-				$class = trim( $class . ' ' . $autoclass );
-
-			$o = '';
-			if( $style ) {
-				foreach($style as $s) {
-					$parts = explode(';', $s);
-					foreach( $parts as $p ) {
-						$p = trim($p, '; ');
-						if( !empty( $p ) )
-							$o .= $p.'; ';
-					}
-				}
-				$style = trim( strtr($o, array("\n"=>'',';;'=>';')) );
-			}
-
-			return join('',array(
-				($style)   ? ' style="'   . $this->cleanba($style)    .'"' : '',
-				($class)   ? ' class="'   . $this->cleanba($class)    .'"' : '',
-				($lang)    ? ' lang="'    . $this->cleanba($lang)     .'"' : '',
-				($id and $include_id) ? ' id="' . $this->cleanba($id) .'"' : '',
-				($colspan) ? ' colspan="' . $this->cleanba($colspan)  .'"' : '',
-				($rowspan) ? ' rowspan="' . $this->cleanba($rowspan)  .'"' : '',
-				($span)    ? ' span="'    . $this->cleanba($span)     .'"' : '',
-				($width)   ? ' width="'   . $this->cleanba($width)    .'"' : '',
-				($align)   ? ' align="'   . $this->cleanba($align)    .'"' : '',
+		if ($this->restricted) {
+			$class = trim( $autoclass );
+			return join( '', array(
+				($lang)  ? ' lang="'  . $this->cleanba($lang)  . '"': '',
+				($class) ? ' class="' . $this->cleanba($class) . '"': '',
 			));
 		}
-		return '';
+		else
+			$class = trim( $class . ' ' . $autoclass );
+
+		$o = '';
+		if( $style ) {
+			foreach($style as $s) {
+				$parts = explode(';', $s);
+				foreach( $parts as $p ) {
+					$p = trim($p, '; ');
+					if( !empty( $p ) )
+						$o .= $p.'; ';
+				}
+			}
+			$style = trim( strtr($o, array("\n"=>'',';;'=>';')) );
+		}
+
+		return join('',array(
+			($style)   ? ' style="'   . $this->cleanba($style)    .'"' : '',
+			($class)   ? ' class="'   . $this->cleanba($class)    .'"' : '',
+			($lang)    ? ' lang="'    . $this->cleanba($lang)     .'"' : '',
+			($id and $include_id) ? ' id="' . $this->cleanba($id) .'"' : '',
+			($colspan) ? ' colspan="' . $this->cleanba($colspan)  .'"' : '',
+			($rowspan) ? ' rowspan="' . $this->cleanba($rowspan)  .'"' : '',
+			($span)    ? ' span="'    . $this->cleanba($span)     .'"' : '',
+			($width)   ? ' width="'   . $this->cleanba($width)    .'"' : '',
+		));
 	}
 
 // -------------------------------------------------------------
@@ -737,7 +720,7 @@ class Textile
 	{
 		$text = $text . "\n\n";
 		return preg_replace_callback("/^(?:table(_?{$this->s}{$this->a}{$this->c})\.(.*)?\n)?^({$this->a}{$this->c}\.? ?\|.*\|)[\s]*\n\n/smU",
-			array(&$this, "fTable"), $text);
+			 array(&$this, "fTable"), $text);
 	}
 
 // -------------------------------------------------------------
@@ -1000,7 +983,7 @@ class Textile
 
 			if( '' === $notedef ) # It will be empty if the regex matched and ate it.
 				return array($o1, $o2, $notedef, $c2, $c1, true);
-		}
+			}
 
 		if (preg_match("/fn(\d+)/", $tag, $fns)) {
 			$tag = 'p';
@@ -1032,7 +1015,7 @@ class Textile
 		}
 		elseif ($tag == 'bc') {
 			$o1 = "<pre$atts>";
-			$o2 = "<code".$this->pba($att, '', 0).">";
+			$o2 = "<code>";
 			$c2 = "</code>";
 			$c1 = "</pre>";
 			$content = $this->shelve($this->r_encode_html(rtrim($content, "\n")."\n"));
@@ -1271,7 +1254,7 @@ class Textile
 		if( $backlink_type === '!' )
 			return '';
 		elseif( $backlink_type === '^' )
-			return '<a href="#noteref'.$info['refids'][0].'"><sup>'.$i.'</sup></a>';
+			return '<sup><a href="#noteref'.$info['refids'][0].'">'.$i.'</a></sup>';
 		else {
 			$_ = array();
 			foreach( $info['refids'] as $id ) {
@@ -1539,11 +1522,11 @@ class Textile
 	{
 		$parts = @parse_url(urldecode($url));
 		if ((empty($parts['scheme']) or @$parts['scheme'] == 'http') and
-			empty($parts['host']) and
-				preg_match('/^\w/', @$parts['path']))
+			 empty($parts['host']) and
+			 preg_match('/^\w/', @$parts['path']))
 			$url = $this->hu.$url;
 		if ($this->restricted and !empty($parts['scheme']) and
-			!in_array($parts['scheme'], $this->url_schemes))
+				!in_array($parts['scheme'], $this->url_schemes))
 			return '#';
 		return $url;
 	}
@@ -1578,15 +1561,29 @@ class Textile
 	{
 		list(, $algn, $atts, $url) = $m;
 		$url = htmlspecialchars($url);
-		$atts  = $this->pba($atts , 'image' , 1 , $algn);
 
-		if(isset($m[4]))
-		{
-			$m[4] = htmlspecialchars($m[4]);
-			$atts .= ' title="' . $m[4] . '" alt="'	 . $m[4] . '"';
+		$extras = $align = '';
+		if( '' !== $algn ) {
+			$vals = array(
+				'<' => 'left',
+				'=' => 'center',
+				'>' => 'right');
+			if ( isset($vals[$algn]) ) {
+				if( 'html5' === $this->doctype )
+					$extras = "align-{$vals[$algn]}";
+				else
+					$align = " align=\"{$vals[$algn]}\"";
+			}
 		}
-		else
-			$atts .= ' alt=""';
+		$atts  = $this->pba($atts , '' , 1 , $extras) . $align;
+
+ 		if(isset($m[4]))
+ 		{
+ 			$m[4] = htmlspecialchars($m[4]);
+			$atts .= ' title="' . $m[4] . '" alt="'	 . $m[4] . '"';
+ 		}
+ 		else
+ 			$atts .= ' alt=""';
 
 		$size = false;
 		if ($this->isRelUrl($url))
@@ -1643,7 +1640,7 @@ class Textile
 			do {
 				$old = $text;
 				$text = strtr($text, $this->shelf);
-			} while ($text != $old);
+			 } while ($text != $old);
 
 		return $text;
 	}
@@ -1660,8 +1657,8 @@ class Textile
 	function encodeEntities($text)
 	{
 		return (function_exists('mb_encode_numericentity'))
-			?	 $this->encode_high($text)
-			:	 htmlentities($text, ENT_NOQUOTES, "utf-8");
+		?	 $this->encode_high($text)
+		:	 htmlentities($text, ENT_NOQUOTES, "utf-8");
 	}
 
 // -------------------------------------------------------------
@@ -1702,8 +1699,8 @@ class Textile
 // -------------------------------------------------------------
 	function noTextile($text)
 	{
-		$text = $this->doSpecial($text, '<notextile>', '</notextile>', 'fTextile');
-		return $this->doSpecial($text, '==', '==', 'fTextile');
+		 $text = $this->doSpecial($text, '<notextile>', '</notextile>', 'fTextile');
+		 return $this->doSpecial($text, '==', '==', 'fTextile');
 
 	}
 
@@ -1814,13 +1811,13 @@ class Textile
 
 // -------------------------------------------------------------
 	function encode_raw_amp($text)
-	{
+	 {
 		return preg_replace('/&(?!#?[a-z0-9]+;)/i', '&amp;', $text);
 	}
 
 // -------------------------------------------------------------
 	function encode_lt_gt($text)
-	{
+	 {
 		return strtr($text, array('<' => '&lt;', '>' => '&gt;'));
 	}
 
