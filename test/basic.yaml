@@ -319,6 +319,33 @@ Partial XHTML spans :
   expect : |
     <p><b>bold</b> and <i>italic</i>, the hard way.</p>
 
+HTML Comments :
+  input:  |
+    Here is some text with a <!-- Commented out[1] --> block.
+
+    <!-- Here is a single <span>line</span> comment block -->
+
+    <!-- Here is a whole
+    multiline
+    <span>HTML</span>
+    Comment
+    -->
+
+    bc. <!-- Here is a comment block in a code block. -->
+  expect: |
+    <p>Here is some text with a <!-- Commented out[1] --> block.</p>
+
+    <p><!-- Here is a single <span>line</span> comment block --></p>
+
+    <p><!-- Here is a whole
+    multiline
+    <span>HTML</span>
+    Comment
+    --></p>
+
+    <pre><code>&lt;!-- Here is a comment block in a code block. --&gt;
+    </code></pre>
+
 URLs as non-links :
   notes  : Straight URL text sequences should not be converted to a hyperlink.
   input  : |
