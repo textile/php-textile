@@ -1066,22 +1066,39 @@ Simple Definition lists:
 
 Redcloth Definition list:
   input:  |
-    - coffee := Hot and black
-    - tea := Also hot, but a little less black
-    - milk :=
+    -(hot) *coffee* := Hot _and_ black
+    -(hot#tea) tea := Also hot, but a little less black
+    -(cold) milk := Nourishing beverage for baby cows.
+    Cold drink that goes great with cookies. =:
+
+    -(hot) coffee := Hot and black
+    -(hot#tea) tea := Also hot, but a little less black
+    -(cold) milk := 
     Nourishing beverage for baby cows.
     Cold drink that goes great with cookies. =:
 
+
   expect: |
     <dl>
-    <dt>coffee</dt>
-    <dd>Hot and black</dd>
-    <dt>tea</dt>
+    <dt class="hot"><strong>coffee</strong></dt>
+    <dd>Hot <em>and</em> black</dd>
+    <dt class="hot" id="tea">tea</dt>
     <dd>Also hot, but a little less black</dd>
-    <dt>milk</dt>
-    <dd>Nourishing beverage for baby cows.</dd>
-    <dd>Cold drink that goes great with cookies.</dd>
+    <dt class="cold">milk</dt>
+    <dd>Nourishing beverage for baby cows.<br />
+    Cold drink that goes great with cookies.</dd>
     </dl>
+
+    <dl>
+    <dt class="hot">coffee</dt>
+    <dd>Hot and black</dd>
+    <dt class="hot" id="tea">tea</dt>
+    <dd>Also hot, but a little less black</dd>
+    <dt class="cold">milk</dt>
+    <dd><p>Nourishing beverage for baby cows.<br />
+    Cold drink that goes great with cookies.</p></dd>
+    </dl>
+
 
 Complex definition list:
   input: |
