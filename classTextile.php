@@ -798,7 +798,7 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function rc_lists($text)
+	function redcloth_lists($text)
 	{
 		return preg_replace_callback("/^([-]+$this->lc[ .].*:=.*)$(?![^-])/smU", array(&$this, "fRCList"), $text);
 	}
@@ -1102,7 +1102,7 @@ class Textile
 
 		if (!$this->lite) {
 			$text = $this->table($text);
-			$text = $this->rc_lists($text);
+			$text = $this->redcloth_lists($text);
 			$text = $this->lists($text);
 		}
 
