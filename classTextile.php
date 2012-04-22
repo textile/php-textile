@@ -806,24 +806,39 @@ class Textile
 // -------------------------------------------------------------
 	function fRCList($m)
 	{
-		$out[] = '<dl>';
+		$out = array();
 		$text = preg_split('/\n(?=[-])/m', $m[0]);
-		//$pt = '';
 		foreach($text as $nr => $line) {
-			//$nextline = isset($text[$nr+1]) ? $text[$nr+1] : false;
-			if (preg_match("/^([-]+)($this->lc)[ .](.*)$/s", $line, $m)) {
-				list(, $tl, $atts, $content) = $m;
+			if (preg_match("/^[-]+($this->lc)[ .](.*)$/s", $line, $m)) {
+				list(, $atts, $content) = $m;
 				$content = trim($content);
 				$atts = $this->pba($atts);
 
-				// Pull the dl line apart...
-				preg_match( "/^(.*?)[\s]*:=[\s]*(.*?)[\s]*(=:)?[\s]*$/s", $content, $xm );
+				preg_match( "/^(.*?)[\s]*:=(.*?)[\s]*(=:|:=)?[\s]*$/s", $content, $xm );
 				list( , $term, $def, ) = $xm;
 				$term = trim( $term );
-				$def  = trim( $def );
-				$def  = str_replace( "\n", "</dd>\n\t<dd>", $def );
-				$out[] = "\t<dt$atts>$term</dt>";
-				$out[] = "\t<dd>$def</dd>";
+				$def  = trim( $def, ' ' );
+
+				if( empty( $out ) ) {
+					if(''==$def)
+						$out[] = "<dl$atts>";
+					else
+						$out[] = '<dl>';
+				}
+
+				if( '' != $def && '' != $term )
+				{
+					$pos = strpos( $def, "\n" );
+					$def = str_replace( "\n", "<br />", trim($def) );
+					if( 0 === $pos )
+						$def  = '<p>' . $def . '</p>';
+
+					$term = $this->graf($term);
+					$def  = $this->graf($def);
+
+					$out[] = "\t<dt$atts>$term</dt>";
+					$out[] = "\t<dd>$def</dd>";
+				}
 			}
 		}
 		$out[] = '</dl>';
