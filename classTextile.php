@@ -960,9 +960,16 @@ class Textile
 	function formatFootnote( $marker, $atts='', $anchor=true )
 	{
 		$pattern = ($anchor) ? txt_fn_foot_pattern : txt_fn_ref_pattern;
-		$out = str_replace( '{atts}', $atts, $pattern );
-		$out = str_replace( '{marker}', $marker, $out );
-		return $out;
+		return $this->replaceMarkers( $pattern, array( 'atts' => $atts, 'marker' => $marker ) );
+	}
+
+// -------------------------------------------------------------
+	function replaceMarkers( $text, $replacements )
+	{
+		if( !empty( $replacements ) )
+			foreach( $replacements as $k => $r )
+				$text = str_replace( '{'.$k.'}', $r, $text );
+		return $text;
 	}
 
 // -------------------------------------------------------------
