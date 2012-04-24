@@ -1479,6 +1479,9 @@ class Textile
 	function refs($m)
 	{
 		list(, $flag, $url) = $m;
+		$uri_parts = array();
+		$this->parseURI( $url, $uri_parts );
+		$url = ltrim( $this->rebuildURI( $uri_parts ) ); // encodes URL if needed.
 		$this->urlrefs[$flag] = $url;
 		return '';
 	}
