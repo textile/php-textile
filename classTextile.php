@@ -1471,7 +1471,7 @@ class Textile
 // -------------------------------------------------------------
 	function getRefs($text)
 	{
-		return preg_replace_callback("/^\[(.+)\]((?:http:\/\/|\/)\S+)(?=\s|$)/Um",
+		return preg_replace_callback("/^\[(.+)\]((?:http:\/\/|https:\/\/|\/)\S+)(?=\s|$)/Um",
 			array(&$this, "refs"), $text);
 	}
 
