@@ -822,7 +822,7 @@ class Textile
 					if( !isset($this->olstarts[$tl]) )
 						$this->olstarts[$tl] = 1;
 
-					if( 0 === $nr ) {					// first line of ol -- has a start attribute?
+					if( strlen($tl) > strlen($pt) ) {			// first line of this level of ol -- has a start attribute?
 						if( '' == $st )
 							$this->olstarts[$tl] = 1;			// no => reset count to 1.
 						elseif( '_' !== $st )
@@ -832,14 +832,14 @@ class Textile
 																// here.
 					}
 
-					if(0 === $nr && '' !== $st)						// output the start attribute if needed...
+					if( (strlen($tl) > strlen($pt)) && '' !== $st)		// output the start attribute if needed...
 						$st = ' start="' . $this->olstarts[$tl] . '"';
 
-					if( $showitem ) 								// TRICKY: Only increment the count for list items
+					if( $showitem ) 							// TRICKY: Only increment the count for list items; not when a list definition line is encountered.
 						$this->olstarts[$tl] += 1;
 				}
 
-				if (preg_match("/^([#*;:]+)($this->lc)[ .].*/", $nextline, $nm))
+				if (preg_match("/^([#*;:]+)(_|[\d]+)?($this->lc)[ .].*/", $nextline, $nm))
 					$nl = $nm[1];
 
 				if ((strpos($pt, ';') !== false) && (strpos($tl, ':') !== false)) {

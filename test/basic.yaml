@@ -916,6 +916,58 @@ Ordered Lists:
         <li>24</li>
     </ol>
 
+Multi-level ordered list with continuation:
+  input:  |
+    # one
+    ##3 one.three
+    ## one.four
+    ## one.five
+    # two
+
+    test
+
+    #_(continuation#section2).
+    # three
+    # four
+    ##_ four.six
+    ## four.seven
+    # five
+
+    test
+
+    #21 twenty-one
+    # twenty-two
+
+  expect: |
+    <ol>
+    <li>one
+    <ol start="3">
+    <li>one.three</li>
+    <li>one.four</li>
+    <li>one.five</li>
+    </ol></li>
+    <li>two</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol class="continuation" id="section2" start="3">
+    <li>three</li>
+    <li>four
+    <ol start="6">
+    <li>four.six</li>
+    <li>four.seven</li>
+    </ol></li>
+    <li>five</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol start="21">
+    <li>twenty-one</li>
+    <li>twenty-two</li>
+    </ol>
+
 Basic Unordered lists:
   input: |
     h3. How about some unordered goodness?
