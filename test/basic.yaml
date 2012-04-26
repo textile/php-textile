@@ -830,6 +830,92 @@ Basic Ordered List:
     <li>&#8230; aaaaand back out</li>
     </ol>
 
+Ordered Lists:
+  input:  |
+    #_(first#list) one
+    # two
+    # three
+
+    test
+
+    #(ordered#list2).
+    # one
+    # two
+    # three
+
+    test
+
+    #_(class_4).
+    # four
+    # five
+    # six
+
+    test
+
+    #_ seven
+    # eight
+    # nine
+
+    test
+
+    # one
+    # two
+    # three
+
+    test
+
+    #22 22
+    # 23
+    # 24
+
+
+  expect: |
+    <ol class="first" id="list" start="1">
+        <li>one</li>
+        <li>two</li>
+        <li>three</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol>
+        <li>one</li>
+        <li>two</li>
+        <li>three</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol start="4">
+        <li>four</li>
+        <li>five</li>
+        <li>six</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol start="7">
+        <li>seven</li>
+        <li>eight</li>
+        <li>nine</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol>
+        <li>one</li>
+        <li>two</li>
+        <li>three</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol start="22">
+        <li>22</li>
+        <li>23</li>
+        <li>24</li>
+    </ol>
+
 Basic Unordered lists:
   input: |
     h3. How about some unordered goodness?
