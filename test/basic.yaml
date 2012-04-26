@@ -878,7 +878,7 @@ Ordered Lists:
 
     <p>test</p>
 
-    <ol>
+    <ol class="ordered" id="list2">
         <li>one</li>
         <li>two</li>
         <li>three</li>
@@ -886,7 +886,7 @@ Ordered Lists:
 
     <p>test</p>
 
-    <ol start="4">
+    <ol class="class_4" start="4">
         <li>four</li>
         <li>five</li>
         <li>six</li>
