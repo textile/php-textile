@@ -817,6 +817,14 @@ Basic Ordered List:
     some newline
     ## And underlings
     # ... aaaaand back out
+
+    p. And here we are with some _(alt)Other colours_
+    # red
+    ## greeny
+    browny
+    pinkish
+    ## black
+    # blue
   expect: |
     <ol>
     <li>Ordered</li>
@@ -830,6 +838,18 @@ Basic Ordered List:
     <li>&#8230; aaaaand back out</li>
     </ol>
 
+    <p>And here we are with some <em class="alt">Other colours</em></p>
+
+    <ol>
+    <li>red
+    <ol>
+    <li>greeny<br />
+    browny<br />
+    pinkish</li>
+    <li>black</li>
+    </ol></li>
+    <li>blue</li>
+    </ol>
 Basic Unordered lists:
   input: |
     h3. How about some unordered goodness?
@@ -840,6 +860,10 @@ Basic Unordered lists:
     ** With
     ** Subs
     * and regulars
+
+    _colours_
+    * yellow
+    * cyan
   expect: |
     <h3>How about some unordered goodness?</h3>
 
@@ -854,6 +878,12 @@ Basic Unordered lists:
     <li>and regulars</li>
     </ul>
 
+    <p><em>colours</em></p>
+
+    <ul>
+    <li>yellow</li>
+    <li>cyan</li>
+    </ul>
 Issue 61... Spans in tables :
   input  : |
     |_. Super |_. Fly |_. Table |
