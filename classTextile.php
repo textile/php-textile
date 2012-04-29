@@ -1204,6 +1204,7 @@ class Textile
 			if( !empty($this->notes)) {
 				foreach($this->notes as $seq=>$info) {
 					$links = $this->makeBackrefLink($info, $g_links, $start_char );
+					$atts = '';
 					if( !empty($info['def'])) {
 						$id = $info['id'];
 						extract($info['def']);
