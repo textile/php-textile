@@ -500,6 +500,7 @@ class Textile
 			return $text;
 		} else {
 			if(!$strict) {
+				$text = $this->prePadLists($text);
 				$text = $this->cleanWhiteSpace($text);
 			}
 
@@ -538,7 +539,7 @@ class Textile
 
 		// escape any raw html
 		$text = $this->encode_html($text, 0);
-
+		$text = $this->prePadLists($text);
 		$text = $this->cleanWhiteSpace($text);
 
 		if($lite) {
@@ -797,6 +798,23 @@ class Textile
 		return "\t<table{$tatts}{$sum}>\n" .$cap. $colgrp. join("\n", $rows) . "\n".(($last_rgrp) ? "\t</t".$last_rgrp.">\n" : '')."\t</table>\n\n";
 	}
 
+// -------------------------------------------------------------
+	function prePadLists($text)
+	{
+		$list_item       = "[#*;:]+$this->lc[ .].*\n";
+		$non_blank_lines = ".+\n";
+		$text = preg_replace_callback(
+			"/^(?:$list_item)(?:$non_blank_lines)*\n/m",
+			array(&$this, "fPrePadLists"),
+			$text."\n\n"
+		);
+		return $text;
+	}
+
+	function fPrePadLists($m)
+	{
+		return "\n".$m[0];
+	}
 // -------------------------------------------------------------
 	function lists($text)
 	{
