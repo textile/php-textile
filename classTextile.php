@@ -968,10 +968,11 @@ class Textile
 			# Is this an anonymous block with a note definition?
 			$notedef = preg_replace_callback("/
 					^note\#               #  start of note def marker
-					([^%<*!@#^([{.]+)     # !label
+					([^%<*!@#^([{ \s.]+)  # !label
 					([*!^]?)              # !link
 					({$this->c})          # !att
-					\.[\s]+               #  end of def marker
+					\.?                   #  optional period.
+					[\s]+                 #  whitespace ends def marker
 					(.*)$                 # !content
 				/x$mod", array(&$this, "fParseNoteDefs"), $content);
 
@@ -1268,7 +1269,6 @@ class Textile
 	function fParseNoteDefs($m)
 	{
 		list(, $label, $link, $att, $content) = $m;
-
 		# Assign an id if the note reference parse hasn't found the label yet.
 		$id = @$this->notes[$label]['id'];
 		if( !$id )
