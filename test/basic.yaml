@@ -127,6 +127,16 @@ Punctuation:
     Happened in '89. it did.
 
     File '1.png'. '1.' '1' '10m' '1.txt'
+
+    NATO(North Atlantic Treaty Organisation)'s pretty big.
+
+    ABC()'s poor knees.
+
+    ABC('s poor knees.
+
+    ABC)'s poor knees.
+
+    Here is a %(example)'spanned'% word.
   expect : |
     <p>Greengrocers&#8217; apostrophe&#8217;s.</p>
 
@@ -148,6 +158,15 @@ Punctuation:
 
     <p>File &#8216;1.png&#8217;. &#8216;1.&#8217; &#8216;1&#8217; &#8216;10m&#8217; &#8216;1.txt&#8217;</p>
 
+    <p><acronym title="North Atlantic Treaty Organisation"><span class="caps">NATO</span></acronym>&#8217;s pretty big.</p>
+
+    <p><acronym title=""><span class="caps">ABC</span></acronym>&#8217;s poor knees.</p>
+
+    <p><span class="caps">ABC</span>(&#8216;s poor knees.</p>
+
+    <p><span class="caps">ABC</span>)&#8217;s poor knees.</p>
+
+    <p>Here is a <span class="example">&#8216;spanned&#8217;</span> word.</p>
 Dashes & Elipsis:
   notes  : '--' should be replaced with em-dash; ' - ' with en-dash (but not inside another sequence of characters) and '...' with elipsis.
   input  : |
