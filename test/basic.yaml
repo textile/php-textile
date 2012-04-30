@@ -137,6 +137,8 @@ Punctuation:
     ABC)'s poor knees.
 
     Here is a %(example)'spanned'% word.
+
+    The NHS(National Health Service)' charter states...
   expect : |
     <p>Greengrocers&#8217; apostrophe&#8217;s.</p>
 
@@ -167,6 +169,8 @@ Punctuation:
     <p><span class="caps">ABC</span>)&#8217;s poor knees.</p>
 
     <p>Here is a <span class="example">&#8216;spanned&#8217;</span> word.</p>
+
+    <p>The <acronym title="National Health Service"><span class="caps">NHS</span></acronym>&#8217; charter states&#8230;</p>
 Dashes & Elipsis:
   notes  : '--' should be replaced with em-dash; ' - ' with en-dash (but not inside another sequence of characters) and '...' with elipsis.
   input  : |
