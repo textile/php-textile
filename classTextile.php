@@ -773,6 +773,7 @@ class Textile
 
 			$cells = array();
 			$cellctr = 0;
+			$row = strtr( $row, array( "\n" => '<br />' ) );
 			foreach(explode("|", $row) as $cell) {
 				$ctyp = "d";
 				if (preg_match("/^_/", $cell)) $ctyp = "h";
