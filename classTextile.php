@@ -1089,6 +1089,28 @@ class Textile
 	}
 
 // -------------------------------------------------------------
+	function fParseHTMLComments($m)
+	{
+		list( , $content ) = $m;
+		if( $this->restricted )
+			$content = $this->shelve($this->r_encode_html($content));
+		else
+			$content = $this->shelve($content);
+		return "<!--$content-->";
+	}
+
+
+	function getHTMLComments($text)
+	{
+		$text = preg_replace_callback("/
+			\<!--    #  start
+			(.*?)    # !content
+			-->      #  end
+		/sx", array(&$this, "fParseHTMLComments"), $text);
+		return $text;
+	}
+
+// -------------------------------------------------------------
 	function graf($text)
 	{
 		// handle normal paragraph text
@@ -1097,6 +1119,7 @@ class Textile
 			$text = $this->code($text);
 		}
 
+		$text = $this->getHTMLComments($text);
 		$text = $this->getRefs($text);
 		$text = $this->links($text);
 		if (!$this->noimage)
