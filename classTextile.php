@@ -420,7 +420,7 @@ class Textile
 		$this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
 
 		$this->glyph_search = array(
-			'/('.$wrd.'|\))\'('.$wrd.')/'.$mod,        // I'm an apostrophe
+			'/('.$wrd.'|\))\'('.$wrd.')/'.$mod,     // I'm an apostrophe
 			'/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod,	// back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
 			'/(\S)\'(?=\s|'.$pnc.'|<|$)/',          // single closing
 			'/\'/',                                 // single opening
