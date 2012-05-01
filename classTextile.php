@@ -331,6 +331,9 @@ Applying Attributes:
 @define('txt_degrees',            '&#176;');
 @define('txt_plusminus',          '&#177;');
 @define('txt_has_unicode',        @preg_match('/\pL/u', 'a')); // Detect if Unicode is compiled into PCRE
+@define('txt_fn_ref_pattern',     '<sup{atts}>{marker}</sup>');
+@define('txt_fn_foot_pattern',    '<sup{atts}>{marker}</sup>');
+@define('txt_nl_ref_pattern',     '<sup{atts}>{marker}</sup>');
 
 class Textile
 {
@@ -1045,6 +1048,22 @@ class Textile
 	}
 
 // -------------------------------------------------------------
+	function formatFootnote( $marker, $atts='', $anchor=true )
+	{
+		$pattern = ($anchor) ? txt_fn_foot_pattern : txt_fn_ref_pattern;
+		return $this->replaceMarkers( $pattern, array( 'atts' => $atts, 'marker' => $marker ) );
+	}
+
+// -------------------------------------------------------------
+	function replaceMarkers( $text, $replacements )
+	{
+		if( !empty( $replacements ) )
+			foreach( $replacements as $k => $r )
+				$text = str_replace( '{'.$k.'}', $r, $text );
+		return $text;
+	}
+
+// -------------------------------------------------------------
 	function fBlock($m)
 	{
 		extract($this->regex_snippets);
@@ -1084,8 +1103,7 @@ class Textile
 			if (strpos($atts, 'class=') === false)
 				$atts .= ' class="footnote"';
 
-			$backlink = (strpos($att, '^') === false) ? $fns[1] : '<a href="#fnrev' . $fnid . '">'.$fns[1].'</a>';
-			$sup = "<sup$supp_id>$backlink</sup>";
+			$sup = (strpos($att, '^') === false) ? $this->formatFootnote($fns[1], $supp_id) : $this->formatFootnote('<a href="#fnrev' . $fnid . '">'.$fns[1] .'</a>', $supp_id);
 
 			$content = $sup . ' ' . $content;
 		}
@@ -1445,7 +1463,7 @@ class Textile
 			$_ = '<a href="#note'.$id.'">'.$_.'</a>';
 
 		# Build the reference...
-		$_ = '<sup'.$atts.'>'.$_.'</sup>';
+		$_ = $this->replaceMarkers( txt_nl_ref_pattern, array( 'atts' => $atts, 'marker' => $_ ) );
 
 		return $_;
 	}
@@ -1834,16 +1852,18 @@ class Textile
 // -------------------------------------------------------------
 	function footnoteID($id, $nolink, $t)
 	{
-		$backref = '';
+		$backref = ' ';
 		if (empty($this->fn[$id])) {
 			$this->fn[$id] = $a = uniqid(rand());
-			$backref = 'id="fnrev'.$a.'" ';
+			$backref = ' id="fnrev'.$a.'" ';
 		}
 
 		$fnid = $this->fn[$id];
 
 		$footref = ( '!' == $nolink ) ? $id : '<a href="#fn'.$fnid.'">'.$id.'</a>';
-		$footref = '<sup '.$backref.'class="footnote">'.$footref.'</sup>';
+		$backref .= 'class="footnote"';
+
+		$footref = $this->formatFootnote( $footref, $backref, false );
 
 		return $footref;
 	}
