@@ -333,6 +333,7 @@ Applying Attributes:
 @define('txt_has_unicode',        @preg_match('/\pL/u', 'a')); // Detect if Unicode is compiled into PCRE
 @define('txt_fn_ref_pattern',     '<sup{atts}>{marker}</sup>');
 @define('txt_fn_foot_pattern',    '<sup{atts}>{marker}</sup>');
+@define('txt_nl_ref_pattern',     '<sup{atts}>{marker}</sup>');
 
 class Textile
 {
@@ -1347,7 +1348,7 @@ class Textile
 			$_ = '<a href="#note'.$id.'">'.$_.'</a>';
 
 		# Build the reference...
-		$_ = '<sup'.$atts.'>'.$_.'</sup>';
+		$_ = $this->replaceMarkers( txt_nl_ref_pattern, array( 'atts' => $atts, 'marker' => $_ ) );
 
 		return $_;
 	}
