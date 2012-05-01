@@ -849,7 +849,7 @@ class Textile
 // -------------------------------------------------------------
 	function lists($text)
 	{
-		return preg_replace_callback("/^([#*;:]+$this->lc[ .].*)$(?![^#*;:])/smU", array(&$this, "fList"), $text);
+		return preg_replace_callback("/^([#*;:]+(?:_|[\d]+)?$this->lc[ .].*)$(?![^#*;:])/smU", array(&$this, "fList"), $text);
 	}
 
 // -------------------------------------------------------------
@@ -859,15 +859,36 @@ class Textile
 		$pt = '';
 		foreach($text as $nr => $line) {
 			$nextline = isset($text[$nr+1]) ? $text[$nr+1] : false;
-			if (preg_match("/^([#*;:]+)($this->lc)[ .](.*)$/s", $line, $m)) {
-				list(, $tl, $atts, $content) = $m;
+			if (preg_match("/^([#*;:]+)(_|[\d]+)?($this->lc)[ .](.*)$/s", $line, $m)) {
+				list(, $tl, $st, $atts, $content) = $m;
 				$content = trim($content);
 				$nl = '';
 				$ltype = $this->lT($tl);
 				$litem = (strpos($tl, ';') !== false) ? 'dt' : ((strpos($tl, ':') !== false) ? 'dd' : 'li');
 				$showitem = (strlen($content) > 0);
 
-				if (preg_match("/^([#*;:]+)($this->lc)[ .].*/", $nextline, $nm))
+				if( 'o' === $ltype ) {					// handle list continuation/start attribute on ordered lists...
+					if( !isset($this->olstarts[$tl]) )
+						$this->olstarts[$tl] = 1;
+
+					if( strlen($tl) > strlen($pt) ) {			// first line of this level of ol -- has a start attribute?
+						if( '' == $st )
+							$this->olstarts[$tl] = 1;			// no => reset count to 1.
+						elseif( '_' !== $st )
+							$this->olstarts[$tl] = (int)$st;	// yes, and numeric => reset to given.
+																// TRICKY: the '_' continuation marker just means
+																// output the count so don't need to do anything
+																// here.
+					}
+
+					if( (strlen($tl) > strlen($pt)) && '' !== $st)		// output the start attribute if needed...
+						$st = ' start="' . $this->olstarts[$tl] . '"';
+
+					if( $showitem ) 							// TRICKY: Only increment the count for list items; not when a list definition line is encountered.
+						$this->olstarts[$tl] += 1;
+				}
+
+				if (preg_match("/^([#*;:]+)(_|[\d]+)?($this->lc)[ .].*/", $nextline, $nm))
 					$nl = $nm[1];
 
 				if ((strpos($pt, ';') !== false) && (strpos($tl, ':') !== false)) {
@@ -877,7 +898,7 @@ class Textile
 				$atts = $this->pba($atts);
 				if (!isset($lists[$tl])) {
 					$lists[$tl] = 1;
-					$line = "\t<" . $ltype . "l$atts>" . (($showitem) ? "\n\t\t<$litem>" . $content : '');
+					$line = "\t<" . $ltype . "l$atts$st>" . (($showitem) ? "\n\t\t<$litem>" . $content : '');
 				} else {
 					$line = ($showitem) ? "\t\t<$litem$atts>" . $content : '';
 				}
