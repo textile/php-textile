@@ -798,6 +798,54 @@ class Textile
 	}
 
 // -------------------------------------------------------------
+	function redcloth_lists($text)
+	{
+		return preg_replace_callback("/^([-]+$this->lc[ .].*:=.*)$(?![^-])/smU", array(&$this, "fRCList"), $text);
+	}
+
+// -------------------------------------------------------------
+	function fRCList($m)
+	{
+		$out = array();
+		$text = preg_split('/\n(?=[-])/m', $m[0]);
+		foreach($text as $nr => $line) {
+			if (preg_match("/^[-]+($this->lc)[ .](.*)$/s", $line, $m)) {
+				list(, $atts, $content) = $m;
+				$content = trim($content);
+				$atts = $this->pba($atts);
+
+				preg_match( "/^(.*?)[\s]*:=(.*?)[\s]*(=:|:=)?[\s]*$/s", $content, $xm );
+				list( , $term, $def, ) = $xm;
+				$term = trim( $term );
+				$def  = trim( $def, ' ' );
+
+				if( empty( $out ) ) {
+					if(''==$def)
+						$out[] = "<dl$atts>";
+					else
+						$out[] = '<dl>';
+				}
+
+				if( '' != $def && '' != $term )
+				{
+					$pos = strpos( $def, "\n" );
+					$def = str_replace( "\n", "<br />", trim($def) );
+					if( 0 === $pos )
+						$def  = '<p>' . $def . '</p>';
+
+					$term = $this->graf($term);
+					$def  = $this->graf($def);
+
+					$out[] = "\t<dt$atts>$term</dt>";
+					$out[] = "\t<dd>$def</dd>";
+				}
+			}
+		}
+		$out[] = '</dl>';
+		return implode("\n", $out);
+	}
+
+// -------------------------------------------------------------
 	function lists($text)
 	{
 		return preg_replace_callback("/^([#*;:]+$this->lc[ .].*)$(?![^#*;:])/smU", array(&$this, "fList"), $text);
@@ -1055,6 +1103,7 @@ class Textile
 
 		if (!$this->lite) {
 			$text = $this->table($text);
+			$text = $this->redcloth_lists($text);
 			$text = $this->lists($text);
 		}
 
