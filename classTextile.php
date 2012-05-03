@@ -93,6 +93,11 @@ Block modifier syntax:
 	Consecutive paragraphs beginning with ; or : are wrapped in definition list tags.
 	Example: <dl><dt>term</dt><dd>definition</dd></dl>
 
+	Redcloth-style Definition list:
+		- Term1 := Definition1
+		- Term2 := Extended
+		  definition =:
+
 Phrase modifier syntax:
 
 		   _emphasis_	->	 <em>emphasis</em>
@@ -307,6 +312,18 @@ Applying Attributes:
 
 		It goes like this, %{color:red}the fourth the fifth%
 			  -> It goes like this, <span style="color:red">the fourth the fifth</span>
+
+Ordered List Start & Continuation:
+
+	You can control the start attribute of an ordered list like so;
+
+		#5 Item 5
+		# Item 6
+
+	You can resume numbering list items after some intervening anonymous block like so...
+
+		#_ Item 7
+		# Item 8
 
 */
 
