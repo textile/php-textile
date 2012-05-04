@@ -351,6 +351,9 @@ Ordered List Start & Continuation:
 @define('txt_fn_ref_pattern',     '<sup{atts}>{marker}</sup>');
 @define('txt_fn_foot_pattern',    '<sup{atts}>{marker}</sup>');
 @define('txt_nl_ref_pattern',     '<sup{atts}>{marker}</sup>');
+// defined these for disambiguation classes. If you want to turn them off, set them to ''
+@define('txt_notelist_class',     '');
+@define('txt_footnote_class',     'footnote');
 
 class Textile
 {
@@ -376,6 +379,7 @@ class Textile
 	var $glyph = array();
 	var $hu = '';
 	var $max_span_depth = 5;
+	var $default_list = 'default';
 
 	var $ver = '2.3.2';
 	var $rev = '$Rev: 3359 $';
@@ -678,6 +682,10 @@ class Textile
 
 		if (preg_match("/($this->hlgn)/", $matched, $horiz))
 			$style[] = "text-align:" . $this->hAlign($horiz[1]);
+
+		if( ($element === 'notelist') && empty($class) && ('' !== txt_notelist_class) ) {
+			$class = txt_notelist_class;
+		}
 
 		if ($element == 'col') {
 			if (preg_match("/(?:\\\\(\d+))?\s*(\d+)?/", $matched, $csp)) {
@@ -1117,8 +1125,8 @@ class Textile
 			else
 				$supp_id = ' id="fn' . $fnid . '"';
 
-			if (strpos($atts, 'class=') === false)
-				$atts .= ' class="footnote"';
+			if( (strpos($atts, 'class=') === false) && ('' !== txt_footnote_class) )
+				$atts .= ' class="'.txt_footnote_class.'"';
 
 			$sup = (strpos($att, '^') === false) ? $this->formatFootnote($fns[1], $supp_id) : $this->formatFootnote('<a href="#fnrev' . $fnid . '">'.$fns[1] .'</a>', $supp_id);
 
@@ -1320,22 +1328,27 @@ class Textile
 
 		# Sequence all referenced definitions...
 		if( !empty($this->notes) ) {
+			foreach( $this->notes as $list=>$elements ) {
 			$o = array();
-			foreach( $this->notes as $label=>$info ) {
+				if( !empty($elements) ) {
+					foreach( $elements as $label=>$info ) {
 				$i = @$info['seq'];
 				if( !empty($i) ) {
 					$info['seq'] = $label;
 					$o[$i] = $info;
 				} else {
-					$this->unreferencedNotes[] = $info;	# unreferenced definitions go here for possible future use.
+							$this->unreferencedNotes[$list][] = $info;	# unreferenced definitions go here for possible future use.
+						}
 				}
 			}
 			if( !empty($o) ) ksort($o);
-			$this->notes = $o;
+				$this->notes[$list] = $o;
+			}
 		}
 
 		# Replace list markers...
-		$text = preg_replace_callback("@<p>notelist({$this->c})(?:\:([$wrd|{$this->syms}]))?([\^!]?)(\+?)\.?[\s]*</p>@U$mod", array(&$this, "fNoteLists"), $text );
+//		$text = preg_replace_callback("@<p>notelist({$this->c})(?:\:([$wrd|{$this->syms}]))?([\^!]?)(\+?)\.(?:[ ]*([$wrd-]*))?[\s]*</p>@U$mod", array(&$this, "fNoteLists"), $text );
+		$text = preg_replace_callback("@<p>notelist({$this->c})(?:\:([$wrd|{$this->syms}]))?([\^!]?)(\+?)\.?[ \s]*([$wrd-]*)?</p>@U$mod", array(&$this, "fNoteLists"), $text );
 
 		return $text;
 	}
@@ -1345,13 +1358,14 @@ class Textile
 	{
 		list(, $att, $start_char, $g_links, $extras) = $m;
 		if( !$start_char ) $start_char = 'a';
-		$index = $g_links.$extras.$start_char;
+		$list = ( isset($m[5]) ) ? $m[5] : $this->default_list;
+		$index = "$list.$start_char.$g_links.$extras";
 
 		if( empty($this->notelist_cache[$index]) ) { # If not in cache, build the entry...
 			$o = array();
 
-			if( !empty($this->notes)) {
-				foreach($this->notes as $seq=>$info) {
+			if( !empty($this->notes[$list])) {
+				foreach($this->notes[$list] as $seq=>$info) {
 					$links = $this->makeBackrefLink($info, $g_links, $start_char );
 					$atts = '';
 					if( !empty($info['def'])) {
@@ -1363,8 +1377,8 @@ class Textile
 					}
 				}
 			}
-			if( '+' == $extras && !empty($this->unreferencedNotes) ) {
-				foreach($this->unreferencedNotes as $seq=>$info) {
+			if( '+' == $extras && !empty($this->unreferencedNotes[$list]) ) {
+				foreach($this->unreferencedNotes[$list] as $seq=>$info) {
 					if( !empty($info['def'])) {
 						extract($info['def']);
 						$o[] = "\t".'<li'.$atts.'>'.$content.'</li>';
@@ -1378,7 +1392,7 @@ class Textile
 		$_ = ($this->notelist_cache[$index]) ? $this->notelist_cache[$index] : '';
 
 		if( !empty($_) ) {
-			$list_atts = $this->pba($att);
+			$list_atts = $this->pba($att, 'notelist');
 			$_ = "<ol$list_atts>\n$_\n</ol>";
 		}
 
@@ -1419,14 +1433,26 @@ class Textile
 	function fParseNoteDefs($m)
 	{
 		list(, $label, $link, $att, $content) = $m;
-		# Assign an id if the note reference parse hasn't found the label yet.
-		$id = @$this->notes[$label]['id'];
-		if( !$id )
-			$this->notes[$label]['id'] = uniqid(rand());
-
-		if( empty($this->notes[$label]['def']) ) # Ignores subsequent defs using the same label
+		$list  = $this->default_list;
+		$label = explode( ':', $label );
+		$num = count($label);
+		if( $num == 1 )
+			$label = $label[0];
+		elseif( $num > 1 )
 		{
-			$this->notes[$label]['def'] = array(
+			$list = $label[0];
+			unset( $label[0] );
+			$label = implode(':', $label);
+		}
+		elseif( $num == 0 )
+		  $label = 'undefined';
+
+		# Assign an id if the note reference parse hasn't found the label yet.
+		$this->notes[$list][$label]['id'] = $id = $this->getNoteID($list, $label);
+
+		if( empty($this->notes[$list][$label]['def']) ) # Ignores subsequent defs using the same label
+		{
+			$this->notes[$list][$label]['def'] = array(
 				'atts'    => $this->pba($att),
 				'content' => $this->graf($content),
 				'link'    => $link,
@@ -1457,22 +1483,34 @@ class Textile
 		# we process the refs...
 
 		list(, $atts, $label, $nolink) = $m;
+		$list  = $this->default_list;
+		$label = explode( ':', $label );
+		$num = count($label);
+		if( $num == 1 )
+			$label = $label[0];
+		elseif( $num > 1 )
+		{
+			$list = $label[0];
+			unset( $label[0] );
+			$label = implode(':', $label);
+		}
+		elseif( $num == 0 )
+		  $label = 'undefined';
+
 		$atts = $this->pba($atts);
 		$nolink = ($nolink === '!');
 
 		# Assign a sequence number to this reference if there isn't one already...
-		$num = @$this->notes[$label]['seq'];
+		$num = @$this->notes[$list][$label]['seq'];
 		if( !$num )
-			$num = $this->notes[$label]['seq'] = ($this->note_index++);
+			$num = $this->notes[$list][$label]['seq'] = 1 + count( @$this->notes[$list] );
 
 		# Make our anchor point & stash it for possible use in backlinks when the
 		# note list is generated later...
-		$this->notes[$label]['refids'][] = $refid = uniqid(rand());
+		$this->notes[$list][$label]['refids'][] = $refid = $this->getNoteID($list, $label, true);
 
 		# If we are referencing a note that hasn't had the definition parsed yet, then assign it an ID...
-		$id = @$this->notes[$label]['id'];
-		if( !$id )
-			$id = $this->notes[$label]['id'] = uniqid(rand());
+		$this->notes[$list][$label]['id'] = $id = $this->getNoteID($list, $label);
 
 		# Build the link (if any)...
 		$_ = '<span id="noteref'.$refid.'">'.$num.'</span>';
@@ -1483,6 +1521,23 @@ class Textile
 		$_ = $this->replaceMarkers( txt_nl_ref_pattern, array( 'atts' => $atts, 'marker' => $_ ) );
 
 		return $_;
+	}
+
+// -------------------------------------------------------------
+	function getNoteID( $list, $label, $force=false )
+	{
+		$id = @$this->notes[$list][$label]['id'];
+		if( $force || !$id )
+		{
+			if( $list != $this->default_list && !empty($list) )
+				$p[] = $list;
+		  $p[] = $label;
+		  $p[] = substr( uniqid(rand()), 0, 6 );
+		  $id = '_'.implode('_', $p);
+		  $id = mb_convert_case( $id, MB_CASE_LOWER, 'UTF-8' );
+		  $id = rawurlencode( $id );
+		}
+		return $id;
 	}
 
 // -------------------------------------------------------------
