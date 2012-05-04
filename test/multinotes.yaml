@@ -1,0 +1,123 @@
+adaptor: textile
+options:
+  showfailures: true
+  showpasses: true
+  showdiffs: true
+  debug: false
+  format: html
+  adaptor_options:
+    restricted: false
+
+Simple named notelist:
+  input  : |
+    Here is some[#list1:some] text. And a little more.
+
+    notelist. list1
+
+    note#list1:some. Some is an English word.
+
+    The end.
+
+  expect : |
+    <p>Here is some<sup><a href="#note_list1_some_"><span id="noteref_list1_some_">1</span></a></sup> text. And a little more.</p>
+
+    <ol>
+    <li><sup><a href="#noteref_list1_some_">a</a></sup><span id="note_list1_some_"> </span>Some is an English word.</li>
+    </ol>
+
+    <p>The end.</p>
+
+Simple named notelist with class attrs:
+  input  : |
+    Here is some[(refclass)#list1:some] text. And a little more.
+
+    notelist(listclass). list1
+
+    note#list1:some(noteclass). Some is an English word.
+
+    The end.
+
+  expect : |
+    <p>Here is some<sup class="refclass"><a href="#note_list1_some_"><span id="noteref_list1_some_">1</span></a></sup> text. And a little more.</p>
+
+    <ol class="listclass">
+    <li class="noteclass"><sup><a href="#noteref_list1_some_">a</a></sup><span id="note_list1_some_"> </span>Some is an English word.</li>
+    </ol>
+
+    <p>The end.</p>
+
+Simple named notelist with id attrs:
+  input  : |
+    Here is some[(#refid)#list1:some] text. And a little more.
+
+    notelist(#listid). list1
+
+    note#list1:some(#noteid). Some is an English word.
+
+    The end.
+
+  expect : |
+    <p>Here is some<sup id="refid"><a href="#note_list1_some_"><span id="noteref_list1_some_">1</span></a></sup> text. And a little more.</p>
+
+    <ol id="listid">
+    <li id="noteid"><sup><a href="#noteref_list1_some_">a</a></sup><span id="note_list1_some_"> </span>Some is an English word.</li>
+    </ol>
+
+    <p>The end.</p>
+
+Simple named notelist with class & id attrs:
+  input  : |
+    Here is some[(refclass#refid)#list1:some] text. And a little more.
+
+    notelist(listclass#listid). list1
+
+    note#list1:some(noteclass#noteid). Some is an English word.
+
+    The end.
+
+  expect : |
+    <p>Here is some<sup class="refclass" id="refid"><a href="#note_list1_some_"><span id="noteref_list1_some_">1</span></a></sup> text. And a little more.</p>
+
+    <ol class="listclass" id="listid">
+    <li class="noteclass" id="noteid"><sup><a href="#noteref_list1_some_">a</a></sup><span id="note_list1_some_"> </span>Some is an English word.</li>
+    </ol>
+
+    <p>The end.</p>
+
+Two notelists without attrs:
+  input  : |
+    Here is some[#list1:some] text[#list1:text]. And a little more.
+
+    notelist. list1
+
+    note#list1:some. Some is an English word.
+
+    note#list1:text. Text is another English word.
+
+    And here is another paragraph[#list2:para] with another example[#list2:example].
+
+    note#list2:para. Paragraph.
+
+    note#list2:example. Example.
+
+    notelist. list2
+
+    The end.
+
+  expect : |
+    <p>Here is some<sup><a href="#note_list1_some_"><span id="noteref_list1_some_">1</span></a></sup> text<sup><a href="#note_list1_text_"><span id="noteref_list1_text_">2</span></a></sup>. And a little more.</p>
+
+    <ol>
+    <li><sup><a href="#noteref_list1_some_">a</a></sup><span id="note_list1_some_"> </span>Some is an English word.</li>
+    <li><sup><a href="#noteref_list1_text_">a</a></sup><span id="note_list1_text_"> </span>Text is another English word.</li>
+    </ol>
+
+    <p>And here is another paragraph<sup><a href="#note_list2_para_"><span id="noteref_list2_para_">1</span></a></sup> with another example<sup><a href="#note_list2_example_"><span id="noteref_list2_example_">2</span></a></sup>.</p>
+
+    <ol>
+    <li><sup><a href="#noteref_list2_para_">a</a></sup><span id="note_list2_para_"> </span>Paragraph.</li>
+    <li><sup><a href="#noteref_list2_example_">a</a></sup><span id="note_list2_example_"> </span>Example.</li>
+    </ol>
+
+    <p>The end.</p>
+
