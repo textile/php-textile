@@ -127,6 +127,18 @@ Punctuation:
     Happened in '89. it did.
 
     File '1.png'. '1.' '1' '10m' '1.txt'
+
+    NATO(North Atlantic Treaty Organisation)'s pretty big.
+
+    ABC()'s poor knees.
+
+    ABC('s poor knees.
+
+    ABC)'s poor knees.
+
+    Here is a %(example)'spanned'% word.
+
+    The NHS(National Health Service)' charter states...
   expect : |
     <p>Greengrocers&#8217; apostrophe&#8217;s.</p>
 
@@ -148,6 +160,17 @@ Punctuation:
 
     <p>File &#8216;1.png&#8217;. &#8216;1.&#8217; &#8216;1&#8217; &#8216;10m&#8217; &#8216;1.txt&#8217;</p>
 
+    <p><acronym title="North Atlantic Treaty Organisation"><span class="caps">NATO</span></acronym>&#8217;s pretty big.</p>
+
+    <p><acronym title=""><span class="caps">ABC</span></acronym>&#8217;s poor knees.</p>
+
+    <p><span class="caps">ABC</span>(&#8216;s poor knees.</p>
+
+    <p><span class="caps">ABC</span>)&#8217;s poor knees.</p>
+
+    <p>Here is a <span class="example">&#8216;spanned&#8217;</span> word.</p>
+
+    <p>The <acronym title="National Health Service"><span class="caps">NHS</span></acronym>&#8217; charter states&#8230;</p>
 Dashes & Elipsis:
   notes  : '--' should be replaced with em-dash; ' - ' with en-dash (but not inside another sequence of characters) and '...' with elipsis.
   input  : |
@@ -319,6 +342,33 @@ Partial XHTML spans :
   expect : |
     <p><b>bold</b> and <i>italic</i>, the hard way.</p>
 
+HTML Comments :
+  input:  |
+    Here is some text with a <!-- Commented out[1] --> block.
+
+    <!-- Here is a single <span>line</span> comment block -->
+
+    <!-- Here is a whole
+    multiline
+    <span>HTML</span>
+    Comment
+    -->
+
+    bc. <!-- Here is a comment block in a code block. -->
+  expect: |
+    <p>Here is some text with a <!-- Commented out[1] --> block.</p>
+
+    <p><!-- Here is a single <span>line</span> comment block --></p>
+
+    <p><!-- Here is a whole
+    multiline
+    <span>HTML</span>
+    Comment
+    --></p>
+
+    <pre><code>&lt;!-- Here is a comment block in a code block. --&gt;
+    </code></pre>
+
 URLs as non-links :
   notes  : Straight URL text sequences should not be converted to a hyperlink.
   input  : |
@@ -432,13 +482,25 @@ Unicode Links :
 
     "$":https://de.wikipedia.org/wiki/Übermensch
 
-    "福島駅":http://ja.wikipedia.org/wiki/福島駅_(大阪府) this is a test -- no trailing slash.
+    "福島駅":link5 this is a test -- no trailing slash.
+
+    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash":link3
 
     "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash":https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ
 
-    "福島駅":http://ja.wikipedia.org/wiki/福島駅_(大阪府)/ this is a test -- with a trailing slash.
+    "福島駅":link6 this is a test -- with a trailing slash.
+
+    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash":link4
 
     "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash":https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ/
+
+    "Google":link1 or "secure google":link2
+    [link1]http://google.com
+    [link2]https://google.com
+    [link3]https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ
+    [link4]https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ/
+    [link5]http://ja.wikipedia.org/wiki/福島駅_(大阪府)
+    [link6]http://ja.wikipedia.org/wiki/福島駅_(大阪府)/
 
   expect : |
     <p><a href="https://de.wikipedia.org/wiki/%C3%9Cbermensch">Übermensch</a></p>
@@ -449,9 +511,15 @@ Unicode Links :
 
     <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash</a></p>
 
+    <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash</a></p>
+
     <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_%28%E5%A4%A7%E9%98%AA%E5%BA%9C%29/">福島駅</a> this is a test &#8212; with a trailing slash.</p>
 
     <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F/">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash</a></p>
+
+    <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F/">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash</a></p>
+
+    <p><a href="http://google.com">Google</a> or <a href="https://google.com">secure google</a></p>
 
 Non-whitelisted link schemes :
   input :  |
@@ -799,6 +867,14 @@ Basic Ordered List:
     some newline
     ## And underlings
     # ... aaaaand back out
+
+    p. And here we are with some _(alt)Other colours_
+    # red
+    ## greeny
+    browny
+    pinkish
+    ## black
+    # blue
   expect: |
     <ol>
     <li>Ordered</li>
@@ -812,6 +888,157 @@ Basic Ordered List:
     <li>&#8230; aaaaand back out</li>
     </ol>
 
+    <p>And here we are with some <em class="alt">Other colours</em></p>
+
+    <ol>
+    <li>red
+    <ol>
+    <li>greeny<br />
+    browny<br />
+    pinkish</li>
+    <li>black</li>
+    </ol></li>
+    <li>blue</li>
+    </ol>
+
+Ordered Lists:
+  input:  |
+    #_(first#list) one
+    # two
+    # three
+
+    test
+
+    #(ordered#list2).
+    # one
+    # two
+    # three
+
+    test
+
+    #_(class_4).
+    # four
+    # five
+    # six
+
+    test
+
+    #_ seven
+    # eight
+    # nine
+
+    test
+
+    # one
+    # two
+    # three
+
+    test
+
+    #22 22
+    # 23
+    # 24
+
+
+  expect: |
+    <ol class="first" id="list" start="1">
+        <li>one</li>
+        <li>two</li>
+        <li>three</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol class="ordered" id="list2">
+        <li>one</li>
+        <li>two</li>
+        <li>three</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol class="class_4" start="4">
+        <li>four</li>
+        <li>five</li>
+        <li>six</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol start="7">
+        <li>seven</li>
+        <li>eight</li>
+        <li>nine</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol>
+        <li>one</li>
+        <li>two</li>
+        <li>three</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol start="22">
+        <li>22</li>
+        <li>23</li>
+        <li>24</li>
+    </ol>
+
+Multi-level ordered list with continuation:
+  input:  |
+    # one
+    ##3 one.three
+    ## one.four
+    ## one.five
+    # two
+
+    test
+
+    #_(continuation#section2).
+    # three
+    # four
+    ##_ four.six
+    ## four.seven
+    # five
+
+    test
+
+    #21 twenty-one
+    # twenty-two
+
+  expect: |
+    <ol>
+    <li>one
+    <ol start="3">
+    <li>one.three</li>
+    <li>one.four</li>
+    <li>one.five</li>
+    </ol></li>
+    <li>two</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol class="continuation" id="section2" start="3">
+    <li>three</li>
+    <li>four
+    <ol start="6">
+    <li>four.six</li>
+    <li>four.seven</li>
+    </ol></li>
+    <li>five</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol start="21">
+    <li>twenty-one</li>
+    <li>twenty-two</li>
+    </ol>
+
 Basic Unordered lists:
   input: |
     h3. How about some unordered goodness?
@@ -822,6 +1049,10 @@ Basic Unordered lists:
     ** With
     ** Subs
     * and regulars
+
+    _colours_
+    * yellow
+    * cyan
   expect: |
     <h3>How about some unordered goodness?</h3>
 
@@ -836,6 +1067,12 @@ Basic Unordered lists:
     <li>and regulars</li>
     </ul>
 
+    <p><em>colours</em></p>
+
+    <ul>
+    <li>yellow</li>
+    <li>cyan</li>
+    </ul>
 Issue 61... Spans in tables :
   input  : |
     |_. Super |_. Fly |_. Table |
@@ -1064,6 +1301,42 @@ Simple Definition lists:
     <dd>Def 3</dd>
     </dl>
 
+Redcloth Definition list:
+  input:  |
+    -(hot) *coffee* := Hot _and_ black
+    -(hot#tea) tea := Also hot, but a little less black
+    -(cold) milk := Nourishing beverage for baby cows.
+    Cold drink that goes great with cookies. =:
+
+    -(hot) coffee := Hot and black
+    -(hot#tea) tea := Also hot, but a little less black
+    -(cold) milk := 
+    Nourishing beverage for baby cows.
+    Cold drink that goes great with cookies. =:
+
+
+  expect: |
+    <dl>
+    <dt class="hot"><strong>coffee</strong></dt>
+    <dd>Hot <em>and</em> black</dd>
+    <dt class="hot" id="tea">tea</dt>
+    <dd>Also hot, but a little less black</dd>
+    <dt class="cold">milk</dt>
+    <dd>Nourishing beverage for baby cows.<br />
+    Cold drink that goes great with cookies.</dd>
+    </dl>
+
+    <dl>
+    <dt class="hot">coffee</dt>
+    <dd>Hot and black</dd>
+    <dt class="hot" id="tea">tea</dt>
+    <dd>Also hot, but a little less black</dd>
+    <dt class="cold">milk</dt>
+    <dd><p>Nourishing beverage for baby cows.<br />
+    Cold drink that goes great with cookies.</p></dd>
+    </dl>
+
+
 Complex definition list:
   input: |
     h2. A definition list
@@ -1261,7 +1534,7 @@ Tables with styles:
     | _The Usual Suspects_ | Benicio Del Toro, Gabriel Byrne, Stephen Baldwin, Kevin Spacey | Bryan Singer | Chris McQaurrie | One of the finest films ever made |
     | _Se7en_ | Morgan Freeman, Brad Pitt, Kevin Spacey | David Fincher | Andrew Kevin Walker | Great psychological thriller |
     | _Primer_ | David Sullivan, Shane Carruth | Shane Carruth | Shane Carruth | Amazing insight into trust and human psychology <br />rather than science fiction. Terrific! |
-    | _District 9_ | Sharlto Copley, Jason Cope | Neill Blomkamp | Neill Blomkamp, Terri Tatchell | Social commentary layered on thick,<br />
+    | _District 9_ | Sharlto Copley, Jason Cope | Neill Blomkamp | Neill Blomkamp, Terri Tatchell | Social commentary layered on thick,
     but boy is it done well |
     |-(medlist){background:#e7e895;}.
     | _Arlington Road_ | Tim Robbins, Jeff Bridges | Mark Pellington | Ehren Kruger | Awesome study in neighbourly relations |
@@ -1320,7 +1593,6 @@ Tables with styles:
     <td> Neill Blomkamp </td>
     <td> Neill Blomkamp, Terri Tatchell </td>
     <td> Social commentary layered on thick,<br />
-
     but boy is it done well </td>
     </tr>
     </tbody>
@@ -1477,6 +1749,29 @@ Unlinked Note References with backlinked and unreferenced defs.:
     notelist{padding:1em; margin:1em; border-bottom:1px solid gray}:α!+.
   expect: |
     <p>Scientists say<sup><span id="noteref">1</span></sup> the moon is quite small. But I, for one, don&#8217;t believe them. Others claim it to be made of cheese<sup><span id="noteref">2</span></sup>. If this proves true I suspect we are in for troubled times<sup><span id="noteref">3</span></sup> as people argue over their &#8220;share&#8221; of the moon&#8217;s cheese. In the end, its limited size<sup><span id="noteref">1</span></sup> may prove problematic.</p>
+
+    <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
+    <li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    <li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    <li><sup><a href="#noteref">α</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    <li>An unreferenced note.</li>
+    </ol>
+
+Malformed notelist :
+  input:  |
+    Scientists say[#lavader] the moon is quite small. But I, for one, don't believe them. Others claim it to be made of cheese[#aardman]. If this proves true I suspect we are in for troubled times[#apollo13!] as people argue over their "share" of the moon's cheese. In the end, its limited size[#lavader] may prove problematic.
+
+    note#unused An unreferenced note.
+
+    note#lavader^ "Proof of the small moon hypothesis":http://antwrp.gsfc.nasa.gov/apod/ap080801.html. Copyright(c) Laurent Laveder
+
+    note#aardman^ "Proof of a cheese moon":http://www.imdb.com/title/tt0104361
+
+    note#apollo13^ After all, things do go "wrong":http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident.
+
+    notelist{padding:1em; margin:1em; border-bottom:1px solid gray}:α!+
+  expect: |
+    <p>Scientists say<sup><a href="#note"><span id="noteref">1</span></a></sup> the moon is quite small. But I, for one, don&#8217;t believe them. Others claim it to be made of cheese<sup><a href="#note"><span id="noteref">2</span></a></sup>. If this proves true I suspect we are in for troubled times<sup><span id="noteref">3</span></sup> as people argue over their &#8220;share&#8221; of the moon&#8217;s cheese. In the end, its limited size<sup><a href="#note"><span id="noteref">1</span></a></sup> may prove problematic.</p>
 
     <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
     <li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
