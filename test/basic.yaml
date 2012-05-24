@@ -384,6 +384,69 @@ URLs as non-links :
 
     <p>&#8220;http://cnn.com(is a website)&#8221;</p>
 
+URI-Schemes :
+  input  : |
+    "link with no scheme":textileit.com
+
+    "link with http":http://textileit.com
+
+    "link with https":https://textileit.com
+
+    "link with ftp":ftp://textileit.com
+
+    "link with sftp":sftp://foobar@textileit.com
+
+    "$":sftp://foobar@textileit.com
+
+    "link with file1":file://host.example.com/folder/file.ext
+
+    "$":file://host.example.com/folder/file.ext
+
+    "link with file2":file:///c:/folder/file.ext
+
+    "$":file:///c:/folder/file.ext
+
+    "link with tel":tel:123123123123123123-123
+
+    "$":tel:123123123123123123-123
+
+    "link with mailto":mailto:contact@textileit.com
+
+    "link with callto":callto:textileit.com
+
+    "$":callto:textileit.com
+
+  expect : |
+    <p><a href="textileit.com">link with no scheme</a></p>
+
+    <p><a href="http://textileit.com">link with http</a></p>
+
+    <p><a href="https://textileit.com">link with https</a></p>
+
+    <p><a href="ftp://textileit.com">link with ftp</a></p>
+
+    <p><a href="sftp://foobar@textileit.com">link with sftp</a></p>
+
+    <p><a href="sftp://foobar@textileit.com">foobar@textileit.com</a></p>
+
+    <p><a href="file://host.example.com/folder/file.ext">link with file1</a></p>
+
+    <p><a href="file://host.example.com/folder/file.ext">host.example.com/folder/file.ext</a></p>
+
+    <p><a href="file:/c%3A/folder/file.ext">link with file2</a></p>
+
+    <p><a href="file:/c%3A/folder/file.ext">c:/folder/file.ext</a></p>
+
+    <p><a href="tel:123123123123123123-123">link with tel</a></p>
+
+    <p><a href="tel:123123123123123123-123">123123123123123123-123</a></p>
+
+    <p><a href="mailto:contact@textileit.com">link with mailto</a></p>
+
+    <p><a href="callto:textileit.com">link with callto</a></p>
+
+    <p><a href="callto:textileit.com">textileit.com</a></p>
+
 Self-Hyperlink :
   notes  : A new feature.
   input  : |
