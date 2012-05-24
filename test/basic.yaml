@@ -394,9 +394,13 @@ URI-Schemes :
 
     "link with ftp":ftp://textileit.com
 
+    "link with ftp alias":uri-alias4
+
     "link with sftp":sftp://foobar@textileit.com
 
     "$":sftp://foobar@textileit.com
+
+    "link with sftp alias":uri-alias3
 
     "link with file1":file://host.example.com/folder/file.ext
 
@@ -404,17 +408,31 @@ URI-Schemes :
 
     "link with file2":file:///c:/folder/file.ext
 
+    "link with file alias":uri-alias2
+
     "$":file:///c:/folder/file.ext
 
     "link with tel":tel:123123123123123123-123
 
     "$":tel:123123123123123123-123
 
+    "int tel":uri-alias1
+
     "link with mailto":mailto:contact@textileit.com
+
+    "link with mailto alias":uri-alias6
 
     "link with callto":callto:textileit.com
 
+    "link with callto alias":uri-alias5
+
     "$":callto:textileit.com
+    [uri-alias1]tel:+123-(0)-123123123-123
+    [uri-alias2]file:///c:/folder/file.ext
+    [uri-alias3]sftp://foo@bar.net
+    [uri-alias4]ftp://foo@bar.net
+    [uri-alias5]callto:textileit.com
+    [uri-alias6]mailto:contact@textileit.com
 
   expect : |
     <p><a href="textileit.com">link with no scheme</a></p>
@@ -425,9 +443,13 @@ URI-Schemes :
 
     <p><a href="ftp://textileit.com">link with ftp</a></p>
 
+    <p><a href="ftp://foo@bar.net">link with ftp alias</a></p>
+
     <p><a href="sftp://foobar@textileit.com">link with sftp</a></p>
 
     <p><a href="sftp://foobar@textileit.com">foobar@textileit.com</a></p>
+
+    <p><a href="sftp://foo@bar.net">link with sftp alias</a></p>
 
     <p><a href="file://host.example.com/folder/file.ext">link with file1</a></p>
 
@@ -435,15 +457,23 @@ URI-Schemes :
 
     <p><a href="file:/c%3A/folder/file.ext">link with file2</a></p>
 
+    <p><a href="file:/c%3A/folder/file.ext">link with file alias</a></p>
+
     <p><a href="file:/c%3A/folder/file.ext">c:/folder/file.ext</a></p>
 
     <p><a href="tel:123123123123123123-123">link with tel</a></p>
 
     <p><a href="tel:123123123123123123-123">123123123123123123-123</a></p>
 
+    <p><a href="tel:%2B123-%280%29-123123123-123">int tel</a></p>
+
     <p><a href="mailto:contact@textileit.com">link with mailto</a></p>
 
+    <p><a href="mailto:contact@textileit.com">link with mailto alias</a></p>
+
     <p><a href="callto:textileit.com">link with callto</a></p>
+
+    <p><a href="callto:textileit.com">link with callto alias</a></p>
 
     <p><a href="callto:textileit.com">textileit.com</a></p>
 

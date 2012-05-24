@@ -1626,8 +1626,11 @@ class Textile
 // -------------------------------------------------------------
 	function getRefs($text)
 	{
-		return preg_replace_callback("/^\[(.+)\]((?:http:\/\/|https:\/\/|\/)\S+)(?=\s|$)/Um",
-			array(&$this, "refs"), $text);
+		if( $this->restricted )
+			$pattern = "/^\[(.+)\]((?:http:\/\/|https:\/\/|\/)\S+)(?=\s|$)/Um";
+		else
+			$pattern = "/^\[(.+)\]((?:http:\/\/|https:\/\/|tel:|file:|ftp:\/\/|sftp:\/\/|mailto:|callto:|\/)\S+)(?=\s|$)/Um";
+		return preg_replace_callback( $pattern, array(&$this, "refs"), $text);
 	}
 
 // -------------------------------------------------------------
