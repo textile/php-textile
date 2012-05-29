@@ -415,7 +415,8 @@ class Textile
 
 		$pnc = '[[:punct:]]';
 
-		$this->url_schemes = array('http','https','ftp','mailto');
+		$this->restricted_url_schemes = array('http','https','ftp','mailto');
+		$this->unrestricted_url_schemes = array('http','https','ftp','mailto','file','tel','callto','sftp');
 
 		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', '###' );
 
@@ -513,6 +514,8 @@ class Textile
 		$this->lite = $lite;
 		$this->noimage = $noimage;
 
+		$this->url_schemes = $this->unrestricted_url_schemes;
+
 		if ($encode)
 		{
 			$text = $this->incomingEntities($text);
@@ -549,6 +552,8 @@ class Textile
 		$this->restricted = true;
 		$this->lite = $lite;
 		$this->noimage = $noimage;
+
+		$this->url_schemes = $this->restricted_url_schemes;
 
 		$this->span_depth = 0;
 		$this->tag_index = 1;
@@ -1621,8 +1626,11 @@ class Textile
 // -------------------------------------------------------------
 	function getRefs($text)
 	{
-		return preg_replace_callback("/^\[(.+)\]((?:http:\/\/|https:\/\/|\/)\S+)(?=\s|$)/Um",
-			array(&$this, "refs"), $text);
+		if( $this->restricted )
+			$pattern = "/^\[(.+)\]((?:http:\/\/|https:\/\/|\/)\S+)(?=\s|$)/Um";
+		else
+			$pattern = "/^\[(.+)\]((?:http:\/\/|https:\/\/|tel:|file:|ftp:\/\/|sftp:\/\/|mailto:|callto:|\/)\S+)(?=\s|$)/Um";
+		return preg_replace_callback( $pattern, array(&$this, "refs"), $text);
 	}
 
 // -------------------------------------------------------------
