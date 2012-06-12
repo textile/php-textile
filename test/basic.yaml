@@ -943,6 +943,15 @@ Make sure these don't get turned into lists... :
 
     *(class)Here is a class* that is a little extended and is
     *followed* by a strong word!
+
+    *123 test*
+
+    *test 123*
+
+    **123 test**
+
+    **test 123**
+
   expect: |
     <p><strong>Here is a comment</strong></p>
 
@@ -950,6 +959,14 @@ Make sure these don't get turned into lists... :
 
     <p><strong class="class">Here is a class</strong> that is a little extended and is<br />
     <strong>followed</strong> by a strong word!</p>
+
+    <p><strong>123 test</strong></p>
+
+    <p><strong>test 123</strong></p>
+
+    <p><b>123 test</b></p>
+
+    <p><b>test 123</b></p>
 
 Basic Ordered List:
   input: |
