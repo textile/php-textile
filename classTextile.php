@@ -5,7 +5,13 @@
  *
  *		  $textile = new Textile;
  *		  echo $textile->TextileThis($string);
+ *
  */
+
+/*
+$HeadURL$
+$LastChangedRevision$
+*/
 
 /*
 
@@ -378,7 +384,7 @@ class Textile
 	var $max_span_depth = 5;
 
 	var $ver = '2.4.0';
-	var $rev = '$Rev: 3359 $';
+	var $rev = '$Rev$';
 
 	var $doc_root;
 
@@ -523,7 +529,6 @@ class Textile
 			return $text;
 		} else {
 			if(!$strict) {
-				$text = $this->prePadLists($text);
 				$text = $this->cleanWhiteSpace($text);
 			}
 
@@ -564,7 +569,6 @@ class Textile
 
 		// escape any raw html
 		$text = $this->encode_html($text, 0);
-		$text = $this->prePadLists($text);
 		$text = $this->cleanWhiteSpace($text);
 
 		if($lite) {
@@ -872,24 +876,6 @@ class Textile
 		return implode("\n", $out);
 	}
 
-// -------------------------------------------------------------
-	function prePadLists($text)
-	{
-		$list_item       = "[#*;:]+(?:_|[\d]+)?$this->lc[ .].*\n";
-		$non_blank_lines = ".+\n";
-		$text = preg_replace_callback(
-			"/^(?:$list_item)(?:$non_blank_lines)*\n/m",
-			array(&$this, "fPrePadLists"),
-			$text."\n\n"
-		);
-		return $text;
-	}
-
-// -------------------------------------------------------------
-	function fPrePadLists($m)
-	{
-		return "\n".$m[0];
-	}
 
 // -------------------------------------------------------------
 	function lists($text)
@@ -2054,3 +2040,4 @@ class Textile
 
 
 } // end class
+

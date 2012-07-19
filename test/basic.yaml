@@ -943,6 +943,12 @@ Make sure these don't get turned into lists... :
 
     *(class)Here is a class* that is a little extended and is
     *followed* by a strong word!
+
+    bc. ; Content-type: text/javascript
+    ; Cache-Control: no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0
+    ; Expires: Sat, 24 Jul 2003 05:00:00 GMT
+    ; Last-Modified: Wed, 1 Jan 2025 05:00:00 GMT
+    ; Pragma: no-cache
   expect: |
     <p><strong>Here is a comment</strong></p>
 
@@ -950,6 +956,13 @@ Make sure these don't get turned into lists... :
 
     <p><strong class="class">Here is a class</strong> that is a little extended and is<br />
     <strong>followed</strong> by a strong word!</p>
+
+    <pre><code>; Content-type: text/javascript
+    ; Cache-Control: no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0
+    ; Expires: Sat, 24 Jul 2003 05:00:00 GMT
+    ; Last-Modified: Wed, 1 Jan 2025 05:00:00 GMT
+    ; Pragma: no-cache
+    </code></pre>
 
 Basic Ordered List:
   input: |
@@ -962,6 +975,7 @@ Basic Ordered List:
     # ... aaaaand back out
 
     p. And here we are with some _(alt)Other colours_
+
     # red
     ## greeny
     browny
@@ -1144,6 +1158,7 @@ Basic Unordered lists:
     * and regulars
 
     _colours_
+
     * yellow
     * cyan
   expect: |
