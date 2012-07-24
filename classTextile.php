@@ -880,7 +880,7 @@ class Textile
 // -------------------------------------------------------------
 	function lists($text)
 	{
-		return preg_replace_callback("/^([#*;:]+(?:_|[\d]+)?$this->lc[ .].*)$(?![^#*;:])/smU", array(&$this, "fList"), $text);
+		return preg_replace_callback("/^((?:[*;:]+|[*;:#]*#(?:_|\d+)?)$this->lc[ .].*)$(?![^#*;:])/smU", array(&$this, "fList"), $text);
 	}
 
 // -------------------------------------------------------------
@@ -890,7 +890,7 @@ class Textile
 		$pt = '';
 		foreach($text as $nr => $line) {
 			$nextline = isset($text[$nr+1]) ? $text[$nr+1] : false;
-			if (preg_match("/^([#*;:]+)(_|[\d]+)?($this->lc)[ .](.*)$/s", $line, $m)) {
+			if (preg_match("/^([#*;:]+)(_|\d+)?($this->lc)[ .](.*)$/s", $line, $m)) {
 				list(, $tl, $st, $atts, $content) = $m;
 				$content = trim($content);
 				$nl = '';

@@ -949,6 +949,15 @@ Make sure these don't get turned into lists... :
     ; Expires: Sat, 24 Jul 2003 05:00:00 GMT
     ; Last-Modified: Wed, 1 Jan 2025 05:00:00 GMT
     ; Pragma: no-cache
+
+    *123 test*
+
+    *test 123*
+
+    **123 test**
+
+    **test 123**
+
   expect: |
     <p><strong>Here is a comment</strong></p>
 
@@ -963,6 +972,14 @@ Make sure these don't get turned into lists... :
     ; Last-Modified: Wed, 1 Jan 2025 05:00:00 GMT
     ; Pragma: no-cache
     </code></pre>
+
+    <p><strong>123 test</strong></p>
+
+    <p><strong>test 123</strong></p>
+
+    <p><b>123 test</b></p>
+
+    <p><b>test 123</b></p>
 
 Basic Ordered List:
   input: |
