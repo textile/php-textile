@@ -358,8 +358,8 @@ Ordered List Start & Continuation:
 @define('txt_fn_foot_pattern',    '<sup{atts}>{marker}</sup>');
 @define('txt_nl_ref_pattern',     '<sup{atts}>{marker}</sup>');
 
-@define('txt_prep_html_input',    ''); // Comment out this line and uncomment the following if you want to prep raw HTML...
-#@define('txt_prep_html_input',    'PREP_HTML_INPUT');
+#@define('txt_prep_html_input',    ''); // Comment out this line and uncomment the following if you want to prep raw HTML...
+@define('txt_prep_html_input',    'PREP_HTML_INPUT');
 
 class Textile
 {
