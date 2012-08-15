@@ -358,6 +358,9 @@ Ordered List Start & Continuation:
 @define('txt_fn_foot_pattern',    '<sup{atts}>{marker}</sup>');
 @define('txt_nl_ref_pattern',     '<sup{atts}>{marker}</sup>');
 
+@define('txt_prep_html_input',    ''); // Comment out this line and uncomment the following if you want to prep raw HTML...
+#@define('txt_prep_html_input',    'PREP_HTML_INPUT');
+
 class Textile
 {
 	var $hlgn;
@@ -988,12 +991,24 @@ class Textile
 	}
 
 // -------------------------------------------------------------
+	function prep_html_input_cb( $m )
+	{
+		return "\n\n {$m[1]}\n\n";
+	}
+
+	function prep_html_input($text)
+	{
+		$text = preg_replace_callback( "@\n(</?\w[^>]*>)\n@", array( $this, "prep_html_input_cb" ), "\n$text\n" );
+		return $text;
+	}
+
+// -------------------------------------------------------------
 	function block($text)
 	{
 		$find = $this->btag;
 		$tre = join('|', $find);
 
-		$text = explode("\n\n", $text);
+		$blocks = array_reverse( explode("\n\n", $text) ); // prep the stack of blocks...
 
 		$tag = 'p';
 		$atts = $cite = $graf = $ext = '';
@@ -1001,9 +1016,10 @@ class Textile
 
 		$out = array();
 
-		foreach($text as $line) {
+		while( count( $blocks ) ) {
+			$block = array_pop( $blocks );
 			$anon = 0;
-			if (preg_match("/^($tre)($this->a$this->c)\.(\.?)(?::(\S+))? (.*)$/s", $line, $m)) {
+			if (preg_match("/^($tre)($this->a$this->c)\.(\.?)(?::(\S+))? (.*)$/s", $block, $m)) {
 				// last block was extended, so close it
 				if ($ext)
 					$out[count($out)-1] .= $c1;
@@ -1013,35 +1029,52 @@ class Textile
 
 				// leave off c1 if this block is extended, we'll close it at the start of the next block
 				if ($ext)
-					$line = $o1.$o2.$content.$c2;
+					$block = $o1.$o2.$content.$c2;
 				else
-					$line = $o1.$o2.$content.$c2.$c1;
+					$block = $o1.$o2.$content.$c2.$c1;
 			}
 			else {
 				// anonymous block
 				$anon = 1;
-				if ($ext or !preg_match('/^ /', $line)) {
-					list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0,$tag,$atts,$ext,$cite,$line));
+				if ($ext or !preg_match('/^ /', $block)) {
+					list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0,$tag,$atts,$ext,$cite,$block));
 					// skip $o1/$c1 because this is part of a continuing extended block
 					if ($tag == 'p' and !$this->hasRawText($content)) {
-						$line = $content;
+						$block = $content;
 					}
 					else {
-						$line = $o2.$content.$c2;
+						if( !$this->restricted && 'PREP_HTML_INPUT' === txt_prep_html_input ) {
+							$prepped_block = $this->prep_html_input($block);
+						//	$prepped_block = $this->cleanWhiteSpace($prepped_block);
+							$new_blocks    = explode( "\n\n", $prepped_block );
+							$num           = count( $new_blocks );
+
+							if( $num > 1 ) {
+								while( count( $new_blocks ) ) {
+									$nb = array_pop( $new_blocks );
+									if( '' == $nb )
+										continue;
+									array_push( $blocks, rtrim($nb, "\n") );
+								}
+								continue;
+							}
+						}
+
+						$block = $o2.$content.$c2;
 					}
 				}
-				else {
-					$line = $this->graf($line);
+				else { // not ext and starts with a space. Why is this being put through graf() ???
+					$block = $this->graf($block);
 				}
 			}
 
-			$line = $this->doPBr($line);
-			$line = preg_replace('/<br>/', '<br />', $line);
+			$block = $this->doPBr($block);
+			$block = preg_replace('/<br>/', '<br />', $block);
 
 			if ($ext and $anon)
-				$out[count($out)-1] .= "\n".$line;
+				$out[count($out)-1] .= "\n".$block;
 			elseif(!$eat)
-				$out[] = $line;
+				$out[] = $block;
 
 			if (!$ext) {
 				$tag = 'p';

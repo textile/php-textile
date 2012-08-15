@@ -15,10 +15,59 @@ Mixed HTML & Textile:
 
     <p>*foo*[^2^]</p>
 
+    <div>
+    <q>abc</q>
+    </div>
+
+    notextile. Don't mess with me!
+
+    bc.. <txp>
+    <hr />
+    </txp>
+
+    p. Hello!
+
+    <div class="t'wonda">
+    ABC
+
+    * d
+    * e
+    * f
+
+    GHI
+    </div>
+
   expect: |
     <p><strong>foo</strong></p>
 
     <p><strong>foo</strong><sup>2</sup></p>
+
+    <div>
+    <q>abc</q>
+    </div>
+
+    Don't mess with me!
+
+    <pre><code>&lt;txp&gt;
+    &lt;hr /&gt;
+    &lt;/txp&gt;
+    </code></pre>
+
+    <p>Hello!</p>
+
+    <div class="t'wonda">
+
+    <p><span class="caps">ABC</span></p>
+
+    <ul>
+    <li>d</li>
+    <li>e</li>
+    <li>f</li>
+    </ul>
+
+    <p><span class="caps">GHI</span></p>
+
+    </div>
 
 Styled numbers:
   input : |
