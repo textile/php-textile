@@ -310,6 +310,34 @@ Nested block modifiers :
 
     <p><em><strong>em <sup>strong</sup></strong></em> <i><b><cite>&amp;</cite></b></i> <strong><em>strong <sub>em</sub></em></strong></p>
 
+Spans in table cells :
+  input:  |
+    | *strong* |
+
+    | _em_ |
+
+    | Inter-word -dashes- | ZIP-codes are 5- or 9-digit codes |
+
+  expect: |
+    <table>
+    <tr>
+    <td> <strong>strong</strong> </td>
+    </tr>
+    </table>
+
+    <table>
+    <tr>
+    <td> <em>em</em> </td>
+    </tr>
+    </table>
+
+    <table>
+    <tr>
+    <td> Inter-word <del>dashes</del> </td>
+    <td> <span class="caps">ZIP</span>-codes are 5- or 9-digit codes </td>
+    </tr>
+    </table>
+
 Parenthesised block modifiers :
   input  : |
     Simple solutions (_*are* the_ best) [for _Komplex(tm)_ people].
@@ -1409,6 +1437,47 @@ Complex table with row- and col-spans:
     <td>sixth</td>
     <td> <em><strong>bold italics</strong></em> </td>
     <td>6</td>
+    </tr>
+    </table>
+
+Lists in tables:
+  input:  |
+    |* Foo[^2^]
+    * _bar_
+    * ~baz~ |
+    |#4 *Four*
+    # __Five__ |
+    |-(hot) coffee := Hot and black
+    -(hot#tea) tea := Also hot, but a little less black
+    -(cold) milk := 
+    Nourishing beverage for baby cows.
+    Cold drink that goes great with cookies. =:
+    |
+  expect: |
+    <table>
+    <tr>
+    <td>	<ul>
+    <li>Foo<sup>2</sup></li>
+    <li><em>bar</em></li>
+    <li><sub>baz</sub></li>
+    </ul></td>
+    </tr>
+    <tr>
+    <td>	<ol start="4">
+    <li><strong>Four</strong></li>
+    <li><i>Five</i></li>
+    </ol></td>
+    </tr>
+    <tr>
+    <td><dl>
+    <dt class="hot">coffee</dt>
+    <dd>Hot and black</dd>
+    <dt class="hot" id="tea">tea</dt>
+    <dd>Also hot, but a little less black</dd>
+    <dt class="cold">milk</dt>
+    <dd><p>Nourishing beverage for baby cows.<br />
+    Cold drink that goes great with cookies.</p></dd><br />
+    </dl></td>
     </tr>
     </table>
 

@@ -803,7 +803,6 @@ class Textile
 
 			$cells = array();
 			$cellctr = 0;
-			$row = strtr( $row, array( "\n" => '<br />' ) );
 			foreach(explode("|", $row) as $cell) {
 				$ctyp = "d";
 				if (preg_match("/^_/", $cell)) $ctyp = "h";
@@ -812,7 +811,10 @@ class Textile
 					$cell = $cmtch[2];
 				} else $catts = '';
 
-				$cell = $this->graf($cell);
+				if (!$this->lite) {
+					$cell = $this->redcloth_lists($cell);
+					$cell = $this->lists($cell);
+				}
 
 				if ($cellctr>0) // Ignore first 'cell': it precedes the opening pipe
 					$cells[] = $this->doTagBr("t$ctyp", "\t\t\t<t$ctyp$catts>$cell</t$ctyp>");
