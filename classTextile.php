@@ -1403,8 +1403,6 @@ class Textile
 			$_ = join( ' ', $_ );
 			return $_;
 		}
-
-		return '';
 	}
 
 
@@ -2001,8 +1999,6 @@ class Textile
 	function textile_popup_help($name, $helpvar, $windowW, $windowH)
 	{
 		return ' <a target="_blank" href="http://www.textpattern.com/help/?item=' . $helpvar . '" onclick="window.open(this.href, \'popupwindow\', \'width=' . $windowW . ',height=' . $windowH . ',scrollbars,resizable\'); return false;">' . $name . '</a><br />';
-
-		return $out;
 	}
 
 // -------------------------------------------------------------
