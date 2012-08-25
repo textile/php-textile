@@ -12,6 +12,7 @@ The only file that is necessary for the correct operation of Textile is @classTe
 
 For live installations only files and subdirectories from the @master@ branch should be used. _Code from other branches should not be used on live sites._
 
+See the "composer wiki page":https://github.com/netcarver/textile/wiki/Installation-via-Composer if you use "composer":https://getcomposer.org to manage the dependencies in your projects. 
 
 
 h2. Usage
