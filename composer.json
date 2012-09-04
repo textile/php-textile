@@ -1,0 +1,13 @@
+{
+    "name": "netcarver/textile",
+    "description": "A lightweight markup language that takes (almost) plaintext and converts it into well formed HTML.",
+    "license": "BSD-3-Clause",
+    "autoload": {
+        "classmap": ["classTextile.php"]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.4-dev"
+        }
+    }
+}
