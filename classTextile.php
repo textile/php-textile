@@ -403,7 +403,7 @@ class Textile
 		else
 			$this->doctype = $doctype;
 
-		$this->hlgn = "(?:\<(?!>)|(?<!<)\>|\<\>|\=|[()]+(?! ))";
+		$this->hlgn = "(?:\<(?!>)|&lt;&gt;|&gt;|&lt;|(?<!<)\>|\<\>|\=|[()]+(?! ))";
 		$this->vlgn = "[\-^~]";
 		$this->clas = "(?:\([^)\n]+\))";	# Don't allow classes/ids/languages/styles to span across newlines
 		$this->lnge = "(?:\[[^]\n]+\])";
@@ -1912,6 +1912,9 @@ class Textile
 	function hAlign($in)
 	{
 		$vals = array(
+			'&lt;'  => 'left',
+			'&gt;'  => 'right',
+			'&lt;&gt;'  => 'justify',
 			'<'  => 'left',
 			'='  => 'center',
 			'>'  => 'right',
