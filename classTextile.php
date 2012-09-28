@@ -978,7 +978,7 @@ class Textile
 	{
 		# Less restrictive version of fBr() ... used only in paragraphs where the next
 		# row may start with a smiley or perhaps something like '#8 bolt...' or '*** stars...'
-		$content = preg_replace("@(.+)(?<!<br>|<br />)\n(?![\s|])@", '$1<br />', $m[3]);
+		$content = preg_replace("@((?!<br>\n|<br />\n))+\n(?![\s|])@", '$1<br />', $m[3]);
 		return '<'.$m[1].$m[2].'>'.$content.$m[4];
 	}
 
