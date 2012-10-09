@@ -269,6 +269,12 @@ Paragraphs with alignment :
 
     p=. Centered paragraph.
 
+    p&lt;. Left-aligned too.
+
+    p&gt;. Right-aligned too.
+
+    p&lt;&gt;. Justified too.
+
   expect : |
     <p style="text-align:left;">Left-aligned paragraph.</p>
 
@@ -277,6 +283,12 @@ Paragraphs with alignment :
     <p style="text-align:justify;">Forasmuch as many have taken in hand to set forth in order a declaration of those things which are most surely believed among us, even as they delivered them unto us, which from the beginning were eyewitnesses, and ministers of the word; it seemed good to me also, having had perfect understanding of all things from the very first, to write unto thee in order, most excellent Theophilus, that thou mightest know the certainty of those things, wherein thou hast been instructed.</p>
 
     <p style="text-align:center;">Centered paragraph.</p>
+
+    <p style="text-align:left;">Left-aligned too.</p>
+
+    <p style="text-align:right;">Right-aligned too.</p>
+
+    <p style="text-align:justify;">Justified too.</p>
 
 Paragraphs with padding :
   input  : |
