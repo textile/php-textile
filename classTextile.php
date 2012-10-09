@@ -1848,7 +1848,7 @@ class Textile
 // -------------------------------------------------------------
 	function fTextile($m)
 	{
-		@list(, $before, $notextile, $after) = $m;
+		@list(, $before, $notextile, $after) = array_pad($m, 4, null);
 		#$notextile = str_replace(array_keys($modifiers), array_values($modifiers), $notextile);
 		return $before.$this->shelve($notextile).$after;
 	}
