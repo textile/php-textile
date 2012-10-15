@@ -9,11 +9,6 @@
  */
 
 /*
-$HeadURL$
-$LastChangedRevision$
-*/
-
-/*
 
 _____________
 T E X T I L E
@@ -384,7 +379,6 @@ class Textile
 	var $max_span_depth = 5;
 
 	var $ver = '2.4.1';
-	var $rev = '$Rev$';
 
 	var $doc_root;
 
