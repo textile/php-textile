@@ -440,6 +440,8 @@ URI-Schemes :
 
     "$":sftp://foobar@textileit.com
 
+    Find it "here":http://github.com/netcarver/some+thing+completely+different on github.
+
     "link with sftp alias":uri-alias3
 
     "link with file1":file://host.example.com/folder/file.ext
@@ -458,7 +460,7 @@ URI-Schemes :
 
     "int tel":uri-alias1
 
-    "link with mailto":mailto:contact@textileit.com
+    "link with mailto":mailto:contact+alt@textileit.com
 
     "link with mailto alias":uri-alias6
 
@@ -489,6 +491,8 @@ URI-Schemes :
 
     <p><a href="sftp://foobar@textileit.com">foobar@textileit.com</a></p>
 
+    <p>Find it <a href="http://github.com/netcarver/some+thing+completely+different">here</a> on github.</p>
+
     <p><a href="sftp://foo@bar.net">link with sftp alias</a></p>
 
     <p><a href="file://host.example.com/folder/file.ext">link with file1</a></p>
@@ -507,7 +511,7 @@ URI-Schemes :
 
     <p><a href="tel:%2B123-%280%29-123123123-123">int tel</a></p>
 
-    <p><a href="mailto:contact@textileit.com">link with mailto</a></p>
+    <p><a href="mailto:contact%2Balt@textileit.com">link with mailto</a></p>
 
     <p><a href="mailto:contact@textileit.com">link with mailto alias</a></p>
 
