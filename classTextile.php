@@ -1521,7 +1521,8 @@ class Textile
 			else {
 				$pp = explode( '/', $parts['path'] );
 				foreach( $pp as &$p ) {
-					$p = strtr( rawurlencode( $p ), array( '%40' => '@', '%2B' => '+' ) );
+					$p = strtr( rawurlencode( $p ), array( '%40' => '@') );
+					if(!in_array($parts['scheme'], array('tel','mailto'))) $p = strtr( $p, array( '%2B' => '+' ));
 				}
 
 				$pp = implode( '/', $pp );
