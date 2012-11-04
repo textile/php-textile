@@ -658,6 +658,19 @@ Unicode Links :
 
     <p><a href="http://google.com">Google</a> or <a href="https://google.com">secure google</a></p>
 
+Self-referencing link alias :
+  input  : |
+    Here is "$":0, and "another link":0, to the ^["$":0]^ site.
+    [0]http://thresholdstate.com/?q=true
+
+    Please check on "$":4 for any updates.
+    [4]https://de.wikipedia.org/wiki/Übermensch
+
+  expect : |
+    <p>Here is <a href="http://thresholdstate.com/?q=true">http://thresholdstate.com/?q=true</a>, and <a href="http://thresholdstate.com/?q=true">another link</a>, to the <sup><a href="http://thresholdstate.com/?q=true">http://thresholdstate.com/?q=true</a></sup> site.</p>
+
+    <p>Please check on <a href="https://de.wikipedia.org/wiki/%C3%9Cbermensch">https://de.wikipedia.org/wiki/Übermensch</a> for any updates.</p>
+
 Non-whitelisted link schemes :
   input :  |
     "I'm a bad link":parp://parp.com
