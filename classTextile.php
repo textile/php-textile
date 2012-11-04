@@ -1576,8 +1576,12 @@ class Textile
 		if( '$' === $text ) {
 			if( $scheme_in_list )
 				$text = ltrim( $this->rebuildURI( $uri_parts, 'authority,path,query,fragment', false ), '/' );
-			else
+			else {
+				if (isset($this->urlrefs[$url]))
+					$url = urldecode($this->urlrefs[$url]);
+
 				$text = $url;
+			}
 		}
 
 		$atts = $this->pba($atts);
