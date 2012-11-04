@@ -1568,7 +1568,7 @@ class Textile
 
 		$scheme         = $uri_parts['scheme'];
 		$scheme_in_list = in_array( $scheme, $this->url_schemes );
-		$scheme_ok = '' === $scheme || $scheme_in_list;
+		$scheme_ok      = ('' === $scheme) || $scheme_in_list;
 
 		if( !$scheme_ok )
 			return $m[0];
