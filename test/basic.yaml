@@ -1300,6 +1300,15 @@ Table alignments:
     |<>. justify me|
     |^. valign top |
     |~. bottom |
+
+    |_=. Grade |_=. Homeroom |_=. Type |_=. Tardy/Dismiss Time |_=. Student |
+    |=. 6 | Bates | Absent |=. - | Jones, Jeanne |
+    |=. 6 | O'Leary | Absent |=. - | Jones, Jackson |
+    |=. 7 | Garran | Absent |=. - | Jones, Lauren |
+    |=. 7 | Martin | Absent |=. - | Jones, Timothy |
+    |=. 7 | Martin | Tardy |=. 10:00 | Jones, John-Paul |
+    |=. 8 | Kast | Absent |=. - | Jones, Samuel |
+    |=. 8 | Woods | Absent |=. - | Jones, Evelyn |
   expect: |
     <table>
     <tr>
@@ -1322,6 +1331,65 @@ Table alignments:
     </tr>
     <tr>
     <td style="vertical-align:bottom;">bottom </td>
+    </tr>
+    </table>
+
+    <table>
+    <tr>
+    <th style="text-align:center;">Grade </th>
+    <th style="text-align:center;">Homeroom </th>
+    <th style="text-align:center;">Type </th>
+    <th style="text-align:center;">Tardy/Dismiss Time </th>
+    <th style="text-align:center;">Student </th>
+    </tr>
+    <tr>
+    <td style="text-align:center;">6 </td>
+    <td> Bates </td>
+    <td> Absent </td>
+    <td style="text-align:center;">- </td>
+    <td> Jones, Jeanne </td>
+    </tr>
+    <tr>
+    <td style="text-align:center;">6 </td>
+    <td> O&#8217;Leary </td>
+    <td> Absent </td>
+    <td style="text-align:center;">- </td>
+    <td> Jones, Jackson </td>
+    </tr>
+    <tr>
+    <td style="text-align:center;">7 </td>
+    <td> Garran </td>
+    <td> Absent </td>
+    <td style="text-align:center;">- </td>
+    <td> Jones, Lauren </td>
+    </tr>
+    <tr>
+    <td style="text-align:center;">7 </td>
+    <td> Martin </td>
+    <td> Absent </td>
+    <td style="text-align:center;">- </td>
+    <td> Jones, Timothy </td>
+    </tr>
+    <tr>
+    <td style="text-align:center;">7 </td>
+    <td> Martin </td>
+    <td> Tardy </td>
+    <td style="text-align:center;">10:00 </td>
+    <td> Jones, John-Paul </td>
+    </tr>
+    <tr>
+    <td style="text-align:center;">8 </td>
+    <td> Kast </td>
+    <td> Absent </td>
+    <td style="text-align:center;">- </td>
+    <td> Jones, Samuel </td>
+    </tr>
+    <tr>
+    <td style="text-align:center;">8 </td>
+    <td> Woods </td>
+    <td> Absent </td>
+    <td style="text-align:center;">- </td>
+    <td> Jones, Evelyn </td>
     </tr>
     </table>
 
