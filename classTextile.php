@@ -1754,14 +1754,14 @@ class Textile
 // -------------------------------------------------------------
 	function fCode($m)
 	{
-		@list(, $before, $text, $after) = $m;
+		list(, $before, $text, $after) = array_pad($m, 4, '');
 		return $before.$this->shelve('<code>'.$this->r_encode_html($text).'</code>').$after;
 	}
 
 // -------------------------------------------------------------
 	function fPre($m)
 	{
-		@list(, $before, $text, $after) = $m;
+		list(, $before, $text, $after) = array_pad($m, 4, '');
 		return $before.'<pre>'.$this->shelve($this->r_encode_html($text)).'</pre>'.$after;
 	}
 
@@ -1832,7 +1832,7 @@ class Textile
 	function fSpecial($m)
 	{
 		// A special block like notextile or code
-		@list(, $before, $text, $after) = $m;
+		list(, $before, $text, $after) = array_pad($m, 4, '');
 		return $before.$this->shelve($this->encode_html($text)).$after;
 	}
 
@@ -1847,7 +1847,7 @@ class Textile
 // -------------------------------------------------------------
 	function fTextile($m)
 	{
-		@list(, $before, $notextile, $after) = $m;
+		list(, $before, $notextile, $after) = array_pad($m, 4, '');
 		#$notextile = str_replace(array_keys($modifiers), array_values($modifiers), $notextile);
 		return $before.$this->shelve($notextile).$after;
 	}
