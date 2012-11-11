@@ -15,7 +15,7 @@ For live installations only files and subdirectories from the @master@ branch sh
 See the "composer wiki page":https://github.com/netcarver/textile/wiki/Installation-via-Composer if you use "composer":https://getcomposer.org to manage the dependencies in your projects. 
 
 
-h2. Usage
+h2. General Usage
 
 You'll need to include the source file and instantiate a parser...
 
@@ -29,6 +29,15 @@ bc. $output = $textile->TextileThis( $trusted_input );
 If you are using Textile to format user-supplied input, blog comments for instance, use a @TextileRestricted()@ call...
 
 bc. $output = $textile->TextileRestricted( $untrusted_input );
+
+h2. CodeIgniter Helper Usage
+
+Copy @classTextile.php@ to @/application/helpers/textile_helper.php@
+
+Then simply use textile as follows:
+
+bc.. $this->load->helper('textile');
+$text = Textile("Dude this is *my* code!");
 
 
 

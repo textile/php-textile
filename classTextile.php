@@ -358,6 +358,23 @@ Ordered List Start & Continuation:
 @define('txt_fn_foot_pattern',    '<sup{atts}>{marker}</sup>');
 @define('txt_nl_ref_pattern',     '<sup{atts}>{marker}</sup>');
 
+# CodeIgniter Helper class
+@define( 'TEXTILE_PARSER_CLASS',  'Textile' );
+function Textile($text) {
+#
+# Initialize the parser and return the result of its transform method.
+#
+	# Setup static parser variable.
+	static $parser;
+	if (!isset($parser)) {
+		$parser_class = TEXTILE_PARSER_CLASS;
+		$parser = new $parser_class;
+	}
+
+	# Transform text using parser.
+	return $parser->TextileThis($text);
+}
+
 class Textile
 {
 	var $hlgn;
