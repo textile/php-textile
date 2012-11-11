@@ -503,17 +503,25 @@ class Textile
 
 // -------------------------------------------------------------
 
-	function TextileThis($text, $lite = '', $encode = '', $noimage = '', $strict = '', $rel = '')
+	function prepare($lite, $noimage, $rel)
 	{
+		$this->urlshelf = array();
+		$this->urlrefs  = array();
+		$this->shelf    = array();
 		$this->span_depth = 0;
 		$this->tag_index = 1;
 		$this->notes = $this->unreferencedNotes = $this->notelist_cache = array();
 		$this->note_index = 1;
 		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
-
 		$this->lite = $lite;
 		$this->noimage = $noimage;
+	}
 
+// -------------------------------------------------------------
+
+	function TextileThis($text, $lite = '', $encode = '', $noimage = '', $strict = '', $rel = '')
+	{
+		$this->prepare($lite, $noimage, $rel);
 		$this->url_schemes = $this->unrestricted_url_schemes;
 
 		if ($encode)
@@ -548,18 +556,9 @@ class Textile
 
 	function TextileRestricted($text, $lite = 1, $noimage = 1, $rel = 'nofollow')
 	{
-		$this->restricted = true;
-		$this->lite = $lite;
-		$this->noimage = $noimage;
-
+		$this->prepare($lite, $noimage, $rel);
 		$this->url_schemes = $this->restricted_url_schemes;
-
-		$this->span_depth = 0;
-		$this->tag_index = 1;
-		$this->notes = $this->unreferencedNotes = $this->notelist_cache = array();
-		$this->note_index = 1;
-
-		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
+		$this->restricted = true;
 
 		// escape any raw html
 		$text = $this->encode_html($text, 0);
