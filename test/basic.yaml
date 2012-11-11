@@ -198,11 +198,28 @@ Dashes & Elipsis:
 
     <p>You know the Italian proverb&#8230;Chi ha compagno ha padrone.</p>
 
-Notextile - in-line :
+Notextile :
   input  : |
     ==*no* <b>textile</b>==
+
+    ==
+    This text should never, 
+    ever, ever, ever, ever
+    be "textiled(tm)"!
+    ==
+
+    But "this(tm)" should be whilst, yet again, >==this(tm)==< should _not_!
+
   expect : |
     <p>*no* <b>textile</b></p>
+
+    <p>
+    This text should never,
+    ever, ever, ever, ever
+    be "textiled(tm)"!
+    </p>
+
+    <p>But &#8220;this&#8482;&#8221; should be whilst, yet again, &gt;this(tm)&lt; should <em>not</em>!</p>
 
 Headers 1-6 :
   input  : |
