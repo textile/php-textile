@@ -1719,13 +1719,12 @@ class Textile
 		}
 		$atts  = $this->pba($atts , '' , 1 , $extras) . $align;
 
- 		if(isset($m[4]))
- 		{
- 			$m[4] = htmlspecialchars($m[4]);
+		if(isset($m[4]) && '' !== $m[4]) {
+			$m[4] = htmlspecialchars($m[4]);
 			$atts .= ' title="' . $m[4] . '" alt="'	 . $m[4] . '"';
- 		}
- 		else
- 			$atts .= ' alt=""';
+		}
+		else
+			$atts .= ' alt=""';
 
 		$size = false;
 		if ($this->isRelUrl($url))
