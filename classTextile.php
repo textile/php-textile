@@ -832,15 +832,18 @@ class Textile
 // -------------------------------------------------------------
 	function fRCList($m)
 	{
+		$in = $m[0];
 		$out = array();
-		$text = preg_split('/\n(?=[-])/m', $m[0]);
+		$text = preg_split('/\n(?=[-])/m', $in);
 		foreach($text as $nr => $line) {
+			$m = array();
 			if (preg_match("/^[-]+($this->lc)[ .](.*)$/s", $line, $m)) {
 				list(, $atts, $content) = $m;
 				$content = trim($content);
 				$atts = $this->pba($atts);
 
-				preg_match( "/^(.*?)[\s]*:=(.*?)[\s]*(=:|:=)?[\s]*$/s", $content, $xm );
+				if( !preg_match( "/^(.*?)[\s]*:=(.*?)[\s]*(=:|:=)?[\s]*$/s", $content, $xm )) return $in;
+
 				list( , $term, $def, ) = $xm;
 				$term = trim( $term );
 				$def  = trim( $def, ' ' );
