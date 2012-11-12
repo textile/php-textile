@@ -2000,40 +2000,6 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function textile_popup_help($name, $helpvar, $windowW, $windowH)
-	{
-		return ' <a target="_blank" href="http://www.textpattern.com/help/?item=' . $helpvar . '" onclick="window.open(this.href, \'popupwindow\', \'width=' . $windowW . ',height=' . $windowH . ',scrollbars,resizable\'); return false;">' . $name . '</a><br />';
-	}
-
-// -------------------------------------------------------------
-// NOTE: deprecated
-	function txtgps($thing)
-	{
-		if (isset($_POST[$thing])) {
-			if (get_magic_quotes_gpc()) {
-				return stripslashes($_POST[$thing]);
-			}
-			else {
-				return $_POST[$thing];
-			}
-		}
-		else {
-			return '';
-		}
-	}
-
-// -------------------------------------------------------------
-// NOTE: deprecated
-	function dump()
-	{
-		static $bool = array( 0=>'false', 1=>'true' );
-		foreach (func_get_args() as $a)
-			echo "\n<pre>",(is_array($a)) ? print_r($a) : ((is_bool($a)) ? $bool[(int)$a] : $a), "</pre>\n";
-		return $this;
-	}
-
-// -------------------------------------------------------------
-
 	function blockLite($text)
 	{
 		$this->btag = array('bq', 'p');
