@@ -1683,26 +1683,26 @@ class Textile
 // -------------------------------------------------------------
 	function image($text)
 	{
-		return preg_replace_callback("/
-			(?:[[{])?		   # pre
-			\!				   # opening !
-			(\<|\=|\>)? 	   # optional alignment atts
-			($this->c)		   # optional style,class atts
-			(?:\. )?		   # optional dot-space
-			([^\s(!]+)		   # presume this is the src
-			\s? 			   # optional space
-			(?:\(([^\)]+)\))?  # optional title
-			\!				   # closing
-			(?::(\S+))? 	   # optional href
-			(?:[\]}]|(?=\s|$|\))) # lookahead: space or end of string
-		/x", array(&$this, "fImage"), $text);
+		return preg_replace_callback('/
+			(?:[[{])?                  # pre
+			\!                         # opening !
+			(\<|\=|\>)?                # optional alignment              $algn
+			('.$this->c.')             # optional style,class atts       $atts
+			(?:\. )?                   # optional dot-space
+			([^\s(!]+)                 # presume this is the src         $url
+			\s?                        # optional space
+			(?:\(([^\)]+)\))?          # optional title                  $title
+			\!                         # closing
+			(?::(\S+)(?<![.,]))?       # optional href sans final punct. $href
+			(?:[\]}]|(?=[.,\s)|]|$))   # lookahead: space , . ) | or end of string ... "|" needed if image in table cell
+		/x', array(&$this, "fImage"), $text);
 	}
 
 // -------------------------------------------------------------
 	function fImage($m)
 	{
-		list(, $algn, $atts, $url) = $m;
-		$url = htmlspecialchars($url);
+		list(, $algn, $atts, $url, $title, $href) = array_pad($m, 6, null);
+		$url = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
 
 		$extras = $align = '';
 		if( '' !== $algn ) {
@@ -1719,9 +1719,9 @@ class Textile
 		}
 		$atts  = $this->pba($atts , '' , 1 , $extras) . $align;
 
-		if(isset($m[4]) && '' !== $m[4]) {
-			$m[4] = htmlspecialchars($m[4]);
-			$atts .= ' title="' . $m[4] . '" alt="'	 . $m[4] . '"';
+		if($title) {
+			$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+			$atts .= ' title="' . $title . '" alt="'	 . $title . '"';
 		}
 		else
 			$atts .= ' alt=""';
@@ -1731,7 +1731,7 @@ class Textile
 			$size = @getimagesize(realpath($this->doc_root.ltrim($url, $this->ds)));
 		if ($size) $atts .= " $size[3]";
 
-		$href = (isset($m[5])) ? $this->shelveURL($m[5]) : '';
+		$href = ($href) ? $this->shelveURL($href) : '';
 		$url = $this->shelveURL($url);
 
 		$out = array(
