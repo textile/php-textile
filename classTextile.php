@@ -1688,7 +1688,7 @@ class Textile
 			\!                         # opening !
 			(\<|\=|\>)?                # optional alignment              $algn
 			('.$this->c.')             # optional style,class atts       $atts
-			(?:\. )?                   # optional dot-space
+			(\. )?                     # optional dot-space              $period
 			([^\s(!]+)                 # presume this is the src         $url
 			\s?                        # optional space
 			(?:\(([^\)]+)\))?          # optional title                  $title
@@ -1701,7 +1701,9 @@ class Textile
 // -------------------------------------------------------------
 	function fImage($m)
 	{
-		list(, $algn, $atts, $url, $title, $href) = array_pad($m, 6, null);
+		list(, $algn, $atts, $period, $url, $title, $href) = array_pad($m, 7, null);
+
+		if( '.' === $period ) $url = ".$url";
 		$url = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
 
 		$extras = $align = '';
