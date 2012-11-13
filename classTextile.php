@@ -414,6 +414,7 @@ class Textile
 		$this->syms  = '¤§µ¶†‡•∗∴◊♠♣♥♦';
 
 		$pnc = '[[:punct:]]';
+		$this->cmap = array( 0x0080, 0xffff, 0, 0xffff);
 
 		$this->restricted_url_schemes = array('http','https','ftp','mailto');
 		$this->unrestricted_url_schemes = array('http','https','ftp','mailto','file','tel','callto','sftp');
@@ -736,8 +737,7 @@ class Textile
 	function table($text)
 	{
 		$text = $text . "\n\n";
-		return preg_replace_callback("/^(?:table(_?{$this->s}{$this->a}{$this->c})\.(.*)?\n)?^({$this->a}{$this->c}\.? ?\|.*\|)[\s]*\n\n/smU",
-			 array(&$this, "fTable"), $text);
+		return preg_replace_callback("/^(?:table(_?{$this->s}{$this->a}{$this->c})\.(.*)?\n)?^({$this->a}{$this->c}\.? ?\|.*\|)[\s]*\n\n/smU", array(&$this, "fTable"), $text);
 	}
 
 // -------------------------------------------------------------
@@ -1291,15 +1291,13 @@ class Textile
 // -------------------------------------------------------------
 	function fRetrieveOpenTags($m)
 	{
-		list(, $key ) = $m;
-		return $this->tagCache[$key]['open'];
+		return $this->tagCache[$m[1]]['open'];
 	}
 
 // -------------------------------------------------------------
 	function fRetrieveCloseTags($m)
 	{
-		list(, $key ) = $m;
-		return $this->tagCache[$key]['close'];
+		return $this->tagCache[$m[1]]['close'];
 	}
 
 // -------------------------------------------------------------
@@ -1643,8 +1641,7 @@ class Textile
 // -------------------------------------------------------------
 	function retrieveURLs($text)
 	{
-		return preg_replace_callback('/urlref:(\w{32})/',
-			array(&$this, "retrieveURL"), $text);
+		return preg_replace_callback('/urlref:(\w{32})/', array(&$this, "retrieveURL"), $text);
 	}
 
 // -------------------------------------------------------------
@@ -1808,8 +1805,7 @@ class Textile
 	function fixEntities($text)
 	{
 		/*	de-entify any remaining angle brackets or ampersands */
-		return str_replace(array("&gt;", "&lt;", "&amp;"),
-			array(">", "<", "&"), $text);
+		return str_replace(array("&gt;", "&lt;", "&amp;"), array(">", "<", "&"), $text);
 	}
 
 // -------------------------------------------------------------
@@ -1826,8 +1822,7 @@ class Textile
 // -------------------------------------------------------------
 	function doSpecial($text, $start, $end, $method='fSpecial')
 	{
-		return preg_replace_callback('/(^|\s|[[({>])'.preg_quote($start, '/').'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}])?/ms',
-			array(&$this, $method), $text);
+		return preg_replace_callback('/(^|\s|[[({>])'.preg_quote($start, '/').'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}])?/ms', array(&$this, $method), $text);
 	}
 
 // -------------------------------------------------------------
@@ -1857,8 +1852,7 @@ class Textile
 // -------------------------------------------------------------
 	function footnoteRef($text)
 	{
-		return preg_replace('/(?<=\S)\[([0-9]+)([\!]?)\](\s)?/Ue',
-			'$this->footnoteID(\'\1\',\'\2\',\'\3\')', $text);
+		return preg_replace('/(?<=\S)\[([0-9]+)([\!]?)\](\s)?/Ue', '$this->footnoteID(\'\1\',\'\2\',\'\3\')', $text);
 	}
 
 // -------------------------------------------------------------
@@ -1934,23 +1928,15 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-// NOTE: used in notelists
 	function encode_high($text, $charset = "UTF-8")
 	{
-		return mb_encode_numericentity($text, $this->cmap(), $charset);
+		return mb_encode_numericentity($text, $this->cmap, $charset);
 	}
 
 // -------------------------------------------------------------
-// NOTE: used in notelists
 	function decode_high($text, $charset = "UTF-8")
 	{
-		return mb_decode_numericentity($text, $this->cmap(), $charset);
-	}
-
-// -------------------------------------------------------------
-	function cmap()
-	{
-		return array( 0x0080, 0xffff, 0, 0xffff);
+		return mb_decode_numericentity($text, $this->cmap, $charset);
 	}
 
 // -------------------------------------------------------------
@@ -2002,7 +1988,6 @@ class Textile
 		$this->btag = array('bq', 'p');
 		return $this->block($text."\n\n");
 	}
-
 
 } // end class
 
