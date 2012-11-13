@@ -1693,7 +1693,7 @@ class Textile
 			\s?                        # optional space
 			(?:\(([^\)]+)\))?          # optional title                  $title
 			\!                         # closing
-			(?::(\S+)(?<![.,]))?       # optional href sans final punct. $href
+			(?::(\S+)(?<![\]).,]))?      # optional href sans final punct. $href
 			(?:[\]}]|(?=[.,\s)|]|$))   # lookahead: space , . ) | or end of string ... "|" needed if image in table cell
 		/x', array(&$this, "fImage"), $text);
 	}
