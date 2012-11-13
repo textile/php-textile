@@ -443,6 +443,7 @@ class Textile
 		$this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
 
 		$this->glyph_search = array(
+			'/(\d+)([\'"]?)( ?)[xX]( ?)(?=\d+)/',   // dimension sign
 			'/('.$wrd.'|\))\'('.$wrd.')/'.$mod,     // I'm an apostrophe
 			'/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod,	// back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
 			'/(\S)\'(?=\s|'.$pnc.'|<|$)/',          // single closing
@@ -454,7 +455,6 @@ class Textile
 			'/([^.]?)\.{3}/',                       // ellipsis
 			'/(\s?)--(\s?)/',                       // em dash
 			'/( )-( )/',                            // en dash
-			'/(\d+)( ?)x( ?)(?=\d+)/',              // dimension sign
 			'/(\b ?|\s|^)[([]TM[])]/i',             // trademark
 			'/(\b ?|\s|^)[([]R[])]/i',              // registered
 			'/(\b ?|\s|^)[([]C[])]/i',              // copyright
@@ -466,6 +466,7 @@ class Textile
 		);
 
 		$this->glyph_replace = array(
+			'$1$2$3'.txt_dimension.'$4',           // dimension sign
 			'$1'.txt_apostrophe.'$2',              // I'm an apostrophe
 			'$1'.txt_apostrophe.'$2',              // back in '88
 			'$1'.txt_quote_single_close,           // single closing
@@ -477,7 +478,6 @@ class Textile
 			'$1'.txt_ellipsis,                     // ellipsis
 			'$1'.txt_emdash.'$2',                  // em dash
 			'$1'.txt_endash.'$2',                  // en dash
-			'$1$2'.txt_dimension.'$3',             // dimension sign
 			'$1'.txt_trademark,                    // trademark
 			'$1'.txt_registered,                   // registered
 			'$1'.txt_copyright,                    // copyright
