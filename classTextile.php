@@ -1687,13 +1687,13 @@ class Textile
 			(?:[[{])?                  # pre
 			\!                         # opening !
 			(\<|\=|\>)?                # optional alignment              $algn
-			('.$this->c.')             # optional style,class atts       $atts
-			(\. )?                     # optional dot-space              $period
+			('.$this->lc.')            # optional style,class atts       $atts
+			(\.\s)?                    # optional dot-space              $period
 			([^\s(!]+)                 # presume this is the src         $url
 			\s?                        # optional space
 			(?:\(([^\)]+)\))?          # optional title                  $title
 			\!                         # closing
-			(?::(\S+)(?<![\]).,]))?      # optional href sans final punct. $href
+			(?::(\S+)(?<![\]).,]))?    # optional href sans final punct. $href
 			(?:[\]}]|(?=[.,\s)|]|$))   # lookahead: space , . ) | or end of string ... "|" needed if image in table cell
 		/x', array(&$this, "fImage"), $text);
 	}
