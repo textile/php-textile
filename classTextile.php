@@ -1722,7 +1722,7 @@ class Textile
 		$atts  = $this->pba($atts , '' , 1 , $extras) . $align;
 
 		if($title) {
-			$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+			$title = $this->encode_html($title);
 			$atts .= ' title="' . $title . '" alt="'	 . $title . '"';
 		}
 		else
