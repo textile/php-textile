@@ -745,7 +745,7 @@ class Textile
 	{
 		$tatts = $this->pba($matches[1], 'table');
 
-		$sum = trim($matches[2]) ? ' summary="'.htmlspecialchars(trim($matches[2])).'"' : '';
+		$sum = trim($matches[2]) ? ' summary="'.htmlspecialchars(trim($matches[2]), ENT_QUOTES, 'UTF-8').'"' : '';
 		$cap = '';
 		$colgrp = $last_rgrp = '';
 		$c_row = 1;
