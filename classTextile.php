@@ -414,6 +414,8 @@ class Textile
 		$this->syms  = '¤§µ¶†‡•∗∴◊♠♣♥♦';
 
 		$pnc = '[[:punct:]]';
+		$this->mb   = is_callable('mb_strlen');
+		$this->cmap = array( 0x0080, 0xffff, 0, 0xffff);
 
 		$this->restricted_url_schemes = array('http','https','ftp','mailto');
 		$this->unrestricted_url_schemes = array('http','https','ftp','mailto','file','tel','callto','sftp');
@@ -505,9 +507,7 @@ class Textile
 
 	function prepare($lite, $noimage, $rel)
 	{
-		$this->urlshelf = array();
-		$this->urlrefs  = array();
-		$this->shelf    = array();
+		$this->urlshelf = $this->urlrefs = $this->shelf = array();
 		$this->span_depth = 0;
 		$this->tag_index = 1;
 		$this->notes = $this->unreferencedNotes = $this->notelist_cache = array();
@@ -526,34 +526,18 @@ class Textile
 
 		if ($encode)
 		{
-			$text = $this->incomingEntities($text);
+			$text = $this->preg_replace("/&(?![#a-z0-9]+;)/i", "x%x%", $text);
 			$text = str_replace("x%x%", "&amp;", $text);
 			return $text;
-		} else {
-			if(!$strict) {
-				$text = $this->cleanWhiteSpace($text);
-			}
-
-			if(!$lite) {
-				$text = $this->block($text);
-				$text = $this->placeNoteLists($text);
-			}
-
-			$text = $this->retrieve($text);
-			$text = $this->replaceGlyphs($text);
-			$text = $this->retrieveTags($text);
-			$text = $this->retrieveURLs($text);
-			$this->span_depth = 0;
-
-			// just to be tidy
-			$text = str_replace("<br />", "<br />\n", $text);
-
-			return $text;
 		}
+
+		if(!$strict)
+			$text = $this->cleanWhiteSpace($text);
+
+		return $this->textileCommon($text, $lite);
 	}
 
 // -------------------------------------------------------------
-
 	function TextileRestricted($text, $lite = 1, $noimage = 1, $rel = 'nofollow')
 	{
 		$this->prepare($lite, $noimage, $rel);
@@ -564,8 +548,15 @@ class Textile
 		$text = $this->encode_html($text, 0);
 		$text = $this->cleanWhiteSpace($text);
 
+		return $this->textileCommon($text, $lite);
+	}
+
+// -------------------------------------------------------------
+	function textileCommon($text, $lite)
+	{
 		if($lite) {
-			$text = $this->blockLite($text);
+			$this->btag = array('bq', 'p');
+			$text = $this->block($text."\n\n");
 		} else {
 			$text = $this->block($text);
 			$text = $this->placeNoteLists($text);
@@ -575,7 +566,6 @@ class Textile
 		$text = $this->replaceGlyphs($text);
 		$text = $this->retrieveTags($text);
 		$text = $this->retrieveURLs($text);
-		$this->span_depth = 0;
 
 		// just to be tidy
 		$text = str_replace("<br />", "<br />\n", $text);
@@ -1651,8 +1641,8 @@ class Textile
 	function retrieveURL($m)
 	{
 		$ref = $m[1];
-		if (!isset($this->urlshelf[$ref]))
-			return $ref;
+		if (!isset($this->urlshelf[$ref])) return $ref;
+
 		$url = $this->urlshelf[$ref];
 		if (isset($this->urlrefs[$url]))
 			$url = $this->urlrefs[$url];
@@ -1787,31 +1777,6 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-// NOTE: deprecated
-	function incomingEntities($text)
-	{
-		return preg_replace("/&(?![#a-z0-9]+;)/i", "x%x%", $text);
-	}
-
-// -------------------------------------------------------------
-// NOTE: deprecated
-	function encodeEntities($text)
-	{
-		return (function_exists('mb_encode_numericentity'))
-		?	 $this->encode_high($text)
-		:	 htmlentities($text, ENT_NOQUOTES, "utf-8");
-	}
-
-// -------------------------------------------------------------
-// NOTE: deprecated
-	function fixEntities($text)
-	{
-		/*	de-entify any remaining angle brackets or ampersands */
-		return str_replace(array("&gt;", "&lt;", "&amp;"),
-			array(">", "<", "&"), $text);
-	}
-
-// -------------------------------------------------------------
 	function cleanWhiteSpace($text)
 	{
 		$out = preg_replace("/^\xEF\xBB\xBF|\x1A/", '', $text); # Byte order mark (if present)
@@ -1892,8 +1857,8 @@ class Textile
 			if (++$i % 2) {
 				// raw < > & chars are already entity encoded in restricted mode
 				if (!$this->restricted) {
-					$line = $this->encode_raw_amp($line);
-					$line = $this->encode_lt_gt($line);
+					$line = preg_replace('/&(?!#?[a-z0-9]+;)/i', '&amp;', $line);
+					$line = strtr($line, array('<' => '&lt;', '>' => '&gt;'));
 				}
 				$line = preg_replace($this->glyph_search, $this->glyph_replace, $line);
 			}
@@ -1933,41 +1898,29 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-// NOTE: used in notelists
 	function encode_high($text, $charset = "UTF-8")
 	{
-		return mb_encode_numericentity($text, $this->cmap(), $charset);
+		return ($this->mb) ? mb_encode_numericentity($text, $this->cmap, $charset) : htmlentities($text, ENT_NOQUOTES, $charset);
 	}
 
 // -------------------------------------------------------------
-// NOTE: used in notelists
 	function decode_high($text, $charset = "UTF-8")
-	{
-		return mb_decode_numericentity($text, $this->cmap(), $charset);
+	{ // TODO test the !mb case
+		return ($this->mb) ? mb_decode_numericentity($text, $this->cmap, $charset) : html_entity_decode($text, ENT_NOQUOTES, $charset);
 	}
 
 // -------------------------------------------------------------
-	function cmap()
-	{
-		return array( 0x0080, 0xffff, 0, 0xffff);
-	}
-
-// -------------------------------------------------------------
+	// DEPRECATED ... will be removed in next release
 	function encode_raw_amp($text)
-	 {
+	{
 		return preg_replace('/&(?!#?[a-z0-9]+;)/i', '&amp;', $text);
 	}
 
 // -------------------------------------------------------------
+	// DEPRECATED ... will be removed in next release
 	function encode_lt_gt($text)
-	 {
-		return strtr($text, array('<' => '&lt;', '>' => '&gt;'));
-	}
-
-// -------------------------------------------------------------
-	function encode_quot($text)
 	{
-		return str_replace('"', '&quot;', $text);
+		return strtr($text, array('<' => '&lt;', '>' => '&gt;'));
 	}
 
 // -------------------------------------------------------------
@@ -1991,17 +1944,9 @@ class Textile
 	{
 		// in restricted mode, all input but quotes has already been escaped
 		if ($this->restricted)
-			return $this->encode_quot($str);
+			return str_replace('"', '&quot;', $str);
 		return $this->encode_html($str, $quotes);
 	}
-
-// -------------------------------------------------------------
-	function blockLite($text)
-	{
-		$this->btag = array('bq', 'p');
-		return $this->block($text."\n\n");
-	}
-
 
 } // end class
 
