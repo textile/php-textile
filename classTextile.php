@@ -795,7 +795,7 @@ class Textile
 			$cellctr = 0;
 			foreach(explode("|", $row) as $cell) {
 				$ctyp = "d";
-				if (preg_match("/^_/", $cell)) $ctyp = "h";
+				if (preg_match("/^_(?=[\s[:punct:]])/", $cell)) $ctyp = "h";
 				if (preg_match("/^(_?$this->s$this->a$this->c\. )(.*)/", $cell, $cmtch)) {
 					$catts = $this->pba($cmtch[1], 'td');
 					$cell = $cmtch[2];
@@ -1541,7 +1541,7 @@ class Textile
 	function links($text)
 	{
 		return preg_replace_callback('/
-			(^|(?<=[\s>.\(])|[{[]) # $pre
+			(^|(?<=[\s>.\(\|])|[{[]) # $pre
 			"                      # start
 			(' . $this->c . ')     # $atts
 			([^"]+?)               # $text
@@ -1550,7 +1550,7 @@ class Textile
 			('.$this->urlch.'+?)   # $url
 			(\/)?                  # $slash
 			([^'.$this->regex_snippets['wrd'].'\/;]*?)  # $post
-			([\]}]|(?=\s|$|\)))	   # $tail
+			([\]}]|(?=\s|$|\)|\|))	   # $tail
 			/x'.$this->regex_snippets['mod'], array(&$this, "fLink"), $text);
 	}
 
@@ -1794,7 +1794,7 @@ class Textile
 // -------------------------------------------------------------
 	function doSpecial($text, $start, $end, $method='fSpecial')
 	{
-		return preg_replace_callback('/(^|\s|[[({>])'.preg_quote($start, '/').'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}])?/ms', array(&$this, $method), $text);
+		return preg_replace_callback('/(^|\s|[|[({>])'.preg_quote($start, '/').'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}|])?/ms', array(&$this, $method), $text);
 	}
 
 // -------------------------------------------------------------
@@ -1810,7 +1810,6 @@ class Textile
 	{
 		 $text = $this->doSpecial($text, '<notextile>', '</notextile>', 'fTextile');
 		 return $this->doSpecial($text, '==', '==', 'fTextile');
-
 	}
 
 // -------------------------------------------------------------

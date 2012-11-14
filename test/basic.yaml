@@ -2547,6 +2547,68 @@ Github Issue 50 (en-dash & strike) :
     a &#8211; <br />
     b</p>
 
+Tables of textile... :
+  input:  |
+    Tables containing other textile elements.
+
+    |'-.244' x "-.123" = ?|
+
+    |@Don't _touch_ this!@| @Don't _touch_ this!@ |
+    |==Don't _touch_ this!==| ==Don't _touch_ this!== |
+    |You _can_ touch this!| You _can_ touch this! |
+    |_touch_ this!| _touch_ this! |
+    |^superscripted^| ^superscripted^ |
+    |~subscripted~| ~subscripted~ |
+    |*strong*| *strong* |
+    |!http://tester.local/logo.png!| !http://tester.local/logo.png! |
+    |"$":https://github.com/netcarver/textile| "$":https://github.com/netcarver/textile |
+  expect: |
+    <p>Tables containing other textile elements.</p>
+
+    <table>
+    <tr>
+    <td>&#8216;-.244&#8217; &#215; &#8220;-.123&#8221; = ?</td>
+    </tr>
+    </table>
+
+    <table>
+    <tr>
+    <td><code>Don&#39;t _touch_ this!</code></td>
+    <td> <code>Don&#39;t _touch_ this!</code> </td>
+    </tr>
+    <tr>
+    <td>Don't _touch_ this!</td>
+    <td> Don't _touch_ this! </td>
+    </tr>
+    <tr>
+    <td>You <em>can</em> touch this!</td>
+    <td> You <em>can</em> touch this! </td>
+    </tr>
+    <tr>
+    <td><em>touch</em> this!</td>
+    <td> <em>touch</em> this! </td>
+    </tr>
+    <tr>
+    <td><sup>superscripted</sup></td>
+    <td> <sup>superscripted</sup> </td>
+    </tr>
+    <tr>
+    <td><sub>subscripted</sub></td>
+    <td> <sub>subscripted</sub> </td>
+    </tr>
+    <tr>
+    <td><strong>strong</strong></td>
+    <td> <strong>strong</strong> </td>
+    </tr>
+    <tr>
+    <td><img src="http://tester.local/logo.png" alt="" /></td>
+    <td> <img src="http://tester.local/logo.png" alt="" /> </td>
+    </tr>
+    <tr>
+    <td><a href="https://github.com/netcarver/textile">github.com/netcarver/textile</a></td>
+    <td> <a href="https://github.com/netcarver/textile">github.com/netcarver/textile</a> </td>
+    </tr>
+    </table>
 Empty things... :
   input:  |
     ''
