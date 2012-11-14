@@ -443,10 +443,10 @@ class Textile
 		$this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
 
 		$this->glyph_search = array(
-			'/([0-9]+)([\'"]?)( ?)[xX]( ?)(?=[\'"]?-?[0-9]*.?[0-9]+)/',   // dimension sign
-			'/"(-?[0-9]*.?[0-9]+)"/',               // double quotes around numerics
+			'/([0-9]+)([\'"]?)( ?)[xX]( ?)(?=[\'"]?[+-]?[0-9]*.?[0-9]+)/',   // dimension sign
+			'/"([+-]?[0-9]*.?[0-9]+)"/',               // double quotes around numerics
 			'/([0-9]+)"/',                          // double prime after numerics
-			'/\'(-?[0-9]*.?[0-9]+)\'/',             // single quotes around numerics
+			'/\'([+-]?[0-9]*.?[0-9]+)\'/',             // single quotes around numerics
 			'/([0-9]+)\'/',                         // prime after numerics
 			'/('.$wrd.'|\))\'('.$wrd.')/'.$mod,     // I'm an apostrophe
 			'/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod,	// back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
