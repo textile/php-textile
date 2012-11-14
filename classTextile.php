@@ -1794,7 +1794,7 @@ class Textile
 // -------------------------------------------------------------
 	function doSpecial($text, $start, $end, $method='fSpecial')
 	{
-		return preg_replace_callback('/(^|\s|[[({>])'.preg_quote($start, '/').'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}])?/ms', array(&$this, $method), $text);
+		return preg_replace_callback('/(^|\s|[|[({>])'.preg_quote($start, '/').'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}|])?/ms', array(&$this, $method), $text);
 	}
 
 // -------------------------------------------------------------
@@ -1810,7 +1810,6 @@ class Textile
 	{
 		 $text = $this->doSpecial($text, '<notextile>', '</notextile>', 'fTextile');
 		 return $this->doSpecial($text, '==', '==', 'fTextile');
-
 	}
 
 // -------------------------------------------------------------
