@@ -795,7 +795,7 @@ class Textile
 			$cellctr = 0;
 			foreach(explode("|", $row) as $cell) {
 				$ctyp = "d";
-				if (preg_match("/^_/", $cell)) $ctyp = "h";
+				if (preg_match("/^_(?=[\s[:punct:]])/", $cell)) $ctyp = "h";
 				if (preg_match("/^(_?$this->s$this->a$this->c\. )(.*)/", $cell, $cmtch)) {
 					$catts = $this->pba($cmtch[1], 'td');
 					$cell = $cmtch[2];
