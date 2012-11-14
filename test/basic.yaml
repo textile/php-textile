@@ -54,6 +54,8 @@ Basic glyphs:
 
 Numerics :
   input:  |
+    "Count with me... 1' 2' 3' 4' 5.0' 6" 7" 8.0" Primed?"
+
     "Do you have 10" nails?" What about 4" nails? 'And some 4' snails as well?'
 
     1 x 1 = 1
@@ -164,6 +166,8 @@ Numerics :
 
     What about -.2- +.3+ -0.2- +-.5+ -0.2 x 0.2- +0.2 x 0.2+ -.2" x .2"- -.2'x.2'-  +.2" x .2"+ +.2'x.2'+
   expect: |
+    <p>&#8220;Count with me&#8230; 1&#8242; 2&#8242; 3&#8242; 4&#8242; 5.0&#8242; 6&#8243; 7&#8243; 8.0&#8243; Primed?&#8221;</p>
+
     <p>&#8220;Do you have 10&#8243; nails?&#8221; What about 4&#8243; nails? &#8216;And some 4&#8242; snails as well?&#8217;</p>
 
     <p>1 &#215; 1 = 1</p>
