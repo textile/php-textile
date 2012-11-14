@@ -2547,7 +2547,7 @@ Github Issue 50 (en-dash & strike) :
     a &#8211; <br />
     b</p>
 
-Tables of textile... :
+Tight tables... :
   input:  |
     Tables containing other textile elements.
 
