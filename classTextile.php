@@ -802,8 +802,12 @@ class Textile
 				} else $catts = '';
 
 				if (!$this->lite) {
-					$cell = $this->redcloth_lists($cell);
-					$cell = $this->lists($cell);
+					$a = array();
+					if( preg_match('/(\s*)(.*)/s', $cell, $a) ) {
+						$cell = $this->redcloth_lists($a[2]);
+						$cell = $this->lists($cell);
+						$cell = $a[1] . $cell;
+					}
 				}
 
 				if ($cellctr>0) // Ignore first 'cell': it precedes the opening pipe
