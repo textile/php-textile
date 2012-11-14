@@ -110,6 +110,18 @@ Numerics :
 
     2"X2" = 4 in[^2^].
 
+    What is 1.2 x 3.5?
+
+    What is .2 x .5?
+
+    What is 1.2x3.5?
+
+    What is .2x.5?
+
+    What is 1.2' x3.5'?
+
+    What is .2"x .5"?
+
   expect: |
     <p>1 &#215; 1 = 1</p>
 
@@ -166,6 +178,18 @@ Numerics :
     <p>2&#8221; &#215;2&#8221; = 4 sqin.</p>
 
     <p>2&#8221;&#215;2&#8221; = 4 in<sup>2</sup>.</p>
+
+    <p>What is 1.2 &#215; 3.5?</p>
+
+    <p>What is .2 &#215; .5?</p>
+
+    <p>What is 1.2&#215;3.5?</p>
+
+    <p>What is .2&#215;.5?</p>
+
+    <p>What is 1.2&#8217; &#215;3.5&#8217;?</p>
+
+    <p>What is .2&#8221;&#215; .5&#8221;?</p>
 
 Ruud's Improvements... :
   input:  |
