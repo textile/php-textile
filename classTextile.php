@@ -1260,7 +1260,7 @@ class Textile
 	{
 		$key = ($this->tag_index++);
 
-		$key = str_pad( (string)$key, 10, '0', STR_PAD_LEFT ); # $key must be of fixed length to allow proper matching in retrieveTags
+		$key = str_pad( (string)$key, 10, '0', STR_PAD_LEFT ).'z'; # $key must be of fixed length to allow proper matching in retrieveTags
 		$this->tagCache[$key] = array('open'=>$opentag, 'close'=>$closetag);
 		$tags = array(
 			'open'  => "textileopentag{$key} ",
@@ -1272,8 +1272,8 @@ class Textile
 // -------------------------------------------------------------
 	function retrieveTags($text)
 	{
-		$text = preg_replace_callback('/textileopentag([\d]{10}) /' , array(&$this, 'fRetrieveOpenTags'),  $text);
-		$text = preg_replace_callback('/ textileclosetag([\d]{10})/', array(&$this, 'fRetrieveCloseTags'), $text);
+		$text = preg_replace_callback('/textileopentag([\d]{10}z) /' , array(&$this, 'fRetrieveOpenTags'),  $text);
+		$text = preg_replace_callback('/ textileclosetag([\d]{10}z)/', array(&$this, 'fRetrieveCloseTags'), $text);
 		return $text;
 	}
 
@@ -1622,7 +1622,7 @@ class Textile
 	function shelveURL($text)
 	{
 		if ('' === $text) return '';
-		$ref = md5($text);
+		$ref = md5($text).'z';
 		$this->urlshelf[$ref] = $text;
 		return 'urlref:'.$ref;
 	}
@@ -1630,7 +1630,7 @@ class Textile
 // -------------------------------------------------------------
 	function retrieveURLs($text)
 	{
-		return preg_replace_callback('/urlref:(\w{32})/', array(&$this, "retrieveURL"), $text);
+		return preg_replace_callback('/urlref:(\w{32}z)/', array(&$this, "retrieveURL"), $text);
 	}
 
 // -------------------------------------------------------------
@@ -1756,7 +1756,7 @@ class Textile
 // -------------------------------------------------------------
 	function shelve($val)
 	{
-		$i = uniqid(rand());
+		$i = uniqid(rand()).'z';
 		$this->shelf[$i] = $val;
 		return $i;
 	}
