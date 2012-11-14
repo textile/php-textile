@@ -1061,7 +1061,6 @@ class Textile
 // -------------------------------------------------------------
 	function fBlock($m)
 	{
-		extract($this->regex_snippets);
 		list(, $tag, $att, $ext, $cite, $content) = $m;
 		$atts = $this->pba($att);
 
@@ -1078,7 +1077,7 @@ class Textile
 					\.?                   #  optional period.
 					[\s]+                 #  whitespace ends def marker
 					(.*)$                 # !content
-				/x$mod", array(&$this, "fParseNoteDefs"), $content);
+				/x".$this->regex_snippets['mod'], array(&$this, "fParseNoteDefs"), $content);
 
 			if( '' === $notedef ) # It will be empty if the regex matched and ate it.
 				return array($o1, $o2, $notedef, $c2, $c1, true);
