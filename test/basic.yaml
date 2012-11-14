@@ -2562,6 +2562,11 @@ Tables of textile... :
     |*strong*| *strong* |
     |!http://tester.local/logo.png!| !http://tester.local/logo.png! |
     |"$":https://github.com/netcarver/textile| "$":https://github.com/netcarver/textile |
+
+    | This | is | a | row | * with a list
+    * inside it |
+    |This|is|a|row|* with a list
+    * inside it|
   expect: |
     <p>Tables containing other textile elements.</p>
 
@@ -2609,6 +2614,30 @@ Tables of textile... :
     <td> <a href="https://github.com/netcarver/textile">github.com/netcarver/textile</a> </td>
     </tr>
     </table>
+
+    <table>
+    <tr>
+    <td> This </td>
+    <td> is </td>
+    <td> a </td>
+    <td> row </td>
+    <td> 	<ul>
+    <li>with a list</li>
+    <li>inside it</li>
+    </ul></td>
+    </tr>
+    <tr>
+    <td>This</td>
+    <td>is</td>
+    <td>a</td>
+    <td>row</td>
+    <td>	<ul>
+    <li>with a list</li>
+    <li>inside it</li>
+    </ul></td>
+    </tr>
+    </table>
+
 Empty things... :
   input:  |
     ''
