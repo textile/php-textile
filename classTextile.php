@@ -1541,7 +1541,7 @@ class Textile
 	function links($text)
 	{
 		return preg_replace_callback('/
-			(^|(?<=[\s>.\(])|[{[]) # $pre
+			(^|(?<=[\s>.\(\|])|[{[]) # $pre
 			"                      # start
 			(' . $this->c . ')     # $atts
 			([^"]+?)               # $text
@@ -1550,7 +1550,7 @@ class Textile
 			('.$this->urlch.'+?)   # $url
 			(\/)?                  # $slash
 			([^'.$this->regex_snippets['wrd'].'\/;]*?)  # $post
-			([\]}]|(?=\s|$|\)))	   # $tail
+			([\]}]|(?=\s|$|\)|\|))	   # $tail
 			/x'.$this->regex_snippets['mod'], array(&$this, "fLink"), $text);
 	}
 
