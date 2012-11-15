@@ -443,7 +443,7 @@ class Textile
 		$this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
 
 		$this->glyph_search = array(
-			'/([0-9]+)(\]?)([\'"]?)( ?)[xX]( ?)(\[?)(?=[\'"]?[+-]?[0-9]*\.?[0-9]+)/',   // dimension sign
+			'/([0-9]+\]?[\'"]? ?)[xX]( ?\[?)(?=[\'"]?[+-]?[0-9]*\.?[0-9]+)/',   // dimension sign
 			'/"([+-]?[0-9]*\.?[0-9]+)"/',           // double quotes around numerics
 			'/([0-9]+\]?)"/',                       // double prime after numerics
 			'/\'([+-]?[0-9]*\.?[0-9]+)\'/',         // single quotes around numerics
@@ -470,7 +470,7 @@ class Textile
 		);
 
 		$this->glyph_replace = array(
-			'$1$2$3$4'.txt_dimension.'$5$6',       // dimension sign
+			'$1'.txt_dimension.'$2',               // dimension sign
 			txt_quote_double_open.'$1'.txt_quote_double_close,  // double quotes around numerics
 			'$1'.txt_prime_double,                 // double prime after numerics
 			txt_quote_single_open.'$1'.txt_quote_single_close,  // single quotes around numerics
