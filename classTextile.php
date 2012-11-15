@@ -429,6 +429,7 @@ class Textile
 				'nab' => '\p{Ll}',
 				'wrd' => '(?:\p{L}|\p{M}|\p{N}|\p{Pc})',
 				'mod' => 'u', # Make sure to mark the unicode patterns as such, Some servers seem to need this.
+				'cur' => '\p{Sc}',
 			);
 		} else {
 			$this->regex_snippets = array(
@@ -437,13 +438,16 @@ class Textile
 				'nab' => 'a-z',
 				'wrd' => '\w',
 				'mod' => '',
+				'cur' => '',
 			);
 		}
 		extract( $this->regex_snippets );
 		$this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
 
+		if($cur) $cur = '(?:['.$cur.']\s*)?';
+
 		$this->glyph_search = array(
-			'/([0-9]+\]?[\'"]? ?)[xX]( ?\[?)(?=[\'"]?[+-]?[0-9]*\.?[0-9]+)/',   // dimension sign
+			'/([0-9]+\]?[\'"]? ?)[xX]( ?\[?)(?=[\'"]?[+-]?'.$cur.'[0-9]*\.?[0-9]+)/'.$mod,   // dimension sign
 			'/"([+-]?[0-9]*\.?[0-9]+)"/',           // double quotes around numerics
 			'/([0-9]+\]?)"/',                       // double prime after numerics
 			'/\'([+-]?[0-9]*\.?[0-9]+)\'/',         // single quotes around numerics
