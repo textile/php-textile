@@ -727,6 +727,31 @@ class Textile
 	}
 
 // -------------------------------------------------------------
+	function mergeAtts($atts, $array)
+	{
+		$parts = preg_split('/ (?=\w+=")/', trim($atts));
+		while(count($parts)) {
+			$ps = explode('=', array_pop($parts));
+			$array[$ps[0]] = trim($ps[1],'" ');
+		}
+		return $array;
+	}
+
+// -------------------------------------------------------------
+	function assembleTag($tag, $atts)
+	{
+		$attribs = '';
+
+		if(count($atts)) {
+			ksort($atts);
+			foreach($atts as $k=>$v) $attribs .= " $k=\"$v\"";
+		}
+
+		$out = "<$tag$attribs />";
+		return $out;
+	}
+
+// -------------------------------------------------------------
 	function hasRawText($text)
 	{
 		// checks whether the text has text not already enclosed by a block tag
