@@ -704,20 +704,21 @@ class Textile
 		if( $style ) {
 			foreach($style as $s) {
 				$parts = explode(';', $s);
+				sort($parts);
 				foreach( $parts as $p ) {
-					$p = trim($p, '; ');
+					$p = trim($p, ';');
 					if( !empty( $p ) )
-						$o .= $p.'; ';
+						$o .= $p.';';
 				}
 			}
 			$style = trim( strtr($o, array("\n"=>'',';;'=>';')) );
 		}
 
 		return join('',array(
-			($style)   ? ' style="'   . $this->cleanba($style)    .'"' : '',
 			($class)   ? ' class="'   . $this->cleanba($class)    .'"' : '',
-			($lang)    ? ' lang="'    . $this->cleanba($lang)     .'"' : '',
 			($id and $include_id) ? ' id="' . $this->cleanba($id) .'"' : '',
+			($lang)    ? ' lang="'    . $this->cleanba($lang)     .'"' : '',
+			($style)   ? ' style="'   . $this->cleanba($style)    .'"' : '',
 			($colspan) ? ' colspan="' . $this->cleanba($colspan)  .'"' : '',
 			($rowspan) ? ' rowspan="' . $this->cleanba($rowspan)  .'"' : '',
 			($span)    ? ' span="'    . $this->cleanba($span)     .'"' : '',
@@ -1105,13 +1106,14 @@ class Textile
 
 			# If there is an author-specified ID goes on the wrapper & the auto-id gets pushed to the <sup>
 			$supp_id = '';
+			if (strpos($atts, 'class=') === false)
+				$atts .= ' class="footnote"';
+
 			if (strpos($atts, ' id=') === false)
 				$atts .= ' id="fn' . $fnid . '"';
 			else
 				$supp_id = ' id="fn' . $fnid . '"';
 
-			if (strpos($atts, 'class=') === false)
-				$atts .= ' class="footnote"';
 
 			$sup = (strpos($att, '^') === false) ? $this->formatFootnote($fns[1], $supp_id) : $this->formatFootnote('<a href="#fnrev' . $fnid . '">'.$fns[1] .'</a>', $supp_id);
 

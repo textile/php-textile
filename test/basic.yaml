@@ -512,7 +512,7 @@ Paragraph with attributes:
   input  : |
     p(class#id)[en-us]{color: blue;}. (also applied by default)
   expect : |
-    <p style="color: blue;" class="class" lang="en-us" id="id">(also applied by default)</p>
+    <p class="class" id="id" lang="en-us" style="color: blue;">(also applied by default)</p>
 
 Paragraphs with alignment :
   input  : |
@@ -557,7 +557,7 @@ Paragraphs with padding :
 
     <p style="padding-right:2em;">Right pad 2em.</p>
 
-    <p style="padding-left:3em; padding-right:3em;">Left and right pad 3em.</p>
+    <p style="padding-left:3em;padding-right:3em;">Left and right pad 3em.</p>
 
 Nested block modifiers :
   input  : |
@@ -801,7 +801,7 @@ Self-Hyperlink :
 
     <p>An auto-hyperlink (with title) to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown" title="Comparison of Textile2 and Markdown">mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
 
-    <p>An auto-hyperlink (with atts) to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown" class="class" lang="en-au" id="id" title="Comparison of Textile2 and Markdown">mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
+    <p>An auto-hyperlink (with atts) to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown" class="class" id="id" lang="en-au" title="Comparison of Textile2 and Markdown">mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
 
 Links :
   input  : |
@@ -862,11 +862,11 @@ Links :
 
     <p><a href="mailto:contact@example.com" title="with title">link text</a></p>
 
-    <p><a href="http://textpattern.com" class="class" lang="de-de" id="id" title="title">textpattern.com</a></p>
+    <p><a href="http://textpattern.com" class="class" id="id" lang="de-de" title="title">textpattern.com</a></p>
 
-    <p><a href="http://textile.sitemonks.com" style="text-transform:uppercase;" class="class" lang="en-gb" id="id" title="Link title">Try this link</a></p>
+    <p><a href="http://textile.sitemonks.com" class="class" id="id" lang="en-gb" style="text-transform:uppercase;" title="Link title">Try this link</a></p>
 
-    <p><a href="linkurl" class="linkclass" lang="de-de" id="linkid" title="Link Title"><img src="imgurl" class="imgclass" id="imgid" title="img/link text" alt="img/link text" /></a></p>
+    <p><a href="linkurl" class="linkclass" id="linkid" lang="de-de" title="Link Title"><img src="imgurl" class="imgclass" id="imgid" title="img/link text" alt="img/link text" /></a></p>
 
 Unicode Links :
   input  : |
@@ -1201,7 +1201,7 @@ In-line citations :
   input  : |
     A ??(myclass#myid4){color:green}[de-de]complex?? phrase.
   expect : |
-    <p>A <cite style="color:green;" class="myclass" lang="de-de" id="myid4">complex</cite> phrase.</p>
+    <p>A <cite class="myclass" id="myid4" lang="de-de" style="color:green;">complex</cite> phrase.</p>
 
 Square-brackets :
   input  : |
@@ -1752,7 +1752,7 @@ Complex table with row- and col-spans:
   expect : |
     <h4>A more complicated table</h4>
 
-    <table style="color:blue;" class="tableclass" id="tableid">
+    <table class="tableclass" id="tableid" style="color:blue;">
     <tr>
     <th>table </th>
     <th>more </th>
@@ -2087,8 +2087,8 @@ Tables with styles:
     | _Phone Booth_ | Colin Farrell, Kiefer Sutherland, Forest Whitaker | Joel Schumacher | Larry Cohen | Edge-of-the-seat stuff in this
     short but brilliantly executed thriller |
   expect: |
-    <table style="border-collapse:collapse;" id="dvds" summary="Great films on DVD employing Textile summary, caption, thead, tfoot, two tbody elements and colgroups">
-    <caption style="font-size:140%; margin-bottom:15px;"><span class="caps">DVD</span>s with two Textiled tbody elements</caption>
+    <table id="dvds" style="border-collapse:collapse;" summary="Great films on DVD employing Textile summary, caption, thead, tfoot, two tbody elements and colgroups">
+    <caption style="font-size:140%;margin-bottom:15px;"><span class="caps">DVD</span>s with two Textiled tbody elements</caption>
     <colgroup span="3" width="100">
     <col style="background:#ddd;" />
     <col width="250" />
@@ -2110,7 +2110,7 @@ Tables with styles:
     <td style="text-align:center;" colspan="5">This is the tfoot, centred </td>
     </tr>
     </tfoot>
-    <tbody style="background:#c5f7f6;" class="toplist">
+    <tbody class="toplist" style="background:#c5f7f6;">
     <tr>
     <td> <em>The Usual Suspects</em> </td>
     <td> Benicio Del Toro, Gabriel Byrne, Stephen Baldwin, Kevin Spacey </td>
@@ -2142,7 +2142,7 @@ Tables with styles:
     but boy is it done well </td>
     </tr>
     </tbody>
-    <tbody style="background:#e7e895;" class="medlist">
+    <tbody class="medlist" style="background:#e7e895;">
     <tr>
     <td> <em>Arlington Road</em> </td>
     <td> Tim Robbins, Jeff Bridges </td>
@@ -2174,7 +2174,7 @@ Basic footref & footnote:
   expect : |
     <p>See<sup id="fnrev" class="footnote"><a href="#fn">1</a></sup> for details &#8212; or perhaps<sup id="fnrev" class="footnote"><a href="#fn">100</a></sup> at a push.</p>
 
-    <p id="fn" class="footnote"><sup>1</sup> Here are the details.</p>
+    <p class="footnote" id="fn"><sup>1</sup> Here are the details.</p>
 
     <p class="footy" id="otherid"><sup id="fn">100</sup> A totally unrelated footnote.</p>
 
@@ -2189,7 +2189,7 @@ Cross linked footref and footnote :
   expect : |
     <p>See<sup id="fnrev" class="footnote"><a href="#fn">2</a></sup> for details, and later, reference it again<sup class="footnote"><a href="#fn">2</a></sup>.</p>
 
-    <p class="footy" lang="en" id="otherid"><sup id="fn"><a href="#fnrev">2</a></sup> Here are the details.</p>
+    <p class="footy" id="otherid" lang="en"><sup id="fn"><a href="#fnrev">2</a></sup> Here are the details.</p>
 
 Unlinked footref and footnote :
   notes  : |
@@ -2202,7 +2202,7 @@ Unlinked footref and footnote :
   expect : |
     <p>See<sup id="fnrev" class="footnote">3</sup> for details.</p>
 
-    <p id="fn" class="footnote"><sup>3</sup> Here are the details.</p>
+    <p class="footnote" id="fn"><sup>3</sup> Here are the details.</p>
 
 Backlinked footref to footnote :
   notes  : |
@@ -2216,7 +2216,7 @@ Backlinked footref to footnote :
   expect : |
     <p>See<sup id="fnrev" class="footnote">4</sup> for details.</p>
 
-    <p id="fn" class="footnote"><sup><a href="#fnrev">4</a></sup> Here are the details.</p>
+    <p class="footnote" id="fn"><sup><a href="#fnrev">4</a></sup> Here are the details.</p>
 
 Simple Note Links:
   input: |
@@ -2228,28 +2228,28 @@ Simple Note Links:
 
     note#apollo13. After all, things do go "wrong":http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident.
 
-    notelist{padding:1em; margin:1em; border-bottom:1px solid gray}.
+    notelist{padding:1em;margin:1em;border-bottom:1px solid gray}.
 
-    notelist{padding:1em; margin:1em; border-bottom:1px solid gray}:§^.
+    notelist{padding:1em;margin:1em;border-bottom:1px solid gray}:§^.
 
-    notelist{padding:1em; margin:1em; border-bottom:1px solid gray}:‡.
+    notelist{padding:1em;margin:1em;border-bottom:1px solid gray}:‡.
 
   expect: |
     <p>Scientists say<sup><a href="#note"><span id="noteref">1</span></a></sup> the moon is quite small. But I, for one, don&#8217;t believe them. Others claim it to be made of cheese<sup><a href="#note"><span id="noteref">2</span></a></sup>. If this proves true I suspect we are in for troubled times<sup><a href="#note"><span id="noteref">3</span></a></sup> as people argue over their &#8220;share&#8221; of the moon&#8217;s cheese. In the end, its limited size<sup><a href="#note"><span id="noteref">1</span></a></sup> may prove problematic.</p>
 
-    <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
+    <ol style="border-bottom:1px solid gray;margin:1em;padding:1em;">
     <li class="noteclass"><sup><a href="#noteref">a</a></sup> <sup><a href="#noteref">b</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
     <li id="noteid"><sup><a href="#noteref">a</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
     <li><sup><a href="#noteref">a</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
     </ol>
 
-    <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
+    <ol style="border-bottom:1px solid gray;margin:1em;padding:1em;">
     <li class="noteclass"><sup><a href="#noteref">§</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
     <li id="noteid"><sup><a href="#noteref">§</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
     <li><sup><a href="#noteref">§</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
     </ol>
 
-    <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
+    <ol style="border-bottom:1px solid gray;margin:1em;padding:1em;">
     <li class="noteclass"><sup><a href="#noteref">‡</a></sup> <sup><a href="#noteref">‡</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
     <li id="noteid"><sup><a href="#noteref">‡</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
     <li><sup><a href="#noteref">‡</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
@@ -2267,13 +2267,13 @@ Note Links.:
 
     h2. Here are my references.
 
-    notelist{padding:1em; margin:1em; border-bottom:1px solid gray}.
+    notelist{padding:1em;margin:1em;border-bottom:1px solid gray}.
   expect: |
     <p>Scientists say<sup><a href="#note"><span id="noteref">1</span></a></sup> the moon is quite small. But I, for one, don&#8217;t believe them. Others claim it to be made of cheese<sup><a href="#note"><span id="noteref">2</span></a></sup>. If this proves true I suspect we are in for troubled times<sup><a href="#note"><span id="noteref">3</span></a></sup> as people argue over their &#8220;share&#8221; of the moon&#8217;s cheese. In the end, its limited size<sup><a href="#note"><span id="noteref">1</span></a></sup> may prove problematic.</p>
 
     <h2>Here are my references.</h2>
 
-    <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
+    <ol style="border-bottom:1px solid gray;margin:1em;padding:1em;">
     <li><sup><a href="#noteref">a</a></sup> <sup><a href="#noteref">b</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
     <li><sup><a href="#noteref">a</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
     <li><sup><a href="#noteref">a</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
@@ -2292,11 +2292,11 @@ Unlinked Note References with backlinked and unreferenced defs.:
 
     note#apollo13^. After all, things do go "wrong":http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident.
 
-    notelist{padding:1em; margin:1em; border-bottom:1px solid gray}:α!+.
+    notelist{padding:1em;margin:1em;border-bottom:1px solid gray}:α!+.
   expect: |
     <p>Scientists say<sup><span id="noteref">1</span></sup> the moon is quite small. But I, for one, don&#8217;t believe them. Others claim it to be made of cheese<sup><span id="noteref">2</span></sup>. If this proves true I suspect we are in for troubled times<sup><span id="noteref">3</span></sup> as people argue over their &#8220;share&#8221; of the moon&#8217;s cheese. In the end, its limited size<sup><span id="noteref">1</span></sup> may prove problematic.</p>
 
-    <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
+    <ol style="border-bottom:1px solid gray;margin:1em;padding:1em;">
     <li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
     <li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
     <li><sup><a href="#noteref">α</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
@@ -2315,11 +2315,11 @@ Malformed notelist :
 
     note#apollo13^ After all, things do go "wrong":http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident.
 
-    notelist{padding:1em; margin:1em; border-bottom:1px solid gray}:α!+
+    notelist{padding:1em;margin:1em;border-bottom:1px solid gray}:α!+
   expect: |
     <p>Scientists say<sup><a href="#note"><span id="noteref">1</span></a></sup> the moon is quite small. But I, for one, don&#8217;t believe them. Others claim it to be made of cheese<sup><a href="#note"><span id="noteref">2</span></a></sup>. If this proves true I suspect we are in for troubled times<sup><span id="noteref">3</span></sup> as people argue over their &#8220;share&#8221; of the moon&#8217;s cheese. In the end, its limited size<sup><a href="#note"><span id="noteref">1</span></a></sup> may prove problematic.</p>
 
-    <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
+    <ol style="border-bottom:1px solid gray;margin:1em;padding:1em;">
     <li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
     <li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
     <li><sup><a href="#noteref">α</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
@@ -2484,17 +2484,17 @@ Classes/ids/langs on phrase modifiers :
 
     @(c#id)[Whatever]My text@
   expect: |
-    <p><sub class="c" lang="en" id="id">My text</sub></p>
+    <p><sub class="c" id="id" lang="en">My text</sub></p>
 
-    <p><span class="c" lang="En" id="id">My text</span></p>
+    <p><span class="c" id="id" lang="En">My text</span></p>
 
-    <p><sup class="c" lang="EN" id="id">My text</sup></p>
+    <p><sup class="c" id="id" lang="EN">My text</sup></p>
 
-    <p><cite class="c" lang="en-gb" id="id">My text</cite></p>
+    <p><cite class="c" id="id" lang="en-gb">My text</cite></p>
 
-    <p><strong class="c" lang="en-GB" id="id">My text</strong></p>
+    <p><strong class="c" id="id" lang="en-GB">My text</strong></p>
 
-    <p><b class="c" lang="en-Gb" id="id">My text</b></p>
+    <p><b class="c" id="id" lang="en-Gb">My text</b></p>
 
     <p><del class="c" id="id">My text</del></p>
 
