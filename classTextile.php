@@ -693,8 +693,8 @@ class Textile
 		if ($this->restricted) {
 			$class = trim( $autoclass );
 			return join( '', array(
-				($lang)  ? ' lang="'  . $this->cleanba($lang)  . '"': '',
 				($class) ? ' class="' . $this->cleanba($class) . '"': '',
+				($lang)  ? ' lang="'  . $this->cleanba($lang)  . '"': '',
 			));
 		}
 		else
