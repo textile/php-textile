@@ -1733,6 +1733,8 @@ class Textile
 
 		$url = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
 
+		$o = array( 'alt'=>'' );
+
 		$extras = $align = '';
 		if( '' !== $algn ) {
 			$vals = array(
@@ -1743,17 +1745,13 @@ class Textile
 				if( 'html5' === $this->doctype )
 					$extras = "align-{$vals[$algn]}";
 				else
-					$align = " align=\"{$vals[$algn]}\"";
+					$o['align'] = $vals[$algn];
 			}
 		}
-		$atts  = $this->pba($atts , '' , 1 , $extras) . $align;
+		$atts  = $this->pba($atts , '' , 1 , $extras);
 
-		if($title) {
-			$title = $this->encode_html($title);
-			$atts .= ' title="' . $title . '" alt="' . $title . '"';
-		}
-		else
-			$atts .= ' alt=""';
+		if($title)
+			$o['title'] = $o['alt'] = $this->encode_html($title);
 
 		$size = false;
 		if ($this->isRelUrl($url))
@@ -1761,16 +1759,17 @@ class Textile
 		if ($size) $atts .= " $size[3]";
 
 		$href = ($href) ? $this->shelveURL($href) : '';
-		$url = $this->shelveURL($url);
+		$o['src'] = $this->shelveURL($url);
 
 		$out = array(
 			($href) ? '<a href="' . $href . '"' . $this->rel .'>' : '',
-			'<img src="' . $url . '"' . $atts . ' />',
+			$this->assembleTag('img', $this->mergeAtts($atts, $o)),
 			($href) ? '</a>' : ''
 		);
 
 		return $this->shelve(join('',$out));
 	}
+
 
 // -------------------------------------------------------------
 	function code($text)

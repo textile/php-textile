@@ -866,7 +866,7 @@ Links :
 
     <p><a href="http://textile.sitemonks.com" class="class" id="id" lang="en-gb" style="text-transform:uppercase;" title="Link title">Try this link</a></p>
 
-    <p><a href="linkurl" class="linkclass" id="linkid" lang="de-de" title="Link Title"><img src="imgurl" class="imgclass" id="imgid" title="img/link text" alt="img/link text" /></a></p>
+    <p><a href="linkurl" class="linkclass" id="linkid" lang="de-de" title="Link Title"><img alt="img/link text" class="imgclass" id="imgid" src="imgurl" title="img/link text" /></a></p>
 
 Unicode Links :
   input  : |
@@ -964,11 +964,11 @@ Image :
     !>http://textpattern.com/favicon.ico!
 
   expect : |
-    <p><img src="http://textpattern.com/favicon.ico" alt="" /></p>
+    <p><img alt="" src="http://textpattern.com/favicon.ico" /></p>
 
-    <p><img src="http://textpattern.com/favicon.ico" align="left" alt="" /></p>
+    <p><img align="left" alt="" src="http://textpattern.com/favicon.ico" /></p>
 
-    <p><img src="http://textpattern.com/favicon.ico" align="right" alt="" /></p>
+    <p><img align="right" alt="" src="http://textpattern.com/favicon.ico" /></p>
 
 Images with links :
   input  : |
@@ -978,11 +978,11 @@ Images with links :
 
     And again, to the right! !>(class#id2)http://textpattern.com/favicon.ico(title text)!:http://textpattern.com
   expect : |
-    <p>Here&#8217;s the favicon from the <acronym title="Textpattern"><span class="caps">TXP</span></acronym> website&#8230; <a href="http://textpattern.com"><img src="http://textpattern.com/favicon.ico" title="title text" alt="title text" /></a></p>
+    <p>Here&#8217;s the favicon from the <acronym title="Textpattern"><span class="caps">TXP</span></acronym> website&#8230; <a href="http://textpattern.com"><img alt="title text" src="http://textpattern.com/favicon.ico" title="title text" /></a></p>
 
-    <p>Again, this time left aligned. <a href="http://textpattern.com"><img src="http://textpattern.com/favicon.ico" class="class" id="id1" align="left" title="title text" alt="title text" /></a></p>
+    <p>Again, this time left aligned. <a href="http://textpattern.com"><img align="left" alt="title text" class="class" id="id1" src="http://textpattern.com/favicon.ico" title="title text" /></a></p>
 
-    <p>And again, to the right! <a href="http://textpattern.com"><img src="http://textpattern.com/favicon.ico" class="class" id="id2" align="right" title="title text" alt="title text" /></a></p>
+    <p>And again, to the right! <a href="http://textpattern.com"><img align="right" alt="title text" class="class" id="id2" src="http://textpattern.com/favicon.ico" title="title text" /></a></p>
 
 Embedded acronym inside acronym:
   input  : |
@@ -1213,7 +1213,7 @@ Square-brackets :
   expect : |
     <p>1<sup>st</sup>, 2<sup>nd</sup>, 3<sup>rd</sup>. 2 log<sub>n</sub></p>
 
-    <p>A close<img src="http://textpattern.com/favicon.ico" alt="" />image.<br />
+    <p>A close<img alt="" src="http://textpattern.com/favicon.ico" />image.<br />
     A tight<a href="http://textpattern.com/">text</a>link.<br />
     A <a href="http://textpattern.com/">footnoted link</a><sup id="fnrev" class="footnote"><a href="#fn">182</a></sup>.</p>
 
@@ -2611,8 +2611,8 @@ Tight tables... :
     <td> <strong>strong</strong> </td>
     </tr>
     <tr>
-    <td><img src="http://tester.local/logo.png" alt="" /></td>
-    <td> <img src="http://tester.local/logo.png" alt="" /> </td>
+    <td><img alt="" src="http://tester.local/logo.png" /></td>
+    <td> <img alt="" src="http://tester.local/logo.png" /> </td>
     </tr>
     <tr>
     <td><a href="https://github.com/netcarver/textile">github.com/netcarver/textile</a></td>
