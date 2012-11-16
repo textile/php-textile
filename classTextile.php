@@ -729,6 +729,7 @@ class Textile
 // -------------------------------------------------------------
 	function mergeAtts($atts, $array)
 	{
+		if(''===$atts) return $array;
 		$parts = preg_split('/ (?=\w+=")/', trim($atts));
 		while(count($parts)) {
 			$ps = explode('=', array_pop($parts));
@@ -747,8 +748,7 @@ class Textile
 			foreach($atts as $k=>$v) $attribs .= " $k=\"$v\"";
 		}
 
-		$out = "<$tag$attribs />";
-		return $out;
+		return "<$tag$attribs />";
 	}
 
 // -------------------------------------------------------------
