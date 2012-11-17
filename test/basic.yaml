@@ -1215,7 +1215,7 @@ Square-brackets :
 
     <p>A close<img alt="" src="http://textpattern.com/favicon.ico" />image.<br />
     A tight<a href="http://textpattern.com/">text</a>link.<br />
-    A <a href="http://textpattern.com/">footnoted link</a><sup id="fnrev" class="footnote"><a href="#fn">182</a></sup>.</p>
+    A <a href="http://textpattern.com/">footnoted link</a><sup class="footnote" id="fnrev"><a href="#fn">182</a></sup>.</p>
 
 Issue 50 Bust-a-quotes:
   assert: skip
@@ -2172,7 +2172,7 @@ Basic footref & footnote:
 
     fn100(footy#otherid). A totally unrelated footnote.
   expect : |
-    <p>See<sup id="fnrev" class="footnote"><a href="#fn">1</a></sup> for details &#8212; or perhaps<sup id="fnrev" class="footnote"><a href="#fn">100</a></sup> at a push.</p>
+    <p>See<sup class="footnote" id="fnrev"><a href="#fn">1</a></sup> for details &#8212; or perhaps<sup class="footnote" id="fnrev"><a href="#fn">100</a></sup> at a push.</p>
 
     <p class="footnote" id="fn"><sup>1</sup> Here are the details.</p>
 
@@ -2187,7 +2187,7 @@ Cross linked footref and footnote :
 
     fn2^(footy#otherid)[en]. Here are the details.
   expect : |
-    <p>See<sup id="fnrev" class="footnote"><a href="#fn">2</a></sup> for details, and later, reference it again<sup class="footnote"><a href="#fn">2</a></sup>.</p>
+    <p>See<sup class="footnote" id="fnrev"><a href="#fn">2</a></sup> for details, and later, reference it again<sup class="footnote"><a href="#fn">2</a></sup>.</p>
 
     <p class="footy" id="otherid" lang="en"><sup id="fn"><a href="#fnrev">2</a></sup> Here are the details.</p>
 
@@ -2200,7 +2200,7 @@ Unlinked footref and footnote :
 
     fn3. Here are the details.
   expect : |
-    <p>See<sup id="fnrev" class="footnote">3</sup> for details.</p>
+    <p>See<sup class="footnote" id="fnrev">3</sup> for details.</p>
 
     <p class="footnote" id="fn"><sup>3</sup> Here are the details.</p>
 
@@ -2214,7 +2214,7 @@ Backlinked footref to footnote :
 
     fn4^. Here are the details.
   expect : |
-    <p>See<sup id="fnrev" class="footnote">4</sup> for details.</p>
+    <p>See<sup class="footnote" id="fnrev">4</sup> for details.</p>
 
     <p class="footnote" id="fn"><sup><a href="#fnrev">4</a></sup> Here are the details.</p>
 
