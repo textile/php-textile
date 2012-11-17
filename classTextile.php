@@ -519,7 +519,7 @@ class Textile
 
 	function prepare($lite, $noimage, $rel)
 	{
-		$this->urlshelf = $this->urlrefs = $this->shelf = array();
+		$this->urlshelf = $this->urlrefs = $this->shelf = $this->fn = array();
 		$this->span_depth = 0;
 		$this->tag_index = 1;
 		$this->notes = $this->unreferencedNotes = $this->notelist_cache = array();
