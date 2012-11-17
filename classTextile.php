@@ -706,7 +706,6 @@ class Textile
 				$parts = explode(';', $s);
 				sort($parts);
 				foreach( $parts as $p ) {
-					$p = trim($p, ';');
 					if( !empty( $p ) )
 						$o .= $p.';';
 				}
