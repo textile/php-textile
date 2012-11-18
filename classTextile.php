@@ -702,13 +702,16 @@ class Textile
 
 		$o = '';
 		if( $style ) {
+			$tmps = array();
 			foreach($style as $s) {
 				$parts = explode(';', $s);
-				sort($parts);
-				foreach( $parts as $p ) {
-					if( !empty( $p ) )
-						$o .= $p.';';
-				}
+				foreach( $parts as $p ) $tmps[] = $p;
+			}
+
+			sort($tmps);
+			foreach( $tmps as $p ) {
+				if( !empty( $p ) )
+					$o .= $p.';';
 			}
 			$style = trim( strtr($o, array("\n"=>'',';;'=>';')) );
 		}
