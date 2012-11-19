@@ -420,7 +420,6 @@ class Textile
 		$this->restricted_url_schemes = array('http','https','ftp','mailto');
 		$this->unrestricted_url_schemes = array('http','https','ftp','mailto','file','tel','callto','sftp');
 
-		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', '###' );
 
 		if (txt_has_unicode) {
 			$this->regex_snippets = array(
@@ -570,6 +569,7 @@ class Textile
 			$this->btag = array('bq', 'p');
 			$text = $this->block($text."\n\n");
 		} else {
+			$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', '###' );
 			$text = $this->block($text);
 			$text = $this->placeNoteLists($text);
 		}
