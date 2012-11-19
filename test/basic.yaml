@@ -801,7 +801,7 @@ Self-Hyperlink :
 
     <p>An auto-hyperlink (with title) to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown" title="Comparison of Textile2 and Markdown">mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
 
-    <p>An auto-hyperlink (with atts) to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown" class="class" id="id" lang="en-au" title="Comparison of Textile2 and Markdown">mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
+    <p>An auto-hyperlink (with atts) to <a class="class" href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown" id="id" lang="en-au" title="Comparison of Textile2 and Markdown">mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
 
 Links :
   input  : |
@@ -862,11 +862,11 @@ Links :
 
     <p><a href="mailto:contact@example.com" title="with title">link text</a></p>
 
-    <p><a href="http://textpattern.com" class="class" id="id" lang="de-de" title="title">textpattern.com</a></p>
+    <p><a class="class" href="http://textpattern.com" id="id" lang="de-de" title="title">textpattern.com</a></p>
 
-    <p><a href="http://textile.sitemonks.com" class="class" id="id" lang="en-gb" style="text-transform:uppercase;" title="Link title">Try this link</a></p>
+    <p><a class="class" href="http://textile.sitemonks.com" id="id" lang="en-gb" style="text-transform:uppercase;" title="Link title">Try this link</a></p>
 
-    <p><a href="linkurl" class="linkclass" id="linkid" lang="de-de" title="Link Title"><img alt="img/link text" class="imgclass" id="imgid" src="imgurl" title="img/link text" /></a></p>
+    <p><a class="linkclass" href="linkurl" id="linkid" lang="de-de" title="Link Title"><img alt="img/link text" class="imgclass" id="imgid" src="imgurl" title="img/link text" /></a></p>
 
 Unicode Links :
   input  : |
@@ -1094,7 +1094,7 @@ Link in quotes. :
   input  : |
     "Here's a "(class#id)link(with a title)":http://cnn.com?a=b&c=d#end_of_page."
   expect : |
-    <p>&#8220;Here&#8217;s a <a href="http://cnn.com?a=b&amp;c=d#end_of_page" class="class" id="id" title="with a title">link</a>.&#8221;</p>
+    <p>&#8220;Here&#8217;s a <a class="class" href="http://cnn.com?a=b&amp;c=d#end_of_page" id="id" title="with a title">link</a>.&#8221;</p>
 
 Double quotes enclosing spans:
   input : |
@@ -2107,7 +2107,7 @@ Tables with styles:
     </thead>
     <tfoot class="footer">
     <tr>
-    <td style="text-align:center;" colspan="5">This is the tfoot, centred </td>
+    <td colspan="5" style="text-align:center;">This is the tfoot, centred </td>
     </tr>
     </tfoot>
     <tbody class="toplist" style="background:#c5f7f6;">

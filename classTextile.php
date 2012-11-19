@@ -353,6 +353,40 @@ Ordered List Start & Continuation:
 @define('txt_fn_foot_pattern',    '<sup{atts}>{marker}</sup>');
 @define('txt_nl_ref_pattern',     '<sup{atts}>{marker}</sup>');
 
+
+class TextileTag extends TextileBag
+{
+	var $tag;
+	var $selfclose;
+	function __construct($name, $attribs=array(), $selfclosing=true) { parent::__construct($attribs); $this->tag = $name; $this->selfclose = $selfclosing; }
+	function __toString() {
+		$attribs = '';
+
+		if(count($this->data)) {
+			ksort($this->data);
+			foreach($this->data as $k=>$v) $attribs .= " $k=\"$v\"";
+		}
+		if($this->tag)
+			$o = '<' . $this->tag . $attribs . (($this->selfclose) ? " />" : '>');
+		else
+			$o = $attribs;
+		return $o;
+	}
+}
+
+
+class TextileBag
+{
+	var $data;
+
+	function __construct($initial_data) { $this->data = (is_array($initial_data)) ? $initial_data : array(); }
+	function __call($k, $params) {
+		$allow_empty = isset($params[1]) && is_bool($params[1]) ? $params[1] : false;
+		if($allow_empty || '' != $params[0]) $this->data[$k] = $params[0];
+		return $this;
+	}
+}
+
 class Textile
 {
 	var $hlgn;
@@ -612,8 +646,32 @@ class Textile
         return $out;
     }
 
+
+
 // -------------------------------------------------------------
-	function pba($in, $element = "", $include_id = 1, $autoclass = '') // "parse block attributes"
+	function newTag($name, $atts, $selfclosing = true) { return new TextileTag($name, $atts, $selfclosing); }
+
+// -------------------------------------------------------------
+	function pba($in, $element = "", $include_id = 1, $autoclass = '')
+	{
+		$o = $this->pba_array($in, $element, $include_id, $autoclass);
+		return $this->pba_array2str($o);
+	}
+
+// -------------------------------------------------------------
+	function pba_array2str($o)
+	{
+		$out = '';
+
+		ksort($o);
+		if(count($o))
+			foreach($o as $k=>$v) $out .= " $k=\"$v\"";
+
+		return $out;
+	}
+
+// -------------------------------------------------------------
+	function pba_array($in, $element = "", $include_id = 1, $autoclass = '') // "parse block attributes"
 	{
 		$style = '';
 		$class = '';
@@ -691,11 +749,11 @@ class Textile
 		}
 
 		if ($this->restricted) {
+			$o = array();
 			$class = trim( $autoclass );
-			return join( '', array(
-				($class) ? ' class="' . $this->cleanba($class) . '"': '',
-				($lang)  ? ' lang="'  . $this->cleanba($lang)  . '"': '',
-			));
+			if($class) $o['class'] = $this->cleanba($class);
+			if($lang)  $o['lang']  = $this->cleanba($lang);
+			return $o;
 		}
 		else
 			$class = trim( $class . ' ' . $autoclass );
@@ -716,41 +774,18 @@ class Textile
 			$style = trim( strtr($o, array("\n"=>'',';;'=>';')) );
 		}
 
-		return join('',array(
-			($class)   ? ' class="'   . $this->cleanba($class)    .'"' : '',
-			($id and $include_id) ? ' id="' . $this->cleanba($id) .'"' : '',
-			($lang)    ? ' lang="'    . $this->cleanba($lang)     .'"' : '',
-			($style)   ? ' style="'   . $this->cleanba($style)    .'"' : '',
-			($colspan) ? ' colspan="' . $this->cleanba($colspan)  .'"' : '',
-			($rowspan) ? ' rowspan="' . $this->cleanba($rowspan)  .'"' : '',
-			($span)    ? ' span="'    . $this->cleanba($span)     .'"' : '',
-			($width)   ? ' width="'   . $this->cleanba($width)    .'"' : '',
-		));
-	}
+		$o = array();
+		if($class)   $o['class']   = $this->cleanba($class);
+		if($colspan) $o['colspan'] = $this->cleanba($colspan);
+		if($id && $include_id)
+			         $o['id']      = $this->cleanba($id);
+		if($lang)    $o['lang']    = $this->cleanba($lang);
+		if($rowspan) $o['rowspan'] = $this->cleanba($rowspan);
+		if($span)    $o['span']    = $this->cleanba($span);
+		if($style)   $o['style']   = $this->cleanba($style);
+		if($width)   $o['width']   = $this->cleanba($width);
 
-// -------------------------------------------------------------
-	function mergeAtts($atts, $array)
-	{
-		if(''===$atts) return $array;
-		$parts = preg_split('/ (?=\w+=")/', trim($atts));
-		while(count($parts)) {
-			$ps = explode('=', array_pop($parts));
-			$array[$ps[0]] = trim($ps[1],'" ');
-		}
-		return $array;
-	}
-
-// -------------------------------------------------------------
-	function assembleTag($tag, $atts)
-	{
-		$attribs = '';
-
-		if(count($atts)) {
-			ksort($atts);
-			foreach($atts as $k=>$v) $attribs .= " $k=\"$v\"";
-		}
-
-		return "<$tag$attribs />";
+		return $o;
 	}
 
 // -------------------------------------------------------------
@@ -906,7 +941,6 @@ class Textile
 		$out[] = '</dl>';
 		return implode("\n", $out);
 	}
-
 
 // -------------------------------------------------------------
 	function lists($text)
@@ -1432,7 +1466,6 @@ class Textile
 		}
 	}
 
-
 // -------------------------------------------------------------
 	function fParseNoteDefs($m)
 	{
@@ -1612,13 +1645,9 @@ class Textile
 			else {
 				if (isset($this->urlrefs[$url]))
 					$url = urldecode($this->urlrefs[$url]);
-
 				$text = $url;
 			}
 		}
-
-		$atts = $this->pba($atts);
-		$atts .= ($title != '') ? ' title="' . $this->encode_html($title) . '"' : '';
 
 		if (!$this->noimage)
 			$text = $this->image($text);
@@ -1627,9 +1656,8 @@ class Textile
 		$text = $this->glyphs($text);
 		$url  = $this->shelveURL( $this->rebuildURI( $uri_parts ) . $slash );
 
-		$opentag  = '<a href="' . $url . '"' . $atts . $this->rel . '>';
-		$closetag = '</a>';
-		$tags     = $this->storeTags($opentag, $closetag);
+		$a = $this->newTag('a', $this->pba_array($atts), false)->title($this->encode_html($title))->href($url, true)->rel($this->rel);
+		$tags     = $this->storeTags((string)$a, '</a>');
 		$out      = $tags['open'].trim($text).$tags['close'];
 
 		if (($pre and !$tail) or ($tail and !$pre))
@@ -1731,47 +1759,34 @@ class Textile
 // -------------------------------------------------------------
 	function fImage($m)
 	{
-		list(, $algn, $atts, $url, $title, $href) = array_pad($m, 6, null);
+		$extras = $align = $alt = '';
+		$size = false;
 
+		list(, $algn, $atts, $url, $title, $href) = array_pad($m, 6, null);
 		$url = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
 
-		$o = array( 'alt'=>'' );
-
-		$extras = $align = '';
 		if( '' !== $algn ) {
-			$vals = array(
-				'<' => 'left',
-				'=' => 'center',
-				'>' => 'right');
+			$vals = array('<' => 'left', '=' => 'center', '>' => 'right');
 			if ( isset($vals[$algn]) ) {
 				if( 'html5' === $this->doctype )
 					$extras = "align-{$vals[$algn]}";
 				else
-					$o['align'] = $vals[$algn];
+					$align = $vals[$algn];
 			}
 		}
-		$atts  = $this->pba($atts , '' , 1 , $extras);
 
-		if($title)
-			$o['title'] = $o['alt'] = $this->encode_html($title);
+		if($title) $title = $alt = $this->encode_html($title);
 
-		$size = false;
 		if ($this->isRelUrl($url))
 			$size = @getimagesize(realpath($this->doc_root.ltrim($url, $this->ds)));
 		if ($size) $atts .= " $size[3]";
 
 		$href = ($href) ? $this->shelveURL($href) : '';
-		$o['src'] = $this->shelveURL($url);
+		$img  = $this->newTag('img', $this->pba_array($atts, '', 1, $extras) )->align($align)->alt($alt, true)->src($this->shelveURL($url), true)->title($title);
 
-		$out = array(
-			($href) ? '<a href="' . $href . '"' . $this->rel .'>' : '',
-			$this->assembleTag('img', $this->mergeAtts($atts, $o)),
-			($href) ? '</a>' : ''
-		);
-
-		return $this->shelve(join('',$out));
+		$out  = ($href) ? "<a href=\"$href\"{$this->rel}>$img</a>" : (string)$img;
+		return $this->shelve($out);
 	}
-
 
 // -------------------------------------------------------------
 	function code($text)
