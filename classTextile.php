@@ -646,8 +646,6 @@ class Textile
         return $out;
     }
 
-
-
 // -------------------------------------------------------------
 	function newTag($name, $atts, $selfclosing = true) { return new TextileTag($name, $atts, $selfclosing); }
 
@@ -1021,7 +1019,11 @@ class Textile
 // -------------------------------------------------------------
 	function lT($in)
 	{
-		return preg_match("/^#+/", $in) ? 'o' : ((preg_match("/^\*+/", $in)) ? 'u' : 'd');
+		$m = array();
+		$type = 'd';
+		if(preg_match('/^([#*]+)/', $in, $m))
+			$type = ('#' === substr($m[1], -1)) ? 'o' : 'u';
+		return $type;
 	}
 
 // -------------------------------------------------------------

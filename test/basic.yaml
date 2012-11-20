@@ -1510,6 +1510,38 @@ Basic Unordered lists:
     <li>yellow</li>
     <li>cyan</li>
     </ul>
+
+Mixed lists:
+  input  : |
+    * bullet
+    *# number
+    *# number
+    *#* bullet
+    *# number
+    *# number with
+    a break
+    * bullet
+    ** okay
+
+  expect : |
+    <ul>
+    <li>bullet
+    <ol>
+    <li>number</li>
+    <li>number
+    <ul>
+    <li>bullet</li>
+    </ul></li>
+    <li>number</li>
+    <li>number with<br />
+    a break</li>
+    </ol></li>
+    <li>bullet
+    <ul>
+    <li>okay</li>
+    </ul></li>
+    </ul>
+
 Issue 61... Spans in tables :
   input  : |
     |_. Super |_. Fly |_. Table |
@@ -1805,6 +1837,15 @@ Lists in tables:
     Nourishing beverage for baby cows.
     Cold drink that goes great with cookies. =:
     |
+    |* bullet
+    *# number
+    *# number
+    *#* bullet
+    *# number
+    *# number with
+    a break
+    * bullet
+    ** okay |
   expect: |
     <table>
     <tr>
@@ -1830,6 +1871,25 @@ Lists in tables:
     <dd><p>Nourishing beverage for baby cows.<br />
     Cold drink that goes great with cookies.</p></dd><br />
     </dl></td>
+    </tr>
+    <tr>
+    <td>	<ul>
+    <li>bullet
+    <ol>
+    <li>number</li>
+    <li>number
+    <ul>
+    <li>bullet</li>
+    </ul></li>
+    <li>number</li>
+    <li>number with<br />
+    a break</li>
+    </ol></li>
+    <li>bullet
+    <ul>
+    <li>okay</li>
+    </ul></li>
+    </ul></td>
     </tr>
     </table>
 
