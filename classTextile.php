@@ -487,10 +487,12 @@ class Textile
 			'/([0-9]+\]?)\'/',                      // prime after numerics
 			'/('.$wrd.'|\))\'('.$wrd.')/'.$mod,     // I'm an apostrophe
 			'/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod,	// back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
+			 '/([([{])\'(?=\S)/',                   // single open following open bracket
 			'/(\S)\'(?=\s|'.$pnc.'|<|$)/',          // single closing
-			'/\'/',                                 // single opening
+			'/\'/',                                 // default single opening
+			'/([([{])\"(?=\S)/',                    // double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
 			'/(\S)\"(?=\s|'.$pnc.'|<|$)/',          // double closing
-			'/"/',                                  // double opening
+			'/"/',                                  // default double opening
 			'/\b(['.$abr.']['.$acr.']{2,})\b(?:[(]([^)]*)[)])/'.$mod,  // 3+ uppercase acronym
 			'/(?<=\s|^|[>(;-])(['.$abr.']{3,})(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod,  // 3+ uppercase
 			'/([^.]?)\.{3}/',                       // ellipsis
@@ -514,10 +516,12 @@ class Textile
 			'$1'.txt_prime,                        // prime after numerics
 			'$1'.txt_apostrophe.'$2',              // I'm an apostrophe
 			'$1'.txt_apostrophe.'$2',              // back in '88
+			'$1'.txt_quote_single_open,            // single open following open bracket
 			'$1'.txt_quote_single_close,           // single closing
-			txt_quote_single_open,                 // single opening
+			txt_quote_single_open,                 // default single opening
+			'$1'.txt_quote_double_open,            // double open following open bracket
 			'$1'.txt_quote_double_close,           // double closing
-			txt_quote_double_open,                 // double opening
+			txt_quote_double_open,                 // default double opening
 			(('html5' === $this->doctype) ? '<abbr title="$2">$1</abbr>' : '<acronym title="$2">$1</acronym>'),     // 3+ uppercase acronym
 			'<span class="caps">glyph:$1</span>$2', // 3+ uppercase
 			'$1'.txt_ellipsis,                     // ellipsis
