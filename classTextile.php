@@ -607,12 +607,8 @@ class Textile
 
         if( $i === $max ) # If we hit the max allowed decodes, assume the input is tainted and consume it.
             $out = '';
-        else
-            $out = strtr( $tmp, array(
-                '"'=>'',
-                "'"=>'',
-                '='=>'',
-            ));
+		else
+			$out = str_replace( array('"', "'", '='), '', $tmp);
         return $out;
     }
 
@@ -714,7 +710,7 @@ class Textile
 						$o .= $p.'; ';
 				}
 			}
-			$style = trim( strtr($o, array("\n"=>'',';;'=>';')) );
+			$style = trim( str_replace(array("\n", ';;'), array('', ';'), $o) );
 		}
 
 		return join('',array(
@@ -1392,7 +1388,7 @@ class Textile
 		$backlink_type = ($link) ? $link : $g_links;
 		$allow_inc = (false === strpos( $this->syms, $i ) );
 
-		$i_ = strtr( $this->encode_high($i) , array('&'=>'', ';'=>'', '#'=>''));
+		$i_ = str_replace( array('&', ';', '#'), '', $this->encode_high($i) );
 		$decode = (strlen($i) !== strlen($i_));
 
 		if( $backlink_type === '!' )
@@ -1533,8 +1529,8 @@ class Textile
 			else {
 				$pp = explode( '/', $parts['path'] );
 				foreach( $pp as &$p ) {
-					$p = strtr( rawurlencode( $p ), array( '%40' => '@') );
-					if(!in_array($parts['scheme'], array('tel','mailto'))) $p = strtr( $p, array( '%2B' => '+' ));
+					$p = str_replace( '%40', '@', rawurlencode( $p ) );
+					if(!in_array($parts['scheme'], array('tel','mailto'))) $p = str_replace('%2B', '+', $p);
 				}
 
 				$pp = implode( '/', $pp );
@@ -1790,7 +1786,7 @@ class Textile
 		if (is_array($this->shelf))
 			do {
 				$old = $text;
-				$text = strtr($text, $this->shelf);
+				$text = str_replace(array_keys($this->shelf), $this->shelf, $text);
 			 } while ($text != $old);
 
 		return $text;
@@ -1875,7 +1871,7 @@ class Textile
 				// raw < > & chars are already entity encoded in restricted mode
 				if (!$this->restricted) {
 					$line = preg_replace('/&(?!#?[a-z0-9]+;)/i', '&amp;', $line);
-					$line = strtr($line, array('<' => '&lt;', '>' => '&gt;'));
+					$line = str_replace(array('<', '>'), array('&lt;', '&gt;'), $line);
 				}
 				$line = preg_replace($this->glyph_search, $this->glyph_replace, $line);
 			}
@@ -1937,7 +1933,7 @@ class Textile
 	// DEPRECATED ... will be removed in next release
 	function encode_lt_gt($text)
 	{
-		return strtr($text, array('<' => '&lt;', '>' => '&gt;'));
+		return str_replace($text, array('<', '>'), array( '&lt;', '&gt;'), $text);
 	}
 
 // -------------------------------------------------------------
@@ -1953,7 +1949,7 @@ class Textile
 			'"' => '&quot;',
 		);
 
-		return strtr($str, $a);
+		return str_replace(array_keys($a), $a, $str);
 	}
 
 // -------------------------------------------------------------
