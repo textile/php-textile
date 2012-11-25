@@ -420,8 +420,6 @@ class Textile
 		$this->restricted_url_schemes = array('http','https','ftp','mailto');
 		$this->unrestricted_url_schemes = array('http','https','ftp','mailto','file','tel','callto','sftp');
 
-		$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', '###' );
-
 		if (txt_has_unicode) {
 			$this->regex_snippets = array(
 				'acr' => '\p{Lu}\p{Nd}',
@@ -523,7 +521,7 @@ class Textile
 
 	function prepare($lite, $noimage, $rel)
 	{
-		$this->urlshelf = $this->urlrefs = $this->shelf = array();
+		$this->urlshelf = $this->urlrefs = $this->shelf = $this->fn = array();
 		$this->span_depth = 0;
 		$this->tag_index = 1;
 		$this->notes = $this->unreferencedNotes = $this->notelist_cache = array();
@@ -574,6 +572,7 @@ class Textile
 			$this->btag = array('bq', 'p');
 			$text = $this->block($text."\n\n");
 		} else {
+			$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', '###' );
 			$text = $this->block($text);
 			$text = $this->placeNoteLists($text);
 		}
@@ -1620,9 +1619,9 @@ class Textile
 	function getRefs($text)
 	{
 		if( $this->restricted )
-			$pattern = "/^\[(.+)\]((?:http:\/\/|https:\/\/|\/)\S+)(?=\s|$)/Um";
+			$pattern = "/^\[(.+)\]((?:https?:\/\/|\/)\S+)(?=\s|$)/Um";
 		else
-			$pattern = "/^\[(.+)\]((?:http:\/\/|https:\/\/|tel:|file:|ftp:\/\/|sftp:\/\/|mailto:|callto:|\/)\S+)(?=\s|$)/Um";
+			$pattern = "/^\[(.+)\]((?:https?:\/\/|tel:|file:|ftp:\/\/|sftp:\/\/|mailto:|callto:|\/)\S+)(?=\s|$)/Um";
 		return preg_replace_callback( $pattern, array(&$this, "refs"), $text);
 	}
 
@@ -1796,10 +1795,10 @@ class Textile
 	function cleanWhiteSpace($text)
 	{
 		$out = preg_replace("/^\xEF\xBB\xBF|\x1A/", '', $text); # Byte order mark (if present)
-		$out = preg_replace("/\r\n?/", "\n", $out); # DOS and MAC line endings to *NIX style endings
-		$out = preg_replace("/^[ \t]*\n/m", "\n", $out);	# lines containing only whitespace
-		$out = preg_replace("/\n{3,}/", "\n\n", $out);	# 3 or more line ends
-		$out = preg_replace("/^\n*/", "", $out);		# leading blank lines
+		$out = preg_replace("/\r\n?/", "\n", $out);             # DOS and MAC line endings to *NIX style endings
+		$out = preg_replace("/^[ \t]*\n/m", "\n", $out);        # lines containing only whitespace
+		$out = preg_replace("/\n{3,}/", "\n\n", $out);          # 3 or more line ends
+		$out = preg_replace("/^\n*/", "", $out);                # leading blank lines
 		return $out;
 	}
 
@@ -1828,19 +1827,19 @@ class Textile
 	function fTextile($m)
 	{
 		list(, $before, $notextile, $after) = array_pad($m, 4, '');
-		#$notextile = str_replace(array_keys($modifiers), array_values($modifiers), $notextile);
 		return $before.$this->shelve($notextile).$after;
 	}
 
 // -------------------------------------------------------------
 	function footnoteRef($text)
 	{
-		return preg_replace('/(?<=\S)\[([0-9]+)([\!]?)\](\s)?/Ue', '$this->footnoteID(\'\1\',\'\2\',\'\3\')', $text);
+		return preg_replace_callback('/(?<=\S)\[(\d+)(!?)\]\s?/U', array(&$this, 'footnoteID'), $text);
 	}
 
 // -------------------------------------------------------------
-	function footnoteID($id, $nolink, $t)
+	function footnoteID($m)
 	{
+		list(, $id, $nolink) = array_pad($m, 3, '');
 		$backref = ' ';
 		if (empty($this->fn[$id])) {
 			$this->fn[$id] = $a = uniqid(rand());
