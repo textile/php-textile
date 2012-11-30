@@ -483,21 +483,21 @@ class Textile
 			'/([0-9]+\]?[\'"]? ?)[xX]( ?\[?)(?=[\'"]?[+-]?'.$cur.'[0-9]*\.?[0-9]+)/'.$mod,   // dimension sign
 			'/"([+-]?[0-9]*\.?[0-9]+)"/',           // double quotes around numerics
 			'/([0-9]+\]?)"/',                       // double prime after numerics
-			'/\'([+-]?[0-9]*\.?[0-9]+)\'/',         // single quotes around numerics
-			'/([0-9]+\]?)\'/',                      // prime after numerics
+			"/'([+-]?[0-9]*\.?[0-9]+)'/",           // single quotes around numerics
+			"/([0-9]+\]?)'/",                       // prime after numerics
 			'/('.$wrd.'|\))\'('.$wrd.')/'.$mod,     // I'm an apostrophe
 			'/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod,	// back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
-			 '/([([{])\'(?=\S)/',                   // single open following open bracket
+			"/([([{])'(?=\S)/",                     // single open following open bracket
 			'/(\S)\'(?=\s|'.$pnc.'|<|$)/',          // single closing
-			'/\'/',                                 // default single opening
-			'/([([{])\"(?=\S)/',                    // double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
+			"/'/",                                  // default single opening
+			'/([([{])"(?=\S)/',                     // double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
 			'/(\S)\"(?=\s|'.$pnc.'|<|$)/',          // double closing
 			'/"/',                                  // default double opening
 			'/\b(['.$abr.']['.$acr.']{2,})\b(?:[(]([^)]*)[)])/'.$mod,  // 3+ uppercase acronym
 			'/(?<=\s|^|[>(;-])(['.$abr.']{3,})(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod,  // 3+ uppercase
 			'/([^.]?)\.{3}/',                       // ellipsis
-			'/(\s?)--(\s?)/',                       // em dash
-			'/( )-( )/',                            // en dash
+			'/--/',                                 // em dash
+			'/ - /',                                // en dash
 			'/(\b ?|\s|^)[([]TM[])]/i',             // trademark
 			'/(\b ?|\s|^)[([]R[])]/i',              // registered
 			'/(\b ?|\s|^)[([]C[])]/i',              // copyright
@@ -525,8 +525,8 @@ class Textile
 			(('html5' === $this->doctype) ? '<abbr title="$2">$1</abbr>' : '<acronym title="$2">$1</acronym>'),     // 3+ uppercase acronym
 			'<span class="caps">glyph:$1</span>$2', // 3+ uppercase
 			'$1'.txt_ellipsis,                     // ellipsis
-			'$1'.txt_emdash.'$2',                  // em dash
-			'$1'.txt_endash.'$2',                  // en dash
+			txt_emdash,                            // em dash
+			' '.txt_endash.' ',                    // en dash
 			'$1'.txt_trademark,                    // trademark
 			'$1'.txt_registered,                   // registered
 			'$1'.txt_copyright,                    // copyright
