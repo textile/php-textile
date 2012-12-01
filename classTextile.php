@@ -445,11 +445,7 @@ class Textile
 		if($cur) $cur = '(?:['.$cur.']\s*)?';
 
 		$this->glyph_search = array(
-			'/([0-9]+\]?[\'"]? ?)[xX]( ?\[?)(?=[\'"]?[+-]?'.$cur.'[0-9]*\.?[0-9]+)/'.$mod,   // dimension sign
-			'/"([+-]?[0-9]*\.?[0-9]+)"/',           // double quotes around numerics
-			'/([0-9]+\]?)"/',                       // double prime after numerics
-			'/\'([+-]?[0-9]*\.?[0-9]+)\'/',         // single quotes around numerics
-			'/([0-9]+\]?)\'/',                      // prime after numerics
+			'/([0-9]+[\])]?[\'"]? ?)[xX]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]+)/'.$mod,   // dimension sign
 			'/('.$wrd.'|\))\'('.$wrd.')/'.$mod,     // I'm an apostrophe
 			'/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod,	// back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
 			 '/([([{])\'(?=\S)/',                   // single open following open bracket
@@ -475,10 +471,6 @@ class Textile
 
 		$this->glyph_replace = array(
 			'$1'.txt_dimension.'$2',               // dimension sign
-			txt_quote_double_open.'$1'.txt_quote_double_close,  // double quotes around numerics
-			'$1'.txt_prime_double,                 // double prime after numerics
-			txt_quote_single_open.'$1'.txt_quote_single_close,  // single quotes around numerics
-			'$1'.txt_prime,                        // prime after numerics
 			'$1'.txt_apostrophe.'$2',              // I'm an apostrophe
 			'$1'.txt_apostrophe.'$2',              // back in '88
 			'$1'.txt_quote_single_open,            // single open following open bracket
