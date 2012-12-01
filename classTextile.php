@@ -1397,7 +1397,7 @@ class Textile
 		else {
 			$_ = array();
 			foreach( $info['refids'] as $id ) {
-				$_[] = '<sup><a href="#noteref'.$id.'">'. ( ($decode) ? $this->decode_high('&#'.$i_.';') : $i_ ) .'</a></sup>';
+				$_[] = '<sup><a href="#noteref'.$id.'">'. ( ($decode) ? $this->decode_high($i_) : $i_ ) .'</a></sup>';
 				if( $allow_inc )
 					$i_++;
 			}
@@ -1917,7 +1917,8 @@ class Textile
 
 // -------------------------------------------------------------
 	function decode_high($text, $charset = "UTF-8")
-	{ // TODO test the !mb case
+	{
+		$text = (ctype_digit($text)) ? "&#$text;" : "&$text;" ;
 		return ($this->mb) ? mb_decode_numericentity($text, $this->cmap, $charset) : html_entity_decode($text, ENT_NOQUOTES, $charset);
 	}
 
