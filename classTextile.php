@@ -353,6 +353,40 @@ Ordered List Start & Continuation:
 @define('txt_fn_foot_pattern',    '<sup{atts}>{marker}</sup>');
 @define('txt_nl_ref_pattern',     '<sup{atts}>{marker}</sup>');
 
+
+class TextileTag extends TextileBag
+{
+	var $tag;
+	var $selfclose;
+	function __construct($name, $attribs=array(), $selfclosing=true) { parent::__construct($attribs); $this->tag = $name; $this->selfclose = $selfclosing; }
+	function __toString() {
+		$attribs = '';
+
+		if(count($this->data)) {
+			ksort($this->data);
+			foreach($this->data as $k=>$v) $attribs .= " $k=\"$v\"";
+		}
+		if($this->tag)
+			$o = '<' . $this->tag . $attribs . (($this->selfclose) ? " />" : '>');
+		else
+			$o = $attribs;
+		return $o;
+	}
+}
+
+
+class TextileBag
+{
+	var $data;
+
+	function __construct($initial_data) { $this->data = (is_array($initial_data)) ? $initial_data : array(); }
+	function __call($k, $params) {
+		$allow_empty = isset($params[1]) && is_bool($params[1]) ? $params[1] : false;
+		if($allow_empty || '' != $params[0]) $this->data[$k] = $params[0];
+		return $this;
+	}
+}
+
 class Textile
 {
 	var $hlgn;
@@ -448,17 +482,17 @@ class Textile
 			'/([0-9]+[\])]?[\'"]? ?)[xX]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]+)/'.$mod,   // dimension sign
 			'/('.$wrd.'|\))\'('.$wrd.')/'.$mod,     // I'm an apostrophe
 			'/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod,	// back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
-			 '/([([{])\'(?=\S)/',                   // single open following open bracket
+			"/([([{])'(?=\S)/",                     // single open following open bracket
 			'/(\S)\'(?=\s|'.$pnc.'|<|$)/',          // single closing
-			'/\'/',                                 // default single opening
-			'/([([{])\"(?=\S)/',                    // double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
-			'/(\S)\"(?=\s|'.$pnc.'|<|$)/',          // double closing
+			"/'/",                                  // default single opening
+			'/([([{])"(?=\S)/',                     // double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
+			'/(\S)"(?=\s|'.$pnc.'|<|$)/',           // double closing
 			'/"/',                                  // default double opening
 			'/\b(['.$abr.']['.$acr.']{2,})\b(?:[(]([^)]*)[)])/'.$mod,  // 3+ uppercase acronym
 			'/(?<=\s|^|[>(;-])(['.$abr.']{3,})(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod,  // 3+ uppercase
 			'/([^.]?)\.{3}/',                       // ellipsis
-			'/(\s?)--(\s?)/',                       // em dash
-			'/( )-( )/',                            // en dash
+			'/--/',                                 // em dash
+			'/ - /',                                // en dash
 			'/(\b ?|\s|^)[([]TM[])]/i',             // trademark
 			'/(\b ?|\s|^)[([]R[])]/i',              // registered
 			'/(\b ?|\s|^)[([]C[])]/i',              // copyright
@@ -482,8 +516,8 @@ class Textile
 			(('html5' === $this->doctype) ? '<abbr title="$2">$1</abbr>' : '<acronym title="$2">$1</acronym>'),     // 3+ uppercase acronym
 			'<span class="caps">glyph:$1</span>$2', // 3+ uppercase
 			'$1'.txt_ellipsis,                     // ellipsis
-			'$1'.txt_emdash.'$2',                  // em dash
-			'$1'.txt_endash.'$2',                  // en dash
+			txt_emdash,                            // em dash
+			' '.txt_endash.' ',                    // en dash
 			'$1'.txt_trademark,                    // trademark
 			'$1'.txt_registered,                   // registered
 			'$1'.txt_copyright,                    // copyright
@@ -604,7 +638,29 @@ class Textile
     }
 
 // -------------------------------------------------------------
-	function pba($in, $element = "", $include_id = 1, $autoclass = '') // "parse block attributes"
+	function newTag($name, $atts, $selfclosing = true) { return new TextileTag($name, $atts, $selfclosing); }
+
+// -------------------------------------------------------------
+	function pba($in, $element = "", $include_id = 1, $autoclass = '')
+	{
+		$o = $this->pba_array($in, $element, $include_id, $autoclass);
+		return $this->pba_array2str($o);
+	}
+
+// -------------------------------------------------------------
+	function pba_array2str($o)
+	{
+		$out = '';
+
+		ksort($o);
+		if(count($o))
+			foreach($o as $k=>$v) $out .= " $k=\"$v\"";
+
+		return $out;
+	}
+
+// -------------------------------------------------------------
+	function pba_array($in, $element = "", $include_id = 1, $autoclass = '') // "parse block attributes"
 	{
 		$style = '';
 		$class = '';
@@ -682,38 +738,43 @@ class Textile
 		}
 
 		if ($this->restricted) {
+			$o = array();
 			$class = trim( $autoclass );
-			return join( '', array(
-				($lang)  ? ' lang="'  . $this->cleanba($lang)  . '"': '',
-				($class) ? ' class="' . $this->cleanba($class) . '"': '',
-			));
+			if($class) $o['class'] = $this->cleanba($class);
+			if($lang)  $o['lang']  = $this->cleanba($lang);
+			return $o;
 		}
 		else
 			$class = trim( $class . ' ' . $autoclass );
 
 		$o = '';
 		if( $style ) {
+			$tmps = array();
 			foreach($style as $s) {
 				$parts = explode(';', $s);
-				foreach( $parts as $p ) {
-					$p = trim($p, '; ');
-					if( !empty( $p ) )
-						$o .= $p.'; ';
-				}
+				foreach( $parts as $p ) $tmps[] = $p;
+			}
+
+			sort($tmps);
+			foreach( $tmps as $p ) {
+				if( !empty( $p ) )
+					$o .= $p.';';
 			}
 			$style = trim( str_replace(array("\n", ';;'), array('', ';'), $o) );
 		}
 
-		return join('',array(
-			($style)   ? ' style="'   . $this->cleanba($style)    .'"' : '',
-			($class)   ? ' class="'   . $this->cleanba($class)    .'"' : '',
-			($lang)    ? ' lang="'    . $this->cleanba($lang)     .'"' : '',
-			($id and $include_id) ? ' id="' . $this->cleanba($id) .'"' : '',
-			($colspan) ? ' colspan="' . $this->cleanba($colspan)  .'"' : '',
-			($rowspan) ? ' rowspan="' . $this->cleanba($rowspan)  .'"' : '',
-			($span)    ? ' span="'    . $this->cleanba($span)     .'"' : '',
-			($width)   ? ' width="'   . $this->cleanba($width)    .'"' : '',
-		));
+		$o = array();
+		if($class)   $o['class']   = $this->cleanba($class);
+		if($colspan) $o['colspan'] = $this->cleanba($colspan);
+		if($id && $include_id)
+			         $o['id']      = $this->cleanba($id);
+		if($lang)    $o['lang']    = $this->cleanba($lang);
+		if($rowspan) $o['rowspan'] = $this->cleanba($rowspan);
+		if($span)    $o['span']    = $this->cleanba($span);
+		if($style)   $o['style']   = $this->cleanba($style);
+		if($width)   $o['width']   = $this->cleanba($width);
+
+		return $o;
 	}
 
 // -------------------------------------------------------------
@@ -869,7 +930,6 @@ class Textile
 		$out[] = '</dl>';
 		return implode("\n", $out);
 	}
-
 
 // -------------------------------------------------------------
 	function lists($text)
@@ -1100,13 +1160,14 @@ class Textile
 
 			# If there is an author-specified ID goes on the wrapper & the auto-id gets pushed to the <sup>
 			$supp_id = '';
+			if (strpos($atts, 'class=') === false)
+				$atts .= ' class="footnote"';
+
 			if (strpos($atts, ' id=') === false)
 				$atts .= ' id="fn' . $fnid . '"';
 			else
 				$supp_id = ' id="fn' . $fnid . '"';
 
-			if (strpos($atts, 'class=') === false)
-				$atts .= ' class="footnote"';
 
 			$sup = (strpos($att, '^') === false) ? $this->formatFootnote($fns[1], $supp_id) : $this->formatFootnote('<a href="#fnrev' . $fnid . '">'.$fns[1] .'</a>', $supp_id);
 
@@ -1398,7 +1459,6 @@ class Textile
 		}
 	}
 
-
 // -------------------------------------------------------------
 	function fParseNoteDefs($m)
 	{
@@ -1578,13 +1638,9 @@ class Textile
 			else {
 				if (isset($this->urlrefs[$url]))
 					$url = urldecode($this->urlrefs[$url]);
-
 				$text = $url;
 			}
 		}
-
-		$atts = $this->pba($atts);
-		$atts .= ($title != '') ? ' title="' . $this->encode_html($title) . '"' : '';
 
 		if (!$this->noimage)
 			$text = $this->image($text);
@@ -1593,9 +1649,8 @@ class Textile
 		$text = $this->glyphs($text);
 		$url  = $this->shelveURL( $this->rebuildURI( $uri_parts ) . $slash );
 
-		$opentag  = '<a href="' . $url . '"' . $atts . $this->rel . '>';
-		$closetag = '</a>';
-		$tags     = $this->storeTags($opentag, $closetag);
+		$a = $this->newTag('a', $this->pba_array($atts), false)->title($this->encode_html($title))->href($url, true)->rel($this->rel);
+		$tags     = $this->storeTags((string)$a, '</a>');
 		$out      = $tags['open'].trim($text).$tags['close'];
 
 		if (($pre and !$tail) or ($tail and !$pre))
@@ -1697,47 +1752,33 @@ class Textile
 // -------------------------------------------------------------
 	function fImage($m)
 	{
-		list(, $algn, $atts, $url, $title, $href) = array_pad($m, 6, null);
+		$extras = $align = $alt = '';
+		$size = false;
 
+		list(, $algn, $atts, $url, $title, $href) = array_pad($m, 6, null);
 		$url = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
 
-		$extras = $align = '';
 		if( '' !== $algn ) {
-			$vals = array(
-				'<' => 'left',
-				'=' => 'center',
-				'>' => 'right');
+			$vals = array('<' => 'left', '=' => 'center', '>' => 'right');
 			if ( isset($vals[$algn]) ) {
 				if( 'html5' === $this->doctype )
 					$extras = "align-{$vals[$algn]}";
 				else
-					$align = " align=\"{$vals[$algn]}\"";
+					$align = $vals[$algn];
 			}
 		}
-		$atts  = $this->pba($atts , '' , 1 , $extras) . $align;
 
-		if($title) {
-			$title = $this->encode_html($title);
-			$atts .= ' title="' . $title . '" alt="' . $title . '"';
-		}
-		else
-			$atts .= ' alt=""';
+		if($title) $title = $alt = $this->encode_html($title);
 
-		$size = false;
 		if ($this->isRelUrl($url))
 			$size = @getimagesize(realpath($this->doc_root.ltrim($url, $this->ds)));
 		if ($size) $atts .= " $size[3]";
 
 		$href = ($href) ? $this->shelveURL($href) : '';
-		$url = $this->shelveURL($url);
+		$img  = $this->newTag('img', $this->pba_array($atts, '', 1, $extras) )->align($align)->alt($alt, true)->src($this->shelveURL($url), true)->title($title);
 
-		$out = array(
-			($href) ? '<a href="' . $href . '"' . $this->rel .'>' : '',
-			'<img src="' . $url . '"' . $atts . ' />',
-			($href) ? '</a>' : ''
-		);
-
-		return $this->shelve(join('',$out));
+		$out  = ($href) ? "<a href=\"$href\"{$this->rel}>$img</a>" : (string)$img;
+		return $this->shelve($out);
 	}
 
 // -------------------------------------------------------------
@@ -1832,16 +1873,16 @@ class Textile
 	function footnoteID($m)
 	{
 		list(, $id, $nolink) = array_pad($m, 3, '');
-		$backref = ' ';
+		//$backref = ' ';
+		$backref = ' class="footnote"';
 		if (empty($this->fn[$id])) {
 			$this->fn[$id] = $a = uniqid(rand());
-			$backref = ' id="fnrev'.$a.'" ';
+			$backref .= " id=\"fnrev$a\"";
 		}
 
 		$fnid = $this->fn[$id];
 
 		$footref = ( '!' == $nolink ) ? $id : '<a href="#fn'.$fnid.'">'.$id.'</a>';
-		$backref .= 'class="footnote"';
 
 		$footref = $this->formatFootnote( $footref, $backref, false );
 
