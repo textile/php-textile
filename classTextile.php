@@ -2055,4 +2055,10 @@ class Textile
 			return str_replace('"', '&quot;', $str);
 		return $this->encode_html($str, $quotes);
 	}
+
+// -------------------------------------------------------------
+	function getVersion()
+	{
+		return $this->ver;
+	}
 } // end class
