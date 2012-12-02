@@ -360,10 +360,17 @@ class TextileBag
 {
 	var $data;
 
-	function __construct($initial_data) { $this->data = (is_array($initial_data)) ? $initial_data : array(); }
-	function __call($k, $params) {
+	function __construct($initial_data)
+	{
+		$this->data = (is_array($initial_data)) ? $initial_data : array();
+	}
+
+	function __call($k, $params)
+	{
 		$allow_empty = isset($params[1]) && is_bool($params[1]) ? $params[1] : false;
-		if($allow_empty || '' != $params[0]) $this->data[$k] = $params[0];
+		if ($allow_empty || '' != $params[0])
+			$this->data[$k] = $params[0];
+
 		return $this;
 	}
 }
@@ -380,18 +387,28 @@ class TextileTag extends TextileBag
 {
 	var $tag;
 	var $selfclose;
-	function __construct($name, $attribs=array(), $selfclosing=true) { parent::__construct($attribs); $this->tag = $name; $this->selfclose = $selfclosing; }
+
+	function __construct($name, $attribs=array(), $selfclosing=true)
+	{
+		parent::__construct($attribs);
+		$this->tag = $name;
+		$this->selfclose = $selfclosing;
+	}
+
 	function __toString() {
 		$attribs = '';
 
-		if(count($this->data)) {
+		if (count($this->data)) {
 			ksort($this->data);
-			foreach($this->data as $k=>$v) $attribs .= " $k=\"$v\"";
+			foreach ($this->data as $k=>$v)
+				$attribs .= " $k=\"$v\"";
 		}
+
 		if($this->tag)
 			$o = '<' . $this->tag . $attribs . (($this->selfclose) ? " />" : '>');
 		else
 			$o = $attribs;
+
 		return $o;
 	}
 }
