@@ -353,7 +353,24 @@ Ordered List Start & Continuation:
 @define('txt_fn_foot_pattern',    '<sup{atts}>{marker}</sup>');
 @define('txt_nl_ref_pattern',     '<sup{atts}>{marker}</sup>');
 
+/**
+ * Class to allow simple assignment to members of the internal data array
+ **/
+class TextileBag
+{
+	var $data;
 
+	function __construct($initial_data) { $this->data = (is_array($initial_data)) ? $initial_data : array(); }
+	function __call($k, $params) {
+		$allow_empty = isset($params[1]) && is_bool($params[1]) ? $params[1] : false;
+		if($allow_empty || '' != $params[0]) $this->data[$k] = $params[0];
+		return $this;
+	}
+}
+
+/**
+ * Class to allow contruction of HTML tags on conversion of an object to a string
+ **/
 class TextileTag extends TextileBag
 {
 	var $tag;
@@ -374,18 +391,6 @@ class TextileTag extends TextileBag
 	}
 }
 
-
-class TextileBag
-{
-	var $data;
-
-	function __construct($initial_data) { $this->data = (is_array($initial_data)) ? $initial_data : array(); }
-	function __call($k, $params) {
-		$allow_empty = isset($params[1]) && is_bool($params[1]) ? $params[1] : false;
-		if($allow_empty || '' != $params[0]) $this->data[$k] = $params[0];
-		return $this;
-	}
-}
 
 class Textile
 {
@@ -1649,9 +1654,9 @@ class Textile
 		$text = $this->glyphs($text);
 		$url  = $this->shelveURL( $this->rebuildURI( $uri_parts ) . $slash );
 
-		$a = $this->newTag('a', $this->pba_array($atts), false)->title($this->encode_html($title))->href($url, true)->rel($this->rel);
-		$tags     = $this->storeTags((string)$a, '</a>');
-		$out      = $tags['open'].trim($text).$tags['close'];
+		$a    = $this->newTag('a', $this->pba_array($atts), false)->title($this->encode_html($title))->href($url, true)->rel($this->rel);
+		$tags = $this->storeTags((string)$a, '</a>');
+		$out  = $tags['open'].trim($text).$tags['close'];
 
 		if (($pre and !$tail) or ($tail and !$pre))
 		{
@@ -1873,8 +1878,8 @@ class Textile
 	function footnoteID($m)
 	{
 		list(, $id, $nolink) = array_pad($m, 3, '');
-		//$backref = ' ';
 		$backref = ' class="footnote"';
+
 		if (empty($this->fn[$id])) {
 			$this->fn[$id] = $a = uniqid(rand());
 			$backref .= " id=\"fnrev$a\"";
