@@ -370,6 +370,11 @@ class TextileBag
 
 /**
  * Class to allow contruction of HTML tags on conversion of an object to a string
+ *
+ * Example usage...
+ *
+ * $img = new TextileTag('img')->class('big blue')->src('images/elephant.jpg');
+ * echo $img;
  **/
 class TextileTag extends TextileBag
 {
