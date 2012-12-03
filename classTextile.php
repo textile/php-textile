@@ -328,30 +328,6 @@ Ordered List Start & Continuation:
 
 */
 
-// define these before including this file to override the standard glyphs
-@define('txt_quote_single_open',  '&#8216;');
-@define('txt_quote_single_close', '&#8217;');
-@define('txt_quote_double_open',  '&#8220;');
-@define('txt_quote_double_close', '&#8221;');
-@define('txt_apostrophe',         '&#8217;');
-@define('txt_prime',              '&#8242;');
-@define('txt_prime_double',       '&#8243;');
-@define('txt_ellipsis',           '&#8230;');
-@define('txt_emdash',             '&#8212;');
-@define('txt_endash',             '&#8211;');
-@define('txt_dimension',          '&#215;');
-@define('txt_trademark',          '&#8482;');
-@define('txt_registered',         '&#174;');
-@define('txt_copyright',          '&#169;');
-@define('txt_half',               '&#189;');
-@define('txt_quarter',            '&#188;');
-@define('txt_threequarters',      '&#190;');
-@define('txt_degrees',            '&#176;');
-@define('txt_plusminus',          '&#177;');
-@define('txt_has_unicode',        @preg_match('/\pL/u', 'a')); // Detect if Unicode is compiled into PCRE
-@define('txt_fn_ref_pattern',     '<sup{atts}>{marker}</sup>');
-@define('txt_fn_foot_pattern',    '<sup{atts}>{marker}</sup>');
-@define('txt_nl_ref_pattern',     '<sup{atts}>{marker}</sup>');
 
 /**
  * Class to allow simple assignment to members of the internal data array
@@ -447,7 +423,9 @@ class Textile
 	var $noimage = false;
 	var $lite = false;
 	var $url_schemes = array();
-	var $glyph = array();
+	var $glyph_search  = null;
+	var $glyph_replace = null;
+	var $rebuild_glyphs = true;
 	var $hu = '';
 	var $max_span_depth = 5;
 
@@ -456,6 +434,8 @@ class Textile
 	var $doc_root;
 
 	var $doctype;
+
+	var $symbols;
 
 // -------------------------------------------------------------
 	function Textile($doctype = 'xhtml')
@@ -469,6 +449,36 @@ class Textile
 			$this->doctype = 'xhtml';
 		else
 			$this->doctype = $doctype;
+
+		/**
+		 * Basic symbols used in textile glyph replacements. To override these, call
+		 * setSymbol('symbol_name', 'new_string') before calling textileThis() or
+		 * textileRestricted().
+		 **/
+		$this->symbols = array(
+			'quote_single_open'  => '&#8216;',
+			'quote_single_close' => '&#8217;',
+			'quote_double_open'  => '&#8220;',
+			'quote_double_close' => '&#8221;',
+			'apostrophe'         => '&#8217;',
+			'prime'              => '&#8242;',
+			'prime_double'       => '&#8243;',
+			'ellipsis'           => '&#8230;',
+			'emdash'             => '&#8212;',
+			'endash'             => '&#8211;',
+			'dimension'          => '&#215;',
+			'trademark'          => '&#8482;',
+			'registered'         => '&#174;',
+			'copyright'          => '&#169;',
+			'half'               => '&#189;',
+			'quarter'            => '&#188;',
+			'threequarters'      => '&#190;',
+			'degrees'            => '&#176;',
+			'plusminus'          => '&#177;',
+			'fn_ref_pattern'     => '<sup{atts}>{marker}</sup>',
+			'fn_foot_pattern'    => '<sup{atts}>{marker}</sup>',
+			'nl_ref_pattern'     => '<sup{atts}>{marker}</sup>',
+		);
 
 		$this->hlgn = "(?:\<(?!>)|&lt;&gt;|&gt;|&lt;|(?<!<)\>|\<\>|\=|[()]+(?! ))";
 		$this->vlgn = "[\-^~]";
@@ -493,7 +503,7 @@ class Textile
 		$this->restricted_url_schemes = array('http','https','ftp','mailto');
 		$this->unrestricted_url_schemes = array('http','https','ftp','mailto','file','tel','callto','sftp');
 
-		if (txt_has_unicode) {
+		if (@preg_match('/\pL/u', 'a')) {
 			$this->regex_snippets = array(
 				'acr' => '\p{Lu}\p{Nd}',
 				'abr' => '\p{Lu}',
@@ -515,7 +525,33 @@ class Textile
 		extract($this->regex_snippets);
 		$this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
 
-		if ($cur) $cur = '(?:['.$cur.']\s*)?';
+		if (defined('hu'))
+			$this->hu = hu;
+
+		if (defined('DIRECTORY_SEPARATOR'))
+			$this->ds = constant('DIRECTORY_SEPARATOR');
+		else
+			$this->ds = '/';
+
+		$this->doc_root = @$_SERVER['DOCUMENT_ROOT'];
+		if (!$this->doc_root)
+			$this->doc_root = @$_SERVER['PATH_TRANSLATED']; // IIS
+
+		$this->doc_root = rtrim($this->doc_root, $this->ds).$this->ds;
+	}
+
+// -------------------------------------------------------------
+	protected function prepGlyphs()
+	{
+		if ((null!==$this->glyph_search) && (null!==$this->glyph_replace) && !$this->rebuild_glyphs)
+			return;
+
+		extract($this->symbols, EXTR_PREFIX_ALL, 'txt');
+		extract($this->regex_snippets );
+		$pnc = '[[:punct:]]';
+
+		if ($cur)
+			$cur = '(?:['.$cur.']\s*)?';
 
 		$this->glyph_search = array(
 			'/([0-9]+[\])]?[\'"]? ?)[xX]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]+)/'.$mod,   // dimension sign
@@ -543,47 +579,35 @@ class Textile
 		);
 
 		$this->glyph_replace = array(
-			'$1'.txt_dimension.'$2',               // dimension sign
-			'$1'.txt_apostrophe.'$2',              // I'm an apostrophe
-			'$1'.txt_apostrophe.'$2',              // back in '88
-			'$1'.txt_quote_single_open,            // single open following open bracket
-			'$1'.txt_quote_single_close,           // single closing
-			txt_quote_single_open,                 // default single opening
-			'$1'.txt_quote_double_open,            // double open following open bracket
-			'$1'.txt_quote_double_close,           // double closing
-			txt_quote_double_open,                 // default double opening
+			'$1'.$txt_dimension.'$2',               // dimension sign
+			'$1'.$txt_apostrophe.'$2',              // I'm an apostrophe
+			'$1'.$txt_apostrophe.'$2',              // back in '88
+			'$1'.$txt_quote_single_open,            // single open following open bracket
+			'$1'.$txt_quote_single_close,           // single closing
+			$txt_quote_single_open,                 // default single opening
+			'$1'.$txt_quote_double_open,            // double open following open bracket
+			'$1'.$txt_quote_double_close,           // double closing
+			$txt_quote_double_open,                 // default double opening
 			(('html5' === $this->doctype) ? '<abbr title="$2">$1</abbr>' : '<acronym title="$2">$1</acronym>'),     // 3+ uppercase acronym
 			'<span class="caps">glyph:$1</span>$2', // 3+ uppercase
-			'$1'.txt_ellipsis,                     // ellipsis
-			txt_emdash,                            // em dash
-			' '.txt_endash.' ',                    // en dash
-			'$1'.txt_trademark,                    // trademark
-			'$1'.txt_registered,                   // registered
-			'$1'.txt_copyright,                    // copyright
-			txt_quarter,                           // 1/4
-			txt_half,                              // 1/2
-			txt_threequarters,                     // 3/4
-			txt_degrees,                           // degrees
-			txt_plusminus,                         // plus minus
+			'$1'.$txt_ellipsis,                     // ellipsis
+			$txt_emdash,                            // em dash
+			' '.$txt_endash.' ',                    // en dash
+			'$1'.$txt_trademark,                    // trademark
+			'$1'.$txt_registered,                   // registered
+			'$1'.$txt_copyright,                    // copyright
+			$txt_quarter,                           // 1/4
+			$txt_half,                              // 1/2
+			$txt_threequarters,                     // 3/4
+			$txt_degrees,                           // degrees
+			$txt_plusminus,                         // plus minus
 		);
 
-		if (defined('hu'))
-			$this->hu = hu;
-
-		if (defined('DIRECTORY_SEPARATOR'))
-			$this->ds = constant('DIRECTORY_SEPARATOR');
-		else
-			$this->ds = '/';
-
-		$this->doc_root = @$_SERVER['DOCUMENT_ROOT'];
-		if (!$this->doc_root)
-			$this->doc_root = @$_SERVER['PATH_TRANSLATED']; // IIS
-
-		$this->doc_root = rtrim($this->doc_root, $this->ds).$this->ds;
+		$this->rebuild_glyphs = false; // no need to rebuild next run unless a symbol is redefined
 	}
 
-// -------------------------------------------------------------
 
+// -------------------------------------------------------------
 	function prepare($lite, $noimage, $rel)
 	{
 		$this->unreferencedNotes = array();
@@ -599,10 +623,10 @@ class Textile
 		$this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
 		$this->lite       = $lite;
 		$this->noimage    = $noimage;
+		$this->prepGlyphs();
 	}
 
 // -------------------------------------------------------------
-
 	function TextileThis($text, $lite = '', $encode = '', $noimage = '', $strict = '', $rel = '')
 	{
 		$this->prepare($lite, $noimage, $rel);
@@ -1164,7 +1188,7 @@ class Textile
 // -------------------------------------------------------------
 	function formatFootnote($marker, $atts='', $anchor=true)
 	{
-		$pattern = ($anchor) ? txt_fn_foot_pattern : txt_fn_ref_pattern;
+		$pattern = ($anchor) ? $this->symbols['fn_foot_pattern'] : $this->symbols['fn_ref_pattern'];
 		return $this->replaceMarkers($pattern, array('atts' => $atts, 'marker' => $marker));
 	}
 
@@ -1582,7 +1606,7 @@ class Textile
 			$_ = '<a href="#note'.$id.'">'.$_.'</a>';
 
 		# Build the reference...
-		$_ = $this->replaceMarkers(txt_nl_ref_pattern, array('atts' => $atts, 'marker' => $_));
+		$_ = $this->replaceMarkers($this->symbols['nl_ref_pattern'], array('atts' => $atts, 'marker' => $_));
 
 		return $_;
 	}
@@ -2054,6 +2078,24 @@ class Textile
 		if ($this->restricted)
 			return str_replace('"', '&quot;', $str);
 		return $this->encode_html($str, $quotes);
+	}
+
+// -------------------------------------------------------------
+	public function setSymbol($name, $value)
+	{
+		$this->symbols[$name] = $value;
+		$this->rebuild_glyphs = true;
+		return $this;
+	}
+
+// -------------------------------------------------------------
+	/**
+	 * getSymbol() returns an array containing the symbol table
+	 * getSymbol('name') returns the value of the named symbol
+	 **/
+	public function getSymbol($name=null)
+	{
+		return ($name) ? @$this->symbols['name'] : $this->symbols;
 	}
 
 // -------------------------------------------------------------
