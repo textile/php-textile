@@ -426,7 +426,7 @@ class Textile
 	var $glyph_search  = null;
 	var $glyph_replace = null;
 	var $rebuild_glyphs = true;
-	var $hu = '';
+	var $relativeImagePrefix = '';
 	var $max_span_depth = 5;
 
 	var $ver = '2.4.1';
@@ -524,9 +524,6 @@ class Textile
 		}
 		extract($this->regex_snippets);
 		$this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
-
-		if (defined('hu'))
-			$this->hu = hu;
 
 		if (defined('DIRECTORY_SEPARATOR'))
 			$this->ds = constant('DIRECTORY_SEPARATOR');
@@ -1799,7 +1796,7 @@ class Textile
 		if ((empty($parts['scheme']) or @$parts['scheme'] == 'http') and
 			 empty($parts['host']) and
 			 preg_match('/^\w/', @$parts['path']))
-			$url = $this->hu.$url;
+			$url = $this->relativeImagePrefix.$url;
 		if ($this->restricted and !empty($parts['scheme']) and
 				!in_array($parts['scheme'], $this->url_schemes))
 			return '#';
@@ -2096,6 +2093,13 @@ class Textile
 	public function getSymbol($name=null)
 	{
 		return ($name) ? @$this->symbols['name'] : $this->symbols;
+	}
+
+// -------------------------------------------------------------
+	public function setRelativeImagePrefix($prefix='')
+	{
+		$this->relativeImagePrefix = $prefix;
+		return $this;
 	}
 
 // -------------------------------------------------------------
