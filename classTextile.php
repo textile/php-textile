@@ -603,7 +603,6 @@ class Textile
 		$this->rebuild_glyphs = false; // no need to rebuild next run unless a symbol is redefined
 	}
 
-
 // -------------------------------------------------------------
 	function prepare($lite, $noimage, $rel)
 	{
@@ -650,7 +649,7 @@ class Textile
 		$this->restricted = true;
 
 		// escape any raw html
-		$text = $this->encode_html($text, 0);
+		$text = $this->encodeHTML($text, 0);
 		$text = $this->cleanWhiteSpace($text);
 
 		return $this->textileCommon($text, $lite);
@@ -673,14 +672,13 @@ class Textile
 		$text = $this->retrieveTags($text);
 		$text = $this->retrieveURLs($text);
 
-		// just to be tidy
 		$text = str_replace("<br />", "<br />\n", $text);
 
 		return $text;
 	}
 
 // -------------------------------------------------------------
-    function cleanba($in)
+    function cleanAttribs($in)
     {
         $tmp    = $in;
         $before = -1;
@@ -703,21 +701,18 @@ class Textile
     }
 
 // -------------------------------------------------------------
-	function newTag($name, $atts, $selfclosing = true) { return new TextileTag($name, $atts, $selfclosing); }
-
-// -------------------------------------------------------------
-	function pba($in, $element = "", $include_id = 1, $autoclass = '')
+	function newTag($name, $atts, $selfclosing = true)
 	{
-		$o = $this->pba_array($in, $element, $include_id, $autoclass);
-		return $this->pba_array2str($o);
+		return new TextileTag($name, $atts, $selfclosing);
 	}
 
 // -------------------------------------------------------------
-	function pba_array2str($o)
+	function parseAttribs($in, $element = "", $include_id = 1, $autoclass = '')
 	{
 		$out = '';
-
+		$o = $this->parseAttribsToArray($in, $element, $include_id, $autoclass);
 		ksort($o);
+
 		if (count($o))
 			foreach ($o as $k=>$v) $out .= " $k=\"$v\"";
 
@@ -725,7 +720,7 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function pba_array($in, $element = "", $include_id = 1, $autoclass = '') // "parse block attributes"
+	function parseAttribsToArray($in, $element = "", $include_id = 1, $autoclass = '')
 	{
 		$style = '';
 		$class = '';
@@ -805,8 +800,8 @@ class Textile
 		if ($this->restricted) {
 			$o = array();
 			$class = trim($autoclass);
-			if ($class) $o['class'] = $this->cleanba($class);
-			if ($lang)  $o['lang']  = $this->cleanba($lang);
+			if ($class) $o['class'] = $this->cleanAttribs($class);
+			if ($lang)  $o['lang']  = $this->cleanAttribs($lang);
 			return $o;
 		}
 		else
@@ -829,15 +824,15 @@ class Textile
 		}
 
 		$o = array();
-		if ($class)   $o['class']   = $this->cleanba($class);
-		if ($colspan) $o['colspan'] = $this->cleanba($colspan);
+		if ($class)   $o['class']   = $this->cleanAttribs($class);
+		if ($colspan) $o['colspan'] = $this->cleanAttribs($colspan);
 		if ($id && $include_id)
-			          $o['id']      = $this->cleanba($id);
-		if ($lang)    $o['lang']    = $this->cleanba($lang);
-		if ($rowspan) $o['rowspan'] = $this->cleanba($rowspan);
-		if ($span)    $o['span']    = $this->cleanba($span);
-		if ($style)   $o['style']   = $this->cleanba($style);
-		if ($width)   $o['width']   = $this->cleanba($width);
+			          $o['id']      = $this->cleanAttribs($id);
+		if ($lang)    $o['lang']    = $this->cleanAttribs($lang);
+		if ($rowspan) $o['rowspan'] = $this->cleanAttribs($rowspan);
+		if ($span)    $o['span']    = $this->cleanAttribs($span);
+		if ($style)   $o['style']   = $this->cleanAttribs($style);
+		if ($width)   $o['width']   = $this->cleanAttribs($width);
 
 		return $o;
 	}
@@ -861,7 +856,7 @@ class Textile
 // -------------------------------------------------------------
 	function fTable($matches)
 	{
-		$tatts = $this->pba($matches[1], 'table');
+		$tatts = $this->parseAttribs($matches[1], 'table');
 
 		$sum = trim($matches[2]) ? ' summary="'.htmlspecialchars(trim($matches[2]), ENT_QUOTES, 'UTF-8').'"' : '';
 		$cap       = '';
@@ -874,7 +869,7 @@ class Textile
 
 			// Caption -- can only occur on row 1, otherwise treat '|=. foo |...' as a normal center-aligned cell.
 			if (($c_row <= 1) && preg_match("/^\|\=($this->s$this->a$this->c)\. ([^\n]*)(.*)/s", ltrim($row), $cmtch)) {
-				$capts = $this->pba($cmtch[1]);
+				$capts = $this->parseAttribs($cmtch[1]);
 				$cap = "\t<caption".$capts.">".trim($cmtch[2])."</caption>\n";
 				$row = ltrim($cmtch[3]);
 				if (empty($row))
@@ -887,7 +882,7 @@ class Textile
 				$nl = strpos($row,"\n");	# Is this colgroup def missing a closing pipe? If so, there will be a newline in the middle of $row somewhere.
 				$idx=0;
 				foreach (explode('|', str_replace('.', '', $gmtch[1])) as $col) {
-					$gatts = $this->pba(trim($col), 'col');
+					$gatts = $this->parseAttribs(trim($col), 'col');
 					$colgrp .= "\t<col".(($idx==0) ? "group".$gatts.">" : $gatts." />")."\n";
 					$idx++;
 				}
@@ -905,11 +900,11 @@ class Textile
 
 			// Row group
 			$rgrp = isset($grpmatch[2]) ? (($grpmatch[2] == '^') ? 'head' : (($grpmatch[2] == '~') ? 'foot' : (($grpmatch[2] == '-') ? 'body' : ''))) : '';
-			$rgrpatts = isset($grpmatch[3]) ? $this->pba($grpmatch[3]) : '';
+			$rgrpatts = isset($grpmatch[3]) ? $this->parseAttribs($grpmatch[3]) : '';
 			$row = $grpmatch[4];
 
 			if (preg_match("/^($this->a$this->c\. )(.*)/m", ltrim($row), $rmtch)) {
-				$ratts = $this->pba($rmtch[1], 'tr');
+				$ratts = $this->parseAttribs($rmtch[1], 'tr');
 				$row = $rmtch[2];
 			} else $ratts = '';
 
@@ -919,14 +914,14 @@ class Textile
 				$ctyp = "d";
 				if (preg_match("/^_(?=[\s[:punct:]])/", $cell)) $ctyp = "h";
 				if (preg_match("/^(_?$this->s$this->a$this->c\. )(.*)/", $cell, $cmtch)) {
-					$catts = $this->pba($cmtch[1], 'td');
+					$catts = $this->parseAttribs($cmtch[1], 'td');
 					$cell = $cmtch[2];
 				} else $catts = '';
 
 				if (!$this->lite) {
 					$a = array();
 					if (preg_match('/(\s*)(.*)/s', $cell, $a)) {
-						$cell = $this->redcloth_lists($a[2]);
+						$cell = $this->redclothLists($a[2]);
 						$cell = $this->lists($cell);
 						$cell = $a[1] . $cell;
 					}
@@ -947,13 +942,13 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function redcloth_lists($text)
+	function redclothLists($text)
 	{
-		return preg_replace_callback("/^([-]+$this->lc[ .].*:=.*)$(?![^-])/smU", array(&$this, "fRCList"), $text);
+		return preg_replace_callback("/^([-]+$this->lc[ .].*:=.*)$(?![^-])/smU", array(&$this, "fRedclothList"), $text);
 	}
 
 // -------------------------------------------------------------
-	function fRCList($m)
+	function fRedclothList($m)
 	{
 		$in = $m[0];
 		$out = array();
@@ -963,7 +958,7 @@ class Textile
 			if (preg_match("/^[-]+($this->lc)[ .](.*)$/s", $line, $m)) {
 				list(, $atts, $content) = $m;
 				$content = trim($content);
-				$atts = $this->pba($atts);
+				$atts = $this->parseAttribs($atts);
 
 				if (!preg_match("/^(.*?)[\s]*:=(.*?)[\s]*(=:|:=)?[\s]*$/s", $content, $xm)) return $in;
 
@@ -1014,7 +1009,7 @@ class Textile
 				list(, $tl, $st, $atts, $content) = $m;
 				$content = trim($content);
 				$nl = '';
-				$ltype = $this->lT($tl);
+				$ltype = $this->liType($tl);
 				$litem = (strpos($tl, ';') !== false) ? 'dt' : ((strpos($tl, ':') !== false) ? 'dd' : 'li');
 				$showitem = (strlen($content) > 0);
 
@@ -1046,7 +1041,7 @@ class Textile
 					$lists[$tl] = 2; // We're already in a <dl> so flag not to start another
 				}
 
-				$atts = $this->pba($atts);
+				$atts = $this->parseAttribs($atts);
 				if (!isset($lists[$tl])) {
 					$lists[$tl] = 1;
 					$line = "\t<" . $ltype . "l$atts$st>" . (($showitem) ? "\n\t\t<$litem>" . $content : '');
@@ -1057,7 +1052,7 @@ class Textile
 				if ((strlen($nl) <= strlen($tl))) $line .= (($showitem) ? "</$litem>" : '');
 				foreach (array_reverse($lists) as $k => $v) {
 					if (strlen($k) > strlen($nl)) {
-						$line .= ($v==2) ? '' : "\n\t</" . $this->lT($k) . "l>";
+						$line .= ($v==2) ? '' : "\n\t</" . $this->liType($k) . "l>";
 						if ((strlen($k) > 1) && ($v != 2))
 							$line .= "</".$litem.">";
 						unset($lists[$k]);
@@ -1074,7 +1069,7 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function lT($in)
+	function liType($in)
 	{
 		$m = array();
 		$type = 'd';
@@ -1202,7 +1197,7 @@ class Textile
 	function fBlock($m)
 	{
 		list(, $tag, $att, $ext, $cite, $content) = $m;
-		$atts = $this->pba($att);
+		$atts = $this->parseAttribs($att);
 
 		$o1  = '';
 		$o2  = '';
@@ -1250,7 +1245,7 @@ class Textile
 			$cite = $this->shelveURL($cite);
 			$cite = ($cite != '') ? ' cite="' . $cite . '"' : '';
 			$o1 = "\t<blockquote$cite$atts>\n";
-			$o2 = "\t\t<p".$this->pba($att, '', 0).">";
+			$o2 = "\t\t<p".$this->parseAttribs($att, '', 0).">";
 			$c2 = "</p>";
 			$c1 = "\n\t</blockquote>";
 		}
@@ -1259,7 +1254,7 @@ class Textile
 			$o2 = "<code>";
 			$c2 = "</code>";
 			$c1 = "</pre>";
-			$content = $this->shelve($this->r_encode_html(rtrim($content, "\n")."\n"));
+			$content = $this->shelve($this->rEncodeHTML(rtrim($content, "\n")."\n"));
 		}
 		elseif ($tag == 'notextile') {
 			$content = $this->shelve($content);
@@ -1269,7 +1264,7 @@ class Textile
 			$c2 = '';
 		}
 		elseif ($tag == 'pre') {
-			$content = $this->shelve($this->r_encode_html(rtrim($content, "\n")."\n"));
+			$content = $this->shelve($this->rEncodeHTML(rtrim($content, "\n")."\n"));
 			$o1 = "<pre$atts>";
 			$o2 = '';
 			$c2 = '';
@@ -1293,13 +1288,13 @@ class Textile
 	{
 		list(, $content) = $m;
 		if ($this->restricted)
-			$content = $this->shelve($this->r_encode_html($content));
+			$content = $this->shelve($this->rEncodeHTML($content));
 		else
 			$content = $this->shelve($content);
 		return "<!--$content-->";
 	}
 
-
+// -------------------------------------------------------------
 	function getHTMLComments($text)
 	{
 		$text = preg_replace_callback("/
@@ -1327,7 +1322,7 @@ class Textile
 
 		if (!$this->lite) {
 			$text = $this->table($text);
-			$text = $this->redcloth_lists($text);
+			$text = $this->redclothLists($text);
 			$text = $this->lists($text);
 		}
 
@@ -1385,7 +1380,7 @@ class Textile
 		list(, $pre, $tag, $atts, $cite, $content, $end, $tail) = $m;
 
 		$tag  = $qtags[$tag];
-		$atts = $this->pba($atts);
+		$atts = $this->parseAttribs($atts);
 		$atts .= ($cite != '') ? 'cite="' . $cite . '"' : '';
 
 		$content = $this->span($content);
@@ -1500,7 +1495,7 @@ class Textile
 		$_ = ($this->notelist_cache[$index]) ? $this->notelist_cache[$index] : '';
 
 		if (!empty($_)) {
-			$list_atts = $this->pba($att);
+			$list_atts = $this->parseAttribs($att);
 			$_ = "<ol$list_atts>\n$_\n</ol>";
 		}
 
@@ -1518,7 +1513,7 @@ class Textile
 		$backlink_type = ($link) ? $link : $g_links;
 		$allow_inc = (false === strpos($this->syms, $i));
 
-		$i_ = str_replace(array('&', ';', '#'), '', $this->encode_high($i));
+		$i_ = str_replace(array('&', ';', '#'), '', $this->encodeHigh($i));
 		$decode = (strlen($i) !== strlen($i_));
 
 		if ($backlink_type === '!')
@@ -1528,7 +1523,7 @@ class Textile
 		else {
 			$_ = array();
 			foreach ($info['refids'] as $id) {
-				$_[] = '<sup><a href="#noteref'.$id.'">'. (($decode) ? $this->decode_high($i_) : $i_) .'</a></sup>';
+				$_[] = '<sup><a href="#noteref'.$id.'">'. (($decode) ? $this->decodeHigh($i_) : $i_) .'</a></sup>';
 				if ($allow_inc)
 					$i_++;
 			}
@@ -1549,7 +1544,7 @@ class Textile
 		if (empty($this->notes[$label]['def'])) # Ignores subsequent defs using the same label
 		{
 			$this->notes[$label]['def'] = array(
-				'atts'    => $this->pba($att),
+				'atts'    => $this->parseAttribs($att),
 				'content' => $this->graf($content),
 				'link'    => $link,
 			);
@@ -1579,7 +1574,7 @@ class Textile
 		# we process the refs...
 
 		list(, $atts, $label, $nolink) = $m;
-		$atts = $this->pba($atts);
+		$atts = $this->parseAttribs($atts);
 		$nolink = ($nolink === '!');
 
 		# Assign a sequence number to this reference if there isn't one already...
@@ -1629,10 +1624,10 @@ class Textile
 		return $ok;
 	}
 
+// -------------------------------------------------------------
 	function addPart(&$mask, $name, &$parts) {
 		return (in_array($name, $mask) && isset($parts[$name]) && '' !== $parts[$name]);
 	}
-
 
 // -------------------------------------------------------------
 	/**
@@ -1728,7 +1723,7 @@ class Textile
 		$text = $this->glyphs($text);
 		$url  = $this->shelveURL($this->rebuildURI($uri_parts) . $slash);
 
-		$a    = $this->newTag('a', $this->pba_array($atts), false)->title($this->encode_html($title))->href($url, true)->rel($this->rel);
+		$a    = $this->newTag('a', $this->parseAttribsToArray($atts), false)->title($this->encodeHTML($title))->href($url, true)->rel($this->rel);
 		$tags = $this->storeTags((string)$a, '</a>');
 		$out  = $tags['open'].trim($text).$tags['close'];
 
@@ -1786,7 +1781,7 @@ class Textile
 		$url = $this->urlshelf[$ref];
 		if (isset($this->urlrefs[$url]))
 			$url = $this->urlrefs[$url];
-		return $this->r_encode_html($this->relURL($url));
+		return $this->rEncodeHTML($this->relURL($url));
 	}
 
 // -------------------------------------------------------------
@@ -1850,7 +1845,7 @@ class Textile
 		}
 
 		if ($title) {
-			$title = $this->encode_html($title);
+			$title = $this->encodeHTML($title);
 			$alt   = $title;
 		}
 
@@ -1860,7 +1855,7 @@ class Textile
 			$atts .= " $size[3]";
 
 		$href = ($href) ? $this->shelveURL($href) : '';
-		$img  = $this->newTag('img', $this->pba_array($atts, '', 1, $extras))->align($align)->alt($alt, true)->src($this->shelveURL($url), true)->title($title);
+		$img  = $this->newTag('img', $this->parseAttribsToArray($atts, '', 1, $extras))->align($align)->alt($alt, true)->src($this->shelveURL($url), true)->title($title);
 
 		$out  = ($href) ? "<a href=\"$href\"{$this->rel}>$img</a>" : (string)$img;
 		return $this->shelve($out);
@@ -1879,14 +1874,14 @@ class Textile
 	function fCode($m)
 	{
 		list(, $before, $text, $after) = array_pad($m, 4, '');
-		return $before.$this->shelve('<code>'.$this->r_encode_html($text).'</code>').$after;
+		return $before.$this->shelve('<code>'.$this->rEncodeHTML($text).'</code>').$after;
 	}
 
 // -------------------------------------------------------------
 	function fPre($m)
 	{
 		list(, $before, $text, $after) = array_pad($m, 4, '');
-		return $before.'<pre>'.$this->shelve($this->r_encode_html($text)).'</pre>'.$after;
+		return $before.'<pre>'.$this->shelve($this->rEncodeHTML($text)).'</pre>'.$after;
 	}
 
 // -------------------------------------------------------------
@@ -1931,7 +1926,7 @@ class Textile
 	{
 		// A special block like notextile or code
 		list(, $before, $text, $after) = array_pad($m, 4, '');
-		return $before.$this->shelve($this->encode_html($text)).$after;
+		return $before.$this->shelve($this->encodeHTML($text)).$after;
 	}
 
 // -------------------------------------------------------------
@@ -2026,34 +2021,20 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function encode_high($text, $charset = "UTF-8")
+	function encodeHigh($text, $charset = "UTF-8")
 	{
 		return ($this->mb) ? mb_encode_numericentity($text, $this->cmap, $charset) : htmlentities($text, ENT_NOQUOTES, $charset);
 	}
 
 // -------------------------------------------------------------
-	function decode_high($text, $charset = "UTF-8")
+	function decodeHigh($text, $charset = "UTF-8")
 	{
 		$text = (ctype_digit($text)) ? "&#$text;" : "&$text;" ;
 		return ($this->mb) ? mb_decode_numericentity($text, $this->cmap, $charset) : html_entity_decode($text, ENT_NOQUOTES, $charset);
 	}
 
 // -------------------------------------------------------------
-	// DEPRECATED ... will be removed in next release
-	function encode_raw_amp($text)
-	{
-		return preg_replace('/&(?!#?[a-z0-9]+;)/i', '&amp;', $text);
-	}
-
-// -------------------------------------------------------------
-	// DEPRECATED ... will be removed in next release
-	function encode_lt_gt($text)
-	{
-		return str_replace($text, array('<', '>'), array('&lt;', '&gt;'), $text);
-	}
-
-// -------------------------------------------------------------
-	function encode_html($str, $quotes=1)
+	function encodeHTML($str, $quotes=1)
 	{
 		$a = array(
 			'&' => '&amp;',
@@ -2069,12 +2050,12 @@ class Textile
 	}
 
 // -------------------------------------------------------------
-	function r_encode_html($str, $quotes=1)
+	function rEncodeHTML($str, $quotes=1)
 	{
 		// in restricted mode, all input but quotes has already been escaped
 		if ($this->restricted)
 			return str_replace('"', '&quot;', $str);
-		return $this->encode_html($str, $quotes);
+		return $this->encodeHTML($str, $quotes);
 	}
 
 // -------------------------------------------------------------
@@ -2107,4 +2088,4 @@ class Textile
 	{
 		return $this->ver;
 	}
-} // end class
+}
