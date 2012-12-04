@@ -611,7 +611,7 @@ class Textile
      * @param  string $rel       Relationship to apply to all generated links
      * @return string The text from the input document
      **/
-    public function TextileThis($text, $lite = '', $encode = '', $noimage = '', $strict = '', $rel = '')
+    public function textileThis($text, $lite = '', $encode = '', $noimage = '', $strict = '', $rel = '')
     {
         $this->prepare($lite, $noimage, $rel);
         $this->url_schemes = $this->unrestricted_url_schemes;
@@ -633,7 +633,7 @@ class Textile
     /**
      * Causes a restricted parse of the input textile text. Use this on any untrusted user input.
      **/
-    public function TextileRestricted($text, $lite = 1, $noimage = 1, $rel = 'nofollow')
+    public function textileRestricted($text, $lite = 1, $noimage = 1, $rel = 'nofollow')
     {
         $this->prepare($lite, $noimage, $rel);
         $this->url_schemes = $this->restricted_url_schemes;
