@@ -1932,7 +1932,7 @@ class Textile
 			else {
 				$pp = explode('/', $parts['path']);
 				foreach ($pp as &$p) {
-					$p = str_replace('%40', '@', rawurlencode($p));
+					$p = str_replace(array('%25', '%40'), array('%', '@'), rawurlencode($p));
 					if (!in_array($parts['scheme'], array('tel','mailto'))) $p = str_replace('%2B', '+', $p);
 				}
 
@@ -1964,14 +1964,14 @@ class Textile
 	function links($text)
 	{
 		return preg_replace_callback('/
-			(^|(?<=[\s>.\(\|])|[{[]) # $pre
-			"                      # start
-			(' . $this->c . ')     # $atts
-			([^"]+?)               # $text
-			(?:\(([^)]+?)\)(?="))? # $title
+			(^|(?<=[\s>.\(\|])|[{[])   # $pre
+			"                          #  start
+			(' . $this->c . ')         # $atts
+			([^"]+?)                   # $text
+			(?:\(([^)]+?)\)(?="))?     # $title
 			":
-			('.$this->urlch.'+?)   # $url
-			(\/)?                  # $slash
+			('.$this->urlch.'+?)       # $url
+			(\/)?                      # $slash
 			([^'.$this->regex_snippets['wrd'].'\/;]*?)  # $post
 			([\]}]|(?=\s|$|\)|\|))	   # $tail
 			/x'.$this->regex_snippets['mod'], array(&$this, "fLink"), $text);
