@@ -333,7 +333,7 @@ Ordered List Start & Continuation:
  **/
 class TextileBag
 {
-    var $data;
+    protected $data;
 
 
     public function __construct($initial_data)
@@ -375,8 +375,8 @@ class TextileBag
  **/
 class TextileTag extends TextileBag
 {
-    var $tag;
-    var $selfclose;
+    protected $tag;
+    protected $selfclose;
 
 
     public function __construct($name, $attribs=array(), $selfclosing=true)
@@ -409,38 +409,38 @@ class TextileTag extends TextileBag
 
 class Textile
 {
-    var $hlgn;
-    var $vlgn;
-    var $clas;
-    var $lnge;
-    var $styl;
-    var $cspn;
-    var $rspn;
-    var $a;
-    var $s;
-    var $c;
-    var $pnct;
-    var $rel;
-    var $fn;
+    protected $hlgn;
+    protected $vlgn;
+    protected $clas;
+    protected $lnge;
+    protected $styl;
+    protected $cspn;
+    protected $rspn;
+    protected $a;
+    protected $s;
+    protected $c;
+    protected $pnct;
+    protected $rel;
+    protected $fn;
 
-    var $shelf = array();
-    var $restricted = false;
-    var $noimage = false;
-    var $lite = false;
-    var $url_schemes = array();
-    var $glyph_search  = null;
-    var $glyph_replace = null;
-    var $rebuild_glyphs = true;
-    var $relativeImagePrefix = '';
-    var $max_span_depth = 5;
+    protected $shelf = array();
+    protected $restricted = false;
+    protected $noimage = false;
+    protected $lite = false;
+    protected $url_schemes = array();
+    protected $glyph_search  = null;
+    protected $glyph_replace = null;
+    protected $rebuild_glyphs = true;
+    protected $relativeImagePrefix = '';
+    protected $max_span_depth = 5;
 
-    var $ver = '2.4.1';
+    protected $ver = '2.4.1';
 
-    var $doc_root;
+    protected $doc_root;
 
-    var $doctype;
+    protected $doctype;
 
-    var $symbols;
+    protected $symbols;
 
 
     /**
