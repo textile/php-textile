@@ -336,7 +336,7 @@ class TextileBag
     var $data;
 
 
-    function __construct($initial_data)
+    public function __construct($initial_data)
     {
         $this->data = (is_array($initial_data)) ? $initial_data : array();
     }
@@ -354,7 +354,7 @@ class TextileBag
      *
      * Would force the value into the data array even if it were empty.
      **/
-    function __call($k, $params)
+    public function __call($k, $params)
     {
         $allow_empty = isset($params[1]) && is_bool($params[1]) ? $params[1] : false;
         if ($allow_empty || '' != $params[0])
@@ -379,7 +379,7 @@ class TextileTag extends TextileBag
     var $selfclose;
 
 
-    function __construct($name, $attribs=array(), $selfclosing=true)
+    public function __construct($name, $attribs=array(), $selfclosing=true)
     {
         parent::__construct($attribs);
         $this->tag = $name;
@@ -387,7 +387,7 @@ class TextileTag extends TextileBag
     }
 
 
-    function __toString() {
+    public function __toString() {
         $attribs = '';
 
         if (count($this->data)) {
@@ -449,7 +449,7 @@ class Textile
      * @param  string $doctype  The output document type to target
      * @return void
      **/
-    function Textile($doctype = 'xhtml')
+    public function Textile($doctype = 'xhtml')
     {
         $doctype_whitelist = array(
             'xhtml',
@@ -555,7 +555,7 @@ class Textile
      * @param  string $value New value for the symbol.
      * @return object $this
      **/
-    function setSymbol($name, $value)
+    public function setSymbol($name, $value)
     {
         $this->symbols[$name] = $value;
         $this->rebuild_glyphs = true;
@@ -569,7 +569,7 @@ class Textile
      * @param  string $name  The name of the symbol to access or null if requesting the symbol table
      * @return array|string The symbol table or the requested symbol
      **/
-    function getSymbol($name=null)
+    public function getSymbol($name=null)
     {
         return ($name) ? @$this->symbols['name'] : $this->symbols;
     }
@@ -582,7 +582,7 @@ class Textile
      * @param  string $prefix  The string to prefix all relative image paths with
      * @return object $this
      **/
-    function setRelativeImagePrefix($prefix='')
+    public function setRelativeImagePrefix($prefix='')
     {
         $this->relativeImagePrefix = $prefix;
         return $this;
@@ -594,7 +594,7 @@ class Textile
      *
      * @return string Version
      **/
-    function getVersion()
+    public function getVersion()
     {
         return $this->ver;
     }
@@ -611,7 +611,7 @@ class Textile
      * @param  string $rel       Relationship to apply to all generated links
      * @return string The text from the input document
      **/
-    function TextileThis($text, $lite = '', $encode = '', $noimage = '', $strict = '', $rel = '')
+    public function TextileThis($text, $lite = '', $encode = '', $noimage = '', $strict = '', $rel = '')
     {
         $this->prepare($lite, $noimage, $rel);
         $this->url_schemes = $this->unrestricted_url_schemes;
@@ -633,7 +633,7 @@ class Textile
     /**
      * Causes a restricted parse of the input textile text. Use this on any untrusted user input.
      **/
-    function TextileRestricted($text, $lite = 1, $noimage = 1, $rel = 'nofollow')
+    public function TextileRestricted($text, $lite = 1, $noimage = 1, $rel = 'nofollow')
     {
         $this->prepare($lite, $noimage, $rel);
         $this->url_schemes = $this->restricted_url_schemes;
@@ -652,7 +652,7 @@ class Textile
      *
      * @internal
      **/
-    function textileCommon($text, $lite)
+    protected function textileCommon($text, $lite)
     {
         if ($lite) {
             $this->btag = array('bq', 'p');
@@ -680,7 +680,7 @@ class Textile
      * @internal
      * @return void
      **/
-    function prepGlyphs()
+    protected function prepGlyphs()
     {
         if ((null!==$this->glyph_search) && (null!==$this->glyph_replace) && !$this->rebuild_glyphs)
             return;
@@ -757,7 +757,7 @@ class Textile
      * @param  string      $rel     A relationship to be applied to all links. eg. 'nofollow'
      * @return void
      **/
-    function prepare($lite, $noimage, $rel)
+    protected function prepare($lite, $noimage, $rel)
     {
         $this->unreferencedNotes = array();
         $this->notelist_cache    = array();
@@ -779,7 +779,7 @@ class Textile
     /**
      * @internal
      **/
-    function cleanAttribs($in)
+    protected function cleanAttribs($in)
     {
         $tmp    = $in;
         $before = -1;
@@ -812,7 +812,7 @@ class Textile
      * @param  bool   $selfclosing Determines if the tag should be selfclosing. Default: true
      * @return TextileTag
      **/
-    function newTag($name, $atts, $selfclosing = true)
+    protected function newTag($name, $atts, $selfclosing = true)
     {
         return new TextileTag($name, $atts, $selfclosing);
     }
@@ -829,7 +829,7 @@ class Textile
      * @param   string $autoclass  An additional class or classes to be applied to the output
      * @return  array  HTML attributes as key=>value mappings
      **/
-    function parseAttribs($in, $element = "", $include_id = 1, $autoclass = '')
+    protected function parseAttribs($in, $element = "", $include_id = 1, $autoclass = '')
     {
         $out = '';
         $o = $this->parseAttribsToArray($in, $element, $include_id, $autoclass);
@@ -845,7 +845,7 @@ class Textile
     /**
      * @internal
      **/
-    function parseAttribsToArray($in, $element = "", $include_id = 1, $autoclass = '')
+    protected function parseAttribsToArray($in, $element = "", $include_id = 1, $autoclass = '')
     {
         $style = '';
         $class = '';
@@ -971,7 +971,7 @@ class Textile
     /**
      * @internal
      **/
-    function hasRawText($text)
+    protected function hasRawText($text)
     {
         // checks whether the text has text not already enclosed by a block tag
         $r = trim(preg_replace('@<(p|blockquote|div|form|table|ul|ol|dl|pre|h\d)[^>]*?'.chr(62).'.*</\1>@s', '', trim($text)));
@@ -988,7 +988,7 @@ class Textile
      * @param  string $text A block of textile
      * @return string Text with tables replaced with HTML tables
      **/
-    function table($text)
+    protected function table($text)
     {
         $text = $text . "\n\n";
         return preg_replace_callback("/^(?:table(_?{$this->s}{$this->a}{$this->c})\.(.*)?\n)?^({$this->a}{$this->c}\.? ?\|.*\|)[\s]*\n\n/smU", array(&$this, "fTable"), $text);
@@ -998,7 +998,7 @@ class Textile
     /**
      * @internal
      **/
-    function fTable($matches)
+    protected function fTable($matches)
     {
         $tatts = $this->parseAttribs($matches[1], 'table');
 
@@ -1094,7 +1094,7 @@ class Textile
      * @param  string $text The input textile text to be searched for redcloth-style definition lists
      * @return string The text with tokens inserted at the points definition lists were found
      **/
-    function redclothLists($text)
+    protected function redclothLists($text)
     {
         return preg_replace_callback("/^([-]+$this->lc[ .].*:=.*)$(?![^-])/smU", array(&$this, "fRedclothList"), $text);
     }
@@ -1103,7 +1103,7 @@ class Textile
     /**
      * @internal
      **/
-    function fRedclothList($m)
+    protected function fRedclothList($m)
     {
         $in = $m[0];
         $out = array();
@@ -1158,7 +1158,7 @@ class Textile
      * @param  string $text  Input textile source to parse for lists
      * @return string Text with lists replaced with tokens
      **/
-    function lists($text)
+    protected function lists($text)
     {
         return preg_replace_callback("/^((?:[*;:]+|[*;:#]*#(?:_|\d+)?)$this->lc[ .].*)$(?![^#*;:])/smU", array(&$this, "fList"), $text);
     }
@@ -1167,7 +1167,7 @@ class Textile
     /**
      * @internal
      **/
-    function fList($m)
+    protected function fList($m)
     {
         $text = preg_split('/\n(?=[*#;:])/m', $m[0]);
         $pt = '';
@@ -1245,7 +1245,7 @@ class Textile
      * @param  string $in Textile input containing possible list marker
      * @return string The type of list (missing the final 'l' character)
      **/
-    function liType($in)
+    protected function liType($in)
     {
         $m = array();
         $type = 'd';
@@ -1258,7 +1258,7 @@ class Textile
     /**
      * @internal
      **/
-    function doTagBr($tag, $in)
+    protected function doTagBr($tag, $in)
     {
         return preg_replace_callback('@<('.preg_quote($tag).')([^>]*?)>(.*)(</\1>)@s', array(&$this, 'fBr'), $in);
     }
@@ -1267,7 +1267,7 @@ class Textile
     /**
      * @internal
      **/
-    function doPBr($in)
+    protected function doPBr($in)
     {
         return preg_replace_callback('@<(p)([^>]*?)>(.*)(</\1>)@s', array(&$this, 'fPBr'), $in);
     }
@@ -1278,7 +1278,7 @@ class Textile
      * row may start with a smiley or perhaps something like '#8 bolt...' or '*** stars...'
      * @internal
      **/
-    function fPBr($m)
+    protected function fPBr($m)
     {
         $content = preg_replace("@((?!<br>\n|<br />\n))+\n(?![\s|])@", '$1<br />', $m[3]);
         return '<'.$m[1].$m[2].'>'.$content.$m[4];
@@ -1288,7 +1288,7 @@ class Textile
     /**
      * @internal
      **/
-    function fBr($m)
+    protected function fBr($m)
     {
         $content = preg_replace("@(.+)(?<!<br>|<br />)\n(?![#*;:\s|])@", '$1<br />', $m[3]);
         return '<'.$m[1].$m[2].'>'.$content.$m[4];
@@ -1304,7 +1304,7 @@ class Textile
      * @param  string $text Textile source text
      * @return string Input text with blocks processed
      **/
-    function block($text)
+    protected function block($text)
     {
         $find = $this->btag;
         $tre = join('|', $find);
@@ -1378,7 +1378,7 @@ class Textile
     /**
      * @internal
      **/
-    function fBlock($m)
+    protected function fBlock($m)
     {
         list(, $tag, $att, $ext, $cite, $content) = $m;
         $atts = $this->parseAttribs($att);
@@ -1471,7 +1471,7 @@ class Textile
     /**
      * @internal
      **/
-    function formatFootnote($marker, $atts='', $anchor=true)
+    protected function formatFootnote($marker, $atts='', $anchor=true)
     {
         $pattern = ($anchor) ? $this->symbols['fn_foot_pattern'] : $this->symbols['fn_ref_pattern'];
         return $this->replaceMarkers($pattern, array('atts' => $atts, 'marker' => $marker));
@@ -1481,7 +1481,7 @@ class Textile
     /**
      * @internal
      **/
-    function replaceMarkers($text, $replacements)
+    protected function replaceMarkers($text, $replacements)
     {
         if (!empty($replacements))
             foreach ($replacements as $k => $r)
@@ -1493,7 +1493,7 @@ class Textile
     /**
      * @internal
      **/
-    function getHTMLComments($text)
+    protected function getHTMLComments($text)
     {
         $text = preg_replace_callback("/
             \<!--    #  start
@@ -1507,7 +1507,7 @@ class Textile
     /**
      * @internal
      **/
-    function fParseHTMLComments($m)
+    protected function fParseHTMLComments($m)
     {
         list(, $content) = $m;
         if ($this->restricted)
@@ -1521,7 +1521,7 @@ class Textile
     /**
      * @internal
      **/
-    function graf($text)
+    protected function graf($text)
     {
         // handle normal paragraph text
         if (!$this->lite) {
@@ -1566,7 +1566,7 @@ class Textile
      * @param  string $text The textile document to perform the replacements in.
      * @return string       The textile document with spans replaced by their HTML inline equivalents
      **/
-    function span($text)
+    protected function span($text)
     {
         $qtags = array('\*\*','\*','\?\?','-','__','_','%','\+','~','\^');
         $pnct = ".,\"'?!;:‹›«»„“”‚‘’";
@@ -1596,7 +1596,7 @@ class Textile
     /**
      * @internal
      **/
-    function fSpan($m)
+    protected function fSpan($m)
     {
         $qtags = array(
             '*'  => 'strong',
@@ -1634,7 +1634,7 @@ class Textile
     /**
      * @internal
      **/
-    function storeTags($opentag,$closetag='')
+    protected function storeTags($opentag,$closetag='')
     {
         $key = ($this->tag_index++);
 
@@ -1651,7 +1651,7 @@ class Textile
     /**
      * @internal
      **/
-    function retrieveTags($text)
+    protected function retrieveTags($text)
     {
         $text = preg_replace_callback('/textileopentag([\d]{10}z) /' , array(&$this, 'fRetrieveOpenTags'),  $text);
         $text = preg_replace_callback('/ textileclosetag([\d]{10}z)/', array(&$this, 'fRetrieveCloseTags'), $text);
@@ -1662,7 +1662,7 @@ class Textile
     /**
      * @internal
      **/
-    function fRetrieveOpenTags($m)
+    protected function fRetrieveOpenTags($m)
     {
         return $this->tagCache[$m[1]]['open'];
     }
@@ -1671,7 +1671,7 @@ class Textile
     /**
      * @internal
      **/
-    function fRetrieveCloseTags($m)
+    protected function fRetrieveCloseTags($m)
     {
         return $this->tagCache[$m[1]]['close'];
     }
@@ -1680,7 +1680,7 @@ class Textile
     /**
      * @internal
      **/
-    function placeNoteLists($text)
+    protected function placeNoteLists($text)
     {
         extract($this->regex_snippets);
 
@@ -1710,7 +1710,7 @@ class Textile
     /**
      * @internal
      **/
-    function fNoteLists($m)
+    protected function fNoteLists($m)
     {
         list(, $att, $start_char, $g_links, $extras) = $m;
         if (!$start_char) $start_char = 'a';
@@ -1758,7 +1758,7 @@ class Textile
     /**
      * @internal
      **/
-    function makeBackrefLink(&$info, $g_links, $i)
+    protected function makeBackrefLink(&$info, $g_links, $i)
     {
         $link    = '';
         $atts    = '';
@@ -1791,7 +1791,7 @@ class Textile
     /**
      * @internal
      **/
-    function fParseNoteDefs($m)
+    protected function fParseNoteDefs($m)
     {
         list(, $label, $link, $att, $content) = $m;
         // Assign an id if the note reference parse hasn't found the label yet.
@@ -1814,7 +1814,7 @@ class Textile
     /**
      * @internal
      **/
-    function noteRef($text)
+    protected function noteRef($text)
     {
         $text = preg_replace_callback("/
             \[                   #  start
@@ -1831,7 +1831,7 @@ class Textile
     /**
      * @internal
      **/
-    function fParseNoteRefs($m)
+    protected function fParseNoteRefs($m)
     {
         //   By the time this function is called, all the defs will have been processed
         // into the notes array. So now we can resolve the link numbers in the order
@@ -1878,7 +1878,7 @@ class Textile
      * @param  array   $m       Reference to an array to receive the parts the URI
      * @return bool             Match/nomatch of the URI pattern.
      **/
-    function parseURI($uri, &$m)
+    protected function parseURI($uri, &$m)
     {
         $r = "@^((?P<scheme>[^:/?#]+):)?(//(?P<authority>[^/?#]*))?(?P<path>[^?#]*)(\?(?P<query>[^#]*))?(#(?P<fragment>.*))?@";
         //      12                      3  4                       5               6  7                 8 9
@@ -1897,7 +1897,7 @@ class Textile
     /**
      * @internal
      **/
-    function addPart(&$mask, $name, &$parts) {
+    protected function addPart(&$mask, $name, &$parts) {
         return (in_array($name, $mask) && isset($parts[$name]) && '' !== $parts[$name]);
     }
 
@@ -1913,7 +1913,7 @@ class Textile
      * @param  bool   $encode Flag to control encoding of the path part of the rebuilt URI
      * @return string         The rebuilt URI
      **/
-    function rebuildURI($parts, $mask='scheme,authority,path,query,fragment', $encode=true)
+    protected function rebuildURI($parts, $mask='scheme,authority,path,query,fragment', $encode=true)
     {
         $mask = explode(',', $mask);
         $out  = '';
@@ -1961,7 +1961,7 @@ class Textile
      * @param  string $text  The source textile text
      * @return string        The document with tokens inserted representing the links
      **/
-    function links($text)
+    protected function links($text)
     {
         return preg_replace_callback('/
             (^|(?<=[\s>.\(\|])|[{[])   # $pre
@@ -1981,7 +1981,7 @@ class Textile
     /**
      * @internal
      **/
-    function fLink($m)
+    protected function fLink($m)
     {
         list(, $pre, $atts, $text, $title, $url, $slash, $post, $tail) = $m;
 
@@ -2054,7 +2054,7 @@ class Textile
       * @param  string $text textile document
       * @return string The textile document with any URI aliases/refs removed.
       **/
-    function getRefs($text)
+    protected function getRefs($text)
     {
         if ($this->restricted)
             $pattern = "/^\[(.+)\]((?:https?:\/\/|\/)\S+)(?=\s|$)/Um";
@@ -2067,7 +2067,7 @@ class Textile
     /**
      * @internal
      **/
-    function refs($m)
+    protected function refs($m)
     {
         list(, $flag, $url) = $m;
         $uri_parts = array();
@@ -2081,7 +2081,7 @@ class Textile
     /**
      * @internal
      **/
-    function shelveURL($text)
+    protected function shelveURL($text)
     {
         if ('' === $text) return '';
         $ref = md5($text).'z';
@@ -2093,7 +2093,7 @@ class Textile
     /**
      * @internal
      **/
-    function retrieveURLs($text)
+    protected function retrieveURLs($text)
     {
         return preg_replace_callback('/urlref:(\w{32}z)/', array(&$this, "retrieveURL"), $text);
     }
@@ -2102,7 +2102,7 @@ class Textile
     /**
      * @internal
      **/
-    function retrieveURL($m)
+    protected function retrieveURL($m)
     {
         $ref = $m[1];
         if (!isset($this->urlshelf[$ref])) return $ref;
@@ -2117,7 +2117,7 @@ class Textile
     /**
      * @internal
      **/
-    function relURL($url)
+    protected function relURL($url)
     {
         $parts = @parse_url(urldecode($url));
         if ((empty($parts['scheme']) or @$parts['scheme'] == 'http') and
@@ -2134,7 +2134,7 @@ class Textile
     /**
      * @internal
      **/
-    function isRelURL($url)
+    protected function isRelURL($url)
     {
         $parts = @parse_url($url);
         return (empty($parts['scheme']) and empty($parts['host']));
@@ -2150,7 +2150,7 @@ class Textile
      * @param  string $text Textile source text
      * @return string The input document with images pulled out and replaced with tokens
      **/
-    function image($text)
+    protected function image($text)
     {
         return preg_replace_callback('/
             (?:[[{])?                  # pre
@@ -2171,7 +2171,7 @@ class Textile
     /**
      * @internal
      **/
-    function fImage($m)
+    protected function fImage($m)
     {
         $extras = '';
         $align  = '';
@@ -2212,7 +2212,7 @@ class Textile
     /**
      * @internal
      **/
-    function code($text)
+    protected function code($text)
     {
         $text = $this->doSpecial($text, '<code>', '</code>', 'fCode');
         $text = $this->doSpecial($text, '@', '@', 'fCode');
@@ -2224,7 +2224,7 @@ class Textile
     /**
      * @internal
      **/
-    function fCode($m)
+    protected function fCode($m)
     {
         list(, $before, $text, $after) = array_pad($m, 4, '');
         return $before.$this->shelve('<code>'.$this->rEncodeHTML($text).'</code>').$after;
@@ -2234,7 +2234,7 @@ class Textile
     /**
      * @internal
      **/
-    function fPre($m)
+    protected function fPre($m)
     {
         list(, $before, $text, $after) = array_pad($m, 4, '');
         return $before.'<pre>'.$this->shelve($this->rEncodeHTML($text)).'</pre>'.$after;
@@ -2244,7 +2244,7 @@ class Textile
     /**
      * @internal
      **/
-    function shelve($val)
+    protected function shelve($val)
     {
         $i = uniqid(rand()).'z';
         $this->shelf[$i] = $val;
@@ -2255,7 +2255,7 @@ class Textile
     /**
      * @internal
      **/
-    function retrieve($text)
+    protected function retrieve($text)
     {
         if (is_array($this->shelf))
             do {
@@ -2275,7 +2275,7 @@ class Textile
      * @param  string $text Input textile text
      * @return string Cleaned version of the input
      **/
-    function cleanWhiteSpace($text)
+    protected function cleanWhiteSpace($text)
     {
         $out = preg_replace("/^\xEF\xBB\xBF|\x1A/", '', $text); // Byte order mark (if present)
         $out = preg_replace("/\r\n?/", "\n", $out);             // DOS and MAC line endings to *NIX style endings
@@ -2289,7 +2289,7 @@ class Textile
     /**
      * @internal
      **/
-    function doSpecial($text, $start, $end, $method='fSpecial')
+    protected function doSpecial($text, $start, $end, $method='fSpecial')
     {
         return preg_replace_callback('/(^|\s|[|[({>])'.preg_quote($start, '/').'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}|])?/ms', array(&$this, $method), $text);
     }
@@ -2298,7 +2298,7 @@ class Textile
     /**
      * @internal
      **/
-    function fSpecial($m)
+    protected function fSpecial($m)
     {
         // A special block like notextile or code
         list(, $before, $text, $after) = array_pad($m, 4, '');
@@ -2309,7 +2309,7 @@ class Textile
     /**
      * @internal
      **/
-    function noTextile($text)
+    protected function noTextile($text)
     {
          $text = $this->doSpecial($text, '<notextile>', '</notextile>', 'fTextile');
          return $this->doSpecial($text, '==', '==', 'fTextile');
@@ -2319,7 +2319,7 @@ class Textile
     /**
      * @internal
      **/
-    function fTextile($m)
+    protected function fTextile($m)
     {
         list(, $before, $notextile, $after) = array_pad($m, 4, '');
         return $before.$this->shelve($notextile).$after;
@@ -2329,7 +2329,7 @@ class Textile
     /**
      * @internal
      **/
-    function footnoteRef($text)
+    protected function footnoteRef($text)
     {
         return preg_replace_callback('/(?<=\S)\[(\d+)(!?)\]\s?/U', array(&$this, 'footnoteID'), $text);
     }
@@ -2338,7 +2338,7 @@ class Textile
     /**
      * @internal
      **/
-    function footnoteID($m)
+    protected function footnoteID($m)
     {
         list(, $id, $nolink) = array_pad($m, 3, '');
         $backref = ' class="footnote"';
@@ -2366,7 +2366,7 @@ class Textile
      * @param  string $text Input textile source text
      * @return string
      **/
-    function glyphs($text)
+    protected function glyphs($text)
     {
         // fix: hackish -- adds a space if final char of text is a double quote.
         $text = preg_replace('/"\z/', "\" ", $text);
@@ -2392,7 +2392,7 @@ class Textile
     /**
      * @internal
      **/
-    function replaceGlyphs($text)
+    protected function replaceGlyphs($text)
     {
         return preg_replace('/glyph:([^<]+)/','$1',$text);
     }
@@ -2401,7 +2401,7 @@ class Textile
     /**
      * @internal
      **/
-    function hAlign($in)
+    protected function hAlign($in)
     {
         $vals = array(
             '&lt;'     => 'left',
@@ -2418,7 +2418,7 @@ class Textile
     /**
      * @internal
      **/
-    function vAlign($in)
+    protected function vAlign($in)
     {
         $vals = array(
             '^' => 'top',
@@ -2431,7 +2431,7 @@ class Textile
     /**
      * @internal
      **/
-    function encodeHigh($text, $charset = "UTF-8")
+    protected function encodeHigh($text, $charset = "UTF-8")
     {
         return ($this->mb) ? mb_encode_numericentity($text, $this->cmap, $charset) : htmlentities($text, ENT_NOQUOTES, $charset);
     }
@@ -2440,7 +2440,7 @@ class Textile
     /**
      * @internal
      **/
-    function decodeHigh($text, $charset = "UTF-8")
+    protected function decodeHigh($text, $charset = "UTF-8")
     {
         $text = (ctype_digit($text)) ? "&#$text;" : "&$text;" ;
         return ($this->mb) ? mb_decode_numericentity($text, $this->cmap, $charset) : html_entity_decode($text, ENT_NOQUOTES, $charset);
@@ -2450,7 +2450,7 @@ class Textile
     /**
      * @internal
      **/
-    function encodeHTML($str, $quotes=1)
+    protected function encodeHTML($str, $quotes=1)
     {
         $a = array(
             '&' => '&amp;',
@@ -2469,7 +2469,7 @@ class Textile
     /**
      * @internal
      **/
-    function rEncodeHTML($str, $quotes=1)
+    protected function rEncodeHTML($str, $quotes=1)
     {
         // in restricted mode, all input but quotes has already been escaped
         if ($this->restricted)
