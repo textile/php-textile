@@ -783,7 +783,37 @@ Self-Hyperlink :
 
 Links :
   input  : |
+    "link text":http://example.com
+
+    "link text":http://example.com.
+
+    "link text":http://example.com,
+
+    "link text":http://example.com?
+
+    "link text":http://example.com:
+
+    "link text":http://example.com;
+
+    "link text":http://example.com|
+
+    "link text":http://example.com*
+
     "link text":http://example.com/
+
+    "link text":http://example.com/.
+
+    "link text":http://example.com/,
+
+    "link text":http://example.com/?
+
+    "link text":http://example.com/:
+
+    "link text":http://example.com/;
+
+    "link text":http://example.com/|
+
+    "link text":http://example.com/*
 
     ("link text":http://example.com)
 
@@ -816,7 +846,37 @@ Links :
     "(linkclass#linkid)[de-de]!(imgclass#imgid)imgurl(img/link text)!(Link Title)":linkurl
 
   expect : |
+    <p><a href="http://example.com">link text</a></p>
+
+    <p><a href="http://example.com">link text</a>.</p>
+
+    <p><a href="http://example.com">link text</a>,</p>
+
+    <p><a href="http://example.com">link text</a>?</p>
+
+    <p><a href="http://example.com">link text</a>:</p>
+
+    <p><a href="http://example.com">link text</a>;</p>
+
+    <p><a href="http://example.com">link text</a>|</p>
+
+    <p><a href="http://example.com">link text</a>*</p>
+
     <p><a href="http://example.com/">link text</a></p>
+
+    <p><a href="http://example.com/">link text</a>.</p>
+
+    <p><a href="http://example.com/">link text</a>,</p>
+
+    <p><a href="http://example.com/">link text</a>?</p>
+
+    <p><a href="http://example.com/">link text</a>:</p>
+
+    <p><a href="http://example.com/">link text</a>;</p>
+
+    <p><a href="http://example.com/">link text</a>|</p>
+
+    <p><a href="http://example.com/">link text</a>*</p>
 
     <p>(<a href="http://example.com">link text</a>)</p>
 
@@ -2295,7 +2355,7 @@ Simple Note Links:
 
 Links from already encoded URL:
   input:  |
-    French "Cheeses":https://en.wikipedia.org/wiki/Appellation_d%27Origine_Contr%C3%B4l%C3%A9e?
+    French "Cheeses":https://en.wikipedia.org/wiki/Appellation_d%27Origine_Contr%C3%B4l%C3%A9e
   expect: |
     <p>French <a href="https://en.wikipedia.org/wiki/Appellation_d%27Origine_Contr%C3%B4l%C3%A9e">Cheeses</a></p>
 

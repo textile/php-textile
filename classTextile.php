@@ -1552,7 +1552,7 @@ class Textile
 			":
 			('.$this->urlch.'+?)     # $url
 			(\/)?                    # $slash
-			([^'.$this->regex_snippets['wrd'].'\/;]*?)  # $post
+			([^'.$this->regex_snippets['wrd'].'\/]*?)  # $post
 			([\]}]|(?=\s|$|\)|\|))	 # $tail
 			/x'.$this->regex_snippets['mod'], array(&$this, "fLink"), $text);
 	}
@@ -1562,19 +1562,27 @@ class Textile
 	{
 		list(, $pre, $atts, $text, $title, $url, $slash, $post, $tail) = $m;
 
+		// Strip any ':' or '?' characters from the end of the url and return them to $post. This seems to be needed
+		// when using the unicode version of the word character class in the regex.
+		$a = array();
+		if (preg_match('/^(.*)([?:]+)$/', $url, $a)) {
+			$url   = $a[1];
+			$post .= $a[2];
+		}
+
 		$uri_parts = array();
-		$this->parseURI( $url, $uri_parts );
+		$this->parseURI($url, $uri_parts);
 
 		$scheme         = $uri_parts['scheme'];
 		$scheme_in_list = in_array( $scheme, $this->url_schemes );
 		$scheme_ok      = ('' === $scheme) || $scheme_in_list;
 
-		if( !$scheme_ok )
+		if (!$scheme_ok)
 			return $m[0];
 
-		if( '$' === $text ) {
-			if( $scheme_in_list )
-				$text = ltrim( $this->rebuildURI( $uri_parts, 'authority,path,query,fragment', false ), '/' );
+		if ('$' === $text) {
+			if ($scheme_in_list)
+				$text = ltrim($this->rebuildURI($uri_parts, 'authority,path,query,fragment', false), '/');
 			else {
 				if (isset($this->urlrefs[$url]))
 					$url = urldecode($this->urlrefs[$url]);
