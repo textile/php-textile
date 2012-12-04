@@ -2005,6 +2005,15 @@ class Textile
 			}
 		}
 
+		$text  = trim($text);
+		$title = $this->encodeHTML($title);
+
+		// If the text was in parenthesis and there was no title then the regex will have an empty $text and a non-empty $title so...
+		if (empty($text) && !empty($title)) {
+			$text  = "($title)";
+			$title = '';
+		}
+
 		if (!$this->noimage)
 			$text = $this->image($text);
 
@@ -2012,9 +2021,9 @@ class Textile
 		$text = $this->glyphs($text);
 		$url  = $this->shelveURL($this->rebuildURI($uri_parts) . $slash);
 
-		$a    = $this->newTag('a', $this->parseAttribsToArray($atts), false)->title($this->encodeHTML($title))->href($url, true)->rel($this->rel);
+		$a    = $this->newTag('a', $this->parseAttribsToArray($atts), false)->title($title)->href($url, true)->rel($this->rel);
 		$tags = $this->storeTags((string)$a, '</a>');
-		$out  = $tags['open'].trim($text).$tags['close'];
+		$out  = $tags['open'].$text.$tags['close'];
 
 		if (($pre and !$tail) or ($tail and !$pre))
 		{

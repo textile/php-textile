@@ -868,6 +868,8 @@ Links :
 
     "(linkclass#linkid)[de-de]!(imgclass#imgid)imgurl(img/link text)!(Link Title)":linkurl
 
+    "(myclass) (just in case you were wondering)":http://slashdot.org/
+
   expect : |
     <p><a href="http://example.com/">link text</a></p>
 
@@ -899,6 +901,7 @@ Links :
 
     <p><a class="linkclass" href="linkurl" id="linkid" lang="de-de" title="Link Title"><img alt="img/link text" class="imgclass" id="imgid" src="imgurl" title="img/link text" /></a></p>
 
+    <p><a class="myclass" href="http://slashdot.org/">(just in case you were wondering)</a></p>
 Unicode Links :
   input  : |
     "Übermensch":https://de.wikipedia.org/wiki/Übermensch
