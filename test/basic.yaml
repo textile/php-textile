@@ -836,7 +836,37 @@ Self-Hyperlink :
 
 Links :
   input  : |
+    "link text":http://example.com
+
+    "link text":http://example.com.
+
+    "link text":http://example.com,
+
+    "link text":http://example.com?
+
+    "link text":http://example.com:
+
+    "link text":http://example.com;
+
+    "link text":http://example.com|
+
+    "link text":http://example.com*
+
     "link text":http://example.com/
+
+    "link text":http://example.com/.
+
+    "link text":http://example.com/,
+
+    "link text":http://example.com/?
+
+    "link text":http://example.com/:
+
+    "link text":http://example.com/;
+
+    "link text":http://example.com/|
+
+    "link text":http://example.com/*
 
     ("link text":http://example.com)
 
@@ -871,7 +901,37 @@ Links :
     "(myclass) (just in case you were wondering)":http://slashdot.org/
 
   expect : |
+    <p><a href="http://example.com">link text</a></p>
+
+    <p><a href="http://example.com">link text</a>.</p>
+
+    <p><a href="http://example.com">link text</a>,</p>
+
+    <p><a href="http://example.com">link text</a>?</p>
+
+    <p><a href="http://example.com">link text</a>:</p>
+
+    <p><a href="http://example.com">link text</a>;</p>
+
+    <p><a href="http://example.com">link text</a>|</p>
+
+    <p><a href="http://example.com">link text</a>*</p>
+
     <p><a href="http://example.com/">link text</a></p>
+
+    <p><a href="http://example.com/">link text</a>.</p>
+
+    <p><a href="http://example.com/">link text</a>,</p>
+
+    <p><a href="http://example.com/">link text</a>?</p>
+
+    <p><a href="http://example.com/">link text</a>:</p>
+
+    <p><a href="http://example.com/">link text</a>;</p>
+
+    <p><a href="http://example.com/">link text</a>|</p>
+
+    <p><a href="http://example.com/">link text</a>*</p>
 
     <p>(<a href="http://example.com">link text</a>)</p>
 

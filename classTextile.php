@@ -1972,7 +1972,7 @@ class Textile
 			":
 			('.$this->urlch.'+?)       # $url
 			(\/)?                      # $slash
-			([^'.$this->regex_snippets['wrd'].'\/;]*?)  # $post
+			([^'.$this->regex_snippets['wrd'].'\/]*?)  # $post
 			([\]}]|(?=\s|$|\)|\|))	   # $tail
 			/x'.$this->regex_snippets['mod'], array(&$this, "fLink"), $text);
 	}
@@ -1984,6 +1984,14 @@ class Textile
 	function fLink($m)
 	{
 		list(, $pre, $atts, $text, $title, $url, $slash, $post, $tail) = $m;
+
+		// Strip any ':' or '?' characters from the end of the url and return them to $post. This seems to be needed
+		// when using the unicode version of the word character class in the regex.
+		$a = array();
+		if (preg_match('/^(.*)([?:]+)$/', $url, $a)) {
+			$url   = $a[1];
+			$post .= $a[2];
+		}
 
 		$uri_parts = array();
 		$this->parseURI($url, $uri_parts);
