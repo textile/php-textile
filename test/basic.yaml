@@ -2293,6 +2293,12 @@ Simple Note Links:
     <li><sup><a href="#noteref">‡</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
     </ol>
 
+Links from already encoded URL:
+  input:  |
+    French "Cheeses":https://en.wikipedia.org/wiki/Appellation_d%27Origine_Contr%C3%B4l%C3%A9e?
+  expect: |
+    <p>French <a href="https://en.wikipedia.org/wiki/Appellation_d%27Origine_Contr%C3%B4l%C3%A9e">Cheeses</a></p>
+
 Note Links.:
   input: |
     Scientists say[#lavader] the moon is quite small. But I, for one, don't believe them. Others claim it to be made of cheese[#aardman]. If this proves true I suspect we are in for troubled times[#apollo13] as people argue over their "share" of the moon's cheese. In the end, its limited size[#lavader] may prove problematic.
