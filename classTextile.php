@@ -1375,7 +1375,6 @@ class Textile
 	}
 
 
-
 	/**
 	 * @internal
 	 **/
@@ -1526,26 +1525,34 @@ class Textile
 	{
 		// handle normal paragraph text
 		if (!$this->lite) {
-			$text = $this->noTextile($text);
-			$text = $this->code($text);
+			$text = $this->noTextile($text);       // Notextile blocks and inlines
+			$text = $this->code($text);            // Handle code
 		}
 
-		$text = $this->getHTMLComments($text);
-		$text = $this->getRefs($text);
-		$text = $this->links($text);
+		$text = $this->getHTMLComments($text);     // HTML comments --
+		$text = $this->getRefs($text);             // Consume link aliases
+		$text = $this->links($text);               // Generate links
+
 		if (!$this->noimage)
-			$text = $this->image($text);
+			$text = $this->image($text);           // Handle images (if permitted)
 
 		if (!$this->lite) {
-			$text = $this->table($text);
-			$text = $this->redclothLists($text);
-			$text = $this->lists($text);
+			$text = $this->table($text);           // Handle tables
+			$text = $this->redclothLists($text);   // Handle redcloth-style definition lists
+			$text = $this->lists($text);           // Handle ordered & unordered lists plus txp-style definition lists
 		}
 
-		$text = $this->span($text);
-		$text = $this->footnoteRef($text);
-		$text = $this->noteRef($text);
-		$text = $this->glyphs($text);
+		$text = $this->span($text);                // Inline markup (em, strong, sup, sub, del etc)
+
+		if (!$this->lite) {
+			// Turn footnote references into supers or links. As footnote blocks are banned in lite mode there is no point generating links for them
+			$text = $this->footnoteRef($text);
+
+			// Turn note references into links
+			$text = $this->noteRef($text);
+		}
+
+		$text = $this->glyphs($text);              // Glyph level substitutions (mainly typographic -- " & ' => curly quotes, -- => em-dash etc.
 
 		return rtrim($text, "\n");
 	}
