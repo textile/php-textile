@@ -658,7 +658,7 @@ class Textile
 			$this->btag = array('bq', 'p');
 			$text = $this->block($text."\n\n");
 		} else {
-			$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', '###');
+			$this->btag = array('bq', 'p', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', '###');
 			$text = $this->block($text);
 			$text = $this->placeNoteLists($text);
 		}
