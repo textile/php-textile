@@ -648,6 +648,33 @@ class Textile
 
 
 	/**
+	 * Preform common parse actions
+	 *
+	 * @internal
+	 **/
+	function textileCommon($text, $lite)
+	{
+		if ($lite) {
+			$this->btag = array('bq', 'p');
+			$text = $this->block($text."\n\n");
+		} else {
+			$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', '###');
+			$text = $this->block($text);
+			$text = $this->placeNoteLists($text);
+		}
+
+		$text = $this->retrieve($text);
+		$text = $this->replaceGlyphs($text);
+		$text = $this->retrieveTags($text);
+		$text = $this->retrieveURLs($text);
+
+		$text = str_replace("<br />", "<br />\n", $text);
+
+		return $text;
+	}
+
+
+	/**
 	 * If needed, prepares the glyph find-and-replace patterns from the internal symbol table
 	 *
 	 * @internal
@@ -746,33 +773,6 @@ class Textile
 		$this->lite       = $lite;
 		$this->noimage    = $noimage;
 		$this->prepGlyphs();
-	}
-
-
-	/**
-	 * Preform common parse actions
-	 *
-	 * @internal
-	 **/
-	function textileCommon($text, $lite)
-	{
-		if ($lite) {
-			$this->btag = array('bq', 'p');
-			$text = $this->block($text."\n\n");
-		} else {
-			$this->btag = array('bq', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', 'p', '###');
-			$text = $this->block($text);
-			$text = $this->placeNoteLists($text);
-		}
-
-		$text = $this->retrieve($text);
-		$text = $this->replaceGlyphs($text);
-		$text = $this->retrieveTags($text);
-		$text = $this->retrieveURLs($text);
-
-		$text = str_replace("<br />", "<br />\n", $text);
-
-		return $text;
 	}
 
 
