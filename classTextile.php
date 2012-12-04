@@ -449,7 +449,7 @@ class Textile
      * @param  string $doctype  The output document type to target
      * @return void
      **/
-    public function Textile($doctype = 'xhtml')
+    public function __construct($doctype = 'xhtml')
     {
         $doctype_whitelist = array(
             'xhtml',
