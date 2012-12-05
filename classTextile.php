@@ -920,18 +920,21 @@ class Textile
 					$lists[$tl] = 2; // We're already in a <dl> so flag not to start another
 				}
 
+				$tabs = str_repeat("\t", strlen($tl));
 				$atts = $this->pba($atts);
 				if (!isset($lists[$tl])) {
 					$lists[$tl] = 1;
-					$line = "\t<" . $ltype . "l$atts$st>" . (($showitem) ? "\n\t\t<$litem>" . $content : '');
+					$line = "$tabs<" . $ltype . "l$atts$st>" . (($showitem) ? "\n$tabs\t<$litem>" . $content : '');
 				} else {
-					$line = ($showitem) ? "\t\t<$litem$atts>" . $content : '';
+					$line = ($showitem) ? "$tabs\t<$litem$atts>" . $content : '';
 				}
 
-				if((strlen($nl) <= strlen($tl))) $line .= (($showitem) ? "</$litem>" : '');
+				if((strlen($nl) <= strlen($tl)))
+					$line .= (($showitem) ? "</$litem>" : '');
+
 				foreach(array_reverse($lists) as $k => $v) {
 					if(strlen($k) > strlen($nl)) {
-						$line .= ($v==2) ? '' : "\n\t</" . $this->lT($k) . "l>";
+						$line .= ($v==2) ? '' : "\n$tabs</" . $this->lT($k) . "l>";
 						if((strlen($k) > 1) && ($v != 2))
 							$line .= "</".$litem.">";
 						unset($lists[$k]);
@@ -944,7 +947,8 @@ class Textile
 			}
 			$out[] = $line;
 		}
-		return $this->doTagBr($litem, join("\n", $out));
+		$out = implode("\n", $out);
+		return $this->doTagBr($litem, $out);
 	}
 
 // -------------------------------------------------------------
