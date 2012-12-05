@@ -220,7 +220,7 @@ Table syntax:
 		|And|Another|table|row|
 		|With an||empty|cell|
 
-		|=. My table caption goes here
+		|=. My table caption goes here  (NB. Table captions *must* be the first line of the table else treated as a center-aligned cell.)
 		|_. A|_. table|_. header|_.row|
 		|A|simple|table|row|
 
@@ -816,7 +816,7 @@ class Textile
 			unset($cells, $catts);
 		}
 
-		return "\t<table{$tatts}{$sum}>\n" .$cap. $colgrp. join("\n", $rows) . "\n".(($last_rgrp) ? "\t</t".$last_rgrp.">\n" : '')."\t</table>\n\n";
+		return "<table{$tatts}{$sum}>\n" .$cap. $colgrp. join("\n", $rows) . "\n".(($last_rgrp) ? "\t</t".$last_rgrp.">\n" : '')."</table>\n\n";
 	}
 
 // -------------------------------------------------------------
@@ -1116,10 +1116,10 @@ class Textile
 		if ($tag == "bq") {
 			$cite = $this->shelveURL($cite);
 			$cite = ($cite != '') ? ' cite="' . $cite . '"' : '';
-			$o1 = "\t<blockquote$cite$atts>\n";
+			$o1 = "<blockquote$cite$atts>\n";
 			$o2 = "\t\t<p".$this->pba($att, '', 0).">";
 			$c2 = "</p>";
-			$c1 = "\n\t</blockquote>";
+			$c1 = "\n</blockquote>";
 		}
 		elseif ($tag == 'bc') {
 			$o1 = "<pre$atts>";
@@ -1143,7 +1143,7 @@ class Textile
 			$eat = true;
 		}
 		else {
-			$o2 = "\t<$tag$atts>";
+			$o2 = "<$tag$atts>";
 			$c2 = "</$tag>";
 		}
 
