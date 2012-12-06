@@ -532,7 +532,7 @@ class Textile
 
 		if ($encode)
 		{
-			$text = $this->preg_replace("/&(?![#a-z0-9]+;)/i", "x%x%", $text);
+			$text = preg_replace("/&(?![#a-z0-9]+;)/i", "x%x%", $text);
 			$text = str_replace("x%x%", "&amp;", $text);
 			return $text;
 		}
