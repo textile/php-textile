@@ -489,18 +489,17 @@ class Textile
             'nl_ref_pattern'     => '<sup{atts}>{marker}</sup>',
         );
 
-        $this->hlgn = "(?:\<(?!>)|&lt;&gt;|&gt;|&lt;|(?<!<)\>|\<\>|\=|[()]+(?! ))";
-        $this->vlgn = "[\-^~]";
-        $this->clas = "(?:\([^)\n]+\))";    // Don't allow classes/ids/languages/styles to span across newlines if used in a dotall regex
-        $this->lnge = "(?:\[[^]\n]+\])";
-        $this->styl = "(?:\{[^}\n]+\})";
-        $this->cspn = "(?:\\\\\d+)";
-        $this->rspn = "(?:\/\d+)";
-        $this->a  = "(?:{$this->hlgn}|{$this->vlgn})*";
-        $this->s  = "(?:{$this->cspn}|{$this->rspn})*";
-        $this->c  = "(?:{$this->clas}|{$this->styl}|{$this->lnge}|{$this->hlgn})*";
-        $this->lc = "(?:{$this->clas}|{$this->styl}|{$this->lnge})*";
-
+        $this->hlgn  = "(?:\<(?!>)|&lt;&gt;|&gt;|&lt;|(?<!<)\>|\<\>|\=|[()]+(?! ))";
+        $this->vlgn  = "[\-^~]";
+        $this->clas  = "(?:\([^)\n]+\))";    // Don't allow classes/ids/languages/styles to span across newlines if used in a dotall regex
+        $this->lnge  = "(?:\[[^]\n]+\])";
+        $this->styl  = "(?:\{[^}\n]+\})";
+        $this->cspn  = "(?:\\\\\d+)";
+        $this->rspn  = "(?:\/\d+)";
+        $this->a     = "(?:$this->hlgn|$this->vlgn)*";
+        $this->s     = "(?:$this->cspn|$this->rspn)*";
+        $this->c     = "(?:$this->clas|$this->styl|$this->lnge|$this->hlgn)*";
+        $this->lc    = "(?:$this->clas|$this->styl|$this->lnge)*";
         $this->pnct  = '[\!"#\$%&\'()\*\+,\-\./:;<=>\?@\[\\\]\^_`{\|}\~]';
         $this->urlch = '[\w"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
         $this->syms  = '¤§µ¶†‡•∗∴◊♠♣♥♦';
@@ -509,7 +508,7 @@ class Textile
         $this->mb   = is_callable('mb_strlen');
         $this->cmap = array(0x0080, 0xffff, 0, 0xffff);
 
-        $this->restricted_url_schemes = array('http','https','ftp','mailto');
+        $this->restricted_url_schemes   = array('http','https','ftp','mailto');
         $this->unrestricted_url_schemes = array('http','https','ftp','mailto','file','tel','callto','sftp');
 
         if (@preg_match('/\pL/u', 'a')) {
@@ -618,7 +617,7 @@ class Textile
 
         if ($encode)
         {
-            $text = $this->preg_replace("/&(?![#a-z0-9]+;)/i", "x%x%", $text);
+            $text = preg_replace("/&(?![#a-z0-9]+;)/i", "x%x%", $text);
             $text = str_replace("x%x%", "&amp;", $text);
             return $text;
         }
