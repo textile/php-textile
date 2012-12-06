@@ -220,7 +220,7 @@ Table syntax:
 		|And|Another|table|row|
 		|With an||empty|cell|
 
-		|=. My table caption goes here
+		|=. My table caption goes here  (NB. Table captions *must* be the first line of the table else treated as a center-aligned cell.)
 		|_. A|_. table|_. header|_.row|
 		|A|simple|table|row|
 
@@ -816,7 +816,7 @@ class Textile
 			unset($cells, $catts);
 		}
 
-		return "\t<table{$tatts}{$sum}>\n" .$cap. $colgrp. join("\n", $rows) . "\n".(($last_rgrp) ? "\t</t".$last_rgrp.">\n" : '')."\t</table>\n\n";
+		return "<table{$tatts}{$sum}>\n" .$cap. $colgrp. join("\n", $rows) . "\n".(($last_rgrp) ? "\t</t".$last_rgrp.">\n" : '')."</table>\n\n";
 	}
 
 // -------------------------------------------------------------
@@ -920,18 +920,21 @@ class Textile
 					$lists[$tl] = 2; // We're already in a <dl> so flag not to start another
 				}
 
+				$tabs = str_repeat("\t", strlen($tl));
 				$atts = $this->pba($atts);
 				if (!isset($lists[$tl])) {
 					$lists[$tl] = 1;
-					$line = "\t<" . $ltype . "l$atts$st>" . (($showitem) ? "\n\t\t<$litem>" . $content : '');
+					$line = "$tabs<" . $ltype . "l$atts$st>" . (($showitem) ? "\n$tabs\t<$litem>" . $content : '');
 				} else {
-					$line = ($showitem) ? "\t\t<$litem$atts>" . $content : '';
+					$line = ($showitem) ? "$tabs\t<$litem$atts>" . $content : '';
 				}
 
-				if((strlen($nl) <= strlen($tl))) $line .= (($showitem) ? "</$litem>" : '');
+				if((strlen($nl) <= strlen($tl)))
+					$line .= (($showitem) ? "</$litem>" : '');
+
 				foreach(array_reverse($lists) as $k => $v) {
 					if(strlen($k) > strlen($nl)) {
-						$line .= ($v==2) ? '' : "\n\t</" . $this->lT($k) . "l>";
+						$line .= ($v==2) ? '' : "\n$tabs</" . $this->lT($k) . "l>";
 						if((strlen($k) > 1) && ($v != 2))
 							$line .= "</".$litem.">";
 						unset($lists[$k]);
@@ -944,7 +947,8 @@ class Textile
 			}
 			$out[] = $line;
 		}
-		return $this->doTagBr($litem, join("\n", $out));
+		$out = implode("\n", $out);
+		return $this->doTagBr($litem, $out);
 	}
 
 // -------------------------------------------------------------
@@ -1116,10 +1120,10 @@ class Textile
 		if ($tag == "bq") {
 			$cite = $this->shelveURL($cite);
 			$cite = ($cite != '') ? ' cite="' . $cite . '"' : '';
-			$o1 = "\t<blockquote$cite$atts>\n";
+			$o1 = "<blockquote$cite$atts>\n";
 			$o2 = "\t\t<p".$this->pba($att, '', 0).">";
 			$c2 = "</p>";
-			$c1 = "\n\t</blockquote>";
+			$c1 = "\n</blockquote>";
 		}
 		elseif ($tag == 'bc') {
 			$o1 = "<pre$atts>";
@@ -1143,7 +1147,7 @@ class Textile
 			$eat = true;
 		}
 		else {
-			$o2 = "\t<$tag$atts>";
+			$o2 = "<$tag$atts>";
 			$c2 = "</$tag>";
 		}
 
