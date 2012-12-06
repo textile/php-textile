@@ -846,6 +846,8 @@ Links :
 
     "link text":http://example.com:
 
+    "link text":http://example.com:80
+
     "link text":http://example.com;
 
     "link text":http://example.com|
@@ -861,6 +863,8 @@ Links :
     "link text":http://example.com/?
 
     "link text":http://example.com/:
+
+    "link text":http://example.com/:80
 
     "link text":http://example.com/;
 
@@ -911,6 +915,8 @@ Links :
 
     <p><a href="http://example.com">link text</a>:</p>
 
+    <p><a href="http://example.com:80">link text</a></p>
+
     <p><a href="http://example.com">link text</a>;</p>
 
     <p><a href="http://example.com">link text</a>|</p>
@@ -926,6 +932,8 @@ Links :
     <p><a href="http://example.com/">link text</a>?</p>
 
     <p><a href="http://example.com/">link text</a>:</p>
+
+    <p><a href="http://example.com/%3A80">link text</a></p>
 
     <p><a href="http://example.com/">link text</a>;</p>
 
