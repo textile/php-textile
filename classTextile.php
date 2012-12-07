@@ -219,7 +219,7 @@ Table syntax:
         |And|Another|table|row|
         |With an||empty|cell|
 
-        |=. My table caption goes here
+        |=. My table caption goes here  (NB. Table captions *must* be the first line of the table else treated as a center-aligned cell.)
         |_. A|_. table|_. header|_.row|
         |A|simple|table|row|
 
