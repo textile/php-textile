@@ -600,6 +600,20 @@ class Textile
 
 
     /**
+     * Encodes the given text.
+     *
+     * @param  string $text The text to be encoded.
+     * @return string The encoded text.
+     **/
+    public function textileEncode($text)
+    {
+        $text = preg_replace("/&(?![#a-z0-9]+;)/i", "x%x%", $text);
+        $text = str_replace("x%x%", "&amp;", $text);
+        return $text;
+    }
+
+
+    /**
      * Causes an un-restricted parse of the input textile text to start.
      *
      * @param  string $text      The input document in textile format
@@ -615,12 +629,8 @@ class Textile
         $this->prepare($lite, $noimage, $rel);
         $this->url_schemes = $this->unrestricted_url_schemes;
 
-        if ($encode)
-        {
-            $text = preg_replace("/&(?![#a-z0-9]+;)/i", "x%x%", $text);
-            $text = str_replace("x%x%", "&amp;", $text);
-            return $text;
-        }
+        if ($encode)  // Use of the $encode flag is discouraged. Calling textileEncode() is prefered.
+            return $this->textileEncode($text);
 
         if (!$strict)
             $text = $this->cleanWhiteSpace($text);
