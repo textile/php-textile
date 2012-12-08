@@ -525,17 +525,22 @@ class Textile
 
 // -------------------------------------------------------------
 
+	function TextileEncode($text)
+	{
+		$text = preg_replace("/&(?![#a-z0-9]+;)/i", "x%x%", $text);
+		$text = str_replace("x%x%", "&amp;", $text);
+		return $text;
+	}
+
+// -------------------------------------------------------------
+
 	function TextileThis($text, $lite = '', $encode = '', $noimage = '', $strict = '', $rel = '')
 	{
 		$this->prepare($lite, $noimage, $rel);
 		$this->url_schemes = $this->unrestricted_url_schemes;
 
-		if ($encode)
-		{
-			$text = preg_replace("/&(?![#a-z0-9]+;)/i", "x%x%", $text);
-			$text = str_replace("x%x%", "&amp;", $text);
-			return $text;
-		}
+		if ($encode) // Use of the $encode flag is discouraged. Calling TextileEncode() is prefered.
+			return $this->TextileEncode($text);
 
 		if(!$strict)
 			$text = $this->cleanWhiteSpace($text);
