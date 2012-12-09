@@ -675,7 +675,7 @@ class Textile
         $this->url_schemes = $this->restricted_url_schemes;
         $this->restricted = true;
 
-        // escape any raw html
+        // Escape any raw html
         $text = $this->encodeHTML($text, 0);
         $text = $this->cleanWhiteSpace($text);
 
@@ -684,7 +684,7 @@ class Textile
 
 
     /**
-     * Preform common parse actions
+     * Perform common parse actions
      *
      * @internal
      **/
@@ -729,56 +729,56 @@ class Textile
             $cur = '(?:['.$cur.']\s*)?';
 
         $this->glyph_search = array(
-            '/([0-9]+[\])]?[\'"]? ?)[xX]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]+)/'.$mod,   // dimension sign
+            '/([0-9]+[\])]?[\'"]? ?)[xX]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]+)/'.$mod,   // Dimension sign
             '/('.$wrd.'|\))\'('.$wrd.')/'.$mod,     // I'm an apostrophe
-            '/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod,    // back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
-            "/([([{])'(?=\S)/",                     // single open following open bracket
-            '/(\S)\'(?=\s|'.$pnc.'|<|$)/',          // single closing
-            "/'/",                                  // default single opening
-            '/([([{])"(?=\S)/',                     // double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
-            '/(\S)"(?=\s|'.$pnc.'|<|$)/',           // double closing
-            '/"/',                                  // default double opening
+            '/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod,    // Back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
+            "/([([{])'(?=\S)/",                     // Single open following open bracket
+            '/(\S)\'(?=\s|'.$pnc.'|<|$)/',          // Single closing
+            "/'/",                                  // Default single opening
+            '/([([{])"(?=\S)/',                     // Double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
+            '/(\S)"(?=\s|'.$pnc.'|<|$)/',           // Double closing
+            '/"/',                                  // Default double opening
             '/\b(['.$abr.']['.$acr.']{2,})\b(?:[(]([^)]*)[)])/'.$mod,  // 3+ uppercase acronym
             '/(?<=\s|^|[>(;-])(['.$abr.']{3,})(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod,  // 3+ uppercase
-            '/([^.]?)\.{3}/',                       // ellipsis
+            '/([^.]?)\.{3}/',                       // Ellipsis
             '/--/',                                 // em dash
             '/ - /',                                // en dash
-            '/(\b ?|\s|^)[([]TM[])]/i',             // trademark
-            '/(\b ?|\s|^)[([]R[])]/i',              // registered
-            '/(\b ?|\s|^)[([]C[])]/i',              // copyright
+            '/(\b ?|\s|^)[([]TM[])]/i',             // Trademark
+            '/(\b ?|\s|^)[([]R[])]/i',              // Registered
+            '/(\b ?|\s|^)[([]C[])]/i',              // Copyright
             '/[([]1\/4[])]/',                       // 1/4
             '/[([]1\/2[])]/',                       // 1/2
             '/[([]3\/4[])]/',                       // 3/4
-            '/[([]o[])]/',                          // degrees -- that's a small 'oh'
-            '/[([]\+\/-[])]/',                      // plus minus
+            '/[([]o[])]/',                          // Degrees -- that's a small 'oh'
+            '/[([]\+\/-[])]/',                      // Plus minus
         );
 
         $this->glyph_replace = array(
-            '$1'.$txt_dimension.'$2',               // dimension sign
+            '$1'.$txt_dimension.'$2',               // Dimension sign
             '$1'.$txt_apostrophe.'$2',              // I'm an apostrophe
-            '$1'.$txt_apostrophe.'$2',              // back in '88
-            '$1'.$txt_quote_single_open,            // single open following open bracket
-            '$1'.$txt_quote_single_close,           // single closing
-            $txt_quote_single_open,                 // default single opening
-            '$1'.$txt_quote_double_open,            // double open following open bracket
-            '$1'.$txt_quote_double_close,           // double closing
-            $txt_quote_double_open,                 // default double opening
+            '$1'.$txt_apostrophe.'$2',              // Back in '88
+            '$1'.$txt_quote_single_open,            // Single open following open bracket
+            '$1'.$txt_quote_single_close,           // Single closing
+            $txt_quote_single_open,                 // Default single opening
+            '$1'.$txt_quote_double_open,            // Double open following open bracket
+            '$1'.$txt_quote_double_close,           // Double closing
+            $txt_quote_double_open,                 // Default double opening
             (('html5' === $this->doctype) ? '<abbr title="$2">$1</abbr>' : '<acronym title="$2">$1</acronym>'),     // 3+ uppercase acronym
             '<span class="caps">glyph:$1</span>$2', // 3+ uppercase
-            '$1'.$txt_ellipsis,                     // ellipsis
+            '$1'.$txt_ellipsis,                     // Ellipsis
             $txt_emdash,                            // em dash
             ' '.$txt_endash.' ',                    // en dash
-            '$1'.$txt_trademark,                    // trademark
-            '$1'.$txt_registered,                   // registered
-            '$1'.$txt_copyright,                    // copyright
+            '$1'.$txt_trademark,                    // Trademark
+            '$1'.$txt_registered,                   // Registered
+            '$1'.$txt_copyright,                    // Copyright
             $txt_quarter,                           // 1/4
             $txt_half,                              // 1/2
             $txt_threequarters,                     // 3/4
-            $txt_degrees,                           // degrees
-            $txt_plusminus,                         // plus minus
+            $txt_degrees,                           // Degrees
+            $txt_plusminus,                         // Plus minus
         );
 
-        $this->rebuild_glyphs = false; // no need to rebuild next run unless a symbol is redefined
+        $this->rebuild_glyphs = false; // No need to rebuild next run unless a symbol is redefined
     }
 
 
@@ -1005,11 +1005,12 @@ class Textile
 
 
     /**
+     * Checks whether the text has text not already enclosed by a block tag
+	 *
      * @internal
      **/
     protected function hasRawText($text)
     {
-        // checks whether the text has text not already enclosed by a block tag
         $r = trim(preg_replace('@<(p|blockquote|div|form|table|ul|ol|dl|pre|h\d)[^>]*?'.chr(62).'.*</\1>@s', '', trim($text)));
         $r = trim(preg_replace('@<(hr|br)[^>]*?/>@', '', $r));
         return '' != $r;
@@ -1217,24 +1218,24 @@ class Textile
                 $litem = (strpos($tl, ';') !== false) ? 'dt' : ((strpos($tl, ':') !== false) ? 'dd' : 'li');
                 $showitem = (strlen($content) > 0);
 
-                if ('o' === $ltype) {                    // handle list continuation/start attribute on ordered lists...
+                if ('o' === $ltype) {                           // Handle list continuation/start attribute on ordered lists...
                     if (!isset($this->olstarts[$tl]))
                         $this->olstarts[$tl] = 1;
 
-                    if (strlen($tl) > strlen($pt)) {            // first line of this level of ol -- has a start attribute?
+                    if (strlen($tl) > strlen($pt)) {            // First line of this level of ol -- has a start attribute?
                         if ('' == $st)
-                            $this->olstarts[$tl] = 1;            // no => reset count to 1.
+                            $this->olstarts[$tl] = 1;           // No => reset count to 1.
                         elseif ('_' !== $st)
-                            $this->olstarts[$tl] = (int)$st;    // yes, and numeric => reset to given.
+                            $this->olstarts[$tl] = (int)$st;    // Yes, and numeric => reset to given.
                                                                 // TRICKY: the '_' continuation marker just means
                                                                 // output the count so don't need to do anything
                                                                 // here.
                     }
 
-                    if ((strlen($tl) > strlen($pt)) && '' !== $st)        // output the start attribute if needed...
+                    if ((strlen($tl) > strlen($pt)) && '' !== $st)        // Output the start attribute if needed...
                         $st = ' start="' . $this->olstarts[$tl] . '"';
 
-                    if ($showitem)                             // TRICKY: Only increment the count for list items; not when a list definition line is encountered.
+                    if ($showitem)                              // TRICKY: Only increment the count for list items; not when a list definition line is encountered.
                         $this->olstarts[$tl] += 1;
                 }
 
@@ -1364,25 +1365,25 @@ class Textile
         foreach ($text as $line) {
             $anon = 0;
             if (preg_match("/^($tre)($this->a$this->c)\.(\.?)(?::(\S+))? (.*)$/s", $line, $m)) {
-                // last block was extended, so close it
+                // Last block was extended, so close it
                 if ($ext)
                     $out[count($out)-1] .= $c1;
-                // new block
+                // New block
                 list(,$tag,$atts,$ext,$cite,$graf) = $m;
                 list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0,$tag,$atts,$ext,$cite,$graf));
 
-                // leave off c1 if this block is extended, we'll close it at the start of the next block
+                // Leave off c1 if this block is extended, we'll close it at the start of the next block
                 if ($ext)
                     $line = $o1.$o2.$content.$c2;
                 else
                     $line = $o1.$o2.$content.$c2.$c1;
             }
             else {
-                // anonymous block
+                // Anonymous block
                 $anon = 1;
                 if ($ext or !preg_match('/^ /', $line)) {
                     list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0,$tag,$atts,$ext,$cite,$line));
-                    // skip $o1/$c1 because this is part of a continuing extended block
+                    // Skip $o1/$c1 because this is part of a continuing extended block
                     if ($tag == 'p' and !$this->hasRawText($content)) {
                         $line = $content;
                     }
@@ -1564,7 +1565,7 @@ class Textile
      **/
     protected function graf($text)
     {
-        // handle normal paragraph text
+        // Handle normal paragraph text
         if (!$this->lite) {
             $text = $this->noTextile($text);       // Notextile blocks and inlines
             $text = $this->code($text);            // Handle code
@@ -1722,7 +1723,7 @@ class Textile
                     $info['seq'] = $label;
                     $o[$i] = $info;
                 } else {
-                    $this->unreferencedNotes[] = $info;    // unreferenced definitions go here for possible future use.
+                    $this->unreferencedNotes[] = $info;    // Unreferenced definitions go here for possible future use.
                 }
             }
             if (!empty($o)) ksort($o);
@@ -1914,7 +1915,7 @@ class Textile
         //
         //    scheme    = $2
         //    authority = $4
-        //     path      = $5
+        //    path      = $5
         //    query     = $7
         //    fragment  = $9
 
@@ -2002,7 +2003,7 @@ class Textile
             ('.$this->urlch.'+?)       # $url
             (\/)?                      # $slash
             ([^'.$this->regex_snippets['wrd'].'\/]*?)  # $post
-            ([\]}]|(?=\s|$|\)|\|))       # $tail
+            ([\]}]|(?=\s|$|\)|\|))     # $tail
             /x'.$this->regex_snippets['mod'], array(&$this, "fLink"), $text);
     }
 
@@ -2101,7 +2102,7 @@ class Textile
         list(, $flag, $url) = $m;
         $uri_parts = array();
         $this->parseURI($url, $uri_parts);
-        $url = ltrim($this->rebuildURI($uri_parts)); // encodes URL if needed.
+        $url = ltrim($this->rebuildURI($uri_parts)); // Encodes URL if needed.
         $this->urlrefs[$flag] = $url;
         return '';
     }
@@ -2397,15 +2398,15 @@ class Textile
      **/
     protected function glyphs($text)
     {
-        // fix: hackish -- adds a space if final char of text is a double quote.
+        // Fix: hackish -- adds a space if final char of text is a double quote.
         $text = preg_replace('/"\z/', "\" ", $text);
 
         $text = preg_split("@(<[\w/!?].*>)@Us", $text, -1, PREG_SPLIT_DELIM_CAPTURE);
         $i = 0;
         foreach ($text as $line) {
-            // text tag text tag text ...
+            // Text tag text tag text ...
             if (++$i % 2) {
-                // raw < > & chars are already entity encoded in restricted mode
+                // Raw < > & chars are already entity encoded in restricted mode
                 if (!$this->restricted) {
                     $line = preg_replace('/&(?!#?[a-z0-9]+;)/i', '&amp;', $line);
                     $line = str_replace(array('<', '>'), array('&lt;', '&gt;'), $line);
@@ -2487,7 +2488,7 @@ class Textile
             '>' => '&gt;',
         );
         if ($quotes) $a = $a + array(
-            "'" => '&#39;', // numeric, as in htmlspecialchars
+            "'" => '&#39;', // Numeric, as in htmlspecialchars
             '"' => '&quot;',
         );
 
@@ -2500,7 +2501,7 @@ class Textile
      **/
     protected function rEncodeHTML($str, $quotes=1)
     {
-        // in restricted mode, all input but quotes has already been escaped
+        // In restricted mode, all input but quotes has already been escaped
         if ($this->restricted)
             return str_replace('"', '&quot;', $str);
         return $this->encodeHTML($str, $quotes);
