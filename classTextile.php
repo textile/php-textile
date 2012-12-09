@@ -3,8 +3,8 @@
 /**
  * Example: get XHTML from a given Textile-markup string ($string)
  *
- *          $textile = new Textile();
- *          echo $textile->TextileThis($string);
+ * $textile = new Textile();
+ * echo $textile->textileThis($string);
  *
  */
 
@@ -26,7 +26,7 @@ Additions and fixes Copyright (c) 2006    Alex Shiels       http://thresholdstat
 Additions and fixes Copyright (c) 2010    Stef Dawson       http://stefdawson.com/
 Additions and fixes Copyright (c) 2010-12 Netcarver         http://github.com/netcarver
 Additions and fixes Copyright (c) 2011    Jeff Soo          http://ipsedixit.net
-Additions and fixes Copyright (c) 2012    Robert Wetzlmayr     http://wetzlmayr.com/
+Additions and fixes Copyright (c) 2012    Robert Wetzlmayr  http://wetzlmayr.com/
 
 _____________
 L I C E N S E
@@ -1089,7 +1089,7 @@ class Textile
                     $a = array();
                     if (preg_match('/(\s*)(.*)/s', $cell, $a)) {
                         $cell = $this->redclothLists($a[2]);
-                        $cell = $this->lists($cell);
+                        $cell = $this->textileLists($cell);
                         $cell = $a[1] . $cell;
                     }
                 }
@@ -1181,16 +1181,16 @@ class Textile
      * @param  string $text  Input textile source to parse for lists
      * @return string Text with lists replaced with tokens
      **/
-    protected function lists($text)
+    protected function textileLists($text)
     {
-        return preg_replace_callback("/^((?:[*;:]+|[*;:#]*#(?:_|\d+)?)$this->lc[ .].*)$(?![^#*;:])/smU", array(&$this, "fList"), $text);
+        return preg_replace_callback("/^((?:[*;:]+|[*;:#]*#(?:_|\d+)?)$this->lc[ .].*)$(?![^#*;:])/smU", array(&$this, "fTextileList"), $text);
     }
 
 
     /**
      * @internal
      **/
-    protected function fList($m)
+    protected function fTextileList($m)
     {
         $text = preg_split('/\n(?=[*#;:])/m', $m[0]);
         $pt = '';
@@ -1567,7 +1567,7 @@ class Textile
         if (!$this->lite) {
             $text = $this->table($text);           // Handle tables
             $text = $this->redclothLists($text);   // Handle redcloth-style definition lists
-            $text = $this->lists($text);           // Handle ordered & unordered lists plus txp-style definition lists
+            $text = $this->textileLists($text);    // Handle ordered & unordered lists plus txp-style definition lists
         }
 
         $text = $this->span($text);                // Inline markup (em, strong, sup, sub, del etc)
