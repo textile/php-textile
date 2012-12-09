@@ -34,7 +34,7 @@ bc. $output = $textile->TextileRestricted( $untrusted_input );
 
 h3. Doctypes
 
-From v2.3.2 onward, PHP Textile can target either XHTML or HTML5 output with XHTML being the default for backward compatibility. If you need HTML5 generation, just do...
+Currently, PHP Textile can target either XHTML or HTML5 output with XHTML being the default for backward compatibility. If you need HTML5 generation, just do...
 
 bc.. $textile = new Textile('html5');
 
@@ -52,7 +52,7 @@ $out = $textile
     ->textileThis($article)
     ;
 
-p. The symbol names that can be passed in to @setSymbol()@ can be found "here":https://github.com/netcarver/textile/blob/582fb7e2af83bb043fe6dd3846220796c814f999/classTextile.php#L468.
+p. The symbol names you can pass to @setSymbol()@ can be found "here":https://github.com/netcarver/textile/blob/582fb7e2af83bb043fe6dd3846220796c814f999/classTextile.php#L468.
 
 h3. Prefixing relative image paths
 
