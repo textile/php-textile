@@ -40,8 +40,6 @@ bc.. $textile = new Textile('html5');
 
 p. ...and you'll get @abbr@ instead of @acronym@ and if you use alignment markers on your images you'll have extra classes placed on them instead of xhtml's @align@ attribute.
 
-
-
 h3. Setting alternate glyphs
 
 From v2.5 on, you can no longer use the legacy 'txt_' defines to override the characters textile will use when doing typographic substitutions. If you need to setup textile to do non-standard typographic substitutions then you need to call @setSymbol('name', 'value');@ to setup the symbol table before you call @textileThis()@ or @textileRestricted()@.
@@ -54,6 +52,7 @@ $out = $textile
     ->textileThis($article)
     ;
 
+p. The symbol names that can be passed in to @setSymbol()@ can be found "here":https://github.com/netcarver/textile/blob/582fb7e2af83bb043fe6dd3846220796c814f999/classTextile.php#L468.
 
 h3. Prefixing relative image paths
 
@@ -65,6 +64,7 @@ $out = $textile
    ->textileThis($article)            // format the article
    ;
 
+p. Textpattern is one project that is known to use this feature.
 
 h2. Getting In Contact
 
