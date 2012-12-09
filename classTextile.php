@@ -534,6 +534,19 @@ class Textile
         extract($this->regex_snippets);
         $this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
 
+        $this->span_tags = array(
+            '*'  => 'strong',
+            '**' => 'b',
+            '??' => 'cite',
+            '_'  => 'em',
+            '__' => 'i',
+            '-'  => 'del',
+            '%'  => 'span',
+            '+'  => 'ins',
+            '~'  => 'sub',
+            '^'  => 'sup',
+        );
+
         if (defined('DIRECTORY_SEPARATOR'))
             $this->ds = constant('DIRECTORY_SEPARATOR');
         else
@@ -1596,14 +1609,15 @@ class Textile
      **/
     protected function span($text)
     {
-        $qtags = array('\*\*','\*','\?\?','-','__','_','%','\+','~','\^');
+        $span_tags = array_keys($this->span_tags);
         $pnct = ".,\"'?!;:‹›«»„“”‚‘’";
         $this->span_depth++;
 
         if ($this->span_depth <= $this->max_span_depth)
         {
-            foreach ($qtags as $f)
+            foreach ($span_tags as $f)
             {
+                $f = preg_quote($f);
                 $text = preg_replace_callback("/
                     (^|(?<=[\s>$pnct\(])|[{[])            # pre
                     ($f)(?!$f)                            # tag
@@ -1626,22 +1640,9 @@ class Textile
      **/
     protected function fSpan($m)
     {
-        $qtags = array(
-            '*'  => 'strong',
-            '**' => 'b',
-            '??' => 'cite',
-            '_'  => 'em',
-            '__' => 'i',
-            '-'  => 'del',
-            '%'  => 'span',
-            '+'  => 'ins',
-            '~'  => 'sub',
-            '^'  => 'sup',
-        );
-
         list(, $pre, $tag, $atts, $cite, $content, $end, $tail) = $m;
 
-        $tag  = $qtags[$tag];
+        $tag  = $this->span_tags[$tag];
         $atts = $this->parseAttribs($atts);
         $atts .= ($cite != '') ? 'cite="' . $cite . '"' : '';
 
