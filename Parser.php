@@ -1,5 +1,8 @@
 <?php
 
+namespace Netcarver\Textile;
+
+
 /**
  * Example: get XHTML from a given Textile-markup string ($string)
  *
@@ -324,91 +327,12 @@ Ordered List Start & Continuation:
 
         #_ Item 7
         # Item 8
-
 */
 
-
-/**
- * Class to allow simple assignment to members of the internal data array
- **/
-class TextileBag
+class Parser
 {
-    protected $data;
+    protected $ver = '2.4.1';
 
-
-    public function __construct($initial_data)
-    {
-        $this->data = (is_array($initial_data)) ? $initial_data : array();
-    }
-
-
-    /**
-     * Allows setting of an element in the $data array. eg...
-     *
-     * $bag->key(value);
-     *
-     * ...sets $bag's $data['key'] to $value provided $value is not empty.
-     * The set can be made forced by following $value with true...
-     *
-     * $bag->key(value, true);
-     *
-     * Would force the value into the data array even if it were empty.
-     **/
-    public function __call($k, $params)
-    {
-        $allow_empty = isset($params[1]) && is_bool($params[1]) ? $params[1] : false;
-        if ($allow_empty || '' != $params[0])
-            $this->data[$k] = $params[0];
-
-        return $this;
-    }
-}
-
-
-/**
- * Class to allow contruction of HTML tags on conversion of an object to a string
- *
- * Example usage...
- *
- * $img = new TextileTag('img')->class('big blue')->src('images/elephant.jpg');
- * echo $img;
- **/
-class TextileTag extends TextileBag
-{
-    protected $tag;
-    protected $selfclose;
-
-
-    public function __construct($name, $attribs=array(), $selfclosing=true)
-    {
-        parent::__construct($attribs);
-        $this->tag = $name;
-        $this->selfclose = $selfclosing;
-    }
-
-
-    public function __toString() {
-        $attribs = '';
-
-        if (count($this->data)) {
-            ksort($this->data);
-            foreach ($this->data as $k=>$v)
-                $attribs .= " $k=\"$v\"";
-        }
-
-        if ($this->tag)
-            $o = '<' . $this->tag . $attribs . (($this->selfclose) ? " />" : '>');
-        else
-            $o = $attribs;
-
-        return $o;
-    }
-}
-
-
-
-class Textile
-{
     protected $hlgn;
     protected $vlgn;
     protected $clas;
@@ -433,13 +357,8 @@ class Textile
     protected $rebuild_glyphs = true;
     protected $relativeImagePrefix = '';
     protected $max_span_depth = 5;
-
-    protected $ver = '2.4.1';
-
     protected $doc_root;
-
     protected $doctype;
-
     protected $symbols;
 
 
@@ -839,18 +758,18 @@ class Textile
 
 
     /**
-     * Helper method that creates a new instance of TextileTag
+     * Helper method that creates a new instance of Netcarver\Textile\Tag
      *
      * @internal
      *
      * @param  string $name        The type of tag to create. eg. newTag('p',...) for a paragraph tag.
      * @param         $atts        The textile attributes to apply to the tag
      * @param  bool   $selfclosing Determines if the tag should be selfclosing. Default: true
-     * @return TextileTag
+     * @return Netcarver\Textile\Tag
      **/
     protected function newTag($name, $atts, $selfclosing = true)
     {
-        return new TextileTag($name, $atts, $selfclosing);
+        return new Netcarver\Textile\Tag($name, $atts, $selfclosing);
     }
 
 
@@ -1006,7 +925,7 @@ class Textile
 
     /**
      * Checks whether the text has text not already enclosed by a block tag
-	 *
+     *
      * @internal
      **/
     protected function hasRawText($text)
