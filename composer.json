@@ -3,7 +3,7 @@
     "description": "A lightweight markup language that takes (almost) plaintext and converts it into well formed HTML.",
     "license": "BSD-3-Clause",
     "autoload": {
-        "psr-0": { "Netcarver\\Textile": "classes/" }
+        "psr-0": { "Netcarver\\Textile": "src/" }
     },
     "extra": {
         "branch-alias": {
