@@ -14,8 +14,6 @@ T E X T I L E
 
 A Humane Web Text Generator
 
-Version 2.4.1
-
 Copyright (c) 2003-2004, Dean Allen <dean@textism.com>
 All rights reserved.
 
@@ -409,6 +407,8 @@ class TextileTag extends TextileBag
 
 class Textile
 {
+    protected $ver = '2.5.0rc1';
+
     protected $hlgn;
     protected $vlgn;
     protected $clas;
@@ -433,13 +433,8 @@ class Textile
     protected $rebuild_glyphs = true;
     protected $relativeImagePrefix = '';
     protected $max_span_depth = 5;
-
-    protected $ver = '2.4.1';
-
     protected $doc_root;
-
     protected $doctype;
-
     protected $symbols;
 
 
