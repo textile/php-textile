@@ -17,7 +17,7 @@ T E X T I L E
 
 A Humane Web Text Generator
 
-Version 2.4.1
+Version 2.5.0rc1
 
 Copyright (c) 2003-2004, Dean Allen <dean@textism.com>
 All rights reserved.
@@ -331,7 +331,7 @@ Ordered List Start & Continuation:
 
 class Parser
 {
-    protected $ver = '2.4.1';
+    protected $ver = '2.5.0rc1';
 
     protected $hlgn;
     protected $vlgn;
