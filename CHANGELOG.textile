@@ -1,6 +1,6 @@
 Here's an edited summary of the commit log. It doesn't include small changes or changes to test cases.
 
-h2. Changes in v3.5.0rc1
+h2. Changes in v3.5.0rc1 (from 2.4.1)
 
 * Add composer.json to allow installation via the "composer PHP package manager":https://getcomposer.org/.
 * Regex improvements (issues "#78":https://github.com/netcarver/textile/issues/78, "#81":https://github.com/netcarver/textile/issues/81 and "#83":https://github.com/netcarver/textile/issues/83.)
@@ -23,8 +23,8 @@ h2. Changes in v3.5.0rc1
 * Fix a problem with links followed by ':', ';' or '?' like @Do you like "cheese":/cheese?@ where the '?' becomes part of the href rather than a '?' at the end of the sentence. This happens on platforms where PCRE has unicode support.
 * Removal of leading \t from generated paragraphs & better indentation of generated lists in the HTML (closes "#90":https://github.com/netcarver/textile/issues/90.)
 * New method @textileEncode()@. This is preferred to calling @textileThis()@ with the $encode flag.
-* PSR-0, PSR-1 & PSR-2 compatibility added...
-*# Split class Textile into Parser, DataBag & Tag and moved them into @src/Netcarver/Textile@ directory for PSR-0.
+* "PSR-0, PSR-1 & PSR-2":https://github.com/php-fig/fig-standards/tree/master/accepted conformity added...
+*# Split class Textile into classes @Parser@, @DataBag@ & @Tag@ and moved them into @src/Netcarver/Textile@ directory for PSR-0.
 *# Unified method names & coding styles according to PSR-1 & PSR-2.
 *# Switched from using defines to explicit set methods; @setSymbol()@ & @setRelativeImagePrefix()@.
 *# Added visibility controls to all properties and methods.
