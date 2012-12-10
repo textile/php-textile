@@ -692,10 +692,10 @@ class Textile
     {
         if ($lite) {
             $this->btag = array('bq', 'p');
-            $text = $this->block($text."\n\n");
+            $text = $this->blocks($text."\n\n");
         } else {
             $this->btag = array('bq', 'p', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', '###');
-            $text = $this->block($text);
+            $text = $this->blocks($text);
             $text = $this->placeNoteLists($text);
         }
 
@@ -1025,7 +1025,7 @@ class Textile
      * @param  string $text A block of textile
      * @return string Text with tables replaced with HTML tables
      **/
-    protected function table($text)
+    protected function tables($text)
     {
         $text = $text . "\n\n";
         return preg_replace_callback("/^(?:table(_?{$this->s}{$this->a}{$this->c})\.(.*)?\n)?^({$this->a}{$this->c}\.? ?\|.*\|)[\s]*\n\n/smU", array(&$this, "fTable"), $text);
@@ -1346,7 +1346,7 @@ class Textile
      * @param  string $text Textile source text
      * @return string Input text with blocks processed
      **/
-    protected function block($text)
+    protected function blocks($text)
     {
         $find = $this->btag;
         $tre = join('|', $find);
@@ -1576,22 +1576,22 @@ class Textile
         $text = $this->links($text);               // Generate links
 
         if (!$this->noimage)
-            $text = $this->image($text);           // Handle images (if permitted)
+            $text = $this->images($text);           // Handle images (if permitted)
 
         if (!$this->lite) {
-            $text = $this->table($text);           // Handle tables
+            $text = $this->tables($text);           // Handle tables
             $text = $this->redclothLists($text);   // Handle redcloth-style definition lists
             $text = $this->textileLists($text);    // Handle ordered & unordered lists plus txp-style definition lists
         }
 
-        $text = $this->span($text);                // Inline markup (em, strong, sup, sub, del etc)
+        $text = $this->spans($text);                // Inline markup (em, strong, sup, sub, del etc)
 
         if (!$this->lite) {
             // Turn footnote references into supers or links. As footnote blocks are banned in lite mode there is no point generating links for them
-            $text = $this->footnoteRef($text);
+            $text = $this->footnoteRefs($text);
 
             // Turn note references into links
-            $text = $this->noteRef($text);
+            $text = $this->noteRefs($text);
         }
 
         $text = $this->glyphs($text);              // Glyph level substitutions (mainly typographic -- " & ' => curly quotes, -- => em-dash etc.
@@ -1608,7 +1608,7 @@ class Textile
      * @param  string $text The textile document to perform the replacements in.
      * @return string       The textile document with spans replaced by their HTML inline equivalents
      **/
-    protected function span($text)
+    protected function spans($text)
     {
         $span_tags = array_keys($this->span_tags);
         $pnct = ".,\"'?!;:‹›«»„“”‚‘’";
@@ -1647,7 +1647,7 @@ class Textile
         $atts = $this->parseAttribs($atts);
         $atts .= ($cite != '') ? 'cite="' . $cite . '"' : '';
 
-        $content = $this->span($content);
+        $content = $this->spans($content);
 
         $opentag = '<'.$tag.$atts.'>';
         $closetag = '</'.$tag.'>';
@@ -1844,7 +1844,7 @@ class Textile
     /**
      * @internal
      **/
-    protected function noteRef($text)
+    protected function noteRefs($text)
     {
         $text = preg_replace_callback("/
             \[                   #  start
@@ -2053,9 +2053,9 @@ class Textile
         }
 
         if (!$this->noimage)
-            $text = $this->image($text);
+            $text = $this->images($text);
 
-        $text = $this->span($text);
+        $text = $this->spans($text);
         $text = $this->glyphs($text);
         $url  = $this->shelveURL($this->rebuildURI($uri_parts) . $slash);
 
@@ -2180,7 +2180,7 @@ class Textile
      * @param  string $text Textile source text
      * @return string The input document with images pulled out and replaced with tokens
      **/
-    protected function image($text)
+    protected function images($text)
     {
         return preg_replace_callback('/
             (?:[[{])?                  # pre
@@ -2359,7 +2359,7 @@ class Textile
     /**
      * @internal
      **/
-    protected function footnoteRef($text)
+    protected function footnoteRefs($text)
     {
         return preg_replace_callback('/(?<=\S)\[(\d+)(!?)\]\s?/U', array(&$this, 'footnoteID'), $text);
     }
