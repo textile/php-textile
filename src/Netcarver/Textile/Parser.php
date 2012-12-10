@@ -17,8 +17,6 @@ T E X T I L E
 
 A Humane Web Text Generator
 
-Version 3.5.0rc1
-
 Copyright (c) 2003-2004, Dean Allen <dean@textism.com>
 All rights reserved.
 
