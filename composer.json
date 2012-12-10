@@ -5,6 +5,9 @@
     "autoload": {
         "psr-0": { "Netcarver\\Textile": "src/" }
     },
+    "require": {
+        "php": ">=5.3.0",
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "3.5-dev"
