@@ -25,7 +25,8 @@ class Tag extends Netcarver\Textile\DataBag
     }
 
 
-    public function __toString() {
+	public function __toString()
+	{
         $attribs = '';
 
         if (count($this->data)) {
