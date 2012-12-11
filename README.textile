@@ -71,7 +71,7 @@ h3. Doctypes
 
 Currently, PHP Textile can target either XHTML or HTML5 output with XHTML being the default for backward compatibility. If you need HTML5 generation, just do...
 
-bc. $parser = new Textile('html5');
+bc. $parser = new Textile\Parser('html5');
 
 ...and you'll get @abbr@ instead of @acronym@ and if you use alignment markers on your images you'll have extra classes placed on them instead of xhtml's @align@ attribute.
 
@@ -81,7 +81,7 @@ From v2.5 on, you can no longer use the legacy 'txt_' defines to override the ch
 
 If you wanted to override the symbol output for the one-half typographic substitution from the standard @&#189;@ to something using the fraction-slash you could do it like this...
 
-bc.. $parser = new Textile('html5'); // adjust if you need a different doctype
+bc.. $parser = new Textile\Parser('html5'); // adjust if you need a different doctype
 $out = $parser
     ->setSymbol('half', '1&#8260;2')  // Redefine the half symbol to use the fraction-slash character
     ->textileThis($article)
@@ -93,7 +93,7 @@ h3. Prefixing relative image paths
 
 From v2.5 onward you can explicitly setup a prefix that will be added to all relative image paths. This might be useful if your application only allows users to reference images from a certain location like, say, an images directory. The @setRelativeImagePrefix()@ method is now available to you for explicitly setting this if you need it.
 
-bc.. $parser = new Textile('html5'); // target whatever doctype you need
+bc.. $parser = new Textile\Parser('html5'); // target whatever doctype you need
 $out = $parser
    ->setRelativeImagePrefix('prefix') // adjust 'prefix' as needed
    ->textileThis($article)            // format the article
