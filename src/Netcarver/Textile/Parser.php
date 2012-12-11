@@ -2,8 +2,6 @@
 
 namespace Netcarver\Textile;
 
-require_once "Tag.php";
-
 /**
  * Example: get XHTML from a given Textile-markup string ($string)
  *
