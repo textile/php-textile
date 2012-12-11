@@ -5,6 +5,18 @@ p=. *A Humane Web Text Generator*
 p=. A lightweight markup language that takes (almost) plaintext and converts it into well formed HTML.
 
 
+h2. Branches
+
+There are two main branches in the repository that will be of interest.
+
+|_. Branch |_. Description |_. PHP Requirements |
+|^=. *master* | The master branch currently represents a multi-file, namespaced, "PSR-0/1/2":https://github.com/php-fig/fig-standards/tree/master/accepted compliant version of textile. These are tagged as v3.5.x releases. |^=. 5.3+ |
+|^=. *2.5* | The 2.5 branch holds a non-namespaced, single-file version of textile representing the v2.5.x releases. This branch is *not* PSR-0 compliant but it attempts to follow PSR-1 and PSR-2 in all other respects. |^=. 5.0+ |
+
+Both branches can be installed via the composer package management system.
+
+From time to time other branches may be present in the repository. These represent transient development or hotfix branches and should not be used for live sites/projects.
+
 
 h2. Installation
 
