@@ -29,13 +29,13 @@ p. Now you should be able to create a textile parser using a fully qualified nam
 
 bc. $parser = new \Netcarver\Textile\Parser($doctype); // $doctype explained later
 
-p. Then, for input that you control, pass it to @TextileThis()@. Like so...
+p. Then, for input that you control, pass it to @textileThis()@. Like so...
 
-bc. $output = $parser->textileThis( $trusted_input );
+bc. $output = $parser->textileThis($trusted_input);
 
-If you are using Textile to format user-supplied input, blog comments for instance, use a @TextileRestricted()@ call...
+If you are using Textile to format user-supplied input, blog comments for instance, use a @textileRestricted()@ call...
 
-bc. $output = $parser->textileRestricted( $untrusted_input );
+bc. $output = $parser->textileRestricted($untrusted_input);
 
 
 h3. Installation via Composer & Its Autoloader
@@ -48,8 +48,9 @@ bc.. {
 
 p. Then open a command line window, switch to thre root of your project and run @composer install@. Textile should be pulled into your project under a new @vendors/@ directory and an autoloader created for all the dependencies in your project. If you are already using Composer and have a @composer.json@ file, just add @"netcarver/textile": "dev-master"@ to the "requires" section and run @composer update@ from the command line. You should now be able to create and use a textile parser...
 
-bc.. require 'vendor/autoload.php';
-$parser = new Textile($doctype);                 // $doctype explained later
+bc.. use Netcarver\Textile;
+require 'vendor/autoload.php';                  // Bring in the composer auto-loader
+$parser = new Textile\Parser();                 // Example using a partially qualified namespace
 $out = $parser->textileThis('h1. Hello World!');
 
 p. Ok, now for a little more detail about setting up your parser.
