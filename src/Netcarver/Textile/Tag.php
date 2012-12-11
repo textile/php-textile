@@ -8,7 +8,7 @@ namespace Netcarver\Textile;
  *
  * Example usage...
  *
- * $img = new TextileTag('img')->class('big blue')->src('images/elephant.jpg');
+ * $img = new Tag('img')->class('big blue')->src('images/elephant.jpg');
  * echo $img;
  **/
 class Tag extends Netcarver\Textile\DataBag
