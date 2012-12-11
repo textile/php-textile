@@ -755,18 +755,18 @@ class Parser
 
 
     /**
-     * Helper method that creates a new instance of Netcarver\Textile\Tag
+     * Helper method that creates a new instance of \Netcarver\Textile\Tag
      *
      * @internal
      *
      * @param  string $name        The type of tag to create. eg. newTag('p',...) for a paragraph tag.
      * @param         $atts        The textile attributes to apply to the tag
      * @param  bool   $selfclosing Determines if the tag should be selfclosing. Default: true
-     * @return Netcarver\Textile\Tag
+     * @return \Netcarver\Textile\Tag
      **/
     protected function newTag($name, $atts, $selfclosing = true)
     {
-        return new Netcarver\Textile\Tag($name, $atts, $selfclosing);
+        return new \Netcarver\Textile\Tag($name, $atts, $selfclosing);
     }
 
 

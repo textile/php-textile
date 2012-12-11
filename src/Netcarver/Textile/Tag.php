@@ -10,7 +10,7 @@ namespace Netcarver\Textile;
  * $img = new Tag('img')->class('big blue')->src('images/elephant.jpg');
  * echo $img;
  **/
-class Tag extends Netcarver\Textile\DataBag
+class Tag extends \Netcarver\Textile\DataBag
 {
     protected $tag;
     protected $selfclose;
