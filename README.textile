@@ -19,6 +19,31 @@ From time to time other branches may be present in the repository. These represe
 
 h2. Installation & Usage
 
+h3. Installation via Composer & Its Autoloader
+
+To start using textile in your project you need to make your project depend upon netcarver/textile and have composer take care of the installation and autoloading of the code for you. If you don't already have a @composer.json@ file in the root of your projet create one and paste one of the following into it...
+
+bc.. {
+    "require": { "netcarver/textile": "3.5.*" }
+}
+
+p. ...if you require the latest stable release from the master branch. Or...
+
+bc.. {
+    "require": { "netcarver/textile": "3.5.*@dev" }
+}
+
+p. ...if you the most recent code.
+
+p. Then open a command line window, switch to thre root of your project and run @composer install@. Textile should be pulled into your project under a new @vendors/@ directory and an autoloader created for all the dependencies in your project. If you are already using Composer and have a @composer.json@ file, just add @"netcarver/textile": "dev-master"@ to the "requires" section and run @composer update@ from the command line. You should now be able to create and use a textile parser...
+
+bc.. require 'vendor/autoload.php';                  // Bring in the composer auto-loader
+use Netcarver\Textile;
+$parser = new Textile\Parser();                 // Example using a partially qualified namespace
+$out = $parser->textileThis('h1. Hello World!');
+
+p. If you aren't using composer, try this...
+
 h3. Manual Install & Include
 
 Copy the contents of the @src/Netcarver/Textile/@ directory to a location of your choice within your project. If you are using an autoloader, you will need to update it to load the classes @Parser@, @Tag@ and @DataBag@ from the @\Netcarver\Textile@ namespace. If you are _not_ using an autoloader you will need to include the following in a suitable location in your project...
@@ -38,22 +63,6 @@ bc. $output = $parser->textileThis($trusted_input);
 If you are using Textile to format user-supplied input, blog comments for instance, use a @textileRestricted()@ call...
 
 bc. $output = $parser->textileRestricted($untrusted_input);
-
-
-h3. Installation via Composer & Its Autoloader
-
-To start using textile in your project you need to make your project depend upon netcarver/textile and have composer take care of the installation and autoloading of the code for you. If you don't already have a @composer.json@ file in the root of your projet create one and paste the following into it...
-
-bc.. {
-    "require": { "netcarver/textile": "dev-master" }
-}
-
-p. Then open a command line window, switch to thre root of your project and run @composer install@. Textile should be pulled into your project under a new @vendors/@ directory and an autoloader created for all the dependencies in your project. If you are already using Composer and have a @composer.json@ file, just add @"netcarver/textile": "dev-master"@ to the "requires" section and run @composer update@ from the command line. You should now be able to create and use a textile parser...
-
-bc.. use Netcarver\Textile;
-require 'vendor/autoload.php';                  // Bring in the composer auto-loader
-$parser = new Textile\Parser();                 // Example using a partially qualified namespace
-$out = $parser->textileThis('h1. Hello World!');
 
 p. Ok, now for a little more detail about setting up your parser.
 
