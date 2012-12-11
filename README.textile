@@ -12,6 +12,8 @@ There are two main branches in the repository that will be of interest, both of 
 |^=. "master":https://github.com/netcarver/textile/tree/master | Has a multi-file, namespaced, "PSR-0/1/2":https://github.com/php-fig/fig-standards/tree/master/accepted compliant version of textile. Releases from master are tagged v3.5.x |^=. _Requires PHP5.3+_ |
 |^=. "2.5":https://github.com/netcarver/textile/tree/2.5 | Holds a single-file version of textile representing the v2.5.x releases. It is *not* PSR-0 compliant but attempts to follow PSR-1 and PSR-2 in other respects. |^=. _Requires PHP5.0+_ |
 
+*This is the README for the master branch.*
+
 From time to time other branches may be present in the repository. These represent transient development or hotfix branches and should not be used for live sites/projects.
 
 
