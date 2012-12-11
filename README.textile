@@ -38,10 +38,10 @@ h3. Via Composer & Its Autoloader
 To start using textile in your project you need to make your project depend upon netcarver/textile and have composer take care of the installation and autoloading of the code for you. If you don't already have a @composer.json@ file in the root of your projet create one and paste the following into it...
 
 bc.. {
-    "require": { "netcarver/textile": "2.*" }
+    "require": { "netcarver/textile": "2.5.*@dev" }
 }
 
-p. Then open a command line window, switch to thre root of your project and run @composer install@. Textile should be pulled into your project under a new @vendors/@ directory and an autoloader created for all the dependencies in your project. If you are already using Composer and have a @composer.json@ file, just add @"netcarver/textile": "2.*"@ to the "requires" section and run @composer update@ from the command line. You should now be able to create and use a textile parser...
+p. Then open a command line window, switch to thre root of your project and run @composer install@. Textile should be pulled into your project under a new @vendors/@ directory and an autoloader created for all the dependencies in your project. If you are already using Composer and have a @composer.json@ file, just add the "netcarver/textile..." part to your existing "requires" section and run @composer update@ from the command line. You should now be able to create and use a textile parser...
 
 bc.. require 'vendor/autoload.php';
 $parser = new Textile('xhtml');                  // Targetting XHTML
