@@ -23,7 +23,7 @@ h2. Changes in v2.5.0rc1 (from 2.4.1)
 * Fix a problem with links followed by ':', ';' or '?' like @Do you like "cheese":/cheese?@ where the '?' becomes part of the href rather than a '?' at the end of the sentence. This happens on platforms where PCRE has unicode support.
 * Removal of leading \t from generated paragraphs & better indentation of generated lists in the HTML (closes "#90":https://github.com/netcarver/textile/issues/90.)
 * New method @textileEncode()@. This is preferred to calling @textileThis()@ with the $encode flag.
-* "PSR-1 & PSR-2":https://github.com/php-fig/fig-standards/tree/master/accepted conformity added but *not* PSR-0...
+* Follows "PSR-1 & PSR-2":https://github.com/php-fig/fig-standards/tree/master/accepted as far as possible *without* being PSR-0 compatible. So...
 *# Unified method names & coding styles according to PSR-1 & PSR-2.
 *# Switched from using defines to explicit set methods; @setSymbol()@ & @setRelativeImagePrefix()@.
 *# Added visibility controls to all properties and methods.
