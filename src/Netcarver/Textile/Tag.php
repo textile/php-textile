@@ -2,6 +2,7 @@
 
 namespace Netcarver\Textile;
 
+require_once "Databag.php";
 
 /**
  * Class to allow contruction of HTML tags on conversion of an object to a string
