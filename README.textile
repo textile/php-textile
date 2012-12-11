@@ -33,7 +33,7 @@ bc.. {
     "require": { "netcarver/textile": "3.5.*@dev" }
 }
 
-p. ...if you the most recent code.
+p. ...if you want the most recent code.
 
 p. Then open a command line window, switch to thre root of your project and run @composer install@. Textile should be pulled into your project under a new @vendors/@ directory and an autoloader created for all the dependencies in your project. If you are already using Composer and have a @composer.json@ file, just add @"netcarver/textile": "dev-master"@ to the "requires" section and run @composer update@ from the command line. You should now be able to create and use a textile parser...
 
