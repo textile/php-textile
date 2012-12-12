@@ -328,7 +328,7 @@ Ordered List Start & Continuation:
 
 class Parser
 {
-    protected $ver = '3.5.0rc1';
+    protected $ver = '3.5.0';
 
     protected $hlgn;
     protected $vlgn;

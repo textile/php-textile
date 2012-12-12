@@ -1,6 +1,6 @@
 Here's an edited summary of the commit log. It doesn't include small changes or changes to test cases.
 
-h2. Changes in v3.5.0rc1 (from 2.4.1)
+h2. Changes in v3.5.0 (from 2.4.1)
 
 * Add composer.json to allow installation via the "composer PHP package manager":https://getcomposer.org/.
 * Regex improvements (issues "#78":https://github.com/netcarver/textile/issues/78, "#81":https://github.com/netcarver/textile/issues/81 and "#83":https://github.com/netcarver/textile/issues/83.)
