@@ -373,10 +373,11 @@ class Parser
             'html5',
         );
         $doctype = strtolower($doctype);
-        if (!in_array($doctype, $doctype_whitelist))
+        if (!in_array($doctype, $doctype_whitelist)) {
             $this->doctype = 'xhtml';
-        else
+        } else {
             $this->doctype = $doctype;
+        }
 
         // Basic symbols used in textile glyph replacements. To override these, call
         // setSymbol('symbol_name', 'new_string') before calling textileThis() or
@@ -463,14 +464,16 @@ class Parser
             '^'  => 'sup',
         );
 
-        if (defined('DIRECTORY_SEPARATOR'))
+        if (defined('DIRECTORY_SEPARATOR')) {
             $this->ds = constant('DIRECTORY_SEPARATOR');
-        else
+        } else {
             $this->ds = '/';
+        }
 
         $this->doc_root = @$_SERVER['DOCUMENT_ROOT'];
-        if (!$this->doc_root)
+        if (!$this->doc_root) {
             $this->doc_root = @$_SERVER['PATH_TRANSLATED']; // IIS
+        }
 
         $this->doc_root = rtrim($this->doc_root, $this->ds).$this->ds;
     }
@@ -565,11 +568,14 @@ class Parser
         $this->prepare($lite, $noimage, $rel);
         $this->url_schemes = $this->unrestricted_url_schemes;
 
-        if ($encode)  // Use of the $encode flag is discouraged. Calling textileEncode() is prefered.
+        // Use of the $encode flag is discouraged. Calling textileEncode() is prefered.
+        if ($encode) {
             return $this->textileEncode($text);
+        }
 
-        if (!$strict)
+        if (!$strict) {
             $text = $this->cleanWhiteSpace($text);
+        }
 
         return $this->textileCommon($text, $lite);
     }
@@ -634,15 +640,17 @@ class Parser
      **/
     protected function prepGlyphs()
     {
-        if ((null!==$this->glyph_search) && (null!==$this->glyph_replace) && !$this->rebuild_glyphs)
+        if ((null!==$this->glyph_search) && (null!==$this->glyph_replace) && !$this->rebuild_glyphs) {
             return;
+        }
 
         extract($this->symbols, EXTR_PREFIX_ALL, 'txt');
         extract($this->regex_snippets );
         $pnc = '[[:punct:]]';
 
-        if ($cur)
+        if ($cur) {
             $cur = '(?:['.$cur.']\s*)?';
+        }
 
         $this->glyph_search = array(
             '/([0-9]+[\])]?[\'"]? ?)[xX]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]+)/'.$mod,   // Dimension sign
@@ -738,18 +746,21 @@ class Parser
         $after  =  0;
         $max    =  3;
         $i      =  0;
-        while (($after != $before) && ($i < $max))
-        {
+
+        while (($after != $before) && ($i < $max)) {
             $before = strlen($tmp);
             $tmp    = rawurldecode($tmp);
             $after  = strlen($tmp);
             $i++;
         }
 
-        if ($i === $max) // If we hit the max allowed decodes, assume the input is tainted and consume it.
+        if ($i === $max) {
+            // If we hit the max allowed decodes, assume the input is tainted and consume it.
             $out = '';
-        else
+        } else {
             $out = str_replace(array('"', "'", '='), '', $tmp);
+        }
+
         return $out;
     }
 
@@ -787,8 +798,11 @@ class Parser
         $o = $this->parseAttribsToArray($in, $element, $include_id, $autoclass);
         ksort($o);
 
-        if (count($o))
-            foreach ($o as $k=>$v) $out .= " $k=\"$v\"";
+        if (count($o)) {
+            foreach ($o as $k => $v) {
+                $out .= " $k=\"$v\"";
+            }
+        }
 
         return $out;
     }
@@ -812,15 +826,19 @@ class Parser
 
         $matched = $in;
         if ($element == 'td') {
-            if (preg_match("/\\\\(\d+)/", $matched, $csp))
+            if (preg_match("/\\\\(\d+)/", $matched, $csp)) {
                 $colspan = $csp[1];
-            if (preg_match("/\/(\d+)/", $matched, $rsp))
+            }
+
+            if (preg_match("/\/(\d+)/", $matched, $rsp)) {
                 $rowspan = $rsp[1];
+            }
         }
 
         if ($element == 'td' or $element == 'tr') {
-            if (preg_match("/($this->vlgn)/", $matched, $vert))
+            if (preg_match("/($this->vlgn)/", $matched, $vert)) {
                 $style[] = "vertical-align:" . $this->vAlign($vert[1]);
+            }
         }
 
         if (preg_match("/\{([^}]*)\}/", $matched, $sty)) {
@@ -843,15 +861,17 @@ class Parser
                 // If a textile class block attribute was found with a '#' in it
                 // split it into the css class and css id...
                 if (false !== $hashpos) {
-                    if (preg_match("/#([-a-zA-Z0-9_\.\:]*)$/", substr($cls[1], $hashpos), $ids))
+                    if (preg_match("/#([-a-zA-Z0-9_\.\:]*)$/", substr($cls[1], $hashpos), $ids)) {
                         $id = $ids[1];
+                    }
 
-                    if (preg_match("/^([-a-zA-Z 0-9_]*)/", substr($cls[1], 0, $hashpos), $ids))
+                    if (preg_match("/^([-a-zA-Z 0-9_]*)/", substr($cls[1], 0, $hashpos), $ids)) {
                         $class = $ids[1];
-                }
-                else {
-                    if (preg_match("/^([-a-zA-Z 0-9_]*)$/", $cls[1], $ids))
+                    }
+                } else {
+                    if (preg_match("/^([-a-zA-Z 0-9_]*)$/", $cls[1], $ids)) {
                         $class = $ids[1];
+                    }
                 }
             }
         }
@@ -866,8 +886,9 @@ class Parser
             $matched = str_replace($pr[0], '', $matched);
         }
 
-        if (preg_match("/($this->hlgn)/", $matched, $horiz))
+        if (preg_match("/($this->hlgn)/", $matched, $horiz)) {
             $style[] = "text-align:" . $this->hAlign($horiz[1]);
+        }
 
         if ($element == 'col') {
             if (preg_match("/(?:\\\\(\d+))?\s*(\d+)?/", $matched, $csp)) {
@@ -879,42 +900,70 @@ class Parser
         if ($this->restricted) {
             $o = array();
             $class = trim($autoclass);
-            if ($class)
+            if ($class) {
                 $o['class'] = $this->cleanAttribs($class);
-            if ($lang)
+            }
+
+            if ($lang) {
                 $o['lang']  = $this->cleanAttribs($lang);
+            }
+
             return $o;
-        }
-        else
+        } else {
             $class = trim($class . ' ' . $autoclass);
+        }
 
         $o = '';
         if ($style) {
             $tmps = array();
             foreach ($style as $s) {
                 $parts = explode(';', $s);
-                foreach ($parts as $p)
+                foreach ($parts as $p) {
                     $tmps[] = $p;
+                }
             }
 
             sort($tmps);
             foreach ($tmps as $p) {
-                if (!empty($p))
+                if (!empty($p)) {
                     $o .= $p.';';
+                }
             }
             $style = trim(str_replace(array("\n", ';;'), array('', ';'), $o));
         }
 
         $o = array();
-        if ($class)   $o['class']   = $this->cleanAttribs($class);
-        if ($colspan) $o['colspan'] = $this->cleanAttribs($colspan);
-        if ($id && $include_id)
-                      $o['id']      = $this->cleanAttribs($id);
-        if ($lang)    $o['lang']    = $this->cleanAttribs($lang);
-        if ($rowspan) $o['rowspan'] = $this->cleanAttribs($rowspan);
-        if ($span)    $o['span']    = $this->cleanAttribs($span);
-        if ($style)   $o['style']   = $this->cleanAttribs($style);
-        if ($width)   $o['width']   = $this->cleanAttribs($width);
+        if ($class) {
+            $o['class']   = $this->cleanAttribs($class);
+        }
+
+        if ($colspan) {
+            $o['colspan'] = $this->cleanAttribs($colspan);
+        }
+
+        if ($id && $include_id) {
+            $o['id']      = $this->cleanAttribs($id);
+        }
+
+        if ($lang) {
+            $o['lang']    = $this->cleanAttribs($lang);
+        }
+
+        if ($rowspan) {
+            $o['rowspan'] = $this->cleanAttribs($rowspan);
+        }
+
+        if ($span) {
+            $o['span']    = $this->cleanAttribs($span);
+        }
+
+        if ($style) {
+            $o['style']   = $this->cleanAttribs($style);
+        }
+
+        if ($width) {
+            $o['width']   = $this->cleanAttribs($width);
+        }
 
         return $o;
     }
@@ -969,14 +1018,15 @@ class Parser
                 $capts = $this->parseAttribs($cmtch[1]);
                 $cap = "\t<caption".$capts.">".trim($cmtch[2])."</caption>\n";
                 $row = ltrim($cmtch[3]);
-                if (empty($row))
+                if (empty($row)) {
                     continue;
+                }
             }
             $c_row += 1;
 
             // Colgroup
             if (preg_match("/^\|:($this->s$this->a$this->c\. .*)/m", ltrim($row), $gmtch)) {
-                $nl = strpos($row,"\n");    // Is this colgroup def missing a closing pipe? If so, there will be a newline in the middle of $row somewhere.
+                $nl = strpos($row, "\n");    // Is this colgroup def missing a closing pipe? If so, there will be a newline in the middle of $row somewhere.
                 $idx=0;
                 foreach (explode('|', str_replace('.', '', $gmtch[1])) as $col) {
                     $gatts = $this->parseAttribs(trim($col), 'col');
@@ -987,8 +1037,7 @@ class Parser
 
                 if ($nl === false) {
                     continue;
-                }
-                else {
+                } else {
                     $row = ltrim(substr($row, $nl));        // Recover from our missing pipe and process the rest of the line...
                 }
             }
@@ -1003,17 +1052,24 @@ class Parser
             if (preg_match("/^($this->a$this->c\. )(.*)/m", ltrim($row), $rmtch)) {
                 $ratts = $this->parseAttribs($rmtch[1], 'tr');
                 $row = $rmtch[2];
-            } else $ratts = '';
+            } else {
+                $ratts = '';
+            }
 
             $cells = array();
             $cellctr = 0;
             foreach (explode("|", $row) as $cell) {
                 $ctyp = "d";
-                if (preg_match("/^_(?=[\s[:punct:]])/", $cell)) $ctyp = "h";
+                if (preg_match("/^_(?=[\s[:punct:]])/", $cell)) {
+                    $ctyp = "h";
+                }
+
                 if (preg_match("/^(_?$this->s$this->a$this->c\. )(.*)/", $cell, $cmtch)) {
                     $catts = $this->parseAttribs($cmtch[1], 'td');
                     $cell = $cmtch[2];
-                } else $catts = '';
+                } else {
+                    $catts = '';
+                }
 
                 if (!$this->lite) {
                     $a = array();
@@ -1024,8 +1080,10 @@ class Parser
                     }
                 }
 
-                if ($cellctr>0) // Ignore first 'cell': it precedes the opening pipe
+                if ($cellctr>0) {
+                    // Ignore first 'cell': it precedes the opening pipe
                     $cells[] = $this->doTagBr("t$ctyp", "\t\t\t<t$ctyp$catts>$cell</t$ctyp>");
+                }
 
                 $cellctr++;
             }
@@ -1068,25 +1126,28 @@ class Parser
                 $content = trim($content);
                 $atts = $this->parseAttribs($atts);
 
-                if (!preg_match("/^(.*?)[\s]*:=(.*?)[\s]*(=:|:=)?[\s]*$/s", $content, $xm)) return $in;
+                if (!preg_match("/^(.*?)[\s]*:=(.*?)[\s]*(=:|:=)?[\s]*$/s", $content, $xm)) {
+                    return $in;
+                }
 
                 list(, $term, $def,) = $xm;
                 $term = trim($term);
                 $def  = trim($def, ' ');
 
                 if (empty($out)) {
-                    if (''==$def)
+                    if (''==$def) {
                         $out[] = "<dl$atts>";
-                    else
+                    } else {
                         $out[] = '<dl>';
+                    }
                 }
 
-                if ('' != $def && '' != $term)
-                {
+                if ('' != $def && '' != $term) {
                     $pos = strpos($def, "\n");
                     $def = str_replace("\n", "<br />", trim($def));
-                    if (0 === $pos)
+                    if (0 === $pos) {
                         $def  = '<p>' . $def . '</p>';
+                    }
 
                     $term = $this->graf($term);
                     $def  = $this->graf($def);
@@ -1134,29 +1195,39 @@ class Parser
                 $litem = (strpos($tl, ';') !== false) ? 'dt' : ((strpos($tl, ':') !== false) ? 'dd' : 'li');
                 $showitem = (strlen($content) > 0);
 
-                if ('o' === $ltype) {                           // Handle list continuation/start attribute on ordered lists...
-                    if (!isset($this->olstarts[$tl]))
+                if ('o' === $ltype) {
+                    // Handle list continuation/start attribute on ordered lists...
+                    if (!isset($this->olstarts[$tl])) {
                         $this->olstarts[$tl] = 1;
+                    }
 
-                    if (strlen($tl) > strlen($pt)) {            // First line of this level of ol -- has a start attribute?
-                        if ('' == $st)
-                            $this->olstarts[$tl] = 1;           // No => reset count to 1.
-                        elseif ('_' !== $st)
-                            $this->olstarts[$tl] = (int)$st;    // Yes, and numeric => reset to given.
+                    if (strlen($tl) > strlen($pt)) {
+                        // First line of this level of ol -- has a start attribute?
+                        if ('' == $st) {
+                            // No => reset count to 1.
+                            $this->olstarts[$tl] = 1;
+                        } elseif ('_' !== $st) {
+                            $this->olstarts[$tl] = (int) $st;   // Yes, and numeric => reset to given.
                                                                 // TRICKY: the '_' continuation marker just means
                                                                 // output the count so don't need to do anything
                                                                 // here.
+                        }
                     }
 
-                    if ((strlen($tl) > strlen($pt)) && '' !== $st)        // Output the start attribute if needed...
+                    if ((strlen($tl) > strlen($pt)) && '' !== $st) {
+                        // Output the start attribute if needed...
                         $st = ' start="' . $this->olstarts[$tl] . '"';
+                    }
 
-                    if ($showitem)                              // TRICKY: Only increment the count for list items; not when a list definition line is encountered.
+                    if ($showitem) {
+                        // TRICKY: Only increment the count for list items; not when a list definition line is encountered.
                         $this->olstarts[$tl] += 1;
+                    }
                 }
 
-                if (preg_match("/^([#*;:]+)(_|[\d]+)?($this->lc)[ .].*/", $nextline, $nm))
+                if (preg_match("/^([#*;:]+)(_|[\d]+)?($this->lc)[ .].*/", $nextline, $nm)) {
                     $nl = $nm[1];
+                }
 
                 if ((strpos($pt, ';') !== false) && (strpos($tl, ':') !== false)) {
                     $lists[$tl] = 2; // We're already in a <dl> so flag not to start another
@@ -1171,20 +1242,21 @@ class Parser
                     $line = ($showitem) ? "$tabs\t<$litem$atts>" . $content : '';
                 }
 
-                if ((strlen($nl) <= strlen($tl)))
+                if ((strlen($nl) <= strlen($tl))) {
                     $line .= (($showitem) ? "</$litem>" : '');
+                }
 
                 foreach (array_reverse($lists) as $k => $v) {
                     if (strlen($k) > strlen($nl)) {
                         $line .= ($v==2) ? '' : "\n$tabs</" . $this->liType($k) . "l>";
-                        if ((strlen($k) > 1) && ($v != 2))
+                        if ((strlen($k) > 1) && ($v != 2)) {
                             $line .= "</".$litem.">";
+                        }
                         unset($lists[$k]);
                     }
                 }
                 $pt = $tl; // Remember the current Textile tag
-            }
-            else {
+            } else {
                 $line .= "\n";
             }
             $out[] = $line;
@@ -1207,8 +1279,9 @@ class Parser
     {
         $m = array();
         $type = 'd';
-        if (preg_match('/^([#*]+)/', $in, $m))
+        if (preg_match('/^([#*]+)/', $in, $m)) {
             $type = ('#' === substr($m[1], -1)) ? 'o' : 'u';
+        }
         return $type;
     }
 
@@ -1282,19 +1355,20 @@ class Parser
             $anon = 0;
             if (preg_match("/^($tre)($this->a$this->c)\.(\.?)(?::(\S+))? (.*)$/s", $line, $m)) {
                 // Last block was extended, so close it
-                if ($ext)
+                if ($ext) {
                     $out[count($out)-1] .= $c1;
+                }
                 // New block
                 list(,$tag,$atts,$ext,$cite,$graf) = $m;
                 list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0,$tag,$atts,$ext,$cite,$graf));
 
                 // Leave off c1 if this block is extended, we'll close it at the start of the next block
-                if ($ext)
+                if ($ext) {
                     $line = $o1.$o2.$content.$c2;
-                else
+                } else {
                     $line = $o1.$o2.$content.$c2.$c1;
-            }
-            else {
+                }
+            } else {
                 // Anonymous block
                 $anon = 1;
                 if ($ext or !preg_match('/^ /', $line)) {
@@ -1302,12 +1376,10 @@ class Parser
                     // Skip $o1/$c1 because this is part of a continuing extended block
                     if ($tag == 'p' and !$this->hasRawText($content)) {
                         $line = $content;
-                    }
-                    else {
+                    } else {
                         $line = $o2.$content.$c2;
                     }
-                }
-                else {
+                } else {
                     $line = $this->graf($line);
                 }
             }
@@ -1315,10 +1387,11 @@ class Parser
             $line = $this->doPBr($line);
             $line = preg_replace('/<br>/', '<br />', $line);
 
-            if ($ext and $anon)
+            if ($ext and $anon) {
                 $out[count($out)-1] .= "\n".$line;
-            elseif (!$eat)
+            } elseif (!$eat) {
                 $out[] = $line;
+            }
 
             if (!$ext) {
                 $tag  = 'p';
@@ -1328,7 +1401,11 @@ class Parser
                 $eat  = false;
             }
         }
-        if ($ext) $out[count($out)-1] .= $c1;
+
+        if ($ext) {
+            $out[count($out)-1] .= $c1;
+        }
+
         return join("\n\n", $out);
     }
 
@@ -1359,9 +1436,11 @@ class Parser
                     (.*)$                 # !content
                 /x".$this->regex_snippets['mod'], array(&$this, "fParseNoteDefs"), $content);
 
-            if ('' === $notedef) // It will be empty if the regex matched and ate it.
+            if ('' === $notedef) {
+                // It will be empty if the regex matched and ate it.
                 return array($o1, $o2, $notedef, $c2, $c1, true);
             }
+        }
 
         if (preg_match("/fn(\d+)/", $tag, $fns)) {
             $tag = 'p';
@@ -1369,13 +1448,15 @@ class Parser
 
             // If there is an author-specified ID goes on the wrapper & the auto-id gets pushed to the <sup>
             $supp_id = '';
-            if (strpos($atts, 'class=') === false)
+            if (strpos($atts, 'class=') === false) {
                 $atts .= ' class="footnote"';
+            }
 
-            if (strpos($atts, ' id=') === false)
+            if (strpos($atts, ' id=') === false) {
                 $atts .= ' id="fn' . $fnid . '"';
-            else
+            } else {
                 $supp_id = ' id="fn' . $fnid . '"';
+            }
 
 
             $sup = (strpos($att, '^') === false) ? $this->formatFootnote($fns[1], $supp_id) : $this->formatFootnote('<a href="#fnrev' . $fnid . '">'.$fns[1] .'</a>', $supp_id);
@@ -1390,32 +1471,27 @@ class Parser
             $o2 = "\t\t<p".$this->parseAttribs($att, '', 0).">";
             $c2 = "</p>";
             $c1 = "\n</blockquote>";
-        }
-        elseif ($tag == 'bc') {
+        } elseif ($tag == 'bc') {
             $o1 = "<pre$atts>";
             $o2 = "<code>";
             $c2 = "</code>";
             $c1 = "</pre>";
             $content = $this->shelve($this->rEncodeHTML(rtrim($content, "\n")."\n"));
-        }
-        elseif ($tag == 'notextile') {
+        } elseif ($tag == 'notextile') {
             $content = $this->shelve($content);
             $o1 = '';
             $o2 = '';
             $c1 = '';
             $c2 = '';
-        }
-        elseif ($tag == 'pre') {
+        } elseif ($tag == 'pre') {
             $content = $this->shelve($this->rEncodeHTML(rtrim($content, "\n")."\n"));
             $o1 = "<pre$atts>";
             $o2 = '';
             $c2 = '';
             $c1 = "</pre>";
-        }
-        elseif ($tag == '###') {
+        } elseif ($tag == '###') {
             $eat = true;
-        }
-        else {
+        } else {
             $o2 = "<$tag$atts>";
             $c2 = "</$tag>";
         }
@@ -1441,9 +1517,11 @@ class Parser
      **/
     protected function replaceMarkers($text, $replacements)
     {
-        if (!empty($replacements))
-            foreach ($replacements as $k => $r)
+        if (!empty($replacements)) {
+            foreach ($replacements as $k => $r) {
                 $text = str_replace('{'.$k.'}', $r, $text);
+            }
+        }
         return $text;
     }
 
@@ -1468,10 +1546,12 @@ class Parser
     protected function fParseHTMLComments($m)
     {
         list(, $content) = $m;
-        if ($this->restricted)
+        if ($this->restricted) {
             $content = $this->shelve($this->rEncodeHTML($content));
-        else
+        } else {
             $content = $this->shelve($content);
+        }
+
         return "<!--$content-->";
     }
 
@@ -1491,8 +1571,9 @@ class Parser
         $text = $this->getRefs($text);             // Consume link aliases
         $text = $this->links($text);               // Generate links
 
-        if (!$this->noimage)
+        if (!$this->noimage) {
             $text = $this->images($text);           // Handle images (if permitted)
+        }
 
         if (!$this->lite) {
             $text = $this->tables($text);           // Handle tables
@@ -1530,10 +1611,8 @@ class Parser
         $pnct = ".,\"'?!;:‹›«»„“”‚‘’";
         $this->span_depth++;
 
-        if ($this->span_depth <= $this->max_span_depth)
-        {
-            foreach ($span_tags as $f)
-            {
+        if ($this->span_depth <= $this->max_span_depth) {
+            foreach ($span_tags as $f) {
                 $f = preg_quote($f);
                 $text = preg_replace_callback("/
                     (^|(?<=[\s>$pnct\(])|[{[])            # pre
@@ -1570,8 +1649,9 @@ class Parser
         $tags = $this->storeTags($opentag, $closetag);
         $out = "{$tags['open']}{$content}{$end}{$tags['close']}";
 
-        if (($pre and !$tail) or ($tail and !$pre))
+        if (($pre and !$tail) or ($tail and !$pre)) {
             $out = $pre.$out.$tail;
+        }
 
         return $out;
     }
@@ -1584,8 +1664,8 @@ class Parser
     {
         $key = ($this->tag_index++);
 
-        $key = str_pad((string)$key, 10, '0', STR_PAD_LEFT).'z'; // $key must be of fixed length to allow proper matching in retrieveTags
-        $this->tagCache[$key] = array('open'=>$opentag, 'close'=>$closetag);
+        $key = str_pad((string) $key, 10, '0', STR_PAD_LEFT).'z'; // $key must be of fixed length to allow proper matching in retrieveTags
+        $this->tagCache[$key] = array('open' => $opentag, 'close' => $closetag);
         $tags = array(
             'open'  => "textileopentag{$key} ",
             'close' => " textileclosetag{$key}",
@@ -1599,7 +1679,7 @@ class Parser
      **/
     protected function retrieveTags($text)
     {
-        $text = preg_replace_callback('/textileopentag([\d]{10}z) /' , array(&$this, 'fRetrieveOpenTags'),  $text);
+        $text = preg_replace_callback('/textileopentag([\d]{10}z) /', array(&$this, 'fRetrieveOpenTags'), $text);
         $text = preg_replace_callback('/ textileclosetag([\d]{10}z)/', array(&$this, 'fRetrieveCloseTags'), $text);
         return $text;
     }
@@ -1633,7 +1713,7 @@ class Parser
         // Sequence all referenced definitions...
         if (!empty($this->notes)) {
             $o = array();
-            foreach ($this->notes as $label=>$info) {
+            foreach ($this->notes as $label => $info) {
                 $i = @$info['seq'];
                 if (!empty($i)) {
                     $info['seq'] = $label;
@@ -1642,7 +1722,10 @@ class Parser
                     $this->unreferencedNotes[] = $info;    // Unreferenced definitions go here for possible future use.
                 }
             }
-            if (!empty($o)) ksort($o);
+            if (!empty($o)) {
+                ksort($o);
+            }
+
             $this->notes = $o;
         }
 
@@ -1659,14 +1742,18 @@ class Parser
     protected function fNoteLists($m)
     {
         list(, $att, $start_char, $g_links, $extras) = $m;
-        if (!$start_char) $start_char = 'a';
+        if (!$start_char) {
+            $start_char = 'a';
+        }
+
         $index = $g_links.$extras.$start_char;
 
-        if (empty($this->notelist_cache[$index])) { // If not in cache, build the entry...
+        if (empty($this->notelist_cache[$index])) {
+            // If not in cache, build the entry...
             $o = array();
 
             if (!empty($this->notes)) {
-                foreach ($this->notes as $seq=>$info) {
+                foreach ($this->notes as $seq => $info) {
                     $links = $this->makeBackrefLink($info, $g_links, $start_char);
                     $atts = '';
                     if (!empty($info['def'])) {
@@ -1679,7 +1766,7 @@ class Parser
                 }
             }
             if ('+' == $extras && !empty($this->unreferencedNotes)) {
-                foreach ($this->unreferencedNotes as $seq=>$info) {
+                foreach ($this->unreferencedNotes as $seq => $info) {
                     if (!empty($info['def'])) {
                         extract($info['def']);
                         $o[] = "\t".'<li'.$atts.'>'.$content.'</li>';
@@ -1687,7 +1774,7 @@ class Parser
                 }
             }
 
-            $this->notelist_cache[$index] = join("\n",$o);
+            $this->notelist_cache[$index] = join("\n", $o);
         }
 
         $_ = ($this->notelist_cache[$index]) ? $this->notelist_cache[$index] : '';
@@ -1717,16 +1804,17 @@ class Parser
         $i_ = str_replace(array('&', ';', '#'), '', $this->encodeHigh($i));
         $decode = (strlen($i) !== strlen($i_));
 
-        if ($backlink_type === '!')
+        if ($backlink_type === '!') {
             return '';
-        elseif ($backlink_type === '^')
+        } elseif ($backlink_type === '^') {
             return '<sup><a href="#noteref'.$info['refids'][0].'">'.$i.'</a></sup>';
-        else {
+        } else {
             $_ = array();
             foreach ($info['refids'] as $id) {
                 $_[] = '<sup><a href="#noteref'.$id.'">'. (($decode) ? $this->decodeHigh($i_) : $i_) .'</a></sup>';
-                if ($allow_inc)
+                if ($allow_inc) {
                     $i_++;
+                }
             }
             $_ = join(' ', $_);
             return $_;
@@ -1742,11 +1830,12 @@ class Parser
         list(, $label, $link, $att, $content) = $m;
         // Assign an id if the note reference parse hasn't found the label yet.
         $id = @$this->notes[$label]['id'];
-        if (!$id)
+        if (!$id) {
             $this->notes[$label]['id'] = uniqid(rand());
+        }
 
-        if (empty($this->notes[$label]['def'])) // Ignores subsequent defs using the same label
-        {
+        // Ignores subsequent defs using the same label
+        if (empty($this->notes[$label]['def'])) {
             $this->notes[$label]['def'] = array(
                 'atts'    => $this->parseAttribs($att),
                 'content' => $this->graf($content),
@@ -1789,8 +1878,9 @@ class Parser
 
         // Assign a sequence number to this reference if there isn't one already...
         $num = @$this->notes[$label]['seq'];
-        if (!$num)
+        if (!$num) {
             $num = $this->notes[$label]['seq'] = ($this->note_index++);
+        }
 
         // Make our anchor point & stash it for possible use in backlinks when the
         // note list is generated later...
@@ -1799,13 +1889,15 @@ class Parser
 
         // If we are referencing a note that hasn't had the definition parsed yet, then assign it an ID...
         $id = @$this->notes[$label]['id'];
-        if (!$id)
+        if (!$id) {
             $id = $this->notes[$label]['id'] = uniqid(rand());
+        }
 
         // Build the link (if any)...
         $_ = '<span id="noteref'.$refid.'">'.$num.'</span>';
-        if (!$nolink)
+        if (!$nolink) {
             $_ = '<a href="#note'.$id.'">'.$_.'</a>';
+        }
 
         // Build the reference...
         $_ = $this->replaceMarkers($this->symbols['nl_ref_pattern'], array('atts' => $atts, 'marker' => $_));
@@ -1843,7 +1935,8 @@ class Parser
     /**
      * @internal
      **/
-    protected function addPart(&$mask, $name, &$parts) {
+    protected function addPart(&$mask, $name, &$parts)
+    {
         return (in_array($name, $mask) && isset($parts[$name]) && '' !== $parts[$name]);
     }
 
@@ -1873,13 +1966,15 @@ class Parser
         }
 
         if ($this->addPart($mask, 'path', $parts)) {
-            if (!$encode)
+            if (!$encode) {
                 $out .= $parts['path'];
-            else {
+            } else {
                 $pp = explode('/', $parts['path']);
                 foreach ($pp as &$p) {
                     $p = str_replace(array('%25', '%40'), array('%', '@'), rawurlencode($p));
-                    if (!in_array($parts['scheme'], array('tel','mailto'))) $p = str_replace('%2B', '+', $p);
+                    if (!in_array($parts['scheme'], array('tel','mailto'))) {
+                        $p = str_replace('%2B', '+', $p);
+                    }
                 }
 
                 $pp = implode('/', $pp);
@@ -1946,15 +2041,17 @@ class Parser
         $scheme_in_list = in_array($scheme, $this->url_schemes);
         $scheme_ok      = ('' === $scheme) || $scheme_in_list;
 
-        if (!$scheme_ok)
+        if (!$scheme_ok) {
             return $m[0];
+        }
 
         if ('$' === $text) {
-            if ($scheme_in_list)
+            if ($scheme_in_list) {
                 $text = ltrim($this->rebuildURI($uri_parts, 'authority,path,query,fragment', false), '/');
-            else {
-                if (isset($this->urlrefs[$url]))
+            } else {
+                if (isset($this->urlrefs[$url])) {
                     $url = urldecode($this->urlrefs[$url]);
+                }
                 $text = $url;
             }
         }
@@ -1968,19 +2065,19 @@ class Parser
             $title = '';
         }
 
-        if (!$this->noimage)
+        if (!$this->noimage) {
             $text = $this->images($text);
+        }
 
         $text = $this->spans($text);
         $text = $this->glyphs($text);
         $url  = $this->shelveURL($this->rebuildURI($uri_parts) . $slash);
 
         $a    = $this->newTag('a', $this->parseAttribsToArray($atts), false)->title($title)->href($url, true)->rel($this->rel);
-        $tags = $this->storeTags((string)$a, '</a>');
+        $tags = $this->storeTags((string) $a, '</a>');
         $out  = $tags['open'].$text.$tags['close'];
 
-        if (($pre and !$tail) or ($tail and !$pre))
-        {
+        if (($pre and !$tail) or ($tail and !$pre)) {
             $out = $pre.$out.$post.$tail;
             $post = '';
         }
@@ -2002,10 +2099,12 @@ class Parser
       **/
     protected function getRefs($text)
     {
-        if ($this->restricted)
+        if ($this->restricted) {
             $pattern = "/^\[(.+)\]((?:https?:\/\/|\/)\S+)(?=\s|$)/Um";
-        else
+        } else {
             $pattern = "/^\[(.+)\]((?:https?:\/\/|tel:|file:|ftp:\/\/|sftp:\/\/|mailto:|callto:|\/)\S+)(?=\s|$)/Um";
+        }
+
         return preg_replace_callback($pattern, array(&$this, "refs"), $text);
     }
 
@@ -2029,7 +2128,10 @@ class Parser
      **/
     protected function shelveURL($text)
     {
-        if ('' === $text) return '';
+        if ('' === $text) {
+            return '';
+        }
+
         $ref = md5($text).'z';
         $this->urlshelf[$ref] = $text;
         return 'urlref:'.$ref;
@@ -2051,11 +2153,15 @@ class Parser
     protected function retrieveURL($m)
     {
         $ref = $m[1];
-        if (!isset($this->urlshelf[$ref])) return $ref;
+        if (!isset($this->urlshelf[$ref])) {
+            return $ref;
+        }
 
         $url = $this->urlshelf[$ref];
-        if (isset($this->urlrefs[$url]))
+        if (isset($this->urlrefs[$url])) {
             $url = $this->urlrefs[$url];
+        }
+
         return $this->rEncodeHTML($this->relURL($url));
     }
 
@@ -2068,11 +2174,13 @@ class Parser
         $parts = @parse_url(urldecode($url));
         if ((empty($parts['scheme']) or @$parts['scheme'] == 'http') and
              empty($parts['host']) and
-             preg_match('/^\w/', @$parts['path']))
-            $url = $this->relativeImagePrefix.$url;
+             preg_match('/^\w/', @$parts['path'])) {
+             $url = $this->relativeImagePrefix.$url;
+             }
         if ($this->restricted and !empty($parts['scheme']) and
-                !in_array($parts['scheme'], $this->url_schemes))
-            return '#';
+                !in_array($parts['scheme'], $this->url_schemes)) {
+                    return '#';
+        }
         return $url;
     }
 
@@ -2130,10 +2238,11 @@ class Parser
         if ('' !== $algn) {
             $vals = array('<' => 'left', '=' => 'center', '>' => 'right');
             if (isset($vals[$algn])) {
-                if ('html5' === $this->doctype)
+                if ('html5' === $this->doctype) {
                     $extras = "align-{$vals[$algn]}";
-                else
+                } else {
                     $align = $vals[$algn];
+                }
             }
         }
 
@@ -2142,15 +2251,18 @@ class Parser
             $alt   = $title;
         }
 
-        if ($this->isRelUrl($url))
+        if ($this->isRelUrl($url)) {
             $size = @getimagesize(realpath($this->doc_root.ltrim($url, $this->ds)));
-        if ($size)
+        }
+
+        if ($size) {
             $atts .= " $size[3]";
+        }
 
         $href = ($href) ? $this->shelveURL($href) : '';
         $img  = $this->newTag('img', $this->parseAttribsToArray($atts, '', 1, $extras))->align($align)->alt($alt, true)->src($this->shelveURL($url), true)->title($title);
 
-        $out  = ($href) ? "<a href=\"$href\"{$this->rel}>$img</a>" : (string)$img;
+        $out  = ($href) ? "<a href=\"$href\"{$this->rel}>$img</a>" : (string) $img;
         return $this->shelve($out);
     }
 
@@ -2203,11 +2315,12 @@ class Parser
      **/
     protected function retrieve($text)
     {
-        if (is_array($this->shelf))
+        if (is_array($this->shelf)) {
             do {
                 $old = $text;
                 $text = str_replace(array_keys($this->shelf), $this->shelf, $text);
-             } while ($text != $old);
+            } while ($text != $old);
+        }
 
         return $text;
     }
@@ -2340,7 +2453,7 @@ class Parser
      **/
     protected function replaceGlyphs($text)
     {
-        return preg_replace('/glyph:([^<]+)/','$1',$text);
+        return preg_replace('/glyph:([^<]+)/', '$1', $text);
     }
 
 
@@ -2403,10 +2516,12 @@ class Parser
             '<' => '&lt;',
             '>' => '&gt;',
         );
-        if ($quotes) $a = $a + array(
-            "'" => '&#39;', // Numeric, as in htmlspecialchars
-            '"' => '&quot;',
-        );
+        if ($quotes) {
+            $a = $a + array(
+                "'" => '&#39;', // Numeric, as in htmlspecialchars
+                '"' => '&quot;',
+            );
+        }
 
         return str_replace(array_keys($a), $a, $str);
     }
@@ -2418,8 +2533,10 @@ class Parser
     protected function rEncodeHTML($str, $quotes=1)
     {
         // In restricted mode, all input but quotes has already been escaped
-        if ($this->restricted)
+        if ($this->restricted) {
             return str_replace('"', '&quot;', $str);
+        }
+
         return $this->encodeHTML($str, $quotes);
     }
 }

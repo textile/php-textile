@@ -24,20 +24,22 @@ class Tag extends \Netcarver\Textile\DataBag
     }
 
 
-	public function __toString()
-	{
+    public function __tostring()
+    {
         $attribs = '';
 
         if (count($this->data)) {
             ksort($this->data);
-            foreach ($this->data as $k=>$v)
+            foreach ($this->data as $k => $v) {
                 $attribs .= " $k=\"$v\"";
+            }
         }
 
-        if ($this->tag)
+        if ($this->tag) {
             $o = '<' . $this->tag . $attribs . (($this->selfclose) ? " />" : '>');
-        else
+        } else {
             $o = $attribs;
+        }
 
         return $o;
     }

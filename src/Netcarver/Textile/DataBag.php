@@ -32,8 +32,9 @@ class DataBag
     public function __call($k, $params)
     {
         $allow_empty = isset($params[1]) && is_bool($params[1]) ? $params[1] : false;
-        if ($allow_empty || '' != $params[0])
+        if ($allow_empty || '' != $params[0]) {
             $this->data[$k] = $params[0];
+        }
 
         return $this;
     }
