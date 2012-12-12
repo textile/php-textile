@@ -411,7 +411,7 @@ class TextileTag extends TextileBag
 
 class Textile
 {
-    protected $ver = '2.5.0rc1';
+    protected $ver = '2.5.0';
 
     protected $hlgn;
     protected $vlgn;
