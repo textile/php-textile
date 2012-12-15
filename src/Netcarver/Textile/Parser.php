@@ -2267,36 +2267,30 @@ class Parser
     }
 
 
-    /**
-     * @internal
-     **/
-    protected function code($text)
-    {
-        $text = $this->doSpecial($text, '<code>', '</code>', 'fCode');
-        $text = $this->doSpecial($text, '@', '@', 'fCode');
-        $text = $this->doSpecial($text, '<pre>', '</pre>', 'fPre');
-        return $text;
-    }
-
-
-    /**
-     * @internal
-     **/
-    protected function fCode($m)
-    {
-        list(, $before, $text, $after) = array_pad($m, 4, '');
-        return $before.$this->shelve('<code>'.$this->rEncodeHTML($text).'</code>').$after;
-    }
-
-
-    /**
-     * @internal
-     **/
-    protected function fPre($m)
-    {
-        list(, $before, $text, $after) = array_pad($m, 4, '');
-        return $before.'<pre>'.$this->shelve($this->rEncodeHTML($text)).'</pre>'.$after;
-    }
+  // -------------------------------------------------------------
+	function code($text)
+	{
+		$text = $this->doSpecial($text, '<code>', '</code>', 'fCode');
+		$text = $this->doSpecial($text, '@', '@', 'fCode');
+		$text = $this->doSpecial($text, '<pre>', '</pre>', 'fPre');
+		return $text;
+	}
+	
+	// -------------------------------------------------------------
+	function fCode($m)
+	{
+		@list(, $before, $attr, $text, $after) = array_pad($m, 5, null);
+		$attr = $this->pba($attr);
+		return $before.$this->shelve("<code $attr>".$this->r_encode_html($text).'</code>').$after;
+	}
+	
+	// -------------------------------------------------------------
+	function fPre($m)
+	{
+		@list(, $before, $attr, $text, $after) = array_pad($m, 5, null);
+    $attr = $this->pba($attr);
+		return $before."<code $attr>".$this->shelve($this->r_encode_html($text)).'</pre>'.$after;
+	}
 
 
     /**
@@ -2343,16 +2337,14 @@ class Parser
         $out = preg_replace("/^\n*/", "", $out);                // leading blank lines
         return $out;
     }
-
-
-    /**
-     * @internal
-     **/
-    protected function doSpecial($text, $start, $end, $method='fSpecial')
-    {
-        return preg_replace_callback('/(^|\s|[|[({>])'.preg_quote($start, '/').'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}|])?/ms', array(&$this, $method), $text);
-    }
-
+  
+	// -------------------------------------------------------------
+	function doSpecial($text, $start, $end, $method='fSpecial')
+	{
+		$callback = array(&$this, $method);
+		return preg_replace_callback('/(^|\s|[[({>])'.preg_quote($start, '/')."($this->lc[\s\.])?".'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}])?/ms',
+				$callback , $text);
+	}
 
     /**
      * @internal
@@ -2375,14 +2367,13 @@ class Parser
     }
 
 
-    /**
-     * @internal
-     **/
-    protected function fTextile($m)
-    {
-        list(, $before, $notextile, $after) = array_pad($m, 4, '');
-        return $before.$this->shelve($notextile).$after;
-    }
+  // -------------------------------------------------------------
+	function fTextile($m)
+	{
+		@list(, $before, $attr, $notextile, $after) = array_pad($m, 5, null);
+		#$notextile = str_replace(array_keys($modifiers), array_values($modifiers), $notextile);
+		return $before.$this->shelve($notextile).$after;
+	}
 
 
     /**
