@@ -2511,19 +2511,8 @@ class Parser
      **/
     protected function encodeHTML($str, $quotes=1)
     {
-        $a = array(
-            '&' => '&amp;',
-            '<' => '&lt;',
-            '>' => '&gt;',
-        );
-        if ($quotes) {
-            $a = $a + array(
-                "'" => '&#39;', // Numeric, as in htmlspecialchars
-                '"' => '&quot;',
-            );
-        }
-
-        return str_replace(array_keys($a), $a, $str);
+        $quote = ( $quotes ) ? ENT_QUOTES : ENT_NOQUOTES;
+  	    return htmlspecialchars($str, $quote, 'UTF-8', false);	
     }
 
 
