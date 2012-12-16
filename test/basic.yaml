@@ -614,7 +614,7 @@ Spans in table cells :
 
     | _em_ |
 
-    | Inter-word -dashes- | ZIP-codes are 5- or 9-digit codes |
+    | Inter-word -dashes- | ZIP-codes are 5- or 9-digit codes | Hello ??<a href="https://github.com">Github</a>!?? |
 
   expect: |
     <table>
@@ -633,6 +633,7 @@ Spans in table cells :
     <tr>
     <td> Inter-word <del>dashes</del> </td>
     <td> <span class="caps">ZIP</span>-codes are 5- or 9-digit codes </td>
+    <td> Hello <cite><a href="https://github.com">Github</a>!</cite> </td>
     </tr>
     </table>
 
