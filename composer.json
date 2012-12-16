@@ -1,6 +1,12 @@
 {
     "name": "netcarver/textile",
     "description": "A lightweight markup language that takes (almost) plaintext and converts it into well formed HTML.",
+    "homepage": "https://github.com/netcarver/textile",
+    "support": {
+        "irc": "irc://irc.freenode.net/textile",
+        "wiki": "https://github.com/netcarver/textile/wiki",
+        "issues": "https://github.com/netcarver/textile/issues"
+    },
     "license": "BSD-3-Clause",
     "autoload": {
         "classmap": ["classTextile.php"]
