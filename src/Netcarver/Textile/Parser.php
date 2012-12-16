@@ -1,7 +1,5 @@
 <?php
-
 namespace Netcarver\Textile;
-
 /**
  * Example: get XHTML from a given Textile-markup string ($string)
  *
@@ -2266,36 +2264,63 @@ class Parser
         return $this->shelve($out);
     }
 
-
+    
     /**
      * @internal
      **/
-    protected function code($text)
+     protected function noTextile($text)
     {
-        $text = $this->doSpecial($text, '<code>', '</code>', 'fCode');
-        $text = $this->doSpecial($text, '@', '@', 'fCode');
-        $text = $this->doSpecial($text, '<pre>', '</pre>', 'fPre');
-        return $text;
+    	$text = $this->doSpecial($text, '<notextile>', '</notextile>', 'fTextile');
+    	return $this->doSpecial($text, '==', '==', 'fTextile');
+    
     }
-
-
+    
     /**
+     * @internal
+     **/
+     protected function code($text)
+    {
+    	$text = $this->doSpecial($text, '<code>', '</code>', 'fCode');
+    	$text = $this->doSpecial($text, '@', '@', 'fCode');
+    	$text = $this->doSpecial($text, '<pre>', '</pre>', 'fPre');
+    	return $text;
+    }
+    
+     /**
      * @internal
      **/
     protected function fCode($m)
     {
-        list(, $before, $text, $after) = array_pad($m, 4, '');
-        return $before.$this->shelve('<code>'.$this->rEncodeHTML($text).'</code>').$after;
+    	@list(, $before, $attr, $text, $after) = array_pad($m, 5, null);;
+    	$attr = $this->parseAttribs($attr);
+    	return $before.$this->shelve("<code $attr>".$this->rEncodeHTML($text).'</code>').$after;
     }
-
-
+    
     /**
      * @internal
      **/
     protected function fPre($m)
     {
-        list(, $before, $text, $after) = array_pad($m, 4, '');
-        return $before.'<pre>'.$this->shelve($this->rEncodeHTML($text)).'</pre>'.$after;
+    	@list(, $before, $attr, $text, $after) = array_pad($m, 5, null);;
+    	return $before.'<pre>'.$this->shelve($this->rEncodeHTML($text)).'</pre>'.$after;
+    }
+    
+    /**
+     * @internal
+     **/
+    protected function fTextile($m){
+    	@list(, $before, $attr, $notextile, $after) = array_pad($m, 5, null);
+    	return $before.$this->shelve($notextile).$after;
+    }
+    
+    /**
+     * @internal
+     **/
+    protected function doSpecial($text, $start, $end, $method='fSpecial')
+    {
+    	$callback = array(&$this, $method);
+    	return preg_replace_callback('/(^|\s|[[({>])'.preg_quote($start, '/')."($this->lc[\s\.])?".'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}])?/ms',
+    			$callback , $text);
     }
 
 
@@ -2344,16 +2369,6 @@ class Parser
         return $out;
     }
 
-
-    /**
-     * @internal
-     **/
-    protected function doSpecial($text, $start, $end, $method='fSpecial')
-    {
-        return preg_replace_callback('/(^|\s|[|[({>])'.preg_quote($start, '/').'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}|])?/ms', array(&$this, $method), $text);
-    }
-
-
     /**
      * @internal
      **/
@@ -2362,26 +2377,6 @@ class Parser
         // A special block like notextile or code
         list(, $before, $text, $after) = array_pad($m, 4, '');
         return $before.$this->shelve($this->encodeHTML($text)).$after;
-    }
-
-
-    /**
-     * @internal
-     **/
-    protected function noTextile($text)
-    {
-         $text = $this->doSpecial($text, '<notextile>', '</notextile>', 'fTextile');
-         return $this->doSpecial($text, '==', '==', 'fTextile');
-    }
-
-
-    /**
-     * @internal
-     **/
-    protected function fTextile($m)
-    {
-        list(, $before, $notextile, $after) = array_pad($m, 4, '');
-        return $before.$this->shelve($notextile).$after;
     }
 
 
@@ -2511,19 +2506,8 @@ class Parser
      **/
     protected function encodeHTML($str, $quotes=1)
     {
-        $a = array(
-            '&' => '&amp;',
-            '<' => '&lt;',
-            '>' => '&gt;',
-        );
-        if ($quotes) {
-            $a = $a + array(
-                "'" => '&#39;', // Numeric, as in htmlspecialchars
-                '"' => '&quot;',
-            );
-        }
-
-        return str_replace(array_keys($a), $a, $str);
+		$quote = ( $quotes ) ? ENT_QUOTES : ENT_NOQUOTES;
+		return htmlspecialchars($str, $quote, 'UTF-8', false);	
     }
 
 
@@ -2536,7 +2520,6 @@ class Parser
         if ($this->restricted) {
             return str_replace('"', '&quot;', $str);
         }
-
         return $this->encodeHTML($str, $quotes);
     }
 }
