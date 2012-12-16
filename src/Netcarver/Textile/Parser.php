@@ -1617,7 +1617,7 @@ class Parser
                 $text = preg_replace_callback("/
                     (^|(?<=[\s>$pnct\(])|[{[])            # pre
                     ($f)(?!$f)                            # tag
-                    ({$this->c})                          # atts
+                    ({$this->lc})                         # atts - do not use horizontal alignment; it kills html tags within inline elements.
                     (?::(\S+))?                           # cite
                     ([^\s$f]+|\S.*?[^\s$f\n])             # content
                     ([$pnct]*)                            # end
