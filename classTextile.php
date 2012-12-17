@@ -322,7 +322,6 @@ Ordered List Start & Continuation:
 
         #_ Item 7
         # Item 8
-
 */
 
 
@@ -651,8 +650,8 @@ class Textile
         $this->prepare($lite, $noimage, $rel);
         $this->url_schemes = $this->unrestricted_url_schemes;
 
+        // Use of the $encode flag is discouraged. Calling textileEncode() is prefered.
         if ($encode) {
-            // Use of the $encode flag is discouraged. Calling textileEncode() is prefered.
             return $this->textileEncode($text);
         }
 
@@ -1748,7 +1747,7 @@ class Textile
         $key = ($this->tag_index++);
 
         $key = str_pad((string) $key, 10, '0', STR_PAD_LEFT).'z'; // $key must be of fixed length to allow proper matching in retrieveTags
-        $this->tagCache[$key] = array('open'=>$opentag, 'close'=>$closetag);
+        $this->tagCache[$key] = array('open' => $opentag, 'close' => $closetag);
         $tags = array(
             'open'  => "textileopentag{$key} ",
             'close' => " textileclosetag{$key}",
@@ -1919,8 +1918,8 @@ class Textile
             $this->notes[$label]['id'] = uniqid(rand());
         }
 
+        // Ignores subsequent defs using the same label
         if (empty($this->notes[$label]['def'])) {
-            // Ignores subsequent defs using the same label
             $this->notes[$label]['def'] = array(
                 'atts'    => $this->parseAttribs($att),
                 'content' => $this->graf($content),
@@ -2620,6 +2619,7 @@ class Textile
         if ($this->restricted) {
             return str_replace('"', '&quot;', $str);
         }
+
         return $this->encodeHTML($str, $quotes);
     }
 }
