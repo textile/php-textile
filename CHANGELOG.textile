@@ -1,6 +1,6 @@
 Here's an edited summary of the commit log. It doesn't include small changes or changes to test cases.
 
-h2. Changes in master (from 3.5.0)
+h2. Changes in master branch (from 3.5.0)
 
 * Remove horizontal alignement from inline elements (closes "#66":https://github.com/netcarver/textile/issues/66.)
 

@@ -613,10 +613,10 @@ class Parser
     protected function textileCommon($text, $lite)
     {
         if ($lite) {
-            $this->btag = array('bq', 'p');
+            $this->blocktag_whitelist = array('bq', 'p');
             $text = $this->blocks($text."\n\n");
         } else {
-            $this->btag = array('bq', 'p', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', '###');
+            $this->blocktag_whitelist = array('bq', 'p', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', '###');
             $text = $this->blocks($text);
             $text = $this->placeNoteLists($text);
         }
@@ -1337,8 +1337,7 @@ class Parser
      **/
     protected function blocks($text)
     {
-        $find = $this->btag;
-        $tre = join('|', $find);
+        $blocktags = join('|', $this->blocktag_whitelist);
 
         $text = explode("\n\n", $text);
 
@@ -1353,7 +1352,7 @@ class Parser
 
         foreach ($text as $line) {
             $anon = 0;
-            if (preg_match("/^($tre)($this->a$this->c)\.(\.?)(?::(\S+))? (.*)$/s", $line, $m)) {
+            if (preg_match("/^($blocktags)($this->a$this->c)\.(\.?)(?::(\S+))? (.*)$/Ss", $line, $m)) {
                 // Last block was extended, so close it
                 if ($ext) {
                     $out[count($out)-1] .= $c1;
