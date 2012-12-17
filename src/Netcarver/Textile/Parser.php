@@ -1204,8 +1204,7 @@ class Parser
                     if (strlen($tl) > strlen($pt)) {
                         // First line of this level of ol -- has a start attribute?
                         if ('' == $st) {
-                            // No => reset count to 1.
-                            $this->olstarts[$tl] = 1;
+                            $this->olstarts[$tl] = 1;           // No => reset count to 1.
                         } elseif ('_' !== $st) {
                             $this->olstarts[$tl] = (int) $st;   // Yes, and numeric => reset to given.
                                                                 // TRICKY: the '_' continuation marker just means
@@ -1259,6 +1258,7 @@ class Parser
             } else {
                 $line .= "\n";
             }
+
             $out[] = $line;
         }
 
@@ -1357,6 +1357,7 @@ class Parser
                 if ($ext) {
                     $out[count($out)-1] .= $c1;
                 }
+
                 // New block
                 list(,$tag,$atts,$ext,$cite,$graf) = $m;
                 list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0,$tag,$atts,$ext,$cite,$graf));
@@ -1456,7 +1457,6 @@ class Parser
             } else {
                 $supp_id = ' id="fn' . $fnid . '"';
             }
-
 
             $sup = (strpos($att, '^') === false) ? $this->formatFootnote($fns[1], $supp_id) : $this->formatFootnote('<a href="#fnrev' . $fnid . '">'.$fns[1] .'</a>', $supp_id);
 
@@ -1721,6 +1721,7 @@ class Parser
                     $this->unreferencedNotes[] = $info;    // Unreferenced definitions go here for possible future use.
                 }
             }
+
             if (!empty($o)) {
                 ksort($o);
             }
@@ -1764,6 +1765,7 @@ class Parser
                     }
                 }
             }
+
             if ('+' == $extras && !empty($this->unreferencedNotes)) {
                 foreach ($this->unreferencedNotes as $seq => $info) {
                     if (!empty($info['def'])) {
@@ -2171,15 +2173,14 @@ class Parser
     protected function relURL($url)
     {
         $parts = @parse_url(urldecode($url));
-        if ((empty($parts['scheme']) or @$parts['scheme'] == 'http') and
-             empty($parts['host']) and
-             preg_match('/^\w/', @$parts['path'])) {
-             $url = $this->relativeImagePrefix.$url;
-             }
-        if ($this->restricted and !empty($parts['scheme']) and
-                !in_array($parts['scheme'], $this->url_schemes)) {
-                    return '#';
+        if ((empty($parts['scheme']) or @$parts['scheme'] == 'http') and empty($parts['host']) and preg_match('/^\w/', @$parts['path'])) {
+            $url = $this->relativeImagePrefix.$url;
         }
+
+        if ($this->restricted and !empty($parts['scheme']) and !in_array($parts['scheme'], $this->url_schemes)) {
+            return '#';
+        }
+
         return $url;
     }
 
