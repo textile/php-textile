@@ -1390,13 +1390,13 @@ class Parser
         $text = preg_split('/\n(?=[-])/m', $in);
         foreach ($text as $nr => $line) {
             $m = array();
-            if (preg_match("/^[-]+($this->lc)[ .](.*)$/s", $line, $m)) {
+            if (preg_match("/^[-]+($this->lc)\.? (.*)$/s", $line, $m)) {
                 list(, $atts, $content) = $m;
                 $content = trim($content);
                 $atts = $this->parseAttribs($atts);
 
                 if (!preg_match("/^(.*?)[\s]*:=(.*?)[\s]*(=:|:=)?[\s]*$/s", $content, $xm)) {
-                    return $in;
+                    $xm = array( $content, $content, '' );
                 }
 
                 list(, $term, $def,) = $xm;
@@ -1411,18 +1411,22 @@ class Parser
                     }
                 }
 
-                if ('' != $def && '' != $term) {
+                if ('' != $term) {
                     $pos = strpos($def, "\n");
                     $def = str_replace("\n", "<br />", trim($def));
                     if (0 === $pos) {
                         $def  = '<p>' . $def . '</p>';
                     }
+                    $term = str_replace("\n", "<br />", $term);
 
                     $term = $this->graf($term);
                     $def  = $this->graf($def);
 
                     $out[] = "\t<dt$atts>$term</dt>";
-                    $out[] = "\t<dd>$def</dd>";
+
+                    if ($def) {
+                        $out[] = "\t<dd>$def</dd>";
+                    }
                 }
             }
         }

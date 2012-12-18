@@ -2,8 +2,9 @@ Here's an edited summary of the commit log. It doesn't include small changes or 
 
 h2. Changes in master branch (from v3.5.1)
 
-* Pending
-
+* Improved support for Redcloth-style definition lists.
+*# Allow multiple terms
+*# Allow linebreaks in terms
 
 h2. Changes in v3.5.1 (from v3.5.0)
 
