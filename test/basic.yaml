@@ -1099,6 +1099,20 @@ Image :
 
     <p><img align="right" alt="" src="http://textpattern.com/favicon.ico" /></p>
 
+Relative Images (default) :
+  input  : |
+    !10x10.gif!
+  expect : |
+    <p><img alt="" height="10" src="10x10.gif" width="10" /></p>
+
+Relative Images (responsive) :
+  input  : |
+    !10x10.gif!
+  expect : |
+    <p><img alt="" src="10x10.gif" /></p>
+  setup :
+    - setResponsiveImages: true
+
 Images with links :
   input  : |
     Here's the favicon from the TXP(Textpattern) website... !http://textpattern.com/favicon.ico(title text)!:http://textpattern.com
