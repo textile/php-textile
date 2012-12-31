@@ -14,6 +14,8 @@ There are two main branches in the repository that will be of interest, both of 
 
 *This is the documentation for the 2.5 branch*
 
+Currently both branches are feature synchronised at the point they are tagged and new features and bugfixes will go into both branches (where possible) for the time being but this _will_ change at some point in the future.
+
 From time to time other branches may be present in the repository. These represent transient development or hotfix branches and should not be used for live sites/projects.
 
 
