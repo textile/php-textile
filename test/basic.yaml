@@ -52,6 +52,32 @@ Basic glyphs:
 
     <p style="font-size: 200%;">2&#188; 3&#189; 4&#190;</p>
 
+Classes and IDs:
+  input  : |
+    p(c). Valid class
+
+    p(#id). Valid ID
+
+    p(c#id). Valid class and ID
+
+    p(c9). Valid class
+
+    p(c4.2). Valid class
+
+    p(c1 c.2 c-3). Valid class
+  expect : |
+    <p class="c">Valid class</p>
+
+    <p id="id">Valid ID</p>
+
+    <p class="c" id="id">Valid class and ID</p>
+
+    <p class="c9">Valid class</p>
+
+    <p class="c4.2">Valid class</p>
+
+    <p class="c1 c.2 c-3">Valid class</p>
+
 Dimensions :
   input:  |
     [1/2] x [1/4] and (1/2)" x [1/4]" and (1/2)' x (1/4)'
