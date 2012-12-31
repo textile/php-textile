@@ -439,6 +439,7 @@ class Textile
     protected $doc_root;
     protected $doctype;
     protected $symbols;
+    protected $responsive_images = false;
 
 
     /**
@@ -603,6 +604,35 @@ class Textile
     {
         $this->relativeImagePrefix = $prefix;
         return $this;
+    }
+
+
+    /**
+     * Allows a client to better support responsive designs by turning on or off
+     * image dimensions when parsing a textile image tag.
+     *
+     * By default (if this method is not called) image dimensions will be included
+     * if possible.
+     *
+     * @access public
+     * @param  bool   $responsive true=>omit image dimensions, false=>include dimensions
+     * @return object $this
+     */
+    public function setResponsiveImages($responsive=true)
+    {
+        $this->responsive_images = $responsive;
+        return $this;
+    }
+
+
+    /**
+     * Allows access to the responsive images flag.
+     *
+     * @return bool state of the $responsive_images flag.
+     */
+    public function getResponsiveImages()
+    {
+        return $this->responsive_images;
     }
 
 
@@ -2333,7 +2363,7 @@ class Textile
             $alt   = $title;
         }
 
-        if ($this->isRelUrl($url)) {
+        if (!$this->responsive_images && $this->isRelUrl($url)) {
             $size = @getimagesize(realpath($this->doc_root.ltrim($url, $this->ds)));
         }
 
