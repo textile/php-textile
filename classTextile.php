@@ -2380,7 +2380,7 @@ class Textile
 
         $href = ($href) ? $this->shelveURL($href) : '';
         $img  = $this
-                    ->newTag('img', $this->parseAttribsToArray($atts, 'img', 1, $extras))
+                    ->newTag('img', $this->parseAttribsToArray($atts, '', 1, $extras))
                     ->align($align)
                     ->alt($alt, true)
                     ->height($height)
