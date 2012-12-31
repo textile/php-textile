@@ -2342,6 +2342,8 @@ class Textile
         $extras = '';
         $align  = '';
         $alt    = '';
+        $height = '';
+        $width  = '';
         $size   = false;
 
         list(, $algn, $atts, $url, $title, $href) = array_pad($m, 6, null);
@@ -2364,15 +2366,28 @@ class Textile
         }
 
         if (!$this->responsive_images && $this->isRelUrl($url)) {
-            $size = @getimagesize(realpath($this->doc_root.ltrim($url, $this->ds)));
+            $real_location = realpath($this->doc_root.ltrim($url, $this->ds));
+
+            if ($real_location) {
+                $size = getimagesize($real_location);
+            }
         }
 
         if ($size) {
-            $atts .= " $size[3]";
+            $height = $size[1];
+            $width  = $size[0];
         }
 
         $href = ($href) ? $this->shelveURL($href) : '';
-        $img  = $this->newTag('img', $this->parseAttribsToArray($atts, '', 1, $extras))->align($align)->alt($alt, true)->src($this->shelveURL($url), true)->title($title);
+        $img  = $this
+                    ->newTag('img', $this->parseAttribsToArray($atts, 'img', 1, $extras))
+                    ->align($align)
+                    ->alt($alt, true)
+                    ->height($height)
+                    ->src($this->shelveURL($url), true)
+                    ->title($title)
+                    ->width($width)
+                    ;
 
         $out  = ($href) ? "<a href=\"$href\"{$this->rel}>$img</a>" : (string) $img;
         return $this->shelve($out);
