@@ -612,11 +612,13 @@ class Textile
      * image dimensions when parsing a textile image tag.
      *
      * By default (if this method is not called) image dimensions will be included
-     * if possible.
+     * for relative images if possible.
      *
-     * @access public
      * @param  bool   $responsive true=>omit image dimensions, false=>include dimensions
      * @return object $this
+     * @example
+     * $parser = new Parser();
+     * $html = $parser->setResponsiveImages()->textileThis($input);
      */
     public function setResponsiveImages($responsive=true)
     {
