@@ -357,6 +357,7 @@ class Parser
     protected $doc_root;
     protected $doctype;
     protected $symbols;
+    protected $responsive_images = false;
 
 
     /**
@@ -521,6 +522,37 @@ class Parser
     {
         $this->relativeImagePrefix = $prefix;
         return $this;
+    }
+
+
+    /**
+     * Allows a client to better support responsive designs by turning on or off
+     * image dimensions when parsing a textile image tag.
+     *
+     * By default (if this method is not called) image dimensions will be included
+     * for relative images if possible.
+     *
+     * @param  bool   $responsive true=>omit image dimensions, false=>include dimensions
+     * @return object $this
+     * @example
+     * $parser = new Parser();
+     * $html = $parser->setResponsiveImages()->textileThis($input);
+     */
+    public function setResponsiveImages($responsive=true)
+    {
+        $this->responsive_images = $responsive;
+        return $this;
+    }
+
+
+    /**
+     * Allows access to the responsive images flag.
+     *
+     * @return bool state of the $responsive_images flag.
+     */
+    public function getResponsiveImages()
+    {
+        return $this->responsive_images;
     }
 
 
@@ -2233,6 +2265,8 @@ class Parser
         $extras = '';
         $align  = '';
         $alt    = '';
+        $height = '';
+        $width  = '';
         $size   = false;
 
         list(, $algn, $atts, $url, $title, $href) = array_pad($m, 6, null);
@@ -2254,16 +2288,29 @@ class Parser
             $alt   = $title;
         }
 
-        if ($this->isRelUrl($url)) {
-            $size = @getimagesize(realpath($this->doc_root.ltrim($url, $this->ds)));
+        if (!$this->responsive_images && $this->isRelUrl($url)) {
+            $real_location = realpath($this->doc_root.ltrim($url, $this->ds));
+
+            if ($real_location) {
+                $size = getimagesize($real_location);
+            }
         }
 
         if ($size) {
-            $atts .= " $size[3]";
+            $height = $size[1];
+            $width  = $size[0];
         }
 
         $href = ($href) ? $this->shelveURL($href) : '';
-        $img  = $this->newTag('img', $this->parseAttribsToArray($atts, '', 1, $extras))->align($align)->alt($alt, true)->src($this->shelveURL($url), true)->title($title);
+        $img  = $this
+                    ->newTag('img', $this->parseAttribsToArray($atts, '', 1, $extras))
+                    ->align($align)
+                    ->alt($alt, true)
+                    ->height($height)
+                    ->src($this->shelveURL($url), true)
+                    ->title($title)
+                    ->width($width)
+                    ;
 
         $out  = ($href) ? "<a href=\"$href\"{$this->rel}>$img</a>" : (string) $img;
         return $this->shelve($out);
