@@ -1,11 +1,16 @@
 Here's an edited summary of the commit log. It doesn't include small changes or changes to test cases.
 
-h2. Changes in master branch (from 3.5.0)
+h2. Changes in master branch (from v3.5.1)
+
+* Pending
+
+
+h2. Changes in v3.5.1 (from v3.5.0)
 
 * Remove horizontal alignment from inline elements (closes "#66":https://github.com/netcarver/textile/issues/66.)
 * Reinstate automatic generation of image width and height generation for relative images (closes "#101":https://github.com/netcarver/textile/issues/101.)
 * Add setResponsiveImages() and getResponsiveImages() to surpress width and height generation for relative images and better support content for responsive layouts (closes "#100":https://github.com/netcarver/textile/issues/101.)
-* Allow . in class attributes (closes  (closes "#97":https://github.com/netcarver/textile/issues/97.)
+* Allow . in class attributes (closes "#97":https://github.com/netcarver/textile/issues/97.)
 
 
 h2. Changes in v3.5.0 (from 2.4.1)
