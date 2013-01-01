@@ -329,7 +329,7 @@ class Parser
      *
      * @var string
      */
-    protected $ver = '3.5.0';
+    protected $ver = '3.5.1';
 
     /**
      * Pattern for horizontal align.
