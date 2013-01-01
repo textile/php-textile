@@ -1111,7 +1111,7 @@ Relative Images (responsive) :
   expect : |
     <p><img alt="" src="10x10.gif" /></p>
   setup :
-    - setResponsiveImages: true
+    - setDimensionlessImages: true
 
 Images with links :
   input  : |

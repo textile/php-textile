@@ -533,7 +533,7 @@ class Parser
     protected $symbols;
 
     /**
-     * dimensionless images flag.
+     * Dimensionless images flag.
      *
      * @var bool
      */
