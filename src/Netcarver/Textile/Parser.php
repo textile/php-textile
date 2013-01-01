@@ -426,7 +426,7 @@ class Parser
      * Shelved content.
      *
      * Stores fragments of the source text that have been parsed
-     * and require no more processing. 
+     * and require no more processing.
      *
      * @var array
      */
@@ -1192,7 +1192,7 @@ class Parser
 
         $o = array();
         if ($class) {
-            $o['class']   = $this->cleanAttribs($class);
+            $o['class'] = $this->cleanAttribs($class);
         }
 
         if ($colspan) {
@@ -1200,11 +1200,11 @@ class Parser
         }
 
         if ($id && $include_id) {
-            $o['id']      = $this->cleanAttribs($id);
+            $o['id'] = $this->cleanAttribs($id);
         }
 
         if ($lang) {
-            $o['lang']    = $this->cleanAttribs($lang);
+            $o['lang'] = $this->cleanAttribs($lang);
         }
 
         if ($rowspan) {
@@ -1212,15 +1212,15 @@ class Parser
         }
 
         if ($span) {
-            $o['span']    = $this->cleanAttribs($span);
+            $o['span'] = $this->cleanAttribs($span);
         }
 
         if ($style) {
-            $o['style']   = $this->cleanAttribs($style);
+            $o['style'] = $this->cleanAttribs($style);
         }
 
         if ($width) {
-            $o['width']   = $this->cleanAttribs($width);
+            $o['width'] = $this->cleanAttribs($width);
         }
 
         return $o;
@@ -1814,16 +1814,16 @@ class Parser
         $text = $this->links($text);               // Generate links
 
         if (!$this->noimage) {
-            $text = $this->images($text);           // Handle images (if permitted)
+            $text = $this->images($text);          // Handle images (if permitted)
         }
 
         if (!$this->lite) {
-            $text = $this->tables($text);           // Handle tables
+            $text = $this->tables($text);          // Handle tables
             $text = $this->redclothLists($text);   // Handle redcloth-style definition lists
             $text = $this->textileLists($text);    // Handle ordered & unordered lists plus txp-style definition lists
         }
 
-        $text = $this->spans($text);                // Inline markup (em, strong, sup, sub, del etc)
+        $text = $this->spans($text);               // Inline markup (em, strong, sup, sub, del etc)
 
         if (!$this->lite) {
             // Turn footnote references into supers or links. As footnote blocks are banned in lite mode there is no point generating links for them
