@@ -410,7 +410,7 @@ class Textile
      *
      * @var string
      */
-    protected $ver = '2.5.0';
+    protected $ver = '2.5.1';
 
     /**
      * Pattern for horizontal align.
