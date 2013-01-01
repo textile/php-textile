@@ -614,11 +614,11 @@ class Textile
     protected $symbols;
 
     /**
-     * Responsive images flag.
+     * Dimensionless images flag.
      *
      * @var bool
      */
-    protected $responsive_images = false;
+    protected $dimensionless_images = false;
 
 
     /**
@@ -793,32 +793,32 @@ class Textile
 
     /**
      * Allows a client to better support responsive designs by turning on or off
-     * image dimensions when parsing a textile image tag.
+     * image dimensions when parsing a textile image tag with a relative path.
      *
      * By default (if this method is not called) image dimensions will be included
-     * for relative images if possible.
+     * for relative images (if possible).
      *
-     * @param  bool   $responsive true=>omit image dimensions, false=>include dimensions
+     * @param  bool   $dimensionless true=>omit image dimensions, false=>include dimensions
      * @return object $this
      * @example
      * $parser = new Parser();
-     * $html = $parser->setResponsiveImages()->textileThis($input);
+     * $html = $parser->setDimensionlessImages()->textileThis($input);
      */
-    public function setResponsiveImages($responsive=true)
+    public function setDimensionlessImages($dimensionless=true)
     {
-        $this->responsive_images = $responsive;
+        $this->dimensionless_images = $dimensionless;
         return $this;
     }
 
 
     /**
-     * Allows access to the responsive images flag.
+     * Allows access to the dimensionless images flag.
      *
-     * @return bool state of the $responsive_images flag.
+     * @return bool state of the $dimensionless_images flag.
      */
-    public function getResponsiveImages()
+    public function getDimensionlessImages()
     {
-        return $this->responsive_images;
+        return $this->dimensionless_images;
     }
 
 
@@ -2534,7 +2534,7 @@ class Textile
             $alt   = $title;
         }
 
-        if (!$this->responsive_images && $this->isRelUrl($url)) {
+        if (!$this->dimensionless_images && $this->isRelUrl($url)) {
             $real_location = realpath($this->doc_root.ltrim($url, $this->ds));
 
             if ($real_location) {
