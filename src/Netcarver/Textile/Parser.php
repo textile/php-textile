@@ -854,6 +854,9 @@ class Parser
         }
 
         if (preg_match("/\(([^()]+)\)/U", $matched, $cls)) {
+
+            $class_regex = "/^([-a-zA-Z 0-9_\.]*)$/";
+
             $matched = str_replace($cls[0], '', $matched);    // Consume entire class block -- valid or invalid...
             // Only allow a restricted subset of the CSS standard characters for classes/ids. No encoding markers allowed...
             if (preg_match("/\(([-a-zA-Z 0-9_\.\:\#]+)\)/U", $cls[0], $cls)) {
@@ -865,11 +868,11 @@ class Parser
                         $id = $ids[1];
                     }
 
-                    if (preg_match("/^([-a-zA-Z 0-9_]*)/", substr($cls[1], 0, $hashpos), $ids)) {
+                    if (preg_match($class_regex, substr($cls[1], 0, $hashpos), $ids)) {
                         $class = $ids[1];
                     }
                 } else {
-                    if (preg_match("/^([-a-zA-Z 0-9_]*)$/", $cls[1], $ids)) {
+                    if (preg_match($class_regex, $cls[1], $ids)) {
                         $class = $ids[1];
                     }
                 }
