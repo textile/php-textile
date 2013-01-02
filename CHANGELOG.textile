@@ -3,6 +3,8 @@ Here's an edited summary of the commit log. It doesn't include small changes or 
 h2. Changes in 2.5 branch (from v2.5.1)
 
 * Improved support for Redcloth-style definition lists.
+*# Allow multiple terms
+*# Allow linebreaks in terms
 
 
 h2. Changes in v2.5.1 (from v2.5.0)
