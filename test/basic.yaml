@@ -2063,6 +2063,17 @@ Redcloth Definition list:
     Nourishing beverage for baby cows.
     Cold drink that goes great with cookies. =:
 
+    - term := you can have line breaks
+    just like other lists
+    - line-spanning
+    term := hey, slick!
+
+    You can have multiple terms before a definition:
+
+    - textile
+    - fabric
+    - cloth := woven threads
+
 
   expect: |
     <dl>
@@ -2085,6 +2096,23 @@ Redcloth Definition list:
     Cold drink that goes great with cookies.</p></dd>
     </dl>
 
+    <dl>
+    <dt>term</dt>
+    <dd>you can have line breaks<br />
+    just like other lists</dd>
+    <dt>line-spanning<br />
+    term</dt>
+    <dd>hey, slick!</dd>
+    </dl>
+
+    <p>You can have multiple terms before a definition:</p>
+
+    <dl>
+    <dt>textile</dt>
+    <dt>fabric</dt>
+    <dt>cloth</dt>
+    <dd>woven threads</dd>
+    </dl>
 
 Complex definition list:
   input: |
