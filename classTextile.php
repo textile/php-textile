@@ -366,7 +366,7 @@ class TextileTag extends TextileBag
     protected $selfclose;
 
 
-    public function __construct($name, $attribs=array(), $selfclosing=true)
+    public function __construct($name, $attribs = array(), $selfclosing = true)
     {
         parent::__construct($attribs);
         $this->tag = $name;
@@ -766,7 +766,7 @@ class Textile
      * @param  string|null  $name The name of the symbol, or NULL if requesting the symbol table
      * @return array|string The symbol table or the requested symbol
      */
-    public function getSymbol($name=null)
+    public function getSymbol($name = null)
     {
         return ($name) ? @$this->symbols['name'] : $this->symbols;
     }
@@ -784,7 +784,7 @@ class Textile
      * @return object $this
      * $parser->setRelativeImagePrefix('http://static.example.com/');
      **/
-    public function setRelativeImagePrefix($prefix='')
+    public function setRelativeImagePrefix($prefix = '')
     {
         $this->relativeImagePrefix = $prefix;
         return $this;
@@ -804,7 +804,7 @@ class Textile
      * $parser = new Parser();
      * $html = $parser->setDimensionlessImages()->textileThis($input);
      */
-    public function setDimensionlessImages($dimensionless=true)
+    public function setDimensionlessImages($dimensionless = true)
     {
         $this->dimensionless_images = $dimensionless;
         return $this;
@@ -963,7 +963,7 @@ class Textile
         }
 
         extract($this->symbols, EXTR_PREFIX_ALL, 'txt');
-        extract($this->regex_snippets );
+        extract($this->regex_snippets);
         $pnc = '[[:punct:]]';
 
         if ($cur) {
@@ -1769,7 +1769,8 @@ class Textile
 
         if ($tag === 'p') {
             // Is this an anonymous block with a note definition?
-            $notedef = preg_replace_callback("/
+            $notedef = preg_replace_callback(
+                "/
                     ^note\#               #  start of note def marker
                     ([^%<*!@#^([{ \s.]+)  # !label
                     ([*!^]?)              # !link
@@ -1777,7 +1778,10 @@ class Textile
                     \.?                   #  optional period.
                     [\s]+                 #  whitespace ends def marker
                     (.*)$                 # !content
-                /x".$this->regex_snippets['mod'], array(&$this, "fParseNoteDefs"), $content);
+                /x".$this->regex_snippets['mod'],
+                array(&$this, "fParseNoteDefs"),
+                $content
+            );
 
             if ('' === $notedef) {
                 // It will be empty if the regex matched and ate it.
@@ -1844,7 +1848,7 @@ class Textile
     }
 
 
-    protected function formatFootnote($marker, $atts='', $anchor=true)
+    protected function formatFootnote($marker, $atts = '', $anchor = true)
     {
         $pattern = ($anchor) ? $this->symbols['fn_foot_pattern'] : $this->symbols['fn_ref_pattern'];
         return $this->replaceMarkers($pattern, array('atts' => $atts, 'marker' => $marker));
@@ -1864,11 +1868,15 @@ class Textile
 
     protected function getHTMLComments($text)
     {
-        $text = preg_replace_callback("/
+        $text = preg_replace_callback(
+            "/
             \<!--    #  start
             (.*?)    # !content *not* greedy
             -->      #  end
-        /sx", array(&$this, "fParseHTMLComments"), $text);
+            /sx",
+            array(&$this, "fParseHTMLComments"),
+            $text
+        );
         return $text;
     }
 
@@ -1939,7 +1947,8 @@ class Textile
         if ($this->span_depth <= $this->max_span_depth) {
             foreach ($span_tags as $f) {
                 $f = preg_quote($f);
-                $text = preg_replace_callback("/
+                $text = preg_replace_callback(
+                    "/
                     (^|(?<=[\s>$pnct\(])|[{[])            # pre
                     ($f)(?!$f)                            # tag
                     ({$this->lc})                         # atts - do not use horizontal alignment; it kills html tags within inline elements.
@@ -1948,7 +1957,10 @@ class Textile
                     ([$pnct]*)                            # end
                     $f
                     ($|[\[\]}<]|(?=[$pnct]{1,2}[^0-9]|\s|\)))  # tail
-                /x".$this->regex_snippets['mod'], array(&$this, "fSpan"), $text);
+                    /x" . $this->regex_snippets['mod'],
+                    array(&$this, "fSpan"),
+                    $text
+                );
             }
         }
         $this->span_depth--;
@@ -1979,7 +1991,7 @@ class Textile
     }
 
 
-    protected function storeTags($opentag,$closetag='')
+    protected function storeTags($opentag, $closetag = '')
     {
         $key = ($this->tag_index++);
 
@@ -2148,14 +2160,18 @@ class Textile
 
     protected function noteRefs($text)
     {
-        $text = preg_replace_callback("/
+        $text = preg_replace_callback(
+            "/
             \[                   #  start
             ({$this->c})         # !atts
             \#
             ([^\]!]+?)           # !label
             ([!]?)               # !nolink
             \]
-        /Ux", array(&$this, "fParseNoteRefs"), $text);
+            /Ux",
+            array(&$this, "fParseNoteRefs"),
+            $text
+        );
         return $text;
     }
 
@@ -2250,7 +2266,7 @@ class Textile
      * @param  bool   $encode Flag to control encoding of the path part of the rebuilt URI
      * @return string         The rebuilt URI
      */
-    protected function rebuildURI($parts, $mask='scheme,authority,path,query,fragment', $encode=true)
+    protected function rebuildURI($parts, $mask = 'scheme,authority,path,query,fragment', $encode = true)
     {
         $mask = explode(',', $mask);
         $out  = '';
@@ -2300,7 +2316,8 @@ class Textile
      */
     protected function links($text)
     {
-        return preg_replace_callback('/
+        return preg_replace_callback(
+            '/
             (^|(?<=[\s>.\(\|])|[{[])   # $pre
             "                          #  start
             (' . $this->c . ')         # $atts
@@ -2311,7 +2328,10 @@ class Textile
             (\/)?                      # $slash
             ([^'.$this->regex_snippets['wrd'].'\/]*?)  # $post
             ([\]}]|(?=\s|$|\)|\|))     # $tail
-            /x'.$this->regex_snippets['mod'], array(&$this, "fLink"), $text);
+            /x' . $this->regex_snippets['mod'],
+            array(&$this, "fLink"),
+            $text
+        );
     }
 
 
@@ -2494,7 +2514,8 @@ class Textile
      */
     protected function images($text)
     {
-        return preg_replace_callback('/
+        return preg_replace_callback(
+            '/
             (?:[[{])?                  # pre
             \!                         # opening !
             (\<|\=|\>)?                # optional alignment              $algn
@@ -2506,7 +2527,10 @@ class Textile
             \!                         # closing
             (?::(\S+)(?<![\]).,]))?    # optional href sans final punct. $href
             (?:[\]}]|(?=[.,\s)|]|$))   # lookahead: space , . ) | or end of string ... "|" needed if image in table cell
-        /x', array(&$this, "fImage"), $text);
+            /x',
+            array(&$this, "fImage"),
+            $text
+        );
     }
 
 
@@ -2558,8 +2582,7 @@ class Textile
                     ->height($height)
                     ->src($this->shelveURL($url), true)
                     ->title($title)
-                    ->width($width)
-                    ;
+                    ->width($width);
 
         $out = (string) $img;
         if ($href) {
@@ -2645,7 +2668,7 @@ class Textile
     }
 
 
-    protected function doSpecial($text, $start, $end, $method='fSpecial')
+    protected function doSpecial($text, $start, $end, $method = 'fSpecial')
     {
         return preg_replace_callback('/(^|\s|[|[({>])'.preg_quote($start, '/').'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}|])?/ms', array(&$this, $method), $text);
     }
@@ -2795,7 +2818,7 @@ class Textile
      * @return string Encoded string
      * @see    htmlspecialchars()
      */
-    protected function encodeHTML($str, $quotes=1)
+    protected function encodeHTML($str, $quotes = 1)
     {
         $a = array(
             '&' => '&amp;',
@@ -2825,7 +2848,7 @@ class Textile
      * @return string Encoded string
      * @see    Parser::encodeHTML()
      */
-    protected function rEncodeHTML($str, $quotes=1)
+    protected function rEncodeHTML($str, $quotes = 1)
     {
         // In restricted mode, all input but quotes has already been escaped
         if ($this->restricted) {
