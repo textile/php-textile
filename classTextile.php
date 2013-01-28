@@ -1046,7 +1046,7 @@ class Textile
         $this->span_depth = 0;
         $this->tag_index  = 1;
         $this->note_index = 1;
-        $this->rel = ($rel) ? ' rel="'.$rel.'"' : '';
+        $this->rel        = $rel;
         $this->lite       = $lite;
         $this->noimage    = $noimage;
         $this->prepGlyphs();
@@ -2551,7 +2551,6 @@ class Textile
             $width  = $size[0];
         }
 
-        $href = ($href) ? $this->shelveURL($href) : '';
         $img  = $this
                     ->newTag('img', $this->parseAttribsToArray($atts, '', 1, $extras))
                     ->align($align)
@@ -2562,7 +2561,16 @@ class Textile
                     ->width($width)
                     ;
 
-        $out  = ($href) ? "<a href=\"$href\"{$this->rel}>$img</a>" : (string) $img;
+        $out = (string) $img;
+        if ($href) {
+            $href = $this->shelveURL($href);
+            $link = $this
+                        ->newTag('a', array(), false)
+                        ->href($href)
+                        ->rel($this->rel);
+            $out  = (string) $link . "$img</a>";
+        }
+
         return $this->shelve($out);
     }
 
