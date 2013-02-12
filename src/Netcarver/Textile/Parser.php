@@ -685,9 +685,9 @@ class Parser
      * @param  string|null  $name The name of the symbol, or NULL if requesting the symbol table
      * @return array|string The symbol table or the requested symbol
      */
-    public function getSymbol($name=null)
+    public function getSymbol($name = null)
     {
-        return ($name) ? @$this->symbols['name'] : $this->symbols;
+        return ($name) ? @$this->symbols[$name] : $this->symbols;
     }
 
 
@@ -703,7 +703,7 @@ class Parser
      * @return object $this
      * $parser->setRelativeImagePrefix('http://static.example.com/');
      **/
-    public function setRelativeImagePrefix($prefix='')
+    public function setRelativeImagePrefix($prefix = '')
     {
         $this->relativeImagePrefix = $prefix;
         return $this;
@@ -723,7 +723,7 @@ class Parser
      * $parser = new Parser();
      * $html = $parser->setDimensionlessImages()->textileThis($input);
      */
-    public function setDimensionlessImages($dimensionless=true)
+    public function setDimensionlessImages($dimensionless = true)
     {
         $this->dimensionless_images = $dimensionless;
         return $this;
@@ -785,7 +785,7 @@ class Parser
      * $parser = new Parser();
      * echo $parser->textileThis('h1. Hello World!');
      */
-    public function textileThis($text, $lite = '', $encode = '', $noimage = '', $strict = '', $rel = '')
+    public function textileThis($text, $lite = false, $encode = false, $noimage = false, $strict = false, $rel = '')
     {
         $this->prepare($lite, $noimage, $rel);
         $this->url_schemes = $this->unrestricted_url_schemes;
@@ -824,7 +824,7 @@ class Parser
      * $parser = new Parser();
      * echo $parser->textileRestricted('h1. Hello World!');
      */
-    public function textileRestricted($text, $lite = 1, $noimage = 1, $rel = 'nofollow')
+    public function textileRestricted($text, $lite = true, $noimage = true, $rel = 'nofollow')
     {
         $this->prepare($lite, $noimage, $rel);
         $this->url_schemes = $this->restricted_url_schemes;
@@ -1040,7 +1040,7 @@ class Parser
      * @return string HTML attribute list
      * @see    Parser::parseAttribsToArray()
      */
-    protected function parseAttribs($in, $element = "", $include_id = 1, $autoclass = '')
+    protected function parseAttribs($in, $element = '', $include_id = true, $autoclass = '')
     {
         $out = '';
         $o = $this->parseAttribsToArray($in, $element, $include_id, $autoclass);
@@ -1061,12 +1061,12 @@ class Parser
      *
      * @param  string $in         The Textile attribute string to be parsed
      * @param  string $element    Focus the routine to interpret the attributes as applying to a specific HTML tag
-     * @param  int    $include_id A value interpreted as a true when cast to bool allows ids to be included in the output
+     * @param  bool   $include_id A value interpreted as a true when cast to bool allows ids to be included in the output
      * @param  string $autoclass  An additional class or classes to be applied to the output
      * @return array  HTML attributes as key => value mappings
      * @see    Parser::parseAttribs()
      */
-    protected function parseAttribsToArray($in, $element = "", $include_id = 1, $autoclass = '')
+    protected function parseAttribsToArray($in, $element = '', $include_id = true, $autoclass = '')
     {
         $style = '';
         $class = '';
@@ -1898,7 +1898,7 @@ class Parser
     }
 
 
-    protected function storeTags($opentag,$closetag='')
+    protected function storeTags($opentag, $closetag='')
     {
         $key = ($this->tag_index++);
 
@@ -2689,13 +2689,13 @@ class Parser
     }
 
 
-    protected function encodeHigh($text, $charset = "UTF-8")
+    protected function encodeHigh($text, $charset = 'UTF-8')
     {
         return ($this->mb) ? mb_encode_numericentity($text, $this->cmap, $charset) : htmlentities($text, ENT_NOQUOTES, $charset);
     }
 
 
-    protected function decodeHigh($text, $charset = "UTF-8")
+    protected function decodeHigh($text, $charset = 'UTF-8')
     {
         $text = (ctype_digit($text)) ? "&#$text;" : "&$text;" ;
         return ($this->mb) ? mb_decode_numericentity($text, $this->cmap, $charset) : html_entity_decode($text, ENT_NOQUOTES, $charset);
@@ -2714,7 +2714,7 @@ class Parser
      * @return string Encoded string
      * @see    htmlspecialchars()
      */
-    protected function encodeHTML($str, $quotes=1)
+    protected function encodeHTML($str, $quotes = true)
     {
         $a = array(
             '&' => '&amp;',
@@ -2744,7 +2744,7 @@ class Parser
      * @return string Encoded string
      * @see    Parser::encodeHTML()
      */
-    protected function rEncodeHTML($str, $quotes=1)
+    protected function rEncodeHTML($str, $quotes = true)
     {
         // In restricted mode, all input but quotes has already been escaped
         if ($this->restricted) {
