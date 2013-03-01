@@ -1617,7 +1617,7 @@ class Parser
 
         foreach ($text as $line) {
             $anon = 0;
-            if (preg_match("/^($blocktags)($this->a$this->c)\.(\.?)(?::(\S+))?(.*)$/Ss", $line, $m)) {
+            if (preg_match("/^($blocktags)($this->a$this->c)\.(\.?)(?::(\S+))? ?(.*)$/Ss", $line, $m)) {
                 // Last block was extended, so close it
                 if ($ext) {
                     $out[count($out)-1] .= $c1;
