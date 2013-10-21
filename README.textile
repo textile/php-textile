@@ -4,7 +4,6 @@ p. *A Humane Web Text Generator*
 
 p. A lightweight markup language that takes (almost) plaintext and converts it into well formed HTML.
 
-
 h2. Branches
 
 There are two main branches in the repository that will be of interest, both of which can be installed via the "Composer":https://getcomposer.org/ package management system.
@@ -18,35 +17,34 @@ Currently both branches are feature synchronised at the point they are tagged an
 
 From time to time other branches may be present in the repository. These represent transient development or hotfix branches and should not be used for live sites/projects.
 
-
 h2. Installation & Usage
 
 h3. Installation via Composer & Its Autoloader
 
 To start using textile in a composer based project you need to add netcarver/textile to your project's dependencies and have composer take care of the installation and autoloading of the code for you. If you don't already have a @composer.json@ file in the root of your project you probably need to "read something about composer":https://getcomposer.org/doc/ before coming back here, creating your @composer.json@ file and pasting one of the following examples into it;
 
-bc.. {
+bc. {
     "require": { "netcarver/textile": "3.5.*" }
 }
 
-p. ...if you require the latest stable release from the master branch. Or;
+...if you require the latest stable release from the master branch. Or;
 
-bc.. {
+bc. {
     "require": { "netcarver/textile": "3.5.*@dev" }
 }
 
-p. ...if you want the most recent code.
+...if you want the most recent code.
 
 p. Then open a command line window, switch to the root of your project and run @composer install@. Textile should be pulled into your project under a the @vendors/@ directory and an autoloader created for all the dependencies in your project. If you are already using Composer and have a @composer.json@ file, just update your "requires" section with one of the above lines and run @composer update@ from the command line.
 
 You should now be able to create and use a textile parser...
 
-bc.. require 'vendor/autoload.php';                  // Bring in the composer auto-loader
+bc. require 'vendor/autoload.php';                  // Bring in the composer auto-loader
 use Netcarver\Textile;
 $parser = new Textile\Parser();                 // Create a textile parser
 $out = $parser->textileThis('h1. Hello World!');
 
-p. If you aren't using composer, try this...
+If you aren't using composer, try this...
 
 h3. Manual Install & Include
 
@@ -84,13 +82,13 @@ From v2.5 on, you can no longer use the legacy 'txt_' defines to override the ch
 
 If you wanted to override the symbol output for the one-half typographic substitution from the standard @&#189;@ to something using the fraction-slash you could do it like this...
 
-bc.. $parser = new Textile\Parser('html5'); // adjust if you need a different doctype
+bc. $parser = new Textile\Parser('html5'); // adjust if you need a different doctype
 $out = $parser
     ->setSymbol('half', '1&#8260;2')  // Redefine the half symbol to use the fraction-slash character
     ->textileThis($article)
     ;
 
-p. The symbol names you can pass to @setSymbol()@ can be found "here":https://github.com/netcarver/textile/blob/582fb7e2af83bb043fe6dd3846220796c814f999/classTextile.php#L468.
+The symbol names you can pass to @setSymbol()@ can be found "here":https://github.com/netcarver/textile/blob/582fb7e2af83bb043fe6dd3846220796c814f999/classTextile.php#L468.
 
 h3. Prefixing relative image paths
 
@@ -111,4 +109,3 @@ The textile project welcomes constructive input and bug reports from users. You 
 * "Open an issue":https://github.com/netcarver/textile/issues on the repository for a feature request or bug.
 * If you are on IRC, feel free to drop into *#textile* on *freenode.net* ("webchat":http://webchat.freenode.net/?channels=#textile.)
 * Use the generic "contact form":http://sitemonks.com/.
-
