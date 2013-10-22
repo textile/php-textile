@@ -8,8 +8,8 @@ h2. Branches
 
 There are two main branches in the repository that will be of interest, both of which can be installed via the "Composer":https://getcomposer.org/ package management system.
 
-|^=. "master":https://github.com/netcarver/textile/tree/master | Has a multi-file, namespaced, "PSR-0/1/2":https://github.com/php-fig/fig-standards/tree/master/accepted compliant version of textile. Releases from master are tagged v3.5.x |^=. _Requires PHP5.3+_ |
-|^=. "2.5":https://github.com/netcarver/textile/tree/2.5       | Holds a single-file version of textile representing the v2.5.x releases. It is *not* PSR-0 compliant but attempts to follow PSR-1 and PSR-2 in other respects.               |^=. _Requires PHP5.0+_ |
+|^=. "master":https://github.com/textile/php-textile/tree/master | Has a multi-file, namespaced, "PSR-0/1/2":https://github.com/php-fig/fig-standards/tree/master/accepted compliant version of textile. Releases from master are tagged v3.5.x |^=. _Requires PHP5.3+_ |
+|^=. "2.5":https://github.com/textile/php-textile/tree/2.5       | Holds a single-file version of textile representing the v2.5.x releases. It is *not* PSR-0 compliant but attempts to follow PSR-1 and PSR-2 in other respects.               |^=. _Requires PHP5.0+_ |
 
 *This is the README for the master branch.*
 
@@ -88,7 +88,7 @@ $out = $parser
     ->textileThis($article)
     ;
 
-The symbol names you can pass to @setSymbol()@ can be found "here":https://github.com/netcarver/textile/blob/582fb7e2af83bb043fe6dd3846220796c814f999/classTextile.php#L468.
+The symbol names you can pass to @setSymbol()@ can be found "here":https://github.com/textile/php-textile/blob/582fb7e2af83bb043fe6dd3846220796c814f999/classTextile.php#L468.
 
 h3. Prefixing relative image paths
 
@@ -104,8 +104,8 @@ p. Textpattern is one project that is known to use a relative image prefix.
 
 h2. Getting In Contact
 
-The textile project welcomes constructive input and bug reports from users. You can contact me in several ways.
+The textile project welcomes constructive input and bug reports from users. You can get in contact in several ways...
 
-* "Open an issue":https://github.com/netcarver/textile/issues on the repository for a feature request or bug.
+* "Open an issue":https://github.com/textile/php-textile/issues on the repository for a feature request or bug.
 * If you are on IRC, feel free to drop into *#textile* on *freenode.net* ("webchat":http://webchat.freenode.net/?channels=#textile.)
 * Use the generic "contact form":http://sitemonks.com/.
