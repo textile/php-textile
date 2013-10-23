@@ -1,11 +1,15 @@
 <?php
 
+/**
+ * Textile - A Humane Web Text Generator.
+ *
+ * @link https://github.com/textile/php-textile
+ */
+
 namespace Netcarver\Textile;
 
-/**
- * Copyright (c) 2012 Netcarver http://github.com/netcarver
- * _____________
- * L I C E N S E
+/*
+ * Copyright (c) 2013, Netcarver http://github.com/netcarver
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,21 +36,47 @@ namespace Netcarver\Textile;
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- **/
+ */
 
 /**
- * Class to allow contruction of HTML tags on conversion of an object to a string
+ * Renders HTML elements.
  *
- * Example usage...
+ * This class can be used to HTML elements. It
+ * does not sanitise attribute values, but can be
+ * used to construct tags with nice object oriented
+ * syntax.
  *
+ * @example
+ * use Netcarver\Textile\Tag;
  * $img = new Tag('img');
- * echo $img->class('big blue')->src('images/elephant.jpg');
- **/
+ * echo (string) $img->class('big blue')->src('images/elephant.jpg');
+ */
+
 class Tag extends \Netcarver\Textile\DataBag
 {
+    /**
+     * The name of the tag.
+     *
+     * @var string
+     */
+
     protected $tag;
+
+    /**
+     * Whether the tag is self-closing.
+     *
+     * @var bool
+     */
+
     protected $selfclose;
 
+    /**
+     * Constructor.
+     *
+     * @param string $name        The tag name
+     * @param array  $attribs     An array of attributes
+     * @param bool   $selfclosing Whether the tag is self-closing
+     */
 
     public function __construct($name, array $attribs = null, $selfclosing = true)
     {
@@ -55,6 +85,15 @@ class Tag extends \Netcarver\Textile\DataBag
         $this->selfclose = $selfclosing;
     }
 
+    /**
+     * Returns the tag as HTML.
+     *
+     * @return string A HTML element
+     * @example
+     * $img = new Tag('img');
+     * $img->src('images/example.jpg')->alt('Example image');
+     * echo (string) $img;
+     */
 
     public function __tostring()
     {
