@@ -1,8 +1,10 @@
 h1. TEXTILE
 
-p. *A Humane Web Text Generator*
+*A Humane Web Text Generator*
 
-p. A lightweight markup language that takes (almost) plaintext and converts it into well formed HTML.
+A lightweight markup language that takes (almost) plaintext and converts it into well formed HTML.
+
+!https://travis-ci.org/textile/php-textile.png?branch=master!:https://travis-ci.org/textile/php-textile
 
 h2. Branches
 
