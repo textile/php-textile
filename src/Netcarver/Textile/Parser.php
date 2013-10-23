@@ -2393,7 +2393,7 @@ class Parser
         // Strip any ':' or '?' characters from the end of the url and return them to $post. This seems to be needed
         // when using the unicode version of the word character class in the regex.
         $a = array();
-        if (preg_match('/^(.*)([?:]+)$/', $url, $a)) {
+        if (preg_match('/^(.*)([?:]+)$/'.$this->regex_snippets['mod'], $url, $a)) {
             $url   = $a[1];
             $post .= $a[2];
         }
@@ -2470,7 +2470,7 @@ class Parser
             $pattern = "/^\[(.+)\]((?:https?:\/\/|tel:|file:|ftp:\/\/|sftp:\/\/|mailto:|callto:|\/)\S+)(?=\s|$)/Um";
         }
 
-        return preg_replace_callback($pattern, array(&$this, "refs"), $text);
+        return preg_replace_callback($pattern.$this->regex_snippets['mod'], array(&$this, "refs"), $text);
     }
 
 
@@ -2586,7 +2586,7 @@ class Parser
             \!                         # closing
             (?::(\S+)(?<![\]).,]))?    # optional href sans final punct. $href
             (?:[\]}]|(?=[.,\s)|]|$))   # lookahead: space , . ) | or end of string ... "|" needed if image in table cell
-        /x', array(&$this, "fImage"), $text);
+        /x'.$this->regex_snippets['mod'], array(&$this, "fImage"), $text);
     }
 
 
@@ -2756,7 +2756,7 @@ class Parser
 
     protected function footnoteRefs($text)
     {
-        return preg_replace_callback('/(?<=\S)\[(\d+)(!?)\]\s?/U', array(&$this, 'footnoteID'), $text);
+        return preg_replace_callback('/(?<=\S)\[(\d+)(!?)\]\s?/U'.$this->regex_snippets['mod'], array(&$this, 'footnoteID'), $text);
     }
 
 
@@ -2794,7 +2794,7 @@ class Parser
         // Fix: hackish -- adds a space if final char of text is a double quote.
         $text = preg_replace('/"\z/', "\" ", $text);
 
-        $text = preg_split("@(<[\w/!?].*>)@Us", $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $text = preg_split("@(<[\w/!?].*>)@Us".$this->regex_snippets['mod'], $text, -1, PREG_SPLIT_DELIM_CAPTURE);
         $i = 0;
         foreach ($text as $line) {
             // Text tag text tag text ...
