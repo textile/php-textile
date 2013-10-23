@@ -656,9 +656,10 @@ class Parser
             $this->ds = '/';
         }
 
-        $this->doc_root = @$_SERVER['DOCUMENT_ROOT'];
-        if (!$this->doc_root) {
-            $this->doc_root = @$_SERVER['PATH_TRANSLATED']; // IIS
+        if (!empty($_SERVER['DOCUMENT_ROOT'])) {
+            $this->doc_root = $_SERVER['DOCUMENT_ROOT'];
+        } else if (!empty($_SERVER['PATH_TRANSLATED'])) {
+            $this->doc_root = $_SERVER['PATH_TRANSLATED'];
         }
 
         $this->doc_root = rtrim($this->doc_root, $this->ds).$this->ds;
