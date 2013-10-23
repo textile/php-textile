@@ -48,7 +48,7 @@ class Tag extends \Netcarver\Textile\DataBag
     protected $selfclose;
 
 
-    public function __construct($name, $attribs=array(), $selfclosing=true)
+    public function __construct($name, array $attribs = null, $selfclosing = true)
     {
         parent::__construct($attribs);
         $this->tag = $name;
