@@ -74,13 +74,13 @@ class Tag extends DataBag
      * Constructor.
      *
      * @param string $name        The tag name
-     * @param array  $attribs     An array of attributes
+     * @param array  $attributes  An array of attributes
      * @param bool   $selfclosing Whether the tag is self-closing
      */
 
-    public function __construct($name, array $attribs = null, $selfclosing = true)
+    public function __construct($name, array $attributes = null, $selfclosing = true)
     {
-        parent::__construct($attribs);
+        parent::__construct($attributes);
         $this->tag = $name;
         $this->selfclose = $selfclosing;
     }
@@ -97,21 +97,19 @@ class Tag extends DataBag
 
     public function __tostring()
     {
-        $attribs = '';
+        $attributes = '';
 
-        if (count($this->data)) {
+        if ($this->data) {
             ksort($this->data);
-            foreach ($this->data as $k => $v) {
-                $attribs .= " $k=\"$v\"";
+            foreach ($this->data as $name => $value) {
+                $attributes .= " $name=\"$value\"";
             }
         }
 
         if ($this->tag) {
-            $o = '<' . $this->tag . $attribs . (($this->selfclose) ? " />" : '>');
-        } else {
-            $o = $attribs;
+            return '<' . $this->tag . $attributes . (($this->selfclose) ? " />" : '>');
         }
 
-        return $o;
+        return $attributes;
     }
 }
