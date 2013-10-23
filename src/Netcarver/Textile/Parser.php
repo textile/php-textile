@@ -656,7 +656,9 @@ class Parser
             $this->ds = '/';
         }
 
-        if (!empty($_SERVER['DOCUMENT_ROOT'])) {
+        if (php_sapi_name() === 'cli') {
+            $this->doc_root = getcwd();
+        } else if (!empty($_SERVER['DOCUMENT_ROOT'])) {
             $this->doc_root = $_SERVER['DOCUMENT_ROOT'];
         } else if (!empty($_SERVER['PATH_TRANSLATED'])) {
             $this->doc_root = $_SERVER['PATH_TRANSLATED'];
