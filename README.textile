@@ -51,7 +51,7 @@ h3. Manual Install & Include
 Copy the @src/Netcarver/Textile/@ directory to a location of your choice within your project. If you are using an autoloader, you will need to update it to load the classes @Parser@, @Tag@ and @DataBag@ from the @Netcarver\Textile@ namespace. If you are _not_ using an autoloader you can manually include the following files in your project:
 
 bc. include 'path/to/src/Netcarver/Textile/Parser.php';
-include 'path/to/src/Netcarver/Textile/Databag.php';
+include 'path/to/src/Netcarver/Textile/DataBag.php';
 include 'path/to/src/Netcarver/Textile/Tag.php';
 
 Adjusting the path as needed. Now you should be able to create a textile parser using a fully qualified namespace like this...
