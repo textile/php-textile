@@ -290,9 +290,9 @@ Other Ruud stuff :
 
     <p>**</p>
 
-    <ul>
-    <li>item1</li>
-    </ul>
+    	<ul>
+    		<li>item1</li>
+    	</ul>
 
 Punctuation:
   input  : |
@@ -310,7 +310,7 @@ Punctuation:
 
     in '89
 
-    in '89``
+    in '89 
 
     Happened in '89. it did.
 
@@ -445,7 +445,7 @@ Notextile :
     ==*no* <b>textile</b>==
 
     ==
-    This text should never, 
+    This text should never,
     ever, ever, ever, ever
     be "textiled(tm)"!
     ==
@@ -645,23 +645,23 @@ Spans in table cells :
 
   expect: |
     <table>
-    <tr>
-    <td> <strong>strong</strong> </td>
-    </tr>
+    		<tr>
+    			<td> <strong>strong</strong> </td>
+    		</tr>
     </table>
 
     <table>
-    <tr>
-    <td> <em>em</em> </td>
-    </tr>
+    		<tr>
+    			<td> <em>em</em> </td>
+    		</tr>
     </table>
 
     <table>
-    <tr>
-    <td> Inter-word <del>dashes</del> </td>
-    <td> <span class="caps">ZIP</span>-codes are 5- or 9-digit codes </td>
-    <td> Hello <cite><a href="https://github.com">Github</a>!</cite> </td>
-    </tr>
+    		<tr>
+    			<td> Inter-word <del>dashes</del> </td>
+    			<td> <span class="caps">ZIP</span>-codes are 5- or 9-digit codes </td>
+    			<td> Hello <cite><a href="https://github.com">Github</a>!</cite> </td>
+    		</tr>
     </table>
 
 Parenthesised block modifiers :
@@ -1029,15 +1029,15 @@ Unicode Links :
 
     <p><a href="https://de.wikipedia.org/wiki/%C3%9Cbermensch">de.wikipedia.org/wiki/Übermensch</a></p>
 
-    <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_%28%E5%A4%A7%E9%98%AA%E5%BA%9C%29">福島駅</a> this is a test &#8212; no trailing slash.</p>
+
+
+
 
     <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash</a></p>
 
-    <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash</a></p>
 
-    <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_%28%E5%A4%A7%E9%98%AA%E5%BA%9C%29/">福島駅</a> this is a test &#8212; with a trailing slash.</p>
 
-    <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F/">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash</a></p>
+
 
     <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F/">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash</a></p>
 
@@ -1456,33 +1456,35 @@ Basic Ordered List:
     ## black
     # blue
   expect: |
-    <ol>
-    <li>Ordered</li>
-    <li>List</li>
-    <li>Live
-    <ol>
-    <li>Including<br />
+    	<ol>
+    		<li>Ordered</li>
+    		<li>List</li>
+    		<li>Live
+    		<ol>
+    			<li>Including<br />
     some newline</li>
-    <li>And underlings</li>
-    </ol></li>
-    <li>&#8230; aaaaand back out</li>
-    </ol>
+    			<li>And underlings</li>
+    		</ol></li>
+    		<li>&#8230; aaaaand back out</li>
+    	</ol>
 
     <p>And here we are with some <em class="alt">Other colours</em></p>
 
-    <ol>
-    <li>red
-    <ol>
-    <li>greeny<br />
+    	<ol>
+    		<li>red
+    		<ol>
+    			<li>greeny<br />
     browny<br />
     pinkish</li>
-    <li>black</li>
-    </ol></li>
-    <li>blue</li>
-    </ol>
+    			<li>black</li>
+    		</ol></li>
+    		<li>blue</li>
+    	</ol>
 
 Ordered Lists:
   input:  |
+    test
+
     #_(first#list) one
     # two
     # three
@@ -1521,54 +1523,58 @@ Ordered Lists:
 
 
   expect: |
-    <ol class="first" id="list" start="1">
-        <li>one</li>
-        <li>two</li>
-        <li>three</li>
-    </ol>
+    <p>test</p>
+
+    	<ol class="first" id="list" start="1">
+    		<li>one</li>
+    		<li>two</li>
+    		<li>three</li>
+    	</ol>
 
     <p>test</p>
 
-    <ol class="ordered" id="list2">
-        <li>one</li>
-        <li>two</li>
-        <li>three</li>
-    </ol>
+    	<ol class="ordered" id="list2">
+    		<li>one</li>
+    		<li>two</li>
+    		<li>three</li>
+    	</ol>
 
     <p>test</p>
 
-    <ol class="class_4" start="4">
-        <li>four</li>
-        <li>five</li>
-        <li>six</li>
-    </ol>
+    	<ol class="class_4" start="4">
+    		<li>four</li>
+    		<li>five</li>
+    		<li>six</li>
+    	</ol>
 
     <p>test</p>
 
-    <ol start="7">
-        <li>seven</li>
-        <li>eight</li>
-        <li>nine</li>
-    </ol>
+    	<ol start="7">
+    		<li>seven</li>
+    		<li>eight</li>
+    		<li>nine</li>
+    	</ol>
 
     <p>test</p>
 
-    <ol>
-        <li>one</li>
-        <li>two</li>
-        <li>three</li>
-    </ol>
+    	<ol>
+    		<li>one</li>
+    		<li>two</li>
+    		<li>three</li>
+    	</ol>
 
     <p>test</p>
 
-    <ol start="22">
-        <li>22</li>
-        <li>23</li>
-        <li>24</li>
-    </ol>
+    	<ol start="22">
+    		<li>22</li>
+    		<li>23</li>
+    		<li>24</li>
+    	</ol>
 
 Multi-level ordered list with continuation:
   input:  |
+    test
+
     # one
     ##3 one.three
     ## one.four
@@ -1590,34 +1596,36 @@ Multi-level ordered list with continuation:
     # twenty-two
 
   expect: |
-    <ol>
-    <li>one
-    <ol start="3">
-    <li>one.three</li>
-    <li>one.four</li>
-    <li>one.five</li>
-    </ol></li>
-    <li>two</li>
-    </ol>
+    <p>test</p>
+
+    	<ol>
+    		<li>one
+    		<ol start="3">
+    			<li>one.three</li>
+    			<li>one.four</li>
+    			<li>one.five</li>
+    		</ol></li>
+    		<li>two</li>
+    	</ol>
 
     <p>test</p>
 
-    <ol class="continuation" id="section2" start="3">
-    <li>three</li>
-    <li>four
-    <ol start="6">
-    <li>four.six</li>
-    <li>four.seven</li>
-    </ol></li>
-    <li>five</li>
-    </ol>
+    	<ol class="continuation" id="section2" start="3">
+    		<li>three</li>
+    		<li>four
+    		<ol start="6">
+    			<li>four.six</li>
+    			<li>four.seven</li>
+    		</ol></li>
+    		<li>five</li>
+    	</ol>
 
     <p>test</p>
 
-    <ol start="21">
-    <li>twenty-one</li>
-    <li>twenty-two</li>
-    </ol>
+    	<ol start="21">
+    		<li>twenty-one</li>
+    		<li>twenty-two</li>
+    	</ol>
 
 Basic Unordered lists:
   input: |
@@ -1637,26 +1645,28 @@ Basic Unordered lists:
   expect: |
     <h3>How about some unordered goodness?</h3>
 
-    <ul class="class">
-    <li>Bullet</li>
-    <li>List</li>
-    <li>Here
-    <ul>
-    <li>With</li>
-    <li>Subs</li>
-    </ul></li>
-    <li>and regulars</li>
-    </ul>
+    	<ul class="class">
+    		<li>Bullet</li>
+    		<li>List</li>
+    		<li>Here
+    		<ul>
+    			<li>With</li>
+    			<li>Subs</li>
+    		</ul></li>
+    		<li>and regulars</li>
+    	</ul>
 
     <p><em>colours</em></p>
 
-    <ul>
-    <li>yellow</li>
-    <li>cyan</li>
-    </ul>
+    	<ul>
+    		<li>yellow</li>
+    		<li>cyan</li>
+    	</ul>
 
 Mixed lists:
   input  : |
+    test
+
     * bullet
     *# number
     *# number
@@ -1668,23 +1678,25 @@ Mixed lists:
     ** okay
 
   expect : |
-    <ul>
-    <li>bullet
-    <ol>
-    <li>number</li>
-    <li>number
-    <ul>
-    <li>bullet</li>
-    </ul></li>
-    <li>number</li>
-    <li>number with<br />
+    <p>test</p>
+
+    	<ul>
+    		<li>bullet
+    		<ol>
+    			<li>number</li>
+    			<li>number
+    			<ul>
+    				<li>bullet</li>
+    			</ul></li>
+    			<li>number</li>
+    			<li>number with<br />
     a break</li>
-    </ol></li>
-    <li>bullet
-    <ul>
-    <li>okay</li>
-    </ul></li>
-    </ul>
+    		</ol></li>
+    		<li>bullet
+    		<ul>
+    			<li>okay</li>
+    		</ul></li>
+    		</ul>
 
 Issue 61... Spans in tables :
   input  : |
@@ -1695,31 +1707,31 @@ Issue 61... Spans in tables :
     | fourth | Foreign EXPÓŅÉNTIAL | 6 |
   expect : |
     <table>
-    <tr>
-    <th>Super </th>
-    <th>Fly </th>
-    <th>Table </th>
-    </tr>
-    <tr>
-    <td> first </td>
-    <td> <span class="caps">ICL</span> </td>
-    <td> 3 </td>
-    </tr>
-    <tr>
-    <td> second </td>
-    <td> <span class="caps">IBM</span> </td>
-    <td> 4 </td>
-    </tr>
-    <tr>
-    <td> third </td>
-    <td>  Ordinary  </td>
-    <td> 5 </td>
-    </tr>
-    <tr>
-    <td> fourth </td>
-    <td> Foreign <span class="caps">EXPÓŅÉNTIAL</span> </td>
-    <td> 6 </td>
-    </tr>
+    		<tr>
+    			<th>Super </th>
+    			<th>Fly </th>
+    			<th>Table </th>
+    		</tr>
+    		<tr>
+    			<td> first </td>
+    			<td> <span class="caps">ICL</span> </td>
+    			<td> 3 </td>
+    		</tr>
+    		<tr>
+    			<td> second </td>
+    			<td> <span class="caps">IBM</span> </td>
+    			<td> 4 </td>
+    		</tr>
+    		<tr>
+    			<td> third </td>
+    			<td>  Ordinary  </td>
+    			<td> 5 </td>
+    		</tr>
+    		<tr>
+    			<td> fourth </td>
+    			<td> Foreign <span class="caps">EXPÓŅÉNTIAL</span> </td>
+    			<td> 6 </td>
+    		</tr>
     </table>
 
 Table alignments:
@@ -1742,86 +1754,86 @@ Table alignments:
     |=. 8 | Woods | Absent |=. - | Jones, Evelyn |
   expect: |
     <table>
-    <tr>
-    <th>attribute list </th>
-    </tr>
-    <tr>
-    <td style="text-align:left;">align left </td>
-    </tr>
-    <tr>
-    <td style="text-align:right;">align right</td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">center </td>
-    </tr>
-    <tr>
-    <td style="text-align:justify;">justify me</td>
-    </tr>
-    <tr>
-    <td style="vertical-align:top;">valign top </td>
-    </tr>
-    <tr>
-    <td style="vertical-align:bottom;">bottom </td>
-    </tr>
+    		<tr>
+    			<th>attribute list </th>
+    		</tr>
+    		<tr>
+    			<td style="text-align:left;">align left </td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:right;">align right</td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center;">center </td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:justify;">justify me</td>
+    		</tr>
+    		<tr>
+    			<td style="vertical-align:top;">valign top </td>
+    		</tr>
+    		<tr>
+    			<td style="vertical-align:bottom;">bottom </td>
+    		</tr>
     </table>
 
     <table>
-    <tr>
-    <th style="text-align:center;">Grade </th>
-    <th style="text-align:center;">Homeroom </th>
-    <th style="text-align:center;">Type </th>
-    <th style="text-align:center;">Tardy/Dismiss Time </th>
-    <th style="text-align:center;">Student </th>
-    </tr>
-    <tr>
-    <td style="text-align:center;">6 </td>
-    <td> Bates </td>
-    <td> Absent </td>
-    <td style="text-align:center;">- </td>
-    <td> Jones, Jeanne </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">6 </td>
-    <td> O&#8217;Leary </td>
-    <td> Absent </td>
-    <td style="text-align:center;">- </td>
-    <td> Jones, Jackson </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">7 </td>
-    <td> Garran </td>
-    <td> Absent </td>
-    <td style="text-align:center;">- </td>
-    <td> Jones, Lauren </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">7 </td>
-    <td> Martin </td>
-    <td> Absent </td>
-    <td style="text-align:center;">- </td>
-    <td> Jones, Timothy </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">7 </td>
-    <td> Martin </td>
-    <td> Tardy </td>
-    <td style="text-align:center;">10:00 </td>
-    <td> Jones, John-Paul </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">8 </td>
-    <td> Kast </td>
-    <td> Absent </td>
-    <td style="text-align:center;">- </td>
-    <td> Jones, Samuel </td>
-    </tr>
-    <tr>
-    <td style="text-align:center;">8 </td>
-    <td> Woods </td>
-    <td> Absent </td>
-    <td style="text-align:center;">- </td>
-    <td> Jones, Evelyn </td>
-    </tr>
+    		<tr>
+    			<th style="text-align:center;">Grade </th>
+    			<th style="text-align:center;">Homeroom </th>
+    			<th style="text-align:center;">Type </th>
+    			<th style="text-align:center;">Tardy/Dismiss Time </th>
+    			<th style="text-align:center;">Student </th>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center;">6 </td>
+    			<td> Bates </td>
+    			<td> Absent </td>
+    			<td style="text-align:center;">- </td>
+    			<td> Jones, Jeanne </td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center;">6 </td>
+    			<td> O&#8217;Leary </td>
+    			<td> Absent </td>
+    			<td style="text-align:center;">- </td>
+    			<td> Jones, Jackson </td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center;">7 </td>
+    			<td> Garran </td>
+    			<td> Absent </td>
+    			<td style="text-align:center;">- </td>
+    			<td> Jones, Lauren </td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center;">7 </td>
+    			<td> Martin </td>
+    			<td> Absent </td>
+    			<td style="text-align:center;">- </td>
+    			<td> Jones, Timothy </td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center;">7 </td>
+    			<td> Martin </td>
+    			<td> Tardy </td>
+    			<td style="text-align:center;">10:00 </td>
+    			<td> Jones, John-Paul </td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center;">8 </td>
+    			<td> Kast </td>
+    			<td> Absent </td>
+    			<td style="text-align:center;">- </td>
+    			<td> Jones, Samuel </td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center;">8 </td>
+    			<td> Woods </td>
+    			<td> Absent </td>
+    			<td style="text-align:center;">- </td>
+    			<td> Jones, Evelyn </td>
+    		</tr>
     </table>
 
 Table colgroups and captions:
@@ -1834,82 +1846,82 @@ Table colgroups and captions:
     |:\5. 80|
     |a|b|c|d|e|
 
-    |=. Testing colgroup and col syntax``
-    |:\5. 80``
+    |=. Testing colgroup and col syntax 
+    |:\5. 80 
     |a|b|c|d|e|
 
-    |=. Testing colgroup and col syntax|``
-    |:\5. 80|``
+    |=. Testing colgroup and col syntax| 
+    |:\5. 80| 
     |a|b|c|d|e|
 
-    |=. Testing colgroup and col syntax |``
-    |:\5. 80 |``
-    |a|b|c|d|e|``
+    |=. Testing colgroup and col syntax | 
+    |:\5. 80 | 
+    |a|b|c|d|e| 
 
   expect : |
     <table>
-    <caption>Testing colgroup and col syntax</caption>
-    <colgroup span="5" width="80">
-    </colgroup>
-    <tr>
-    <td>a</td>
-    <td>b</td>
-    <td>c</td>
-    <td>d</td>
-    <td>e</td>
-    </tr>
+    	<caption>Testing colgroup and col syntax</caption>
+    	<colgroup span="5" width="80">
+    	</colgroup>
+    		<tr>
+    			<td>a</td>
+    			<td>b</td>
+    			<td>c</td>
+    			<td>d</td>
+    			<td>e</td>
+    		</tr>
     </table>
 
     <table>
-    <caption>Testing colgroup and col syntax</caption>
-    <colgroup span="5" width="80">
-    </colgroup>
-    <tr>
-    <td>a</td>
-    <td>b</td>
-    <td>c</td>
-    <td>d</td>
-    <td>e</td>
-    </tr>
+    	<caption>Testing colgroup and col syntax</caption>
+    	<colgroup span="5" width="80">
+    	</colgroup>
+    		<tr>
+    			<td>a</td>
+    			<td>b</td>
+    			<td>c</td>
+    			<td>d</td>
+    			<td>e</td>
+    		</tr>
     </table>
 
     <table>
-    <caption>Testing colgroup and col syntax</caption>
-    <colgroup span="5" width="80">
-    </colgroup>
-    <tr>
-    <td>a</td>
-    <td>b</td>
-    <td>c</td>
-    <td>d</td>
-    <td>e</td>
-    </tr>
+    	<caption>Testing colgroup and col syntax</caption>
+    	<colgroup span="5" width="80">
+    	</colgroup>
+    		<tr>
+    			<td>a</td>
+    			<td>b</td>
+    			<td>c</td>
+    			<td>d</td>
+    			<td>e</td>
+    		</tr>
     </table>
 
     <table>
-    <caption>Testing colgroup and col syntax</caption>
-    <colgroup span="5" width="80">
-    </colgroup>
-    <tr>
-    <td>a</td>
-    <td>b</td>
-    <td>c</td>
-    <td>d</td>
-    <td>e</td>
-    </tr>
+    	<caption>Testing colgroup and col syntax</caption>
+    	<colgroup span="5" width="80">
+    	</colgroup>
+    		<tr>
+    			<td>a</td>
+    			<td>b</td>
+    			<td>c</td>
+    			<td>d</td>
+    			<td>e</td>
+    		</tr>
     </table>
 
     <table>
-    <caption>Testing colgroup and col syntax</caption>
-    <colgroup span="5" width="80">
-    </colgroup>
-    <tr>
-    <td>a</td>
-    <td>b</td>
-    <td>c</td>
-    <td>d</td>
-    <td>e</td>
-    </tr>
+    	<caption>Testing colgroup and col syntax</caption>
+    	<colgroup span="5" width="80">
+    	</colgroup>
+    		<tr>
+    			<td>a</td>
+    			<td>b</td>
+    			<td>c</td>
+    			<td>d</td>
+    			<td>e</td>
+    		</tr>
     </table>
 
 Complex table with row- and col-spans:
@@ -1929,43 +1941,43 @@ Complex table with row- and col-spans:
     <h4>A more complicated table</h4>
 
     <table class="tableclass" id="tableid" style="color:blue;">
-    <tr>
-    <th>table </th>
-    <th>more </th>
-    <th>badass </th>
-    </tr>
-    <tr>
-    <td colspan="3">Horizontal span of 3</td>
-    </tr>
-    <tr class="firstrow">
-    <td>first</td>
-    <td><acronym title="open the pod bay doors"><span class="caps">HAL</span></acronym></td>
-    <td>1</td>
-    </tr>
-    <tr>
-    <td>some</td>
-    <td style="color:green;">styled</td>
-    <td>content</td>
-    </tr>
-    <tr>
-    <td rowspan="2">spans 2 rows</td>
-    <td>this is</td>
-    <td>quite a</td>
-    </tr>
-    <tr>
-    <td> deep test </td>
-    <td> don&#8217;t you think?</td>
-    </tr>
-    <tr class="lastrow">
-    <td>fifth</td>
-    <td>I&#8217;m a lumberjack</td>
-    <td>5</td>
-    </tr>
-    <tr>
-    <td>sixth</td>
-    <td> <em><strong>bold italics</strong></em> </td>
-    <td>6</td>
-    </tr>
+    		<tr>
+    			<th>table </th>
+    			<th>more </th>
+    			<th>badass </th>
+    		</tr>
+    		<tr>
+    			<td colspan="3">Horizontal span of 3</td>
+    		</tr>
+    		<tr class="firstrow">
+    			<td>first</td>
+    			<td><acronym title="open the pod bay doors"><span class="caps">HAL</span></acronym></td>
+    			<td>1</td>
+    		</tr>
+    		<tr>
+    			<td>some</td>
+    			<td style="color:green;">styled</td>
+    			<td>content</td>
+    		</tr>
+    		<tr>
+    			<td rowspan="2">spans 2 rows</td>
+    			<td>this is</td>
+    			<td>quite a</td>
+    		</tr>
+    		<tr>
+    			<td> deep test </td>
+    			<td> don&#8217;t you think?</td>
+    		</tr>
+    		<tr class="lastrow">
+    			<td>fifth</td>
+    			<td>I&#8217;m a lumberjack</td>
+    			<td>5</td>
+    		</tr>
+    		<tr>
+    			<td>sixth</td>
+    			<td> <em><strong>bold italics</strong></em> </td>
+    			<td>6</td>
+    		</tr>
     </table>
 
 Lists in tables:
@@ -1992,49 +2004,49 @@ Lists in tables:
     ** okay |
   expect: |
     <table>
-    <tr>
-    <td>	<ul>
-    <li>Foo<sup>2</sup></li>
-    <li><em>bar</em></li>
-    <li><sub>baz</sub></li>
-    </ul></td>
-    </tr>
-    <tr>
-    <td>	<ol start="4">
-    <li><strong>Four</strong></li>
-    <li><i>Five</i></li>
-    </ol></td>
-    </tr>
-    <tr>
-    <td><dl>
-    <dt class="hot">coffee</dt>
-    <dd>Hot and black</dd>
-    <dt class="hot" id="tea">tea</dt>
-    <dd>Also hot, but a little less black</dd>
-    <dt class="cold">milk</dt>
-    <dd><p>Nourishing beverage for baby cows.<br />
+    		<tr>
+    			<td>	<ul>
+    		<li>Foo<sup>2</sup></li>
+    		<li><em>bar</em></li>
+    		<li><sub>baz</sub></li>
+    	</ul></td>
+    		</tr>
+    		<tr>
+    			<td>	<ol start="4">
+    		<li><strong>Four</strong></li>
+    		<li><i>Five</i></li>
+    	</ol></td>
+    		</tr>
+    		<tr>
+    			<td><dl>
+    	<dt class="hot">coffee</dt>
+    	<dd>Hot and black</dd>
+    	<dt class="hot" id="tea">tea</dt>
+    	<dd>Also hot, but a little less black</dd>
+    	<dt class="cold">milk</dt>
+    	<dd><p>Nourishing beverage for baby cows.<br />
     Cold drink that goes great with cookies.</p></dd><br />
     </dl></td>
-    </tr>
-    <tr>
-    <td>	<ul>
-    <li>bullet
-    <ol>
-    <li>number</li>
-    <li>number
-    <ul>
-    <li>bullet</li>
-    </ul></li>
-    <li>number</li>
-    <li>number with<br />
+    		</tr>
+    		<tr>
+    			<td>	<ul>
+    		<li>bullet
+    		<ol>
+    			<li>number</li>
+    			<li>number
+    			<ul>
+    				<li>bullet</li>
+    			</ul></li>
+    			<li>number</li>
+    			<li>number with<br />
     a break</li>
-    </ol></li>
-    <li>bullet
-    <ul>
-    <li>okay</li>
-    </ul></li>
-    </ul></td>
-    </tr>
+    		</ol></li>
+    		<li>bullet
+    		<ul>
+    			<li>okay</li>
+    		</ul></li>
+    		</ul></td>
+    		</tr>
     </table>
 
 Simple Definition lists:
@@ -2044,12 +2056,12 @@ Simple Definition lists:
     : Def 2
     : Def 3
   expect: |
-    <dl class="class" id="id">
-    <dt>Term 1</dt>
-    <dd>Def 1</dd>
-    <dd>Def 2</dd>
-    <dd>Def 3</dd>
-    </dl>
+    	<dl class="class" id="id">
+    		<dt>Term 1</dt>
+    		<dd>Def 1</dd>
+    		<dd>Def 2</dd>
+    		<dd>Def 3</dd>
+    	</dl>
 
 Redcloth Definition list:
   input:  |
@@ -2078,41 +2090,41 @@ Redcloth Definition list:
 
   expect: |
     <dl>
-    <dt class="hot"><strong>coffee</strong></dt>
-    <dd>Hot <em>and</em> black</dd>
-    <dt class="hot" id="tea">tea</dt>
-    <dd>Also hot, but a little less black</dd>
-    <dt class="cold">milk</dt>
-    <dd>Nourishing beverage for baby cows.<br />
+    	<dt class="hot"><strong>coffee</strong></dt>
+    	<dd>Hot <em>and</em> black</dd>
+    	<dt class="hot" id="tea">tea</dt>
+    	<dd>Also hot, but a little less black</dd>
+    	<dt class="cold">milk</dt>
+    	<dd>Nourishing beverage for baby cows.<br />
     Cold drink that goes great with cookies.</dd>
     </dl>
 
     <dl>
-    <dt class="hot">coffee</dt>
-    <dd>Hot and black</dd>
-    <dt class="hot" id="tea">tea</dt>
-    <dd>Also hot, but a little less black</dd>
-    <dt class="cold">milk</dt>
-    <dd><p>Nourishing beverage for baby cows.<br />
+    	<dt class="hot">coffee</dt>
+    	<dd>Hot and black</dd>
+    	<dt class="hot" id="tea">tea</dt>
+    	<dd>Also hot, but a little less black</dd>
+    	<dt class="cold">milk</dt>
+    	<dd><p>Nourishing beverage for baby cows.<br />
     Cold drink that goes great with cookies.</p></dd>
     </dl>
 
     <dl>
-    <dt>term</dt>
-    <dd>you can have line breaks<br />
+    	<dt>term</dt>
+    	<dd>you can have line breaks<br />
     just like other lists</dd>
-    <dt>line-spanning<br />
+    	<dt>line-spanning<br />
     term</dt>
-    <dd>hey, slick!</dd>
+    	<dd>hey, slick!</dd>
     </dl>
 
     <p>You can have multiple terms before a definition:</p>
 
     <dl>
-    <dt>textile</dt>
-    <dt>fabric</dt>
-    <dt>cloth</dt>
-    <dd>woven threads</dd>
+    	<dt>textile</dt>
+    	<dt>fabric</dt>
+    	<dt>cloth</dt>
+    	<dd>woven threads</dd>
     </dl>
 
 Complex definition list:
@@ -2146,52 +2158,52 @@ Complex definition list:
   expect: |
     <h2>A definition list</h2>
 
-    <dl class="class" id="id">
-    <dt>Term 1</dt>
-    <dd>Def 1</dd>
-    <dd>Def 2</dd>
-    <dd>Def 3
-    <dl>
-    <dt>Center</dt>
-    <dt><acronym title="Why Em Cee Ayy"><span class="caps">NATO</span></acronym></dt>
-    <dd>Subdef 1</dd>
-    <dd>Subdef 2
-    <dl>
-    <dt>SubSub Term</dt>
-    <dd>SubSub Def 1</dd>
-    <dd>SubSub Def 2</dd>
-    <dd>Subsub Def 3<br />
+    	<dl class="class" id="id">
+    		<dt>Term 1</dt>
+    		<dd>Def 1</dd>
+    		<dd>Def 2</dd>
+    		<dd>Def 3
+    		<dl>
+    			<dt>Center</dt>
+    			<dt><acronym title="Why Em Cee Ayy"><span class="caps">NATO</span></acronym></dt>
+    			<dd>Subdef 1</dd>
+    			<dd>Subdef 2
+    			<dl>
+    				<dt>SubSub Term</dt>
+    				<dd>SubSub Def 1</dd>
+    				<dd>SubSub Def 2</dd>
+    				<dd>Subsub Def 3<br />
     With newline</dd>
-    <dd>Subsub Def 4</dd>
-    </dl></dd>
-    <dd>Subdef 3</dd>
-    </dl></dd>
-    <dd><span class="caps">DEF</span> 4</dd>
-    <dt>Term 2</dt>
-    <dd>Another def</dd>
-    <dd>And another</dd>
-    <dd>One more
-    <dl>
-    <dd>A def without a term</dd>
-    <dd>More defness</dd>
-    </dl></dd>
-    <dt>Third term for good measure</dt>
-    <dd>My definition of a boombastic jazz</dd>
-    </dl>
+    				<dd>Subsub Def 4</dd>
+    			</dl></dd>
+    			<dd>Subdef 3</dd>
+    		</dl></dd>
+    		<dd><span class="caps">DEF</span> 4</dd>
+    		<dt>Term 2</dt>
+    		<dd>Another def</dd>
+    		<dd>And another</dd>
+    		<dd>One more
+    		<dl>
+    			<dd>A def without a term</dd>
+    			<dd>More defness</dd>
+    		</dl></dd>
+    		<dt>Third term for good measure</dt>
+    		<dd>My definition of a boombastic jazz</dd>
+    	</dl>
 
 1-line blockquote :
   input  : |
     bq. Don't suck the brown stuff off of 2 pence coins; it ain't chocolate.
   expect : |
     <blockquote>
-    <p>Don&#8217;t suck the brown stuff off of 2 pence coins; it ain&#8217;t chocolate.</p>
+    		<p>Don&#8217;t suck the brown stuff off of 2 pence coins; it ain&#8217;t chocolate.</p>
     </blockquote>
 1-line blockquote 2:
   input  : |
     bq. Don't suck the **brown stuff(tm)** off of "2 pence":http://royalmint.gov.uk coins; it ain't chocolate.
   expect : |
     <blockquote>
-    <p>Don&#8217;t suck the <b>brown stuff&#8482;</b> off of <a href="http://royalmint.gov.uk">2 pence</a> coins; it ain&#8217;t chocolate.</p>
+    		<p>Don&#8217;t suck the <b>brown stuff&#8482;</b> off of <a href="http://royalmint.gov.uk">2 pence</a> coins; it ain&#8217;t chocolate.</p>
     </blockquote>
 n-line blockquote:
   input  : |
@@ -2200,7 +2212,7 @@ n-line blockquote:
     p. That's all.
   expect : |
     <blockquote>
-    <p>Don&#8217;t suck the <b>brown stuff&#8482;</b> off of <a href="http://royalmint.gov.uk">2 pence</a> coins; it ain&#8217;t chocolate.</p>
+    		<p>Don&#8217;t suck the <b>brown stuff&#8482;</b> off of <a href="http://royalmint.gov.uk">2 pence</a> coins; it ain&#8217;t chocolate.</p>
     </blockquote>
 
     <p>That&#8217;s all.</p>
@@ -2210,7 +2222,7 @@ Blockquote with citation source :
     bq.:http://textism.com/ Text...
   expect : |
     <blockquote cite="http://textism.com/">
-    <p>Text&#8230;</p>
+    		<p>Text&#8230;</p>
     </blockquote>
 
 All capitals comment post :
@@ -2236,47 +2248,47 @@ New tables :
     | we're sure of a | big surprise |
   expect : |
     <table>
-    <caption id="captionola">My boombastic table caption. It must appear before the first thead/row</caption>
-    <thead>
-    <tr>
-    <th>thead-wrapped </th>
-    <th>column </th>
-    </tr>
-    </thead>
-    <tfoot class="footjob">
-    <tr>
-    <td> tfoot-wrapped </td>
-    <td> column </td>
-    </tr>
-    </tfoot>
-    <tbody>
-    <tr>
-    <td> tbody-wrapped </td>
-    <td> column </td>
-    </tr>
-    <tr>
-    <td> some more </td>
-    <td> columny goodness </td>
-    </tr>
-    <tr class="colourful">
-    <td> yet more </td>
-    <td> colourful rows </td>
-    </tr>
-    <tr>
-    <td> nothing much </td>
-    <td> here </td>
-    </tr>
-    </tbody>
-    <tbody class="nursery" id="rhyme">
-    <tr>
-    <td> if we go down </td>
-    <td style="text-align:center;">to the woods today </td>
-    </tr>
-    <tr>
-    <td> we&#8217;re sure of a </td>
-    <td> big surprise </td>
-    </tr>
-    </tbody>
+    	<caption id="captionola">My boombastic table caption. It must appear before the first thead/row</caption>
+    	<thead>
+    		<tr>
+    			<th>thead-wrapped </th>
+    			<th>column </th>
+    		</tr>
+    	</thead>
+    	<tfoot class="footjob">
+    		<tr>
+    			<td> tfoot-wrapped </td>
+    			<td> column </td>
+    		</tr>
+    	</tfoot>
+    	<tbody>
+    		<tr>
+    			<td> tbody-wrapped </td>
+    			<td> column </td>
+    		</tr>
+    		<tr>
+    			<td> some more </td>
+    			<td> columny goodness </td>
+    		</tr>
+    		<tr class="colourful">
+    			<td> yet more </td>
+    			<td> colourful rows </td>
+    		</tr>
+    		<tr>
+    			<td> nothing much </td>
+    			<td> here </td>
+    		</tr>
+    	</tbody>
+    	<tbody class="nursery" id="rhyme">
+    		<tr>
+    			<td> if we go down </td>
+    			<td style="text-align:center;">to the woods today </td>
+    		</tr>
+    		<tr>
+    			<td> we&#8217;re sure of a </td>
+    			<td> big surprise </td>
+    		</tr>
+    	</tbody>
     </table>
 
 Simple table with newline in a cell:
@@ -2286,17 +2298,17 @@ Simple table with newline in a cell:
     Valid values: 'cdo', 'cod' |
   expect: |
     <table>
-    <tr>
-    <th>Attribute </th>
-    <th>Default Value </th>
-    <th>Description </th>
-    </tr>
-    <tr>
-    <td> &#8216;order&#8217; </td>
-    <td style="text-align:center;">&#8216;cdo&#8217; </td>
-    <td> Optional: order of sections. Omit or leave blank for default copyright-date-owner order.<br />
+    		<tr>
+    			<th>Attribute </th>
+    			<th>Default Value </th>
+    			<th>Description </th>
+    		</tr>
+    		<tr>
+    			<td> &#8216;order&#8217; </td>
+    			<td style="text-align:center;">&#8216;cdo&#8217; </td>
+    			<td> Optional: order of sections. Omit or leave blank for default copyright-date-owner order.<br />
     Valid values: &#8216;cdo&#8217;, &#8216;cod&#8217; </td>
-    </tr>
+    		</tr>
     </table>
 
 Tables with styles:
@@ -2320,77 +2332,77 @@ Tables with styles:
     short but brilliantly executed thriller |
   expect: |
     <table id="dvds" style="border-collapse:collapse;" summary="Great films on DVD employing Textile summary, caption, thead, tfoot, two tbody elements and colgroups">
-    <caption style="font-size:140%;margin-bottom:15px;"><span class="caps">DVD</span>s with two Textiled tbody elements</caption>
-    <colgroup span="3" width="100">
-    <col style="background:#ddd;" />
-    <col width="250" />
-    <col />
-    <col width="50" />
-    <col width="300" />
-    </colgroup>
-    <thead class="header">
-    <tr>
-    <th>Title </th>
-    <th>Starring </th>
-    <th>Director </th>
-    <th>Writer </th>
-    <th>Notes </th>
-    </tr>
-    </thead>
-    <tfoot class="footer">
-    <tr>
-    <td colspan="5" style="text-align:center;">This is the tfoot, centred </td>
-    </tr>
-    </tfoot>
-    <tbody class="toplist" style="background:#c5f7f6;">
-    <tr>
-    <td> <em>The Usual Suspects</em> </td>
-    <td> Benicio Del Toro, Gabriel Byrne, Stephen Baldwin, Kevin Spacey </td>
-    <td> Bryan Singer </td>
-    <td> Chris McQaurrie </td>
-    <td> One of the finest films ever made </td>
-    </tr>
-    <tr>
-    <td> <em>Se7en</em> </td>
-    <td> Morgan Freeman, Brad Pitt, Kevin Spacey </td>
-    <td> David Fincher </td>
-    <td> Andrew Kevin Walker </td>
-    <td> Great psychological thriller </td>
-    </tr>
-    <tr>
-    <td> <em>Primer</em> </td>
-    <td> David Sullivan, Shane Carruth </td>
-    <td> Shane Carruth </td>
-    <td> Shane Carruth </td>
-    <td> Amazing insight into trust and human psychology <br />
+    	<caption style="font-size:140%;margin-bottom:15px;"><span class="caps">DVD</span>s with two Textiled tbody elements</caption>
+    	<colgroup span="3" width="100">
+    	<col style="background:#ddd;" />
+    	<col width="250" />
+    	<col />
+    	<col width="50" />
+    	<col width="300" />
+    	</colgroup>
+    	<thead class="header">
+    		<tr>
+    			<th>Title </th>
+    			<th>Starring </th>
+    			<th>Director </th>
+    			<th>Writer </th>
+    			<th>Notes </th>
+    		</tr>
+    	</thead>
+    	<tfoot class="footer">
+    		<tr>
+    			<td colspan="5" style="text-align:center;">This is the tfoot, centred </td>
+    		</tr>
+    	</tfoot>
+    	<tbody class="toplist" style="background:#c5f7f6;">
+    		<tr>
+    			<td> <em>The Usual Suspects</em> </td>
+    			<td> Benicio Del Toro, Gabriel Byrne, Stephen Baldwin, Kevin Spacey </td>
+    			<td> Bryan Singer </td>
+    			<td> Chris McQaurrie </td>
+    			<td> One of the finest films ever made </td>
+    		</tr>
+    		<tr>
+    			<td> <em>Se7en</em> </td>
+    			<td> Morgan Freeman, Brad Pitt, Kevin Spacey </td>
+    			<td> David Fincher </td>
+    			<td> Andrew Kevin Walker </td>
+    			<td> Great psychological thriller </td>
+    		</tr>
+    		<tr>
+    			<td> <em>Primer</em> </td>
+    			<td> David Sullivan, Shane Carruth </td>
+    			<td> Shane Carruth </td>
+    			<td> Shane Carruth </td>
+    			<td> Amazing insight into trust and human psychology <br />
     rather than science fiction. Terrific! </td>
-    </tr>
-    <tr>
-    <td> <em>District 9</em> </td>
-    <td> Sharlto Copley, Jason Cope </td>
-    <td> Neill Blomkamp </td>
-    <td> Neill Blomkamp, Terri Tatchell </td>
-    <td> Social commentary layered on thick,<br />
+    		</tr>
+    		<tr>
+    			<td> <em>District 9</em> </td>
+    			<td> Sharlto Copley, Jason Cope </td>
+    			<td> Neill Blomkamp </td>
+    			<td> Neill Blomkamp, Terri Tatchell </td>
+    			<td> Social commentary layered on thick,<br />
     but boy is it done well </td>
-    </tr>
-    </tbody>
-    <tbody class="medlist" style="background:#e7e895;">
-    <tr>
-    <td> <em>Arlington Road</em> </td>
-    <td> Tim Robbins, Jeff Bridges </td>
-    <td> Mark Pellington </td>
-    <td> Ehren Kruger </td>
-    <td> Awesome study in neighbourly relations </td>
-    </tr>
-    <tr>
-    <td> <em>Phone Booth</em> </td>
-    <td> Colin Farrell, Kiefer Sutherland, Forest Whitaker </td>
-    <td> Joel Schumacher </td>
-    <td> Larry Cohen </td>
-    <td> Edge-of-the-seat stuff in this<br />
+    		</tr>
+    	</tbody>
+    	<tbody class="medlist" style="background:#e7e895;">
+    		<tr>
+    			<td> <em>Arlington Road</em> </td>
+    			<td> Tim Robbins, Jeff Bridges </td>
+    			<td> Mark Pellington </td>
+    			<td> Ehren Kruger </td>
+    			<td> Awesome study in neighbourly relations </td>
+    		</tr>
+    		<tr>
+    			<td> <em>Phone Booth</em> </td>
+    			<td> Colin Farrell, Kiefer Sutherland, Forest Whitaker </td>
+    			<td> Joel Schumacher </td>
+    			<td> Larry Cohen </td>
+    			<td> Edge-of-the-seat stuff in this<br />
     short but brilliantly executed thriller </td>
-    </tr>
-    </tbody>
+    		</tr>
+    	</tbody>
     </table>
 
 Basic footref & footnote:
@@ -2470,21 +2482,21 @@ Simple Note Links:
     <p>Scientists say<sup><a href="#note"><span id="noteref">1</span></a></sup> the moon is quite small. But I, for one, don&#8217;t believe them. Others claim it to be made of cheese<sup><a href="#note"><span id="noteref">2</span></a></sup>. If this proves true I suspect we are in for troubled times<sup><a href="#note"><span id="noteref">3</span></a></sup> as people argue over their &#8220;share&#8221; of the moon&#8217;s cheese. In the end, its limited size<sup><a href="#note"><span id="noteref">1</span></a></sup> may prove problematic.</p>
 
     <ol style="border-bottom:1px solid gray;margin:1em;padding:1em;">
-    <li class="noteclass"><sup><a href="#noteref">a</a></sup> <sup><a href="#noteref">b</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
-    <li id="noteid"><sup><a href="#noteref">a</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
-    <li><sup><a href="#noteref">a</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    	<li class="noteclass"><sup><a href="#noteref">a</a></sup> <sup><a href="#noteref">b</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    	<li id="noteid"><sup><a href="#noteref">a</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    	<li><sup><a href="#noteref">a</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
     </ol>
 
     <ol style="border-bottom:1px solid gray;margin:1em;padding:1em;">
-    <li class="noteclass"><sup><a href="#noteref">§</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
-    <li id="noteid"><sup><a href="#noteref">§</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
-    <li><sup><a href="#noteref">§</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    	<li class="noteclass"><sup><a href="#noteref">§</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    	<li id="noteid"><sup><a href="#noteref">§</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    	<li><sup><a href="#noteref">§</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
     </ol>
 
     <ol style="border-bottom:1px solid gray;margin:1em;padding:1em;">
-    <li class="noteclass"><sup><a href="#noteref">‡</a></sup> <sup><a href="#noteref">‡</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
-    <li id="noteid"><sup><a href="#noteref">‡</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
-    <li><sup><a href="#noteref">‡</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    	<li class="noteclass"><sup><a href="#noteref">‡</a></sup> <sup><a href="#noteref">‡</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    	<li id="noteid"><sup><a href="#noteref">‡</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    	<li><sup><a href="#noteref">‡</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
     </ol>
 
 Links from already encoded URL:
@@ -2512,9 +2524,9 @@ Note Links.:
     <h2>Here are my references.</h2>
 
     <ol style="border-bottom:1px solid gray;margin:1em;padding:1em;">
-    <li><sup><a href="#noteref">a</a></sup> <sup><a href="#noteref">b</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
-    <li><sup><a href="#noteref">a</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
-    <li><sup><a href="#noteref">a</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    	<li><sup><a href="#noteref">a</a></sup> <sup><a href="#noteref">b</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    	<li><sup><a href="#noteref">a</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    	<li><sup><a href="#noteref">a</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
     </ol>
 
 
@@ -2535,10 +2547,10 @@ Unlinked Note References with backlinked and unreferenced defs.:
     <p>Scientists say<sup><span id="noteref">1</span></sup> the moon is quite small. But I, for one, don&#8217;t believe them. Others claim it to be made of cheese<sup><span id="noteref">2</span></sup>. If this proves true I suspect we are in for troubled times<sup><span id="noteref">3</span></sup> as people argue over their &#8220;share&#8221; of the moon&#8217;s cheese. In the end, its limited size<sup><span id="noteref">1</span></sup> may prove problematic.</p>
 
     <ol style="border-bottom:1px solid gray;margin:1em;padding:1em;">
-    <li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
-    <li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
-    <li><sup><a href="#noteref">α</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
-    <li>An unreferenced note.</li>
+    	<li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    	<li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    	<li><sup><a href="#noteref">α</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    	<li>An unreferenced note.</li>
     </ol>
 
 Malformed notelist :
@@ -2558,17 +2570,17 @@ Malformed notelist :
     <p>Scientists say<sup><a href="#note"><span id="noteref">1</span></a></sup> the moon is quite small. But I, for one, don&#8217;t believe them. Others claim it to be made of cheese<sup><a href="#note"><span id="noteref">2</span></a></sup>. If this proves true I suspect we are in for troubled times<sup><span id="noteref">3</span></sup> as people argue over their &#8220;share&#8221; of the moon&#8217;s cheese. In the end, its limited size<sup><a href="#note"><span id="noteref">1</span></a></sup> may prove problematic.</p>
 
     <ol style="border-bottom:1px solid gray;margin:1em;padding:1em;">
-    <li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
-    <li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
-    <li><sup><a href="#noteref">α</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
-    <li>An unreferenced note.</li>
+    	<li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    	<li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    	<li><sup><a href="#noteref">α</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    	<li>An unreferenced note.</li>
     </ol>
 
 Issue 72 - spans around foreign chars :
   input  : |
     *W skład zestawu wchodzą*:
 
-    *W skład zestawu wchodzą*:``
+    *W skład zestawu wchodzą*: 
   expect : |
     <p><strong>W skład zestawu wchodzą</strong>:</p>
 
@@ -2597,10 +2609,10 @@ Smileys still smileys? :
 
     :)
 
-    :(``
-    :(``
-    :(``
-    :)``
+    :( 
+    :( 
+    :( 
+    :) 
 
     Pinocchio!
     :^)
@@ -2611,13 +2623,13 @@ Smileys still smileys? :
     Wink!
     ;)
 
-    :[``
+    :[ 
     :]
 
     ;(
     something
     dark side
-    :)``
+    :) 
 
     ;(c)[de] Item
 
@@ -2648,9 +2660,9 @@ Smileys still smileys? :
     dark side<br />
     :) </p>
 
-    <dl class="c" lang="de">
-    <dt>Item</dt>
-    </dl>
+    	<dl class="c" lang="de">
+    		<dt>Item</dt>
+    	</dl>
 
 Styles on phrase modifiers :
   input:  |
@@ -2755,7 +2767,7 @@ Github Issue 50 (en-dash & strike) :
     - xyz
 
     a -b-
-    a -b-``
+    a -b- 
     a - b
     a -b
     a- b
@@ -2765,7 +2777,7 @@ Github Issue 50 (en-dash & strike) :
     b
     a -
     b
-    a -``
+    a - 
     b
   expect: |
     <p>fjfhfjhf<br />
@@ -2814,71 +2826,71 @@ Tight tables... :
     <p>Tables containing other textile elements.</p>
 
     <table>
-    <tr>
-    <td>.244 &#215; -.123 = ?</td>
-    </tr>
+    		<tr>
+    			<td>.244 &#215; -.123 = ?</td>
+    		</tr>
     </table>
 
     <table>
-    <tr>
-    <td><code>Don&#39;t _touch_ this!</code></td>
-    <td> <code>Don&#39;t _touch_ this!</code> </td>
-    </tr>
-    <tr>
-    <td>Don't _touch_ this!</td>
-    <td> Don't _touch_ this! </td>
-    </tr>
-    <tr>
-    <td>You <em>can</em> touch this!</td>
-    <td> You <em>can</em> touch this! </td>
-    </tr>
-    <tr>
-    <td><em>touch</em> this!</td>
-    <td> <em>touch</em> this! </td>
-    </tr>
-    <tr>
-    <td><sup>superscripted</sup></td>
-    <td> <sup>superscripted</sup> </td>
-    </tr>
-    <tr>
-    <td><sub>subscripted</sub></td>
-    <td> <sub>subscripted</sub> </td>
-    </tr>
-    <tr>
-    <td><strong>strong</strong></td>
-    <td> <strong>strong</strong> </td>
-    </tr>
-    <tr>
-    <td><img alt="" src="http://tester.local/logo.png" /></td>
-    <td> <img alt="" src="http://tester.local/logo.png" /> </td>
-    </tr>
-    <tr>
-    <td><a href="https://github.com/netcarver/textile">github.com/netcarver/textile</a></td>
-    <td> <a href="https://github.com/netcarver/textile">github.com/netcarver/textile</a> </td>
-    </tr>
+    		<tr>
+    			<td><code>Don&#39;t _touch_ this!</code></td>
+    			<td> <code>Don&#39;t _touch_ this!</code> </td>
+    		</tr>
+    		<tr>
+    			<td>Don't _touch_ this!</td>
+    			<td> Don't _touch_ this! </td>
+    		</tr>
+    		<tr>
+    			<td>You <em>can</em> touch this!</td>
+    			<td> You <em>can</em> touch this! </td>
+    		</tr>
+    		<tr>
+    			<td><em>touch</em> this!</td>
+    			<td> <em>touch</em> this! </td>
+    		</tr>
+    		<tr>
+    			<td><sup>superscripted</sup></td>
+    			<td> <sup>superscripted</sup> </td>
+    		</tr>
+    		<tr>
+    			<td><sub>subscripted</sub></td>
+    			<td> <sub>subscripted</sub> </td>
+    		</tr>
+    		<tr>
+    			<td><strong>strong</strong></td>
+    			<td> <strong>strong</strong> </td>
+    		</tr>
+    		<tr>
+    			<td><img alt="" src="http://tester.local/logo.png" /></td>
+    			<td> <img alt="" src="http://tester.local/logo.png" /> </td>
+    		</tr>
+    		<tr>
+    			<td><a href="https://github.com/netcarver/textile">github.com/netcarver/textile</a></td>
+    			<td> <a href="https://github.com/netcarver/textile">github.com/netcarver/textile</a> </td>
+    		</tr>
     </table>
 
     <table>
-    <tr>
-    <td> This </td>
-    <td> is </td>
-    <td> a </td>
-    <td> row </td>
-    <td> 	<ul>
-    <li>with a list</li>
-    <li>inside it</li>
-    </ul></td>
-    </tr>
-    <tr>
-    <td>This</td>
-    <td>is</td>
-    <td>a</td>
-    <td>row</td>
-    <td>	<ul>
-    <li>with a list</li>
-    <li>inside it</li>
-    </ul></td>
-    </tr>
+    		<tr>
+    			<td> This </td>
+    			<td> is </td>
+    			<td> a </td>
+    			<td> row </td>
+    			<td> 	<ul>
+    		<li>with a list</li>
+    		<li>inside it</li>
+    	</ul></td>
+    		</tr>
+    		<tr>
+    			<td>This</td>
+    			<td>is</td>
+    			<td>a</td>
+    			<td>row</td>
+    			<td>	<ul>
+    		<li>with a list</li>
+    		<li>inside it</li>
+    	</ul></td>
+    		</tr>
     </table>
 
 Empty things... :
@@ -3045,9 +3057,9 @@ Empty things... :
     <p>,,</p>
 
     <table>
-    <tr>
-      <td></td>
-    </tr>
+    		<tr>
+    			<td></td>
+    		</tr>
     </table>
 
     <p>` `</p>
@@ -3062,9 +3074,9 @@ Empty things... :
 
     <p>&amp; &amp;</p>
 
-    <ul>
-    <li>*</li>
-    </ul>
+    	<ul>
+    		<li>*</li>
+    	</ul>
 
     <p>_ _</p>
 
@@ -3092,21 +3104,21 @@ Empty things... :
 
     <p><code> </code></p>
 
-    <ol>
-    <li>#</li>
-    </ol>
+    	<ol>
+    		<li>#</li>
+    	</ol>
 
     <p>$ $</p>
 
     <p>! !</p>
 
-    <dl>
-    <dd>:</dd>
-    </dl>
+    	<dl>
+    		<dd>:</dd>
+    	</dl>
 
-    <dl>
-    <dt>;</dt>
-    </dl>
+    	<dl>
+    		<dt>;</dt>
+    	</dl>
 
     <p>. .</p>
 
