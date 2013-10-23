@@ -39,8 +39,8 @@ namespace Netcarver\Textile;
  *
  * Example usage...
  *
- * $img = new Tag('img')->class('big blue')->src('images/elephant.jpg');
- * echo $img;
+ * $img = new Tag('img');
+ * echo $img->class('big blue')->src('images/elephant.jpg');
  **/
 class Tag extends \Netcarver\Textile\DataBag
 {
