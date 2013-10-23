@@ -332,53 +332,63 @@ class Parser
     protected $ver = '3.5.1';
 
     /**
+     * Regular expression snippets.
+     *
+     * @var array
+     */
+    protected $regex_snippets;
+
+    /**
      * Pattern for horizontal align.
      *
      * @var string
      */
-    protected $hlgn;
+    protected $hlgn = "(?:\<(?!>)|&lt;&gt;|&gt;|&lt;|(?<!<)\>|\<\>|\=|[()]+(?! ))";
 
     /**
      * Pattern for vertical align.
      *
      * @var string
      */
-    protected $vlgn;
+    protected $vlgn = "[\-^~]";
 
     /**
      * Pattern for HTML classes and IDs.
      *
+     * Does not allow classes/ids/languages/styles to span across
+     * newlines if used in a dotall regular expression.
+     *
      * @var string
      */
-    protected $clas;
+    protected $clas = "(?:\([^)\n]+\))";
 
     /**
      * Pattern for language attribute.
      *
      * @var string
      */
-    protected $lnge;
+    protected $lnge = "(?:\[[^]\n]+\])";
 
     /**
      * Pattern for style attribute.
      *
      * @var string
      */
-    protected $styl;
+    protected $styl = "(?:\{[^}\n]+\})";
 
     /**
      * ?
      *
      * @var string
      */
-    protected $cspn;
+    protected $cspn = "(?:\\\\\d+)";
 
     /**
      * ?
      *
      * @var string
      */
-    protected $rspn;
+    protected $rspn = "(?:\/\d+)";
 
     /**
      * ?
@@ -406,7 +416,21 @@ class Parser
      *
      * @var string
      */
-    protected $pnct;
+    protected $pnct = '[\!"#\$%&\'()\*\+,\-\./:;<=>\?@\[\\\]\^_`{\|}\~]';
+
+    /**
+     * Pattern for URL.
+     *
+     * @var string
+     */
+    protected $urlch;
+
+    /**
+     * Matched marker symbols.
+     *
+     * @var string
+     */
+    protected $syms = '¤§µ¶†‡•∗∴◊♠♣♥♦';
 
     /**
      * HTML rel attribute used for links.
@@ -459,6 +483,52 @@ class Parser
      * @var array
      */
     protected $url_schemes = array();
+
+    /**
+     * Restricted link protocols.
+     *
+     * @var array
+     */
+    protected $restricted_url_schemes = array(
+        'http',
+        'https',
+        'ftp',
+        'mailto',
+    );
+
+    /**
+     * Unrestricted link protocols.
+     *
+     * @var array
+     */
+    protected $unrestricted_url_schemes = array(
+        'http',
+        'https',
+        'ftp',
+        'mailto',
+        'file',
+        'tel',
+        'callto',
+        'sftp',
+    );
+
+    /**
+     * Span tags.
+     *
+     * @var array
+     */
+    protected $span_tags = array(
+        '*'  => 'strong',
+        '**' => 'b',
+        '??' => 'cite',
+        '_'  => 'em',
+        '__' => 'i',
+        '-'  => 'del',
+        '%'  => 'span',
+        '+'  => 'ins',
+        '~'  => 'sub',
+        '^'  => 'sup',
+    );
 
     /**
      * Patterns for finding glyphs.
@@ -528,9 +598,36 @@ class Parser
     /**
      * Substitution symbols.
      *
+     * Basic symbols used in textile glyph replacements. To override these, call
+     * setSymbol method before calling textileThis or textileRestricted.
+     *
      * @var array
+     * @see Parser::setSymbol()
      */
-    protected $symbols;
+    protected $symbols = array(
+        'quote_single_open'  => '&#8216;',
+        'quote_single_close' => '&#8217;',
+        'quote_double_open'  => '&#8220;',
+        'quote_double_close' => '&#8221;',
+        'apostrophe'         => '&#8217;',
+        'prime'              => '&#8242;',
+        'prime_double'       => '&#8243;',
+        'ellipsis'           => '&#8230;',
+        'emdash'             => '&#8212;',
+        'endash'             => '&#8211;',
+        'dimension'          => '&#215;',
+        'trademark'          => '&#8482;',
+        'registered'         => '&#174;',
+        'copyright'          => '&#169;',
+        'half'               => '&#189;',
+        'quarter'            => '&#188;',
+        'threequarters'      => '&#190;',
+        'degrees'            => '&#176;',
+        'plusminus'          => '&#177;',
+        'fn_ref_pattern'     => '<sup{atts}>{marker}</sup>',
+        'fn_foot_pattern'    => '<sup{atts}>{marker}</sup>',
+        'nl_ref_pattern'     => '<sup{atts}>{marker}</sup>',
+    );
 
     /**
      * Dimensionless images flag.
@@ -544,8 +641,21 @@ class Parser
      *
      * @var string
      */
-    protected $ds;
+    protected $ds = '/';
 
+    /**
+     * Whether mbstring extension is installed.
+     *
+     * @var bool
+     */
+    protected $mb;
+
+    /**
+     * Multi-byte conversion map.
+     *
+     * @var array
+     */
+    protected $cmap = array(0x0080, 0xffff, 0, 0xffff);
 
     /**
      * Constructor.
@@ -565,55 +675,12 @@ class Parser
             $this->doctype = $doctype;
         }
 
-        // Basic symbols used in textile glyph replacements. To override these, call
-        // setSymbol('symbol_name', 'new_string') before calling textileThis() or
-        // textileRestricted().
-        $this->symbols = array(
-            'quote_single_open'  => '&#8216;',
-            'quote_single_close' => '&#8217;',
-            'quote_double_open'  => '&#8220;',
-            'quote_double_close' => '&#8221;',
-            'apostrophe'         => '&#8217;',
-            'prime'              => '&#8242;',
-            'prime_double'       => '&#8243;',
-            'ellipsis'           => '&#8230;',
-            'emdash'             => '&#8212;',
-            'endash'             => '&#8211;',
-            'dimension'          => '&#215;',
-            'trademark'          => '&#8482;',
-            'registered'         => '&#174;',
-            'copyright'          => '&#169;',
-            'half'               => '&#189;',
-            'quarter'            => '&#188;',
-            'threequarters'      => '&#190;',
-            'degrees'            => '&#176;',
-            'plusminus'          => '&#177;',
-            'fn_ref_pattern'     => '<sup{atts}>{marker}</sup>',
-            'fn_foot_pattern'    => '<sup{atts}>{marker}</sup>',
-            'nl_ref_pattern'     => '<sup{atts}>{marker}</sup>',
-        );
+        $this->a = "(?:$this->hlgn|$this->vlgn)*";
+        $this->s = "(?:$this->cspn|$this->rspn)*";
+        $this->c = "(?:$this->clas|$this->styl|$this->lnge|$this->hlgn)*";
+        $this->lc = "(?:$this->clas|$this->styl|$this->lnge)*";
 
-        $this->hlgn  = "(?:\<(?!>)|&lt;&gt;|&gt;|&lt;|(?<!<)\>|\<\>|\=|[()]+(?! ))";
-        $this->vlgn  = "[\-^~]";
-        $this->clas  = "(?:\([^)\n]+\))";    // Don't allow classes/ids/languages/styles to span across newlines if used in a dotall regex
-        $this->lnge  = "(?:\[[^]\n]+\])";
-        $this->styl  = "(?:\{[^}\n]+\})";
-        $this->cspn  = "(?:\\\\\d+)";
-        $this->rspn  = "(?:\/\d+)";
-        $this->a     = "(?:$this->hlgn|$this->vlgn)*";
-        $this->s     = "(?:$this->cspn|$this->rspn)*";
-        $this->c     = "(?:$this->clas|$this->styl|$this->lnge|$this->hlgn)*";
-        $this->lc    = "(?:$this->clas|$this->styl|$this->lnge)*";
-        $this->pnct  = '[\!"#\$%&\'()\*\+,\-\./:;<=>\?@\[\\\]\^_`{\|}\~]';
-        $this->urlch = '[\w"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
-        $this->syms  = '¤§µ¶†‡•∗∴◊♠♣♥♦';
-
-        $pnc = '[[:punct:]]';
-        $this->mb   = is_callable('mb_strlen');
-        $this->cmap = array(0x0080, 0xffff, 0, 0xffff);
-
-        $this->restricted_url_schemes   = array('http','https','ftp','mailto');
-        $this->unrestricted_url_schemes = array('http','https','ftp','mailto','file','tel','callto','sftp');
+        $this->mb = is_callable('mb_strlen');
 
         if (@preg_match('/\pL/u', 'a')) {
             $this->regex_snippets = array(
@@ -637,23 +704,8 @@ class Parser
         extract($this->regex_snippets);
         $this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
 
-        $this->span_tags = array(
-            '*'  => 'strong',
-            '**' => 'b',
-            '??' => 'cite',
-            '_'  => 'em',
-            '__' => 'i',
-            '-'  => 'del',
-            '%'  => 'span',
-            '+'  => 'ins',
-            '~'  => 'sub',
-            '^'  => 'sup',
-        );
-
         if (defined('DIRECTORY_SEPARATOR')) {
             $this->ds = constant('DIRECTORY_SEPARATOR');
-        } else {
-            $this->ds = '/';
         }
 
         if (php_sapi_name() === 'cli') {
