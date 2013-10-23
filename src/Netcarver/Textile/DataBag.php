@@ -77,6 +77,8 @@ class DataBag
      * Empty values are rejected, unless the
      * second argument is set TRUE.
      *
+     * @param   string $k      The name
+     * @param   array  $params Arguments
      * @example
      * use Netcarver\Textile\DataBag;
      * $plant = new DataBag(array('key' => 'value'));
