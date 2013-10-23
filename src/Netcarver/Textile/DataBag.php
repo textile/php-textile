@@ -77,7 +77,7 @@ class DataBag
      * Empty values are rejected, unless the
      * second argument is set TRUE.
      *
-     * @param   string $k      The name
+     * @param   string $name   The name
      * @param   array  $params Arguments
      * @example
      * use Netcarver\Textile\DataBag;
@@ -85,11 +85,10 @@ class DataBag
      * $plant->flower('rose')->color('red')->emptyValue(false, true);
      */
 
-    public function __call($k, $params)
+    public function __call($name, array $params)
     {
-        $allow_empty = isset($params[1]) && is_bool($params[1]) ? $params[1] : false;
-        if ($allow_empty || '' != $params[0]) {
-            $this->data[$k] = $params[0];
+        if (!empty($params[1]) || !empty($params[0])) {
+            $this->data[$name] = $params[0];
         }
 
         return $this;
