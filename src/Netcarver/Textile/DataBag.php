@@ -63,12 +63,12 @@ class DataBag
     /**
      * Constructor.
      *
-     * @param array|null $initial_data The initial data array stored in the bag
+     * @param array|null $data The initial data array stored in the bag
      */
 
-    public function __construct(array $initial_data = null)
+    public function __construct(array $data = null)
     {
-        $this->data = (array) $initial_data;
+        $this->data = (array) $data;
     }
 
     /**
