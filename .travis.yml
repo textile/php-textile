@@ -3,4 +3,4 @@ php:
   - 5.5
 before_script:
   - composer install
-script: phpunit --configuration phpunit.xml
+script: ./vendor/bin/phpunit
