@@ -1,11 +1,15 @@
 <?php
 
+/**
+ * Textile - A Humane Web Text Generator.
+ *
+ * @link https://github.com/textile/php-textile
+ */
+
 namespace Netcarver\Textile;
 
-/**
- * Copyright (c) 2012 Netcarver http://github.com/netcarver
- * _____________
- * L I C E N S E
+/*
+ * Copyright (c) 2013, Netcarver https://github.com/netcarver
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,35 +36,53 @@ namespace Netcarver\Textile;
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- **/
-
+ */
 
 /**
- * Class to allow simple assignment to members of the internal data array
- **/
+ * Simple data storage.
+ *
+ * This class to allows storing assignments in an internal
+ * data array.
+ *
+ * @example
+ * use Netcarver\Textile\DataBag;
+ * $plant = new DataBag(array('key' => 'value'));
+ * $plant->flower('rose')->color('red');
+ */
+
 class DataBag
 {
+    /**
+     * The data array stored in the bag.
+     *
+     * @var array
+     */
+
     protected $data;
 
+    /**
+     * Constructor.
+     *
+     * @param array $initial_data The initial data array stored in the bag
+     */
 
     public function __construct($initial_data)
     {
         $this->data = (is_array($initial_data)) ? $initial_data : array();
     }
 
-
     /**
-     * Allows setting of an element in the $data array. eg...
+     * Adds a value to the bag.
      *
-     * $bag->key(value);
+     * Empty values are rejected, unless the
+     * second argument is set TRUE.
      *
-     * ...sets $bag's $data['key'] to $value provided $value is not empty.
-     * The set can be made forced by following $value with true...
-     *
-     * $bag->key(value, true);
-     *
-     * Would force the value into the data array even if it were empty.
-     **/
+     * @example
+     * use Netcarver\Textile\DataBag;
+     * $plant = new DataBag(array('key' => 'value'));
+     * $plant->flower('rose')->color('red')->emptyValue(false, true);
+     */
+
     public function __call($k, $params)
     {
         $allow_empty = isset($params[1]) && is_bool($params[1]) ? $params[1] : false;
