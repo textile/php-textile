@@ -452,6 +452,11 @@ Notextile :
 
     But "this(tm)" should be whilst, yet again, >==this(tm)==< should _not_!
 
+    notextile.. Make sure the empty line
+    in this Notextile block...
+
+    ...is preserved.
+
   expect : |
     <p>*no* <b>textile</b></p>
 
@@ -462,6 +467,11 @@ Notextile :
     </p>
 
     <p>But &#8220;this&#8482;&#8221; should be whilst, yet again, &gt;this(tm)&lt; should <em>not</em>!</p>
+
+    Make sure the empty line
+    in this Notextile block...
+
+    ...is preserved.
 
 Tricky Open Quotes... :
   input :  |

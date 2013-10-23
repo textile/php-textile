@@ -1746,7 +1746,7 @@ class Parser
     {
         $blocktags = join('|', $this->blocktag_whitelist);
 
-        $text = explode("\n\n", $text);
+        $text = preg_split('/(\n{2,})/', $text, null, PREG_SPLIT_DELIM_CAPTURE);
 
         $tag  = 'p';
         $atts = '';
@@ -1754,15 +1754,28 @@ class Parser
         $graf = '';
         $ext  = '';
         $eat  = false;
+        $whitespace = '';
 
         $out  = array();
 
         foreach ($text as $line) {
+            // Line is just whitespace
+            if (trim($line) === '') {
+                $whitespace = $out[] = $line;
+                continue;
+            }
+
             $anon = 0;
             if (preg_match("/^($blocktags)($this->a$this->c)\.(\.?)(?::(\S+))? (.*)$/Ss", $line, $m)) {
                 // Last block was extended, so close it
                 if ($ext) {
-                    $out[count($out)-1] .= $c1;
+                    if ($whitespace) {
+                        $out[count($out)-1] = $c1 . $whitespace;
+                        $whitespace = '';
+                    }
+                    else {
+                        $out[] = $c1;
+                    }
                 }
 
                 // New block
@@ -1793,12 +1806,7 @@ class Parser
 
             $line = $this->doPBr($line);
             $line = preg_replace('/<br>/', '<br />', $line);
-
-            if ($ext and $anon) {
-                $out[count($out)-1] .= "\n".$line;
-            } elseif (!$eat) {
-                $out[] = $line;
-            }
+            $out[] = $line;
 
             if (!$ext) {
                 $tag  = 'p';
@@ -1810,10 +1818,15 @@ class Parser
         }
 
         if ($ext) {
-            $out[count($out)-1] .= $c1;
+            if ($whitespace) {
+                $out[count($out)-1] = $c1 . $whitespace;
+            }
+            else {
+                $out[] = $c1;
+            }
         }
 
-        return join("\n\n", $out);
+        return join('', $out);
     }
 
     /**
@@ -1888,7 +1901,7 @@ class Parser
             $o2 = "<code>";
             $c2 = "</code>";
             $c1 = "</pre>";
-            $content = $this->shelve($this->rEncodeHTML(rtrim($content, "\n")."\n"));
+            $content = $this->shelve($this->rEncodeHTML($content));
         } elseif ($tag == 'notextile') {
             $content = $this->shelve($content);
             $o1 = '';
@@ -1896,7 +1909,7 @@ class Parser
             $c1 = '';
             $c2 = '';
         } elseif ($tag == 'pre') {
-            $content = $this->shelve($this->rEncodeHTML(rtrim($content, "\n")."\n"));
+            $content = $this->shelve($this->rEncodeHTML($content));
             $o1 = "<pre$atts>";
             $o2 = '';
             $c2 = '';
@@ -2719,8 +2732,6 @@ class Parser
     {
         $out = preg_replace("/^\xEF\xBB\xBF|\x1A/", '', $text); // Byte order mark (if present)
         $out = preg_replace("/\r\n?/", "\n", $out);             // DOS and MAC line endings to *NIX style endings
-        $out = preg_replace("/^[ \t]*\n/m", "\n", $out);        // lines containing only whitespace
-        $out = preg_replace("/\n{3,}/", "\n\n", $out);          // 3 or more line ends
         $out = preg_replace("/^\n*/", "", $out);                // leading blank lines
         return $out;
     }
