@@ -95,7 +95,7 @@ class Tag extends DataBag
      * echo (string) $img;
      */
 
-    public function __tostring()
+    public function __toString()
     {
         $attributes = '';
 
