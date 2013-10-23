@@ -539,6 +539,13 @@ class Parser
      */
     protected $dimensionless_images = false;
 
+    /**
+     * Directory separator.
+     *
+     * @var string
+     */
+    protected $ds;
+
 
     /**
      * Constructor.
