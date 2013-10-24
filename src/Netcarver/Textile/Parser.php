@@ -887,7 +887,7 @@ class Parser
      * usually a absolute HTTP address pointing to a directory.
      *
      * @param  string $prefix  The string to prefix all relative image paths with
-     * @return Netcarver\Textile\Parser
+     * @return Parser
      * @example
      * $parser->setRelativeImagePrefix('http://static.example.com/');
      */
@@ -906,7 +906,7 @@ class Parser
      * for relative images (if possible).
      *
      * @param  bool   $dimensionless true=>omit image dimensions, false=>include dimensions
-     * @return Netcarver\Textile\Parser
+     * @return Parser
      * @example
      * $parser = new Parser();
      * echo $parser->setDimensionlessImages(false)->textileThis($input);
@@ -1225,12 +1225,12 @@ class Parser
      * @param  string $name        The HTML element name
      * @param  array  $atts        HTML attributes applied to the tag
      * @param  bool   $selfclosing Determines if the tag should be selfclosing
-     * @return \Netcarver\Textile\Tag
+     * @return Tag
      */
 
     protected function newTag($name, $atts, $selfclosing = true)
     {
-        return new \Netcarver\Textile\Tag($name, $atts, $selfclosing);
+        return new Tag($name, $atts, $selfclosing);
     }
 
     /**
