@@ -1114,6 +1114,12 @@ Relative Images (responsive) :
   setup :
     - setDimensionlessImages: true
 
+Unicode image src, alt and title : 
+  input : |
+    !大阪府.png(大阪府)!
+  expect : |
+    <p><img alt="大阪府" src="大阪府.png" title="大阪府" /></p>
+
 Images with links :
   input  : |
     Here's the favicon from the TXP(Textpattern) website... !http://textpattern.com/favicon.ico(title text)!:http://textpattern.com
