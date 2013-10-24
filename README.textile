@@ -49,7 +49,8 @@ h3. Parsing untrusted input
 
 If you are using Textile to format user-supplied input, blog comments for instance, use the @textileRestricted()@ method:
 
-bc. echo $parser->textileRestricted('!bad/image/not/allowed.svg!');
+bc. $parser = new \Netcarver\Textile\Parser();
+echo $parser->textileRestricted('!bad/image/not/allowed.svg!');
 
 The method doesn't allow more powerful formatting options including inline style, and removes any raw HTML.
 
