@@ -1238,13 +1238,13 @@ class Parser
      *
      * @param  string $in         The Textile attribute string to be parsed
      * @param  string $element    Focus the routine to interpret the attributes as applying to a specific HTML tag
-     * @param  int    $include_id A value interpreted as a true when cast to bool allows ids to be included in the output
-     * @param  string $autoclass  An additional class or classes to be applied to the output
+     * @param  bool   $include_id If FALSE, IDs are not included in the attribute list
+     * @param  string $autoclass  An additional classes applied to the output
      * @return string HTML attribute list
      * @see    Parser::parseAttribsToArray()
      */
 
-    protected function parseAttribs($in, $element = '', $include_id = 1, $autoclass = '')
+    protected function parseAttribs($in, $element = '', $include_id = true, $autoclass = '')
     {
         $out = '';
         $o = $this->parseAttribsToArray($in, $element, $include_id, $autoclass);
@@ -1264,13 +1264,13 @@ class Parser
      *
      * @param  string $in         The Textile attribute string to be parsed
      * @param  string $element    Focus the routine to interpret the attributes as applying to a specific HTML tag
-     * @param  int    $include_id A value interpreted as a true when cast to bool allows ids to be included in the output
-     * @param  string $autoclass  An additional class or classes to be applied to the output
+     * @param  bool   $include_id If FALSE, IDs are not included in the attribute list
+     * @param  string $autoclass  An additional classes applied to the output
      * @return array  HTML attributes as key => value mappings
      * @see    Parser::parseAttribs()
      */
 
-    protected function parseAttribsToArray($in, $element = '', $include_id = 1, $autoclass = '')
+    protected function parseAttribsToArray($in, $element = '', $include_id = true, $autoclass = '')
     {
         $style = '';
         $class = '';
