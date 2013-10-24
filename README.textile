@@ -41,8 +41,8 @@ h2. Usage
 
 Textile parser can be accessed through the @Netcarver\Textile\Parser@ class. The class is highly configurable, and actual parsing happens with the @textileThis@ and @textileRestricted@ methods:
 
-bc. use Netcarver\Textile;
-$parser = new Textile\Parser();
+bc. use Netcarver\Textile\Parser as Textile;
+$parser = new Textile();
 echo $parser->textileThis('h1. Hello World!');
 
 h3. Parsing untrusted input
@@ -58,6 +58,7 @@ h3. Doctypes
 Currently, PHP Textile can target either XHTML or HTML5 output with XHTML being the default for backward compatibility. The targeted doctype can be changed through the constructor:
 
 bc. $parser = new \Netcarver\Textile\Parser('html5');
+echo $parser->textileThis('HTML(HyperText Markup Language)");
 
 In HTML5 mode, you'll get @abbr@ instead of @acronym@ and if you use alignment markers on your images you'll have extra classes placed on them instead of XHTML's @align@ attribute.
 
@@ -65,7 +66,8 @@ h3. Setting alternate glyphs
 
 Textile's typographic substitutions can be overridden with the @setSymbol@ method. If you need to setup textile to do non-standard substitutions, call @setSymbol@ before you parse the input with @textileThis@ or @textileRestricted@.
 
-bc. $parser->setSymbol('half', '1&#8260;2');
+bc. $parser = new \Netcarver\Textile\Parser();
+$parser->setSymbol('half', '1&#8260;2');
 $parser->textileThis('Hello World!');
 
 The symbol names you can pass to @setSymbol()@ can be found "here":https://github.com/textile/php-textile/blob/582fb7e2af83bb043fe6dd3846220796c814f999/classTextile.php#L468.
@@ -74,7 +76,8 @@ h3. Prefixing relative image paths
 
 Setting a image path prefix might be useful if your application only allows users to reference images from a certain location like, say, an images directory. The prefix can be set with the @setRelativeImagePrefix()@ method:
 
-bc. $parser->setRelativeImagePrefix('user/uploads');
+bc. $parser = new \Netcarver\Textile\Parser();
+$parser->setRelativeImagePrefix('user/uploads');
 $parser->textileThis('Hello World!');
 
 h2. Getting In Contact
