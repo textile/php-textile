@@ -79,7 +79,7 @@ class DataBag
      *
      * @param   string $name   The name
      * @param   array  $params Arguments
-     * @return  Netcarver\Textile\DataBag
+     * @return  DataBag
      * @example
      * use Netcarver\Textile\DataBag;
      * $plant = new DataBag(array('key' => 'value'));
