@@ -820,7 +820,7 @@ class Parser
      * $parser->setRelativeImagePrefix('http://static.example.com/');
      */
 
-    public function setRelativeImagePrefix($prefix='')
+    public function setRelativeImagePrefix($prefix = '')
     {
         $this->relativeImagePrefix = $prefix;
         return $this;
@@ -840,7 +840,7 @@ class Parser
      * echo $parser->setDimensionlessImages(false)->textileThis($input);
      */
 
-    public function setDimensionlessImages($dimensionless=true)
+    public function setDimensionlessImages($dimensionless = true)
     {
         $this->dimensionless_images = $dimensionless;
         return $this;
@@ -1164,7 +1164,7 @@ class Parser
      * @see    Parser::parseAttribsToArray()
      */
 
-    protected function parseAttribs($in, $element = "", $include_id = 1, $autoclass = '')
+    protected function parseAttribs($in, $element = '', $include_id = 1, $autoclass = '')
     {
         $out = '';
         $o = $this->parseAttribsToArray($in, $element, $include_id, $autoclass);
@@ -1190,7 +1190,7 @@ class Parser
      * @see    Parser::parseAttribs()
      */
 
-    protected function parseAttribsToArray($in, $element = "", $include_id = 1, $autoclass = '')
+    protected function parseAttribsToArray($in, $element = '', $include_id = 1, $autoclass = '')
     {
         $style = '';
         $class = '';
@@ -2058,7 +2058,7 @@ class Parser
     }
 
 
-    protected function storeTags($opentag,$closetag='')
+    protected function storeTags($opentag, $closetag = '')
     {
         $key = ($this->tag_index++);
 
