@@ -702,6 +702,70 @@ class Parser
     protected $cmap = array(0x0080, 0xffff, 0, 0xffff);
 
     /**
+     * Stores note index.
+     *
+     * @var int
+     */
+
+    protected $note_index = 1;
+
+    /**
+     * Stores unreferenced notes.
+     *
+     * @var array
+     */
+
+    protected $unreferencedNotes = array();
+
+    /**
+     * Stores note lists.
+     *
+     * @var array
+     */
+
+    protected $notelist_cache = array();
+
+    /**
+     * Stores notes.
+     *
+     * @var array
+     */
+
+    protected $notes = array();
+
+    /**
+     * Stores shelved URLs.
+     *
+     * @var array
+     */
+
+    protected $urlshelf = array();
+
+    /**
+     * Stores URL references.
+     *
+     * @var array
+     */
+
+    protected $urlrefs = array();
+
+    /**
+     * Stores span depth.
+     *
+     * @var int
+     */
+
+    protected $span_depth = 0;
+
+    /**
+     * Stores tag index.
+     *
+     * @var int
+     */
+
+    protected $tag_index = 1;
+
+    /**
      * Constructor.
      *
      * @param string $doctype The output document type, either 'xhtml' or 'html5'
@@ -1787,10 +1851,10 @@ class Parser
             } else {
                 // Anonymous block
                 $anon = 1;
-                if ($ext or !preg_match('/^ /', $line)) {
+                if ($ext || !preg_match('/^ /', $line)) {
                     list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0,$tag,$atts,$ext,$cite,$line));
                     // Skip $o1/$c1 because this is part of a continuing extended block
-                    if ($tag == 'p' and !$this->hasRawText($content)) {
+                    if ($tag == 'p' && !$this->hasRawText($content)) {
                         $line = $content;
                     } else {
                         $line = $o2.$content.$c2;
@@ -1803,7 +1867,7 @@ class Parser
             $line = $this->doPBr($line);
             $line = preg_replace('/<br>/', '<br />', $line);
 
-            if ($ext and $anon) {
+            if ($ext && $anon) {
                 $out[count($out)-1] .= "\n".$line;
             } elseif (!$eat) {
                 $out[] = $line;
@@ -2050,7 +2114,7 @@ class Parser
         $tags = $this->storeTags($opentag, $closetag);
         $out = "{$tags['open']}{$content}{$end}{$tags['close']}";
 
-        if (($pre and !$tail) or ($tail and !$pre)) {
+        if (($pre && !$tail) || ($tail && !$pre)) {
             $out = $pre.$out.$tail;
         }
 
@@ -2100,10 +2164,9 @@ class Parser
         if (!empty($this->notes)) {
             $o = array();
             foreach ($this->notes as $label => $info) {
-                $i = @$info['seq'];
-                if (!empty($i)) {
+                if (!empty($info['seq'])) {
+                    $o[$info['seq']] = $info;
                     $info['seq'] = $label;
-                    $o[$i] = $info;
                 } else {
                     $this->unreferencedNotes[] = $info;    // Unreferenced definitions go here for possible future use.
                 }
@@ -2207,9 +2270,9 @@ class Parser
     protected function fParseNoteDefs($m)
     {
         list(, $label, $link, $att, $content) = $m;
+
         // Assign an id if the note reference parse hasn't found the label yet.
-        $id = @$this->notes[$label]['id'];
-        if (!$id) {
+        if (empty($this->notes[$label]['id'])) {
             $this->notes[$label]['id'] = uniqid(rand());
         }
 
@@ -2249,10 +2312,12 @@ class Parser
         $atts = $this->parseAttribs($atts);
         $nolink = ($nolink === '!');
 
-        // Assign a sequence number to this reference if there isn't one already...
-        $num = @$this->notes[$label]['seq'];
-        if (!$num) {
+        // Assign a sequence number to this reference if there isn't one already.
+
+        if (empty($this->notes[$label]['seq'])) {
             $num = $this->notes[$label]['seq'] = ($this->note_index++);
+        } else {
+            $num = $this->notes[$label]['seq'];
         }
 
         // Make our anchor point & stash it for possible use in backlinks when the
@@ -2260,10 +2325,12 @@ class Parser
         $refid = uniqid(rand());
         $this->notes[$label]['refids'][] = $refid;
 
-        // If we are referencing a note that hasn't had the definition parsed yet, then assign it an ID...
-        $id = @$this->notes[$label]['id'];
-        if (!$id) {
+        // If we are referencing a note that hasn't had the definition parsed yet, then assign it an ID.
+
+        if (empty($this->notes[$label]['id'])) {
             $id = $this->notes[$label]['id'] = uniqid(rand());
+        } else {
+            $id = $this->notes[$label]['id'];
         }
 
         // Build the link (if any)...
@@ -2450,7 +2517,7 @@ class Parser
         $tags = $this->storeTags((string) $a, '</a>');
         $out  = $tags['open'].$text.$tags['close'];
 
-        if (($pre and !$tail) or ($tail and !$pre)) {
+        if (($pre && !$tail) || ($tail && !$pre)) {
             $out = $pre.$out.$post.$tail;
             $post = '';
         }
@@ -2536,21 +2603,26 @@ class Parser
         return $this->rEncodeHTML($this->relURL($url));
     }
 
+    /**
+     * Completes and formats a URL.
+     *
+     * @return string
+     */
 
     protected function relURL($url)
     {
         $parts = @parse_url(urldecode($url));
-        if ((empty($parts['scheme']) or @$parts['scheme'] == 'http') and empty($parts['host']) and preg_match('/^\w/', @$parts['path'])) {
+
+        if ((empty($parts['scheme']) || $parts['scheme'] == 'http') && empty($parts['host']) && (isset($parts['path']) && preg_match('/^\w/', $parts['path']))) {
             $url = $this->relativeImagePrefix.$url;
         }
 
-        if ($this->restricted and !empty($parts['scheme']) and !in_array($parts['scheme'], $this->url_schemes)) {
+        if ($this->restricted && !empty($parts['scheme']) && !in_array($parts['scheme'], $this->url_schemes)) {
             return '#';
         }
 
         return $url;
     }
-
 
     /**
      * Checks if an URL is relative.
@@ -2565,9 +2637,8 @@ class Parser
     protected function isRelURL($url)
     {
         $parts = @parse_url($url);
-        return (empty($parts['scheme']) and empty($parts['host']));
+        return (empty($parts['scheme']) && empty($parts['host']));
     }
-
 
     /**
      * Parses images in the given input.
@@ -2715,7 +2786,6 @@ class Parser
 
         return $text;
     }
-
 
     /**
      * Cleans up the textile input text, removing BOM and unifying line endings etc.
