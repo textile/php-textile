@@ -2332,7 +2332,7 @@ class Parser
 
     protected function fParseNoteRefs($m)
     {
-        //   By the time this function is called, all the defs will have been processed
+        // By the time this function is called, all the defs will have been processed
         // into the notes array. So now we can resolve the link numbers in the order
         // we process the refs...
 
@@ -2762,6 +2762,12 @@ class Parser
         return $this->shelve($out);
     }
 
+    /**
+     * Parses code blocks in the given input.
+     *
+     * @param  string $text The input
+     * @return string Processed text
+     */
 
     protected function code($text)
     {
@@ -2771,6 +2777,12 @@ class Parser
         return $text;
     }
 
+    /**
+     * Formats inline code tags.
+     *
+     * @param  array  $m
+     * @return string
+     */
 
     protected function fCode($m)
     {
@@ -2778,6 +2790,12 @@ class Parser
         return $before.$this->shelve('<code>'.$this->rEncodeHTML($text).'</code>').$after;
     }
 
+    /**
+     * Formats pre tags.
+     *
+     * @param  array  $m Options
+     * @return string
+     */
 
     protected function fPre($m)
     {
@@ -2793,6 +2811,7 @@ class Parser
      *
      * @param  string $val The content
      * @return string The fragment's unique reference ID
+     * @see    Parser::retrieve()
      */
 
     protected function shelve($val)
@@ -2801,6 +2820,17 @@ class Parser
         $this->shelf[$i] = $val;
         return $i;
     }
+
+    /**
+     * Replaces reference tokens with corresponding shelved content.
+     *
+     * This method puts all shelved content back to the final,
+     * parsed input.
+     *
+     * @param  string $text The input
+     * @return string Processed text
+     * @see    Parser::shelve()
+     */
 
     protected function retrieve($text)
     {
@@ -2850,6 +2880,12 @@ class Parser
         return $before.$this->shelve($this->encodeHTML($text)).$after;
     }
 
+    /**
+     * Parses notextile tags in the given input.
+     *
+     * @param  string $text The input
+     * @return string Processed input
+     */
 
     protected function noTextile($text)
     {
@@ -2857,6 +2893,12 @@ class Parser
          return $this->doSpecial($text, '==', '==', 'fTextile');
     }
 
+    /**
+     * Format notextile blocks.
+     *
+     * @param  array $m Options
+     * @return string
+     */
 
     protected function fTextile($m)
     {
@@ -2864,12 +2906,27 @@ class Parser
         return $before.$this->shelve($notextile).$after;
     }
 
+    /**
+     * Parses footnote reference links in the given input.
+     *
+     * This method replaces [n] instances with links.
+     *
+     * @param  string $text The input
+     * @return string $text Processed input
+     * @see    Parser::footnoteID()
+     */
 
     protected function footnoteRefs($text)
     {
         return preg_replace_callback('/(?<=\S)\[(\d+)(!?)\]\s?/U'.$this->regex_snippets['mod'], array(&$this, 'footnoteID'), $text);
     }
 
+    /**
+     * Renders a footnote reference link or ID.
+     *
+     * @param  array  $m Options
+     * @return string Footnote link, or ID
+     */
 
     protected function footnoteID($m)
     {
@@ -2921,6 +2978,15 @@ class Parser
         return join('', $glyph_out);
     }
 
+    /**
+     * Replaces glyph references in the given input.
+     *
+     * This method removes temporary glyph: instances
+     * from the input.
+     *
+     * @param  string $text The input
+     * @return string Processed input
+     */
 
     protected function replaceGlyphs($text)
     {
@@ -2979,7 +3045,7 @@ class Parser
     /**
      * Convert special characters to HTML entities.
      *
-     * This method's functinality is identical to PHP's own
+     * This method's functionality is identical to PHP's own
      * htmlspecialchars(). In Textile this is used for sanitising
      * the input.
      *
@@ -3011,8 +3077,8 @@ class Parser
      * Convert special characters to HTML entities.
      *
      * This is identical to encodeHTML(), but takes restricted
-     * mode into account. When in restricted mode,  ignores
-     * the $quotes option.
+     * mode into account. When in restricted mode, only escapes
+     * quotes.
      *
      * @param  string $str    The string to encode
      * @param  bool   $quotes Encode quotes
