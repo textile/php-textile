@@ -2804,7 +2804,7 @@ class Parser
         $out = preg_replace("/^[ \t]*\n/m", "\n", $out);
         // Trim three or more LFs down to 2.
         $out = preg_replace("/\n{3,}/", "\n\n", $out);
-        // Removes leaving blank lines.
+        // Removes leading blank lines.
         $out = preg_replace("/^\n*/", "", $out);
         return $out;
     }
