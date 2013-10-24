@@ -2,8 +2,7 @@ h1. TEXTILE
 
 *A Humane Web Text Generator*
 
-A lightweight markup language that takes (almost) plaintext and converts it into well formed HTML. You can read about the format & use it live at "TxStyle.org":http://txstyle.org/article/43/a-short-introduction.
-
+A lightweight markup language that takes (almost) plaintext and converts it into well formed HTML. You can read more about the format and test it at "TxStyle.org":http://txstyle.org/article/43/a-short-introduction.
 
 h2. Branches
 
