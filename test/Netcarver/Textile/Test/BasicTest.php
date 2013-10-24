@@ -29,21 +29,39 @@ class BasicTest extends \PHPUnit_Framework_TestCase
                 continue;
             }
 
-            $textile = new \Netcarver\Textile\Parser();
-
-            if (isset($test['setup'][0]))
+            if (isset($test['doctype'])) {
+                $textile = new \Netcarver\Textile\Parser($test['doctype']);
+            }
+            else
             {
-                foreach ($test['setup'][0] as $method => $value)
-                {
+                $textile = new \Netcarver\Textile\Parser();
+            }
+
+            if (isset($test['setup'][0])) {
+                foreach ($test['setup'][0] as $method => $value) {
                     $textile->$method($value);
                 }
             }
 
-            $expect = rtrim($test['expect']);
-            $input = $textile->textileThis($test['input']);
+            if (isset($test['method'])) {
+                $method = trim($test['method']);
+            }
+            else {
+                $method = 'textileThis';
+            }
 
-            foreach (array('expect', 'input') as $variable)
-            {
+            if (isset($test['arguments'][0])) {
+                $args = array_values($test['arguments'][0]);
+            }
+            else {
+                $args = array();
+            }
+
+            $expect = rtrim($test['expect']);
+            array_unshift($args, $test['input']);
+            $input = rtrim(call_user_func_array(array($textile, $method), $args));
+
+            foreach (array('expect', 'input') as $variable) {
                 $$variable = preg_replace(
                     array(
                         '/ id="(fn|note)[a-z0-9]*"/',
