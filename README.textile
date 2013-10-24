@@ -4,14 +4,13 @@ h1. TEXTILE
 
 A lightweight markup language that takes (almost) plaintext and converts it into well formed HTML. You can read about the format & use it live at "TxStyle.org":http://txstyle.org/article/43/a-short-introduction.
 
-!https://travis-ci.org/textile/php-textile.png?branch=master!:https://travis-ci.org/textile/php-textile
 
 h2. Branches
 
 There are two main branches in the repository that will be of interest, both of which can be installed via the "Composer":https://getcomposer.org/ package management system.
 
-|^=. "master":https://github.com/textile/php-textile/tree/master | Has a multi-file, namespaced, "PSR-0/1/2":https://github.com/php-fig/fig-standards/tree/master/accepted compliant version of textile. Releases from master are tagged v3.5.x |^=. _Requires PHP5.3+_ |
-|^=. "2.5":https://github.com/textile/php-textile/tree/2.5       | Holds a single-file version of textile representing the v2.5.x releases. It is *not* PSR-0 compliant but attempts to follow PSR-1 and PSR-2 in other respects.               |^=. _Requires PHP5.0+_ |
+|^=. "master":https://github.com/textile/php-textile/tree/master | Has a multi-file, namespaced, "PSR-0/1/2":https://github.com/php-fig/fig-standards/tree/master/accepted compliant version of textile. Releases from master are tagged v3.5.x !https://travis-ci.org/textile/php-textile.png?branch=master!:https://travis-ci.org/textile/php-textile |^=. _Requires PHP5.3+_ |
+|^=. "2.5":https://github.com/textile/php-textile/tree/2.5       | Holds a single-file version of textile representing the v2.5.x releases. It is *not* PSR-0 compliant but attempts to follow PSR-1 and PSR-2 in other respects.               !https://travis-ci.org/textile/php-textile.png?branch=2.5!:https://travis-ci.org/textile/php-textile    |^=. _Requires PHP5.0+_ |
 
 *This is the README for the master branch.*
 
