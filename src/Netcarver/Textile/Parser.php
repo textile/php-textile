@@ -2788,19 +2788,24 @@ class Parser
     }
 
     /**
-     * Cleans up the textile input text, removing BOM and unifying line endings etc.
+     * Removes BOM and unifies line ending in the given input.
      *
-     * @param  string $text Input textile text
+     * @param  string $text Input Textile
      * @return string Cleaned version of the input
      */
 
     protected function cleanWhiteSpace($text)
     {
-        $out = preg_replace("/^\xEF\xBB\xBF|\x1A/", '', $text); // Byte order mark (if present)
-        $out = preg_replace("/\r\n?/", "\n", $out);             // DOS and MAC line endings to *NIX style endings
-        $out = preg_replace("/^[ \t]*\n/m", "\n", $out);        // lines containing only whitespace
-        $out = preg_replace("/\n{3,}/", "\n\n", $out);          // 3 or more line ends
-        $out = preg_replace("/^\n*/", "", $out);                // leading blank lines
+        // Removes byte order mark.
+        $out = preg_replace("/^\xEF\xBB\xBF|\x1A/", '', $text);
+        // Replaces CRLF and CR with single LF.
+        $out = preg_replace("/\r\n?/", "\n", $out);
+        // Replaces line endings containing only whitespace with single LF.
+        $out = preg_replace("/^[ \t]*\n/m", "\n", $out);
+        // Trim three or more LFs down to 2.
+        $out = preg_replace("/\n{3,}/", "\n\n", $out);
+        // Removes leaving blank lines.
+        $out = preg_replace("/^\n*/", "", $out);
         return $out;
     }
 
