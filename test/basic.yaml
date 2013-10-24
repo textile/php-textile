@@ -2687,6 +2687,8 @@ Styles on phrase modifiers :
     __{text-align:right;}My text__
 
     @{text-align:right;}My text@
+
+    _{content:大阪府;}Unicode style_
   expect: |
     <p><sub style="text-align:right;">My text</sub></p>
 
@@ -2709,6 +2711,8 @@ Styles on phrase modifiers :
     <p><i style="text-align:right;">My text</i></p>
 
     <p><code>{text-align:right;}My text</code></p>
+
+    <p><em style="content:大阪府;">Unicode style</em></p>
 
 Classes/ids/langs on phrase modifiers :
   input:  |
