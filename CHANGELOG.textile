@@ -13,6 +13,7 @@ h2. Changes in master branch (from v3.5.1)
 * Move internal property definitions from the constructor to class definition.
 * Added runnable PHPUnit tests, integration with "Travis CI":https://travis-ci.org/.
 * Removed error suppression, the code doesn't intentionally produce notices.
+* Add @br@ tags to headings instead of leaving linebreaks untouched.
 
 h2. Changes in v3.5.1 (from v3.5.0)
 
