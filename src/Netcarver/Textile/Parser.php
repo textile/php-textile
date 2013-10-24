@@ -1045,7 +1045,7 @@ class Parser
     protected function textileCommon($text, $lite)
     {
         while (1) {
-            $this->spanReferenceTokenPrefix = 'textile' . uniqid(rand());
+            $this->spanReferenceTokenPrefix = 'textileSpanReference'.uniqid(rand()).'z';
 
             if (strpos($text, $this->spanReferenceTokenPrefix) === false) {
                 break;
@@ -2789,7 +2789,7 @@ class Parser
 
     protected function shelve($val)
     {
-        $i = uniqid(rand()).'z';
+        $i = 'textileShelveReference'.uniqid(rand()).'z';
         $this->shelf[$i] = $val;
         return $i;
     }
