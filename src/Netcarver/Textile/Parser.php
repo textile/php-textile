@@ -1788,7 +1788,7 @@ class Parser
     }
 
     /**
-     * Adds br tags to paragraphs.
+     * Adds br tags to paragraphs and headings.
      *
      * @param  string $in The input
      * @return string
@@ -1796,13 +1796,13 @@ class Parser
 
     protected function doPBr($in)
     {
-        return preg_replace_callback('@<(p)([^>]*?)>(.*)(</\1>)@s', array(&$this, 'fPBr'), $in);
+        return preg_replace_callback('@<(p|h[1-6])([^>]*?)>(.*)(</\1>)@s', array(&$this, 'fPBr'), $in);
     }
 
     /**
      * Less restrictive version of fBr method.
      *
-     * Used only in paragraphs where the next row may
+     * Used only in paragraphs and headings where the next row may
      * start with a smiley or perhaps something like '#8 bolt...'
      * or '*** stars...'.
      *
