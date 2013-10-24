@@ -970,7 +970,7 @@ class Parser
      * echo $parser->textileThis('h1. Hello World!');
      */
 
-    public function textileThis($text, $lite = '', $encode = '', $noimage = '', $strict = '', $rel = '')
+    public function textileThis($text, $lite = false, $encode = false, $noimage = false, $strict = false, $rel = '')
     {
         $this->prepare($lite, $noimage, $rel);
         $this->url_schemes = $this->unrestricted_url_schemes;
@@ -1011,7 +1011,7 @@ class Parser
      * echo $parser->textileRestricted('h1. Hello World!');
      */
 
-    public function textileRestricted($text, $lite = 1, $noimage = 1, $rel = 'nofollow')
+    public function textileRestricted($text, $lite = true, $noimage = true, $rel = 'nofollow')
     {
         $this->prepare($lite, $noimage, $rel);
         $this->url_schemes = $this->restricted_url_schemes;
@@ -1839,8 +1839,8 @@ class Parser
                 }
 
                 // New block
-                list(,$tag,$atts,$ext,$cite,$graf) = $m;
-                list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0,$tag,$atts,$ext,$cite,$graf));
+                list(, $tag, $atts, $ext, $cite, $graf) = $m;
+                list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0, $tag, $atts, $ext, $cite, $graf));
 
                 // Leave off c1 if this block is extended, we'll close it at the start of the next block
                 if ($ext) {
@@ -1852,7 +1852,7 @@ class Parser
                 // Anonymous block
                 $anon = 1;
                 if ($ext || !preg_match('/^ /', $line)) {
-                    list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0,$tag,$atts,$ext,$cite,$line));
+                    list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0, $tag, $atts, $ext, $cite, $line));
                     // Skip $o1/$c1 because this is part of a continuing extended block
                     if ($tag == 'p' && !$this->hasRawText($content)) {
                         $line = $content;
@@ -1987,7 +1987,7 @@ class Parser
     }
 
 
-    protected function formatFootnote($marker, $atts='', $anchor=true)
+    protected function formatFootnote($marker, $atts = '', $anchor = true)
     {
         $pattern = ($anchor) ? $this->symbols['fn_foot_pattern'] : $this->symbols['fn_ref_pattern'];
         return $this->replaceMarkers($pattern, array('atts' => $atts, 'marker' => $marker));
@@ -2397,7 +2397,7 @@ class Parser
      * @link   http://tools.ietf.org/html/rfc3986#section-5.3
      */
 
-    protected function rebuildURI($parts, $mask='scheme,authority,path,query,fragment', $encode=true)
+    protected function rebuildURI($parts, $mask = 'scheme,authority,path,query,fragment', $encode = true)
     {
         $mask = explode(',', $mask);
         $out  = '';
@@ -2810,7 +2810,7 @@ class Parser
     }
 
 
-    protected function doSpecial($text, $start, $end, $method='fSpecial')
+    protected function doSpecial($text, $start, $end, $method = 'fSpecial')
     {
         return preg_replace_callback('/(^|\s|[|[({>])'.preg_quote($start, '/').'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}|])?/ms', array(&$this, $method), $text);
     }
@@ -2860,7 +2860,6 @@ class Parser
 
         return $footref;
     }
-
 
     /**
      * Replaces glyphs in the given input.
@@ -2938,15 +2937,15 @@ class Parser
     }
 
 
-    protected function encodeHigh($text, $charset = "UTF-8")
+    protected function encodeHigh($text, $charset = 'UTF-8')
     {
         return ($this->mb) ? mb_encode_numericentity($text, $this->cmap, $charset) : htmlentities($text, ENT_NOQUOTES, $charset);
     }
 
 
-    protected function decodeHigh($text, $charset = "UTF-8")
+    protected function decodeHigh($text, $charset = 'UTF-8')
     {
-        $text = (ctype_digit($text)) ? "&#$text;" : "&$text;" ;
+        $text = (ctype_digit($text)) ? "&#$text;" : "&$text;";
         return ($this->mb) ? mb_decode_numericentity($text, $this->cmap, $charset) : html_entity_decode($text, ENT_NOQUOTES, $charset);
     }
 
@@ -2963,13 +2962,14 @@ class Parser
      * @see    htmlspecialchars()
      */
 
-    protected function encodeHTML($str, $quotes=1)
+    protected function encodeHTML($str, $quotes = true)
     {
         $a = array(
             '&' => '&amp;',
             '<' => '&lt;',
             '>' => '&gt;',
         );
+
         if ($quotes) {
             $a = $a + array(
                 "'" => '&#39;', // Numeric, as in htmlspecialchars
@@ -2993,7 +2993,7 @@ class Parser
      * @see    Parser::encodeHTML()
      */
 
-    protected function rEncodeHTML($str, $quotes=1)
+    protected function rEncodeHTML($str, $quotes = true)
     {
         // In restricted mode, all input but quotes has already been escaped
         if ($this->restricted) {
