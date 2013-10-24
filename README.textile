@@ -1,8 +1,8 @@
-h1. TEXTILE
+h1. Textile for PHP
 
-*A Humane Web Text Generator*
+"Textile reference":http://txstyle.org/article/43/a-short-introduction | "Live editor":http://txstyle.org/ | "Packagist":https://packagist.org/packages/netcarver/textile
 
-A lightweight markup language that takes (almost) plaintext and converts it into well formed HTML. You can read more about the format and test it at "TxStyle.org":http://txstyle.org/article/43/a-short-introduction.
+Textile is a humane web text generator. It takes lightweight, readable, plaintext-like syntax and converts it into well formed HTML. This repository contains a Textile parser for PHP.
 
 h2. Branches
 
