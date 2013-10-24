@@ -790,11 +790,20 @@ class Parser
      *
      * @param  string|null  $name The name of the symbol, or NULL if requesting the symbol table
      * @return array|string The symbol table or the requested symbol
+     * @throws \InvalidArgumentException
      */
 
-    public function getSymbol($name=null)
+    public function getSymbol($name = null)
     {
-        return ($name) ? @$this->symbols['name'] : $this->symbols;
+        if ($name !== null) {
+            if (isset($this->symbols[$name])) {
+                return $this->symbols[$name];
+            }
+
+            throw new \InvalidArgumentException('The specified name does not match any symbols.');
+        }
+
+        return $this->symbols;
     }
 
     /**
