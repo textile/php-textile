@@ -766,12 +766,20 @@ class Parser
     protected $tag_index = 1;
 
     /**
-     * Span reference token prefix.
+     * Unique ID used for reference tokens.
      *
      * @var string
      */
 
-    protected $spanReferenceTokenPrefix;
+    protected $uid;
+
+	/**
+	 * Token reference index.
+	 *
+	 * @var int
+	 */
+
+	protected $refIndex = 1;
 
     /**
      * Constructor.
@@ -1045,9 +1053,9 @@ class Parser
     protected function textileCommon($text, $lite)
     {
         while (1) {
-            $this->spanReferenceTokenPrefix = 'textileSpanReference'.uniqid(rand()).'z';
+			$this->uid = 'textileRef' . uniqid(rand());
 
-            if (strpos($text, $this->spanReferenceTokenPrefix) === false) {
+            if (strpos($text, $this->uid) === false) {
                 break;
             }
         }
@@ -2145,8 +2153,8 @@ class Parser
         $key = str_pad((string) $key, 10, '0', STR_PAD_LEFT).'z'; // $key must be of fixed length to allow proper matching in retrieveTags
         $this->tagCache[$key] = array('open' => $opentag, 'close' => $closetag);
         $tags = array(
-            'open'  => "{$this->spanReferenceTokenPrefix}opentag{$key} ",
-            'close' => " {$this->spanReferenceTokenPrefix}closetag{$key}",
+            'open'  => "textileSpanReference{$this->uid}opentag{$key} ",
+            'close' => " textileSpanReference{$this->uid}closetag{$key}",
         );
         return $tags;
     }
@@ -2154,8 +2162,8 @@ class Parser
 
     protected function retrieveTags($text)
     {
-        $text = preg_replace_callback('/'.$this->spanReferenceTokenPrefix.'opentag([\d]{10}z) /', array(&$this, 'fRetrieveOpenTags'), $text);
-        $text = preg_replace_callback('/ '.$this->spanReferenceTokenPrefix.'closetag([\d]{10}z)/', array(&$this, 'fRetrieveCloseTags'), $text);
+        $text = preg_replace_callback('/textileSpanReference'.$this->uid.'opentag([\d]{10}z) /', array(&$this, 'fRetrieveOpenTags'), $text);
+        $text = preg_replace_callback('/ textileSpanReference'.$this->uid.'closetag([\d]{10}z)/', array(&$this, 'fRetrieveCloseTags'), $text);
         return $text;
     }
 
@@ -2789,11 +2797,10 @@ class Parser
 
     protected function shelve($val)
     {
-        $i = 'textileShelveReference'.uniqid(rand()).'z';
+        $i = 'textileShelveReference'.$this->uid.'i'.($this->refIndex++).'z';
         $this->shelf[$i] = $val;
         return $i;
     }
-
 
     protected function retrieve($text)
     {
