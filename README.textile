@@ -29,7 +29,7 @@ bc. require './vendor/autoload.php';
 
 h3. Manually
 
-You can also install Textile library manually. The library supports any PSR-0 style autoloaders, but you can also include the source files in your project manually. Download the repository, and include the source files:
+You can also install Textile library manually. The library supports any PSR-0 style autoloaders, but you can also include the source files in your project manually. "Download":https://github.com/textile/php-textile/releases the repository, and include the source files:
 
 bc. require 'path/to/src/Netcarver/Textile/Parser.php';
 require 'path/to/src/Netcarver/Textile/DataBag.php';
