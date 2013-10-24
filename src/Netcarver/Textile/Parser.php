@@ -766,6 +766,14 @@ class Parser
     protected $tag_index = 1;
 
     /**
+     * Span reference token prefix.
+     *
+     * @var string
+     */
+
+    protected $spanReferenceTokenPrefix;
+
+    /**
      * Constructor.
      *
      * @param string $doctype The output document type, either 'xhtml' or 'html5'
@@ -1036,6 +1044,14 @@ class Parser
 
     protected function textileCommon($text, $lite)
     {
+        while (1) {
+            $this->spanReferenceTokenPrefix = 'textile' . uniqid(rand());
+
+            if (strpos($text, $this->spanReferenceTokenPrefix) === false) {
+                break;
+            }
+        }
+
         if ($lite) {
             $this->blocktag_whitelist = array('bq', 'p');
             $text = $this->blocks($text."\n\n");
@@ -2129,8 +2145,8 @@ class Parser
         $key = str_pad((string) $key, 10, '0', STR_PAD_LEFT).'z'; // $key must be of fixed length to allow proper matching in retrieveTags
         $this->tagCache[$key] = array('open' => $opentag, 'close' => $closetag);
         $tags = array(
-            'open'  => "textileopentag{$key} ",
-            'close' => " textileclosetag{$key}",
+            'open'  => "{$this->spanReferenceTokenPrefix}opentag{$key} ",
+            'close' => " {$this->spanReferenceTokenPrefix}closetag{$key}",
         );
         return $tags;
     }
@@ -2138,8 +2154,8 @@ class Parser
 
     protected function retrieveTags($text)
     {
-        $text = preg_replace_callback('/textileopentag([\d]{10}z) /', array(&$this, 'fRetrieveOpenTags'), $text);
-        $text = preg_replace_callback('/ textileclosetag([\d]{10}z)/', array(&$this, 'fRetrieveCloseTags'), $text);
+        $text = preg_replace_callback('/'.$this->spanReferenceTokenPrefix.'opentag([\d]{10}z) /', array(&$this, 'fRetrieveOpenTags'), $text);
+        $text = preg_replace_callback('/ '.$this->spanReferenceTokenPrefix.'closetag([\d]{10}z)/', array(&$this, 'fRetrieveCloseTags'), $text);
         return $text;
     }
 

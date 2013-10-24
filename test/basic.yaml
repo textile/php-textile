@@ -3152,3 +3152,9 @@ Restricted mode security filtering mode with default options :
     <p>&#8220;javascript link&#8221;:javacript:window.alert()</p>
 
     <p>notextile. &lt;iframe src=&#8220;xss/attempt&#8221;&gt;&lt;/iframe&gt;&lt;&amp;#123&gt;&lt;script&gt;window.alert(&#8216;success&#8217;)&lt;/script&gt;</p>
+
+Token references :
+  input : |
+    Hello textileopentag0000000001z World!
+  expect : |
+    <p>Hello textileopentag0000000001z World!</p>
