@@ -773,13 +773,13 @@ class Parser
 
     protected $uid;
 
-	/**
-	 * Token reference index.
-	 *
-	 * @var int
-	 */
+    /**
+     * Token reference index.
+     *
+     * @var int
+     */
 
-	protected $refIndex = 1;
+    protected $refIndex = 1;
 
     /**
      * Constructor.
@@ -1053,7 +1053,7 @@ class Parser
     protected function textileCommon($text, $lite)
     {
         while (1) {
-			$this->uid = 'textileRef' . uniqid(rand());
+            $this->uid = 'textileRef' . uniqid(rand());
 
             if (strpos($text, $this->uid) === false) {
                 break;
