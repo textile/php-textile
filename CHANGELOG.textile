@@ -6,6 +6,7 @@ h2. Changes in master branch (from v3.5.1)
 *# Allow multiple terms
 *# Allow linebreaks in terms
 * Fix incorrectly rendered @rel@ attributes (closes "#103":https://github.com/textile/php-textile/issues/103.)
+* Fix @getSymbol()@ so it actually returns the named symbol (closes "#104":https://github.com/textile/php-textile/issues/104.)
 * Fix unicode link aliases that were broken on some PCRE_UTF8 supporting systems.
 * Add image dimensions to images even when Textile is run on command line. On CLI, images are looked from the current working directory.
 * Define internal class properties as protected rather than at all, causing them to be created as public.
