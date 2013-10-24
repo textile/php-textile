@@ -69,7 +69,7 @@ Textile's typographic substitutions can be overridden with the @setSymbol@ metho
 
 bc. $parser = new \Netcarver\Textile\Parser();
 $parser->setSymbol('half', '1&#8260;2');
-$parser->textileThis('Hello World!');
+$parser->textileThis('Hello [1/2] World!');
 
 The symbol names you can pass to @setSymbol()@ can be found "here":https://github.com/textile/php-textile/blob/582fb7e2af83bb043fe6dd3846220796c814f999/classTextile.php#L468.
 
