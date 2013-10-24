@@ -2242,7 +2242,11 @@ class Parser
         $atts    = '';
         $content = '';
         $id      = '';
-        @extract($info['def']);
+
+        if (!empty($info['def'])) {
+            extract($info['def']);
+        }
+
         $backlink_type = ($link) ? $link : $g_links;
         $allow_inc = (false === strpos($this->syms, $i));
 
