@@ -5,6 +5,12 @@ h2. Changes in master branch (from v3.5.1)
 * Improved support for Redcloth-style definition lists.
 *# Allow multiple terms
 *# Allow linebreaks in terms
+* Fix unicode link aliases that were broken on some PCRE_UTF8 supporting systems.
+* Add image dimensions to images even when Textile is run on command line. On CLI, images are looked from the current working directory.
+* Define internal class properties as protected rather than at all, causing them to be created as public.
+* Move internal property definitions from the constructor to class definition.
+* Added runnable PHPUnit tests, integration with "Travis CI":https://travis-ci.org/.
+* Removed error suppression, the code doesn't intentionally produce notices.
 
 h2. Changes in v3.5.1 (from v3.5.0)
 
@@ -37,7 +43,7 @@ h2. Changes in v3.5.0 (from 2.4.1)
 * Fix a problem with links followed by ':', ';' or '?' like @Do you like "cheese":/cheese?@ where the '?' becomes part of the href rather than a '?' at the end of the sentence. This happens on platforms where PCRE has unicode support.
 * Removal of leading \t from generated paragraphs & better indentation of generated lists in the HTML (closes "#90":https://github.com/netcarver/textile/issues/90.)
 * New method @textileEncode()@. This is preferred to calling @textileThis()@ with the $encode flag.
-* "PSR-0, PSR-1 & PSR-2":https://github.com/php-fig/fig-standards/tree/master/accepted conformity added...
+* "PSR-0, PSR-1 & PSR-2":https://github.com/php-fig/fig-standards/tree/master/accepted conformity added.
 *# Split class Textile into classes @Parser@, @DataBag@ & @Tag@ and moved them into @src/Netcarver/Textile@ directory for PSR-0.
 *# Unified method names & coding styles according to PSR-1 & PSR-2.
 *# Switched from using defines to explicit set methods; @setSymbol()@ & @setRelativeImagePrefix()@.
