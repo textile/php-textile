@@ -1,13 +1,11 @@
 h1. TEXTILE
 
-p. *A Humane Web Text Generator*
+"Textile reference":http://txstyle.org/article/43/a-short-introduction | "Live editor":http://txstyle.org/ | "Packagist":https://packagist.org/packages/netcarver/textile
 
-p. A lightweight markup language that takes (almost) plaintext and converts it into well formed HTML. You can read about the format & use it live at "TxStyle.org":http://txstyle.org/article/43/a-short-introduction.
+*Textile is a humane web text generator*. It takes lightweight, readable, plaintext-like markup language and converts it into well formed HTML. This repository contains a Textile parser for PHP.
 
 
 h2. Branches
-
-There are two main branches in the repository that will be of interest, both of which can be installed via the "Composer":https://getcomposer.org/ package management system.
 
 |^=. "master":https://github.com/textile/php-textile/tree/master | Has a multi-file, namespaced, "PSR-0/1/2":https://github.com/php-fig/fig-standards/tree/master/accepted compliant version of textile. Releases from master are tagged v3.5.x !https://travis-ci.org/textile/php-textile.png?branch=master!:https://travis-ci.org/textile/php-textile |^=. _Requires PHP5.3+_ |
 |^=. "2.5":https://github.com/textile/php-textile/tree/2.5       | Holds a single-file version of textile representing the v2.5.x releases. It is *not* PSR-0 compliant but attempts to follow PSR-1 and PSR-2 in other respects.               !https://travis-ci.org/textile/php-textile.png?branch=2.5!:https://travis-ci.org/textile/php-textile    |^=. _Requires PHP5.0+_ |
@@ -71,7 +69,7 @@ If you wanted to override the symbol output for the one-half typographic substit
 bc.. $parser = new Textile('html5'); // adjust if you need a different doctype
 $out = $parser
     ->setSymbol('half', '1&#8260;2')  // Redefine the half symbol to use the fraction-slash character
-    ->textileThis($article)
+    ->textileThis('Hello [1/2] World!')
     ;
 
 p. The symbol names you can pass to @setSymbol()@ can be found "here":https://github.com/textile/php-textile/blob/582fb7e2af83bb043fe6dd3846220796c814f999/classTextile.php#L468.
