@@ -58,7 +58,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     public function provider()
     {
         $out = array();
-		chdir(__DIR__ . '/fixtures');
+        chdir(__DIR__ . '/fixtures');
 
         if ($files = glob('*.yaml'))
         {
