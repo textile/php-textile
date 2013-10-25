@@ -8,6 +8,9 @@ h2. Changes in master branch (from v3.5.1)
 * Fix incorrectly rendered @rel@ attributes (closes "#103":https://github.com/textile/php-textile/issues/103.)
 * Fix @getSymbol()@ so it actually returns the named symbol (closes "#104":https://github.com/textile/php-textile/issues/104.)
 * Fix unicode link aliases that were broken on some PCRE_UTF8 supporting systems.
+* Fix collapsing whitespace and preserve newlines. Preserves whitespace inside long @bc@, @notextile@ and @pre@ blocks, rather than collapsing two or more empty lines down to one. Renders whitespace as it was defined, rather than using hard-coded single LF to separate lines (closes "#109":https://github.com/textile/php-textile/issues/109 and "#111":https://github.com/textile/php-textile/pull/111.)
+* Fix the number of code tags rendered inside long code blocks (closes "#116":https://github.com/textile/php-textile/issues/116.)
+* Fix token spoofing from the document body by randomizing token references (closes "#115":https://github.com/textile/php-textile/issues/115.)
 * Add image dimensions to images even when Textile is run on command line. On CLI, images are looked from the current working directory.
 * Define internal class properties as protected rather than at all, causing them to be created as public.
 * Move internal property definitions from the constructor to class definition.
