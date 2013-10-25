@@ -1,6 +1,6 @@
 Here's an edited summary of the commit log. It doesn't include small changes or changes to test cases.
 
-h2. Changes in master branch (from v3.5.1)
+h2. Changes in v3.5.2 (from v3.5.1)
 
 * Improved support for Redcloth-style definition lists.
 *# Allow multiple terms
