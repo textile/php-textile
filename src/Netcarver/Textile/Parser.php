@@ -1089,7 +1089,7 @@ class Parser
 
     protected function prepGlyphs()
     {
-        if ((null!==$this->glyph_search) && (null!==$this->glyph_replace) && !$this->rebuild_glyphs) {
+        if ($this->rebuild_glyphs === false) {
             return;
         }
 
