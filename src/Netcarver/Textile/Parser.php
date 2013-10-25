@@ -1999,10 +1999,8 @@ class Parser
             $c2 = "</p>";
             $c1 = "\n</blockquote>";
         } elseif ($tag == 'bc') {
-            $o1 = "<pre$atts>";
-            $o2 = "<code>";
-            $c2 = "</code>";
-            $c1 = "</pre>";
+            $o1 = "<pre$atts><code>";
+            $c1 = "</code></pre>";
             $content = $this->shelve($this->rEncodeHTML($content));
         } elseif ($tag == 'notextile') {
             $content = $this->shelve($content);
