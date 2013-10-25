@@ -1354,19 +1354,19 @@ Code blocks, pre and exclusions :
     &lt;txp:image_info type=&quot;caption&quot; /&gt;
     &lt;/txp:category&gt;</code></pre>
 
-    <pre><code>Code block</code>
+    <pre><code>Code block
 
 
 
-    <code>with three empty lines</code></pre>
+    with three empty lines</code></pre>
 
     <p class="regular" id="somestuff"><em>Aaaand</em>, <strong><i>relax</i></strong>.</p>
 
-    <pre><code>Paragraph 1</code>
+    <pre><code>Paragraph 1
 
-    <code>Paragraph 2</code>
+    Paragraph 2
 
-    <code>Paragraph 3</code></pre>
+    Paragraph 3</code></pre>
 
 Basic span modifiers & glyphs:
   input: |
