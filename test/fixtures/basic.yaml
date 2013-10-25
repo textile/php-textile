@@ -726,8 +726,7 @@ HTML Comments :
     Comment
     --></p>
 
-    <pre><code>&lt;!-- Here is a comment block in a code block. --&gt;
-    </code></pre>
+    <pre><code>&lt;!-- Here is a comment block in a code block. --&gt;</code></pre>
 
 URLs as non-links :
   notes  : Straight URL text sequences should not be converted to a hyperlink.
@@ -1329,10 +1328,21 @@ Code blocks, pre and exclusions :
     <txp:image_info type="caption" />
     </txp:category>
 
+    bc.. Code block
+
+
+
+    with three empty lines
+
     p(regular#somestuff). _Aaaand_, *__relax__*.
+
+    bc.. Paragraph 1
+
+    Paragraph 2
+
+    Paragraph 3
   expect : |
-    <pre class="input"><code>You can&#39;t _*touch*_ *_this_*... Hammer time.
-    </code></pre>
+    <pre class="input"><code>You can&#39;t _*touch*_ *_this_*... Hammer time.</code></pre>
 
     <p>And keep your <code>(expect)mitts _*off*_ *_me_*</code> as well. About the <code>&lt;hr /&gt;</code> tag.</p>
 
@@ -1342,10 +1352,21 @@ Code blocks, pre and exclusions :
     &lt;txp:image class=&quot;prawns&quot; something=&quot;summat else&quot; /&gt;
     &lt;br /&gt;
     &lt;txp:image_info type=&quot;caption&quot; /&gt;
-    &lt;/txp:category&gt;
-    </code></pre>
+    &lt;/txp:category&gt;</code></pre>
+
+    <pre><code>Code block</code>
+
+
+
+    <code>with three empty lines</code></pre>
 
     <p class="regular" id="somestuff"><em>Aaaand</em>, <strong><i>relax</i></strong>.</p>
+
+    <pre><code>Paragraph 1</code>
+
+    <code>Paragraph 2</code>
+
+    <code>Paragraph 3</code></pre>
 
 Basic span modifiers & glyphs:
   input: |
@@ -1438,8 +1459,7 @@ Make sure these don't get turned into lists... :
     ; Cache-Control: no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0
     ; Expires: Sat, 24 Jul 2003 05:00:00 GMT
     ; Last-Modified: Wed, 1 Jan 2025 05:00:00 GMT
-    ; Pragma: no-cache
-    </code></pre>
+    ; Pragma: no-cache</code></pre>
 
     <p><strong>123 test</strong></p>
 
