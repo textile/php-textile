@@ -23,7 +23,7 @@ The recommended way to install Textile is via "Composer":https://getcomposer.org
 
 bc. $ composer require "netcarver/textile 2.5.*"
 
-Or add it to your project's @composer.json@ file...
+Or add it to your project's @composer.json@ file:
 
 bc.. {
     "require": { "netcarver/textile": "2.5.*@dev" }
@@ -35,11 +35,9 @@ bc. require './vendor/autoload.php';
 
 h3. Manually
 
-The only file that is necessary for the correct operation of Textile 2.* is @classTextile.php@ from the root directory. To use it, just grab the latest raw copy of "classTextile.php":https://raw.github.com/textile/php-textile/2.5/classTextile.php and save it into your project. Now you have the source file installed you'll need to include the file and create a parser...
+The only file that is necessary for the correct operation of Textile 2.* is @classTextile.php@ from the root directory. Grab the latest raw copy of "classTextile.php":https://raw.github.com/textile/php-textile/2.5/classTextile.php and include it in your application:
 
 bc. include "classTextile.php";
-
-Or point your PSR-0 autoloader to the Textile installation location.
 
 h2. Usage
 
@@ -85,7 +83,6 @@ Setting an image path prefix might be useful if your application only allows use
 bc. $parser = new Textile('html5');
 $parser->setRelativeImagePrefix('user/uploads');
 echo $parser->textileThis('!image.png!');
-
 
 h2. Running tests
 
