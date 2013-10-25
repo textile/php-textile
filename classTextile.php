@@ -969,6 +969,7 @@ class Textile
      *
      * @param  string $prefix  The string to prefix all relative image paths with
      * @return object $this
+     * @example
      * $parser->setRelativeImagePrefix('http://static.example.com/');
      */
 
@@ -979,13 +980,14 @@ class Textile
     }
 
     /**
-     * Allows a client to better support responsive designs by turning on or off
-     * image dimensions when parsing a textile image tag with a relative path.
+     * Toggles image dimension attributes.
      *
-     * By default (if this method is not called) image dimensions will be included
-     * for relative images (if possible).
+     * If $dimensionless is set to TRUE, image width and height attributes
+     * will not be included in rendered image tags. Normally, Textile will add
+     * dimensions height images that specify a relative path, as long
+     * as the image file can be accessed.
      *
-     * @param  bool   $dimensionless true=>omit image dimensions, false=>include dimensions
+     * @param  bool   $dimensionless TRUE to disable image dimensions, FALSE to enable
      * @return object $this
      * @example
      * $parser = new Textile();
@@ -997,7 +999,6 @@ class Textile
         $this->dimensionless_images = $dimensionless;
         return $this;
     }
-
 
     /**
      * Whether images will get dimensions or not.
@@ -1159,7 +1160,7 @@ class Textile
 
     protected function prepGlyphs()
     {
-        if ((null!==$this->glyph_search) && (null!==$this->glyph_replace) && !$this->rebuild_glyphs) {
+        if ($this->rebuild_glyphs === false) {
             return;
         }
 
@@ -1858,7 +1859,7 @@ class Textile
     }
 
     /**
-     * Adds br tags to paragraphs.
+     * Adds br tags to paragraphs and headings.
      *
      * @param  string $in The input
      * @return string
@@ -1866,13 +1867,13 @@ class Textile
 
     protected function doPBr($in)
     {
-        return preg_replace_callback('@<(p)([^>]*?)>(.*)(</\1>)@s', array(&$this, 'fPBr'), $in);
+        return preg_replace_callback('@<(p|h[1-6])([^>]*?)>(.*)(</\1>)@s', array(&$this, 'fPBr'), $in);
     }
 
     /**
      * Less restrictive version of fBr method.
      *
-     * Used only in paragraphs where the next row may
+     * Used only in paragraphs and headings where the next row may
      * start with a smiley or perhaps something like '#8 bolt...'
      * or '*** stars...'.
      *
@@ -2402,7 +2403,7 @@ class Textile
 
     protected function fParseNoteRefs($m)
     {
-        //   By the time this function is called, all the defs will have been processed
+        // By the time this function is called, all the defs will have been processed
         // into the notes array. So now we can resolve the link numbers in the order
         // we process the refs...
 
@@ -2832,6 +2833,12 @@ class Textile
         return $this->shelve($out);
     }
 
+    /**
+     * Parses code blocks in the given input.
+     *
+     * @param  string $text The input
+     * @return string Processed text
+     */
 
     protected function code($text)
     {
@@ -2841,6 +2848,12 @@ class Textile
         return $text;
     }
 
+    /**
+     * Formats inline code tags.
+     *
+     * @param  array  $m
+     * @return string
+     */
 
     protected function fCode($m)
     {
@@ -2848,6 +2861,12 @@ class Textile
         return $before.$this->shelve('<code>'.$this->rEncodeHTML($text).'</code>').$after;
     }
 
+    /**
+     * Formats pre tags.
+     *
+     * @param  array  $m Options
+     * @return string
+     */
 
     protected function fPre($m)
     {
@@ -2863,6 +2882,7 @@ class Textile
      *
      * @param  string $val The content
      * @return string The fragment's unique reference ID
+     * @see    retrieve()
      */
 
     protected function shelve($val)
@@ -2871,6 +2891,17 @@ class Textile
         $this->shelf[$i] = $val;
         return $i;
     }
+
+    /**
+     * Replaces reference tokens with corresponding shelved content.
+     *
+     * This method puts all shelved content back to the final,
+     * parsed input.
+     *
+     * @param  string $text The input
+     * @return string Processed text
+     * @see    shelve()
+     */
 
     protected function retrieve($text)
     {
@@ -2920,6 +2951,12 @@ class Textile
         return $before.$this->shelve($this->encodeHTML($text)).$after;
     }
 
+    /**
+     * Parses notextile tags in the given input.
+     *
+     * @param  string $text The input
+     * @return string Processed input
+     */
 
     protected function noTextile($text)
     {
@@ -2927,6 +2964,12 @@ class Textile
          return $this->doSpecial($text, '==', '==', 'fTextile');
     }
 
+    /**
+     * Format notextile blocks.
+     *
+     * @param  array $m Options
+     * @return string
+     */
 
     protected function fTextile($m)
     {
@@ -2934,12 +2977,27 @@ class Textile
         return $before.$this->shelve($notextile).$after;
     }
 
+    /**
+     * Parses footnote reference links in the given input.
+     *
+     * This method replaces [n] instances with links.
+     *
+     * @param  string $text The input
+     * @return string $text Processed input
+     * @see    footnoteID()
+     */
 
     protected function footnoteRefs($text)
     {
         return preg_replace_callback('/(?<=\S)\[(\d+)(!?)\]\s?/U'.$this->regex_snippets['mod'], array(&$this, 'footnoteID'), $text);
     }
 
+    /**
+     * Renders a footnote reference link or ID.
+     *
+     * @param  array  $m Options
+     * @return string Footnote link, or ID
+     */
 
     protected function footnoteID($m)
     {
@@ -2991,6 +3049,15 @@ class Textile
         return join('', $glyph_out);
     }
 
+    /**
+     * Replaces glyph references in the given input.
+     *
+     * This method removes temporary glyph: instances
+     * from the input.
+     *
+     * @param  string $text The input
+     * @return string Processed input
+     */
 
     protected function replaceGlyphs($text)
     {
@@ -3049,7 +3116,7 @@ class Textile
     /**
      * Convert special characters to HTML entities.
      *
-     * This method's functinality is identical to PHP's own
+     * This method's functionality is identical to PHP's own
      * htmlspecialchars(). In Textile this is used for sanitising
      * the input.
      *
@@ -3081,8 +3148,8 @@ class Textile
      * Convert special characters to HTML entities.
      *
      * This is identical to encodeHTML(), but takes restricted
-     * mode into account. When in restricted mode,  ignores
-     * the $quotes option.
+     * mode into account. When in restricted mode, only escapes
+     * quotes.
      *
      * @param  string $str    The string to encode
      * @param  bool   $quotes Encode quotes
