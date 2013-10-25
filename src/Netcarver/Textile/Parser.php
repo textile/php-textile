@@ -907,17 +907,18 @@ class Parser
     }
 
     /**
-     * Allows a client to better support responsive designs by turning on or off
-     * image dimensions when parsing a textile image tag with a relative path.
+     * Toggles image dimension attributes.
      *
-     * By default (if this method is not called) image dimensions will be included
-     * for relative images (if possible).
+     * If $dimensionless is set to TRUE, image width and height attributes
+     * will not be included in rendered image tags. Normally, Textile will add
+     * dimensions height images that specify a relative path, as long
+     * as the image file can be accessed.
      *
-     * @param  bool   $dimensionless true=>omit image dimensions, false=>include dimensions
+     * @param  bool   $dimensionless TRUE to disable image dimensions, FALSE to enable
      * @return Parser
      * @example
      * $parser = new Parser();
-     * echo $parser->setDimensionlessImages(false)->textileThis($input);
+     * echo $parser->setDimensionlessImages(false)->textileThis('Hello World!');
      */
 
     public function setDimensionlessImages($dimensionless = true)
@@ -925,7 +926,6 @@ class Parser
         $this->dimensionless_images = $dimensionless;
         return $this;
     }
-
 
     /**
      * Whether images will get dimensions or not.
