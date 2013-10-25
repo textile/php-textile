@@ -2,6 +2,7 @@
 
 namespace Netcarver\Textile\Test;
 use Symfony\Component\Yaml\Yaml;
+use Netcarver\Textile\Parser as Textile;
 
 class BasicTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,7 +14,49 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($expect, $input, 'In section: '.$name);
     }
- 
+
+    public function testGetVersion()
+    {
+        $textile = new Textile();
+        $this->assertRegExp('/^[0-9]+\.[0-9]+\.[0-9]+(:?-[A-Za-z0-9.]+)?(?:\+[A-Za-z0-9.]+)?$/', $textile->getVersion());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+
+    public function testInvalidSymbol()
+    {
+        $textile = new Textile();
+        $textile->getSymbol('invalidSymbolName');
+    }
+
+    public function testSetGetSymbol()
+    {
+        $textile = new Textile();
+        $this->assertEquals('TestValue', $textile->setSymbol('test', 'TestValue')->getSymbol('test'));
+        $this->assertArrayHasKey('test', $textile->getSymbol());
+    }
+
+    public function testSetRelativeImagePrefixChaining()
+    {
+        $textile = new Textile();
+        $this->assertEquals('TestValue', $textile->setRelativeImagePrefix('abc')->setSymbol('test', 'TestValue')->getSymbol('test'));
+    }
+
+    public function testSetGetDimensionlessImage()
+    {
+        $textile = new Textile();
+        $this->assertFalse($textile->getDimensionlessImages());
+        $this->assertTrue($textile->setDimensionlessImages(true)->getDimensionlessImages());
+    }
+
+    public function testEncode()
+    {
+        $textile = new Textile();
+        $this->assertEquals('&amp; &amp; &#124; &amp;#x0022 &#x0022;', $textile->textileEncode('& &amp; &#124; &#x0022 &#x0022;'));
+    }
+
     public function provider()
     {
         chdir(dirname(dirname(dirname(__DIR__))));
@@ -35,11 +78,11 @@ class BasicTest extends \PHPUnit_Framework_TestCase
                     }
 
                     if (isset($test['doctype'])) {
-                        $textile = new \Netcarver\Textile\Parser($test['doctype']);
+                        $textile = new Textile($test['doctype']);
                     }
                     else
                     {
-                        $textile = new \Netcarver\Textile\Parser();
+                        $textile = new Textile();
                     }
 
                     if (isset($test['setup'][0])) {
