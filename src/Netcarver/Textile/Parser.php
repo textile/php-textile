@@ -1094,7 +1094,7 @@ class Parser
         }
 
         extract($this->symbols, EXTR_PREFIX_ALL, 'txt');
-        extract($this->regex_snippets );
+        extract($this->regex_snippets);
         $pnc = '[[:punct:]]';
 
         if ($cur) {
