@@ -5,6 +5,14 @@ h2. Changes in 2.5 branch (from v2.5.1)
 * Improved support for Redcloth-style definition lists.
 *# Allow multiple terms
 *# Allow linebreaks in terms
+* Fix incorrectly rendered @rel@ attributes (closes "#103":https://github.com/textile/php-textile/issues/103.)
+* Fix @getSymbol()@ so it actually returns the named symbol (closes "#104":https://github.com/textile/php-textile/issues/104.)
+* Fix unicode link aliases that were broken on some PCRE_UTF8 supporting systems.
+* Add image dimensions to images even when Textile is run on command line. On CLI, images are looked from the current working directory.
+* Define internal class properties as protected rather than at all, causing them to be created as public.
+* Move internal property definitions from the constructor to class definition.
+* Added runnable PHPUnit tests, integration with "Travis CI":https://travis-ci.org/.
+* Removed error suppression, the code doesn't intentionally produce notices.
 
 
 h2. Changes in v2.5.1 (from v2.5.0)
