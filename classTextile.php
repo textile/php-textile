@@ -1914,7 +1914,7 @@ class Textile
     {
         $blocktags = join('|', $this->blocktag_whitelist);
 
-        $text = explode("\n\n", $text);
+        $text = preg_split('/(\n{2,})/', $text, null, PREG_SPLIT_DELIM_CAPTURE);
 
         $tag  = 'p';
         $atts = '';
@@ -1922,10 +1922,22 @@ class Textile
         $graf = '';
         $ext  = '';
         $eat  = false;
+        $whitespace = '';
+        $eatWhitespace = false;
 
         $out  = array();
 
-        foreach ($text as $line) {
+        foreach ($text as $key => $line) {
+
+            // Line is just whitespace, keep it for the next block.
+            if (trim($line) === '') {
+                if ($eatWhitespace === false) {
+                    $whitespace .= $line;
+                }
+                continue;
+            }
+
+            $eatWhitespace = false;
             $anon = 0;
             if (preg_match("/^($blocktags)($this->a$this->c)\.(\.?)(?::(\S+))? (.*)$/Ss", $line, $m)) {
                 // Last block was extended, so close it
@@ -1960,12 +1972,18 @@ class Textile
             }
 
             $line = $this->doPBr($line);
-            $line = preg_replace('/<br>/', '<br />', $line);
+            $line = $whitespace . preg_replace('/<br>/', '<br />', $line);
 
             if ($ext && $anon) {
-                $out[count($out)-1] .= "\n".$line;
+                $out[count($out)-1] .= $line;
             } elseif (!$eat) {
                 $out[] = $line;
+            }
+
+            if ($eat) {
+                $eatWhitespace = true;
+            } else {
+                $whitespace = '';
             }
 
             if (!$ext) {
@@ -1981,7 +1999,7 @@ class Textile
             $out[count($out)-1] .= $c1;
         }
 
-        return join("\n\n", $out);
+        return join('', $out);
     }
 
     /**
@@ -2056,7 +2074,7 @@ class Textile
             $o2 = "<code>";
             $c2 = "</code>";
             $c1 = "</pre>";
-            $content = $this->shelve($this->rEncodeHTML(rtrim($content, "\n")."\n"));
+            $content = $this->shelve($this->rEncodeHTML($content));
         } elseif ($tag == 'notextile') {
             $content = $this->shelve($content);
             $o1 = '';
@@ -2064,7 +2082,7 @@ class Textile
             $c1 = '';
             $c2 = '';
         } elseif ($tag == 'pre') {
-            $content = $this->shelve($this->rEncodeHTML(rtrim($content, "\n")."\n"));
+            $content = $this->shelve($this->rEncodeHTML($content));
             $o1 = "<pre$atts>";
             $o2 = '';
             $c2 = '';
@@ -2928,12 +2946,10 @@ class Textile
         $out = preg_replace("/^\xEF\xBB\xBF|\x1A/", '', $text);
         // Replaces CRLF and CR with single LF.
         $out = preg_replace("/\r\n?/", "\n", $out);
-        // Replaces line endings containing only whitespace with single LF.
+        // Removes leading tabs and spaces, if the line is otherwise empty.
         $out = preg_replace("/^[ \t]*\n/m", "\n", $out);
-        // Trim three or more LFs down to 2.
-        $out = preg_replace("/\n{3,}/", "\n\n", $out);
-        // Removes leading blank lines.
-        $out = preg_replace("/^\n*/", "", $out);
+        // Removes leading and ending blank lines.
+        $out = trim($out, "\n");
         return $out;
     }
 
