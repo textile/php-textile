@@ -2569,10 +2569,14 @@ class Textile
     }
 
     /**
-     * Initiates recognition and conversion of links in the source document.
+     * Parses and shelves links in the given input.
      *
-     * @param  string $text  The source textile text
-     * @return string        The document with tokens inserted representing the links
+     * This method parses the input Textile document for links.
+     * Formats and encodes them, and stores the created link
+     * elements in cache.
+     *
+     * @param  string $text Textile input
+     * @return string The input document with link pulled out and replaced with tokens
      */
 
     protected function links($text)
