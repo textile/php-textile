@@ -1,6 +1,8 @@
-Here's an edited summary of the commit log. It doesn't include small changes or changes to test cases.
+h1. Changelog
 
-h2. Changes in v3.5.2 (from v3.5.1)
+Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
+
+h2. "Version 3.5.2 - 2013/10/25":https://github.com/textile/php-textile/releases/tag/v3.5.2
 
 * Improved support for Redcloth-style definition lists.
 *# Allow multiple terms
@@ -18,15 +20,14 @@ h2. Changes in v3.5.2 (from v3.5.1)
 * Removed error suppression, the code doesn't intentionally produce notices.
 * Add @br@ tags to headings instead of leaving linebreaks untouched.
 
-h2. Changes in v3.5.1 (from v3.5.0)
+h2. "Version 3.5.1 - 2013/01/01":https://github.com/textile/php-textile/releases/tag/v3.5.1
 
 * Remove horizontal alignment from inline elements (closes "#66":https://github.com/netcarver/textile/issues/66.)
 * Reinstate automatic generation of image width and height generation for relative images (closes "#101":https://github.com/netcarver/textile/issues/101.)
 * Add setDimensionlessImages() and getDimensionlessImages() to surpress width and height generation for relative images and better support content for responsive layouts (closes "#100":https://github.com/netcarver/textile/issues/101.)
 * Allow "." in class attributes (closes "#97":https://github.com/netcarver/textile/issues/97.)
 
-
-h2. Changes in v3.5.0 (from 2.4.1)
+h2. "Version 3.5.0 - 2012/12/12":https://github.com/textile/php-textile/releases/tag/v3.5.0
 
 * Add composer.json to allow installation via the "composer PHP package manager":https://getcomposer.org/.
 * Regex improvements (issues "#78":https://github.com/netcarver/textile/issues/78, "#81":https://github.com/netcarver/textile/issues/81 and "#83":https://github.com/netcarver/textile/issues/83.)
@@ -56,8 +57,7 @@ h2. Changes in v3.5.0 (from 2.4.1)
 *# Added visibility controls to all properties and methods.
 * Dropped textile's PHP4 heritage and moved over to using a @__construct()@ method.
 
-
-h2. Changes in v2.4.1 (from 2.4.0)
+h2. "Version 2.4.1 - 2012/08/23":https://github.com/textile/php-textile/releases/tag/v2.4.1
 
 * Add @sftp@, @callto@, @tel@ and @file@ schemes to the URI whitelist in unrestricted mode.
 * Support international format @tel@ URIs via linkrefs (link aliases.)
@@ -69,7 +69,7 @@ h2. Changes in v2.4.1 (from 2.4.0)
 * Reverted auto-breaking in table cells as it introduced #71 (breaking lists within table cells).
 * Fixed #67 which ran textile within table cells through the glyph routine twice.
 
-h2. Changes in v2.4.0 (from 2.3.2)
+h2. "Version 2.4.0 - 2012/05/07":https://github.com/textile/php-textile/releases/tag/v2.4.0
 
 * Conditionally use utf8 in span regex pattern. Closes #53.
 * Small code cleanups
@@ -86,7 +86,7 @@ h2. Changes in v2.4.0 (from 2.3.2)
 * Bugfix: allow apostrophe between ) and a word character.
 * Allow notelist refs to be customised.
 
-h2. Changes in v2.3.2 (from 2.3)
+h2. "Version 2.3.2 - 2012/03/20":https://github.com/textile/php-textile/releases/tag/v2.3.2
 
 * Allow multiple classes in block attributes.
 * Improve handling of (classA classB#Bad id) blocks.
@@ -101,3 +101,36 @@ h2. Changes in v2.3.2 (from 2.3)
 * Simplify en-dash glyph rule -- should fix #50
 * Simplify self-hyperlinked text, remove the scheme for http, https, ftp and mailto link text.
 
+h2. "Version 2.3.0 - 2012/01/10":https://github.com/textile/php-textile/releases/tag/v2.3
+
+* Fix potential DoS in cleanba().
+* Fix the issue where class would eat the note label.
+* Sanitise image URLs.
+* Allow inline span tags to be applied within non-English quotation marks.
+* Allow non-English quotation marks inside inline span tags.
+* Allow pipe closure of captions.
+* Allow missing closing pipe in colgroups.
+* Note-style links can use index 0.
+* Encode quotes in restricted mode, rather than improperly leaving them as is.
+* Improve lang, style, id and class handling.
+* Add rel attributes to linked images.
+* Center aligned cells aren't treated as captions.
+* Removed use of deprecated @split()@ function.
+* Disallow unsafe block attributes in restricted mode.
+
+h2. "Version 2.2.0 - 2010/09/22":https://github.com/textile/php-textile/releases/tag/v2.2public
+
+* Allow duplicate notelists with different backref characters.
+* Properly render empty table cells.
+* Add support for glyphs such as fractions, plus-minus and degrees.
+* Optimize glyph encoding setup.
+* Optimize style attribute processing.
+* Less restrictive paragraph breaking.
+* Output cleaner inline styles.
+* More restrictive apostrophe encoding and matching.
+* Remove horizontal and vertical alignment attributes from list elements.
+* Lists can use dot terminator.
+* Improved table generation, allow linebreaks in table cells.
+* Add notelists.
+* Add self-links where the URL can be used with the link text (@"$":http://example.com@).
+* Allow glyph parsing across tag boundaries.
