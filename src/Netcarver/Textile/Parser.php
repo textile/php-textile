@@ -2614,12 +2614,13 @@ class Parser
 
     protected function getRefs($text)
     {
-        if ($this->restricted) {
-            $pattern = "/^\[(.+)\]((?:https?:\/\/|\/)\S+)(?=\s|$)/Um";
-        } else {
-            $pattern = "/^\[(.+)\]((?:https?:\/\/|tel:|file:|ftp:\/\/|sftp:\/\/|mailto:|callto:|\/)\S+)(?=\s|$)/Um";
+        $pattern = array();
+
+        foreach ($this->url_schemes as $scheme) {
+            $pattern[] = preg_quote($scheme.':', '/');
         }
 
+        $pattern = '/^\[(.+)\]((?:'.join('|', $pattern).'|\/)\S+)(?=\s|$)/Um';
         return preg_replace_callback($pattern.$this->regex_snippets['mod'], array(&$this, "refs"), $text);
     }
 
