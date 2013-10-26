@@ -2642,13 +2642,13 @@ class Parser
 
         $ref = md5($text).'z';
         $this->urlshelf[$ref] = $text;
-        return 'urlref:'.$ref;
+        return 'textileUrlReference'.$this->uid.':'.$ref;
     }
 
 
     protected function retrieveURLs($text)
     {
-        return preg_replace_callback('/urlref:(\w{32}z)/', array(&$this, "retrieveURL"), $text);
+        return preg_replace_callback('/textileUrlReference'.$this->uid.':(\w{32}z)/', array(&$this, 'retrieveURL'), $text);
     }
 
 
