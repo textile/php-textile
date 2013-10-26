@@ -120,6 +120,8 @@ h2. "Version 2.3.0 - 2012/01/10":https://github.com/textile/php-textile/releases
 
 h2. "Version 2.2.0 - 2010/09/22":https://github.com/textile/php-textile/releases/tag/v2.2public
 
+This is our first release forked from "revision 3359":https://code.google.com/p/textpattern/source/detail?r=3359 of "Textpattern CMS":http://textpattern.com. Here are the changes since Textile v2.0.0:
+
 * Allow duplicate notelists with different backref characters.
 * Properly render empty table cells.
 * Add support for glyphs such as fractions, plus-minus and degrees.
@@ -130,7 +132,11 @@ h2. "Version 2.2.0 - 2010/09/22":https://github.com/textile/php-textile/releases
 * More restrictive apostrophe encoding and matching.
 * Remove horizontal and vertical alignment attributes from list elements.
 * Lists can use dot terminator.
-* Improved table generation, allow linebreaks in table cells.
-* Add notelists.
+* Improved table generation: allow linebreaks in table cells, colgroups, thead, tbody and tfoot elements.
+* Add auto-numbered notelists.
+* Add Textile comment tag. Comments aren't displayed in the generated markup.
 * Add self-links where the URL can be used with the link text (@"$":http://example.com@).
 * Allow glyph parsing across tag boundaries.
+* Add definition lists.
+* Fix duplicate IDs in footnotes.
+* Caps span isn't added to acronyms.
