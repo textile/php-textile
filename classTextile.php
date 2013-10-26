@@ -2685,12 +2685,13 @@ class Textile
 
     protected function getRefs($text)
     {
-        if ($this->restricted) {
-            $pattern = "/^\[(.+)\]((?:https?:\/\/|\/)\S+)(?=\s|$)/Um";
-        } else {
-            $pattern = "/^\[(.+)\]((?:https?:\/\/|tel:|file:|ftp:\/\/|sftp:\/\/|mailto:|callto:|\/)\S+)(?=\s|$)/Um";
+        $pattern = array();
+
+        foreach ($this->url_schemes as $scheme) {
+            $pattern[] = preg_quote($scheme.':', '/');
         }
 
+        $pattern = '/^\[(.+)\]((?:'.join('|', $pattern).'|\/)\S+)(?=\s|$)/Um';
         return preg_replace_callback($pattern.$this->regex_snippets['mod'], array(&$this, "refs"), $text);
     }
 
@@ -2731,7 +2732,7 @@ class Textile
 
         $ref = md5($text).'z';
         $this->urlshelf[$ref] = $text;
-        return 'urlref:'.$ref;
+        return 'textileUrlReference'.$this->uid.':'.$ref;
     }
 
     /**
@@ -2747,7 +2748,7 @@ class Textile
 
     protected function retrieveURLs($text)
     {
-        return preg_replace_callback('/urlref:(\w{32}z)/', array(&$this, "retrieveURL"), $text);
+        return preg_replace_callback('/textileUrlReference'.$this->uid.':(\w{32}z)/', array(&$this, 'retrieveURL'), $text);
     }
 
     /**
