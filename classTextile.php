@@ -644,7 +644,7 @@ class Textile
      * the $glyph_replace array.
      *
      * @var null|array
-     * @see Parser::$glyph_replace
+     * @see Textile::$glyph_replace
      */
 
     protected $glyph_search  = null;
@@ -658,7 +658,7 @@ class Textile
      * the corresponding search regex.
      *
      * @var null|array
-     * @see Parser::$glyph_search
+     * @see Textile::$glyph_search
      */
 
     protected $glyph_replace = null;
@@ -670,7 +670,7 @@ class Textile
      * rebuild the glyph substitutions before the next parse.
      *
      * @var bool
-     * @see Parser::setSymbol()
+     * @see Textile::setSymbol()
      */
 
     protected $rebuild_glyphs = true;
@@ -714,7 +714,7 @@ class Textile
      * setSymbol method before calling textileThis or textileRestricted.
      *
      * @var array
-     * @see Parser::setSymbol()
+     * @see Textile::setSymbol()
      */
 
     protected $symbols = array(
@@ -1031,7 +1031,7 @@ class Textile
      * @param  string $text The text to be encoded
      * @return string The encoded text
      * @example
-     * $parser = new Parser();
+     * $parser = new Textile();
      * $parser->textileEncode('Some content to encode.');
      */
 
@@ -1052,9 +1052,9 @@ class Textile
      * @param  bool   $strict  FALSE to strip whitespace before parsing
      * @param  string $rel     Relationship attribute applied to generated links
      * @return string Parsed $text
-     * @see    Parser::textileRestricted()
+     * @see    Textile::textileRestricted()
      * @example
-     * $parser = new Parser();
+     * $parser = new Textile();
      * echo $parser->textileThis('h1. Hello World!');
      */
 
@@ -1092,9 +1092,9 @@ class Textile
      * @param  bool   $noimage Allow images
      * @param  string $rel     Relationship attribute applied to generated links
      * @return string Parsed $text
-     * @see    Parser::textileThis()
+     * @see    Textile::textileThis()
      * @example
-     * $parser = new Parser();
+     * $parser = new Textile();
      * echo $parser->textileRestricted('h1. Hello World!');
      */
 
@@ -1154,8 +1154,8 @@ class Textile
     /**
      * Prepares the glyph patterns from the symbol table.
      *
-     * @see Parser::setSymbol()
-     * @see Parser::getSymbol()
+     * @see Textile::setSymbol()
+     * @see Textile::getSymbol()
      */
 
     protected function prepGlyphs()
@@ -1320,7 +1320,7 @@ class Textile
      * @param  bool   $include_id If FALSE, IDs are not included in the attribute list
      * @param  string $autoclass  An additional classes applied to the output
      * @return string HTML attribute list
-     * @see    Parser::parseAttribsToArray()
+     * @see    Textile::parseAttribsToArray()
      */
 
     protected function parseAttribs($in, $element = '', $include_id = true, $autoclass = '')
@@ -1346,7 +1346,7 @@ class Textile
      * @param  bool   $include_id If FALSE, IDs are not included in the attribute list
      * @param  string $autoclass  An additional classes applied to the output
      * @return array  HTML attributes as key => value mappings
-     * @see    Parser::parseAttribs()
+     * @see    Textile::parseAttribs()
      */
 
     protected function parseAttribsToArray($in, $element = '', $include_id = true, $autoclass = '')
@@ -1544,7 +1544,7 @@ class Textile
      *
      * @param  array  $matches
      * @return string HTML table
-     * @see    Parser::tables()
+     * @see    Textile::tables()
      */
 
     protected function fTable($matches)
@@ -1663,7 +1663,7 @@ class Textile
      *
      * @param  array  $m
      * @return string HTML definition list
-     * @see    Parser::redclothLists()
+     * @see    Textile::redclothLists()
      */
 
     protected function fRedclothList($m)
@@ -1740,7 +1740,7 @@ class Textile
      *
      * @param  array  $m
      * @return string HTML list
-     * @see    Parser::textileLists()
+     * @see    Textile::textileLists()
      */
 
     protected function fTextileList($m)
@@ -2517,7 +2517,6 @@ class Textile
         return (in_array($name, $mask) && isset($parts[$name]) && '' !== $parts[$name]);
     }
 
-
     /**
      * Rebuild a URI from parsed parts and a mask.
      *
@@ -2596,6 +2595,13 @@ class Textile
         );
     }
 
+    /**
+     * Formats a link and stores it on the shelf.
+     *
+     * @param  array  $m Options
+     * @return string Reference token for the shelved content
+     * @see    Textile::links()
+     */
 
     protected function fLink($m)
     {
@@ -2684,6 +2690,13 @@ class Textile
         return preg_replace_callback($pattern.$this->regex_snippets['mod'], array(&$this, "refs"), $text);
     }
 
+    /**
+     * Parses, encodes and shelves the current URI alias.
+     *
+     * @param  array $m Options
+     * @return string Empty string
+     * @see    Textile::getRefs()
+     */
 
     protected function refs($m)
     {
@@ -2703,6 +2716,7 @@ class Textile
      *
      * @param  string $text The URL
      * @return string The fragment's unique reference ID
+     * @see    Textile::retrieveURLs()
      */
 
     protected function shelveURL($text)
@@ -2716,12 +2730,28 @@ class Textile
         return 'urlref:'.$ref;
     }
 
+    /**
+     * Replaces reference tokens with corresponding shelved URL.
+     *
+     * This method puts all shelved URLs back to the final,
+     * parsed input.
+     *
+     * @param  string $text The input
+     * @return string Processed text
+     * @see    Textile::shelveURL()
+     */
 
     protected function retrieveURLs($text)
     {
         return preg_replace_callback('/urlref:(\w{32}z)/', array(&$this, "retrieveURL"), $text);
     }
 
+    /**
+     * Retrieves an URL from the shelve.
+     *
+     * @param  array  $m Options
+     * @return string The URL
+     */
 
     protected function retrieveURL($m)
     {
@@ -2776,11 +2806,11 @@ class Textile
     }
 
     /**
-     * Parses images in the given input.
+     * Parses and shelves images in the given input.
      *
-     * This method parses the input textile document for images and
+     * This method parses the input Textile document for images and
      * generates img HTML tags for each one found, caching the
-     * generated img tag internally and replacing the textile image with a
+     * generated img tag internally and replacing the Textile image with a
      * token to the cached tag.
      *
      * @param  string $text Textile input
@@ -2808,6 +2838,13 @@ class Textile
         );
     }
 
+    /**
+     * Formats an image and stores it on the shelf.
+     *
+     * @param  array  $m Options
+     * @return string Reference token for the shelved content
+     * @see    Textile::images()
+     */
 
     protected function fImage($m)
     {
@@ -2922,7 +2959,7 @@ class Textile
      *
      * @param  string $val The content
      * @return string The fragment's unique reference ID
-     * @see    retrieve()
+     * @see    Textile::retrieve()
      */
 
     protected function shelve($val)
@@ -2940,7 +2977,7 @@ class Textile
      *
      * @param  string $text The input
      * @return string Processed text
-     * @see    shelve()
+     * @see    Textile::shelve()
      */
 
     protected function retrieve($text)
@@ -3022,7 +3059,7 @@ class Textile
      *
      * @param  string $text The input
      * @return string $text Processed input
-     * @see    footnoteID()
+     * @see    Textile::footnoteID()
      */
 
     protected function footnoteRefs($text)
@@ -3192,7 +3229,7 @@ class Textile
      * @param  string $str    The string to encode
      * @param  bool   $quotes Encode quotes
      * @return string Encoded string
-     * @see    Parser::encodeHTML()
+     * @see    Textile::encodeHTML()
      */
 
     protected function rEncodeHTML($str, $quotes = true)
