@@ -1,6 +1,6 @@
 h1. Textile for PHP
 
-"Textile reference":http://txstyle.org/article/43/a-short-introduction | "Live editor":http://txstyle.org/ | "Packagist":https://packagist.org/packages/netcarver/textile
+"Downloads":https://github.com/textile/php-textile/releases | "Textile reference":http://txstyle.org/article/43/a-short-introduction | "Live editor":http://txstyle.org/ | "Packagist":https://packagist.org/packages/netcarver/textile
 
 *Textile is a humane web text generator*. It takes lightweight, readable, plaintext-like markup language and converts it into well formed HTML. This repository contains a Textile parser for PHP.
 
