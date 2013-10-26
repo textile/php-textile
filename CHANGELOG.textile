@@ -29,9 +29,9 @@ h2. "Version 3.5.1 - 2013/01/01":https://github.com/textile/php-textile/releases
 
 h2. "Version 3.5.0 - 2012/12/12":https://github.com/textile/php-textile/releases/tag/v3.5.0
 
-* Add composer.json to allow installation via the "composer PHP package manager":https://getcomposer.org/.
-* Regex improvements (issues "#78":https://github.com/netcarver/textile/issues/78, "#81":https://github.com/netcarver/textile/issues/81 and "#83":https://github.com/netcarver/textile/issues/83.)
-* Allow pre-encoded '>' and '<' as alignments.
+* Add composer.json to allow installation via the "Composer PHP package manager":https://getcomposer.org/.
+* Regular expression improvements (issues "#78":https://github.com/netcarver/textile/issues/78, "#81":https://github.com/netcarver/textile/issues/81 and "#83":https://github.com/netcarver/textile/issues/83.)
+* Allow pre-encoded @>@ and @<@ as alignments.
 * Self-referencing links can now be combined with link aliases. eg. @"$":alias1@ is now possible.
 * Fix memory leak and performance degradation when calling same Textile object multiple times.
 * Do not double-encode @+@ or @%@ in urls.
