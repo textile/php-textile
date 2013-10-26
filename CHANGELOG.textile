@@ -2,7 +2,7 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
-h2. "Version 3.5.2 - 2013/10/25":https://github.com/textile/php-textile/releases/tag/v3.5.2
+h2. "Version 2.5.2 - 2013/10/25":https://github.com/textile/php-textile/releases/tag/v2.5.2
 
 * Improved support for Redcloth-style definition lists.
 *# Allow multiple terms
@@ -20,14 +20,14 @@ h2. "Version 3.5.2 - 2013/10/25":https://github.com/textile/php-textile/releases
 * Removed error suppression, the code doesn't intentionally produce notices.
 * Add @br@ tags to headings instead of leaving linebreaks untouched.
 
-h2. "Version 3.5.1 - 2013/01/01":https://github.com/textile/php-textile/releases/tag/v3.5.1
+h2. "Version 2.5.1 - 2013/01/01":https://github.com/textile/php-textile/releases/tag/v2.5.1
 
 * Remove horizontal alignment from inline elements (closes "#66":https://github.com/netcarver/textile/issues/66.)
 * Reinstate automatic generation of image width and height generation for relative images (closes "#101":https://github.com/netcarver/textile/issues/101.)
 * Add setDimensionlessImages() and getDimensionlessImages() to suppress width and height generation for relative images and better support content for responsive layouts (closes "#100":https://github.com/netcarver/textile/issues/101.)
 * Allow "." in class attributes (closes "#97":https://github.com/netcarver/textile/issues/97.)
 
-h2. "Version 3.5.0 - 2012/12/12":https://github.com/textile/php-textile/releases/tag/v3.5.0
+h2. "Version 2.5.0 - 2012/12/12":https://github.com/textile/php-textile/releases/tag/v2.5.0
 
 * Add composer.json to allow installation via the "composer PHP package manager":https://getcomposer.org/.
 * Regex improvements (issues "#78":https://github.com/netcarver/textile/issues/78, "#81":https://github.com/netcarver/textile/issues/81 and "#83":https://github.com/netcarver/textile/issues/83.)
@@ -50,8 +50,7 @@ h2. "Version 3.5.0 - 2012/12/12":https://github.com/textile/php-textile/releases
 * Fix a problem with links followed by ':', ';' or '?' like @Do you like "cheese":/cheese?@ where the '?' becomes part of the href rather than a '?' at the end of the sentence. This happens on platforms where PCRE has unicode support.
 * Removal of leading \t from generated paragraphs & better indentation of generated lists in the HTML (closes "#90":https://github.com/netcarver/textile/issues/90.)
 * New method @textileEncode()@. This is preferred to calling @textileThis()@ with the $encode flag.
-* "PSR-0, PSR-1 & PSR-2":https://github.com/php-fig/fig-standards/tree/master/accepted conformity added.
-*# Split class Textile into classes @Parser@, @DataBag@ & @Tag@ and moved them into @src/Netcarver/Textile@ directory for PSR-0.
+* Follows "PSR-1 & PSR-2":https://github.com/php-fig/fig-standards/tree/master/accepted as far as possible *without* being PSR-0 compatible. So...
 *# Unified method names & coding styles according to PSR-1 & PSR-2.
 *# Switched from using defines to explicit set methods; @setSymbol()@ & @setRelativeImagePrefix()@.
 *# Added visibility controls to all properties and methods.
