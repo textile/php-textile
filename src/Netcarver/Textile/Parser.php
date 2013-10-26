@@ -2150,6 +2150,13 @@ class Parser
         return $text;
     }
 
+    /**
+     * Formats a span tag and stores it on the shelf.
+     *
+     * @param  array  $m Options
+     * @return string Content wrapped to reference tokens
+     * @see    Parser::spans()
+     */
 
     protected function fSpan($m)
     {
@@ -2173,6 +2180,13 @@ class Parser
         return $out;
     }
 
+    /**
+     * Stores a tag pair in the tag cache.
+     *
+     * @param  string $opentag  Opening tag
+     * @param  string $closetag Closing tag
+     * @return array  Reference tokens for both opening and closing tag
+     */
 
     protected function storeTags($opentag, $closetag = '')
     {
@@ -2187,6 +2201,16 @@ class Parser
         return $tags;
     }
 
+    /**
+     * Replaces reference tokens with corresponding shelved span tags.
+     *
+     * This method puts all shelved span tags back to the final,
+     * parsed input.
+     *
+     * @param  string $text The input
+     * @return string Processed text
+     * @see    Parser::storeTags()
+     */
 
     protected function retrieveTags($text)
     {
@@ -2195,12 +2219,26 @@ class Parser
         return $text;
     }
 
+    /**
+     * Retrieves opening tag from the tag cache.
+     *
+     * @param  array $m Options
+     * @return string
+     * @see    Parser::retrieveTags()
+     */
 
     protected function fRetrieveOpenTags($m)
     {
         return $this->tagCache[$m[1]]['open'];
     }
 
+    /**
+     * Retrieves the closing tag from the tag cache.
+     *
+     * @param  array $m Options
+     * @return string
+     * @see    Parser::retrieveTags()
+     */
 
     protected function fRetrieveCloseTags($m)
     {
