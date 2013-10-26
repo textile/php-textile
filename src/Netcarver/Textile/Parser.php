@@ -2446,7 +2446,6 @@ class Parser
         return (in_array($name, $mask) && isset($parts[$name]) && '' !== $parts[$name]);
     }
 
-
     /**
      * Rebuild a URI from parsed parts and a mask.
      *
@@ -2499,10 +2498,14 @@ class Parser
     }
 
     /**
-     * Initiates recognition and conversion of links in the source document.
+     * Parses and shelves links in the given input.
      *
-     * @param  string $text  The source textile text
-     * @return string        The document with tokens inserted representing the links
+     * This method parses the input Textile document for links.
+     * Formats and encodes them, and stores the created link
+     * elements in cache.
+     *
+     * @param  string $text Textile input
+     * @return string The input document with link pulled out and replaced with tokens
      */
 
     protected function links($text)
@@ -2525,6 +2528,13 @@ class Parser
         );
     }
 
+    /**
+     * Formats a link and stores it on the shelf.
+     *
+     * @param  array  $m Options
+     * @return string Reference token for the shelved content
+     * @see    Parser::links()
+     */
 
     protected function fLink($m)
     {
@@ -2613,6 +2623,13 @@ class Parser
         return preg_replace_callback($pattern.$this->regex_snippets['mod'], array(&$this, "refs"), $text);
     }
 
+    /**
+     * Parses, encodes and shelves the current URI alias.
+     *
+     * @param  array $m Options
+     * @return string Empty string
+     * @see    Parser::getRefs()
+     */
 
     protected function refs($m)
     {
@@ -2632,6 +2649,7 @@ class Parser
      *
      * @param  string $text The URL
      * @return string The fragment's unique reference ID
+     * @see    Parser::retrieveURLs()
      */
 
     protected function shelveURL($text)
@@ -2645,12 +2663,28 @@ class Parser
         return 'textileUrlReference'.$this->uid.':'.$ref;
     }
 
+    /**
+     * Replaces reference tokens with corresponding shelved URL.
+     *
+     * This method puts all shelved URLs back to the final,
+     * parsed input.
+     *
+     * @param  string $text The input
+     * @return string Processed text
+     * @see    Parser::shelveURL()
+     */
 
     protected function retrieveURLs($text)
     {
         return preg_replace_callback('/textileUrlReference'.$this->uid.':(\w{32}z)/', array(&$this, 'retrieveURL'), $text);
     }
 
+    /**
+     * Retrieves an URL from the shelve.
+     *
+     * @param  array  $m Options
+     * @return string The URL
+     */
 
     protected function retrieveURL($m)
     {
@@ -2705,11 +2739,11 @@ class Parser
     }
 
     /**
-     * Parses images in the given input.
+     * Parses and shelves images in the given input.
      *
-     * This method parses the input textile document for images and
+     * This method parses the input Textile document for images and
      * generates img HTML tags for each one found, caching the
-     * generated img tag internally and replacing the textile image with a
+     * generated img tag internally and replacing the Textile image with a
      * token to the cached tag.
      *
      * @param  string $text Textile input
@@ -2737,6 +2771,13 @@ class Parser
         );
     }
 
+    /**
+     * Formats an image and stores it on the shelf.
+     *
+     * @param  array  $m Options
+     * @return string Reference token for the shelved content
+     * @see    Parser::images()
+     */
 
     protected function fImage($m)
     {
