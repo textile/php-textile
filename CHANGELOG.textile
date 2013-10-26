@@ -24,7 +24,7 @@ h2. "Version 3.5.1 - 2013/01/01":https://github.com/textile/php-textile/releases
 
 * Remove horizontal alignment from inline elements (closes "#66":https://github.com/netcarver/textile/issues/66.)
 * Reinstate automatic generation of image width and height generation for relative images (closes "#101":https://github.com/netcarver/textile/issues/101.)
-* Add setDimensionlessImages() and getDimensionlessImages() to surpress width and height generation for relative images and better support content for responsive layouts (closes "#100":https://github.com/netcarver/textile/issues/101.)
+* Add setDimensionlessImages() and getDimensionlessImages() to suppress width and height generation for relative images and better support content for responsive layouts (closes "#100":https://github.com/netcarver/textile/issues/101.)
 * Allow "." in class attributes (closes "#97":https://github.com/netcarver/textile/issues/97.)
 
 h2. "Version 3.5.0 - 2012/12/12":https://github.com/textile/php-textile/releases/tag/v3.5.0
