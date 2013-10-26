@@ -3172,6 +3172,8 @@ Restricted mode security filtering mode with default options :
     "nofollow":http://example.com
 
     notextile. <iframe src="xss/attempt"></iframe><&#123><script>window.alert('success')</script>
+
+    !http://example.com/<script>window.alert("Hello World!");</script>.png!
   expect : |
     <p>!10&#215;10.gif!</p>
 
@@ -3183,8 +3185,32 @@ Restricted mode security filtering mode with default options :
 
     <p>notextile. &lt;iframe src=&#8220;xss/attempt&#8221;&gt;&lt;/iframe&gt;&lt;&amp;#123&gt;&lt;script&gt;window.alert(&#8216;success&#8217;)&lt;/script&gt;</p>
 
+    <p>!http://example.com/&lt;script&gt;window.alert(&#8220;Hello World!&#8221;);&lt;/script&gt;.png!</p>
+
 Token references :
   input : |
     Hello textileopentag0000000001z World!
   expect : |
     <p>Hello textileopentag0000000001z World!</p>
+
+Link and image encoding :
+  input : |
+    !http://example.com/?size=60&file=image.png!
+
+    !http://example.com/needs<&"encoding.png!
+
+    "Requires encoding":http://example.com/?foo&bar
+
+    "Entity is merely part of text":http://example.com/?foo&amp;bar
+
+    "In path component":http://example.com/&.html
+  expect : |
+    <p><img alt="" src="http://example.com/?size=60&amp;file=image.png" /></p>
+
+    <p><img alt="" src="http://example.com/needs&lt;&amp;&quot;encoding.png" /></p>
+
+    <p><a href="http://example.com/?foo&amp;bar">Requires encoding</a></p>
+
+    <p><a href="http://example.com/?foo&amp;amp;bar">Entity is merely part of text</a></p>
+
+    <p><a href="http://example.com/%26.html">In path component</a></p>
