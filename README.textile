@@ -35,7 +35,7 @@ bc. require './vendor/autoload.php';
 
 h3. Manually
 
-The only file that is necessary for the correct operation of Textile 2.* is @classTextile.php@ from the root directory. "Grab a copy of the latest Textile v2.5.x release":https://github.com/textile/php-textile/releases and include it in your application:
+The only file that is necessary for the correct operation of Textile 2.* is @classTextile.php@ from the root directory. "Grab a copy of the latest Textile v2.5.x release":https://github.com/textile/php-textile/releases, extract the archive and include the @classTextile.php@ file in your application:
 
 bc. include "classTextile.php";
 
