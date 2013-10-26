@@ -1954,7 +1954,8 @@ class Parser
 
         if ($tag === 'p') {
             // Is this an anonymous block with a note definition?
-            $notedef = preg_replace_callback("/
+            $notedef = preg_replace_callback(
+                "/
                     ^note\#               #  start of note def marker
                     ([^%<*!@#^([{ \s.]+)  # !label
                     ([*!^]?)              # !link
@@ -1962,7 +1963,10 @@ class Parser
                     \.?                   #  optional period.
                     [\s]+                 #  whitespace ends def marker
                     (.*)$                 # !content
-                /x".$this->regex_snippets['mod'], array(&$this, "fParseNoteDefs"), $content);
+                /x".$this->regex_snippets['mod'],
+                array(&$this, "fParseNoteDefs"),
+                $content
+            );
 
             if ('' === $notedef) {
                 // It will be empty if the regex matched and ate it.
@@ -2047,11 +2051,15 @@ class Parser
 
     protected function getHTMLComments($text)
     {
-        $text = preg_replace_callback("/
+        $text = preg_replace_callback(
+            "/
             \<!--    #  start
             (.*?)    # !content *not* greedy
             -->      #  end
-        /sx", array(&$this, "fParseHTMLComments"), $text);
+            /sx",
+            array(&$this, "fParseHTMLComments"),
+            $text
+        );
         return $text;
     }
 
@@ -2122,7 +2130,8 @@ class Parser
         if ($this->span_depth <= $this->max_span_depth) {
             foreach ($span_tags as $f) {
                 $f = preg_quote($f);
-                $text = preg_replace_callback("/
+                $text = preg_replace_callback(
+                    "/
                     (^|(?<=[\s>$pnct\(])|[{[])            # pre
                     ($f)(?!$f)                            # tag
                     ({$this->lc})                         # atts - do not use horizontal alignment; it kills html tags within inline elements.
@@ -2131,7 +2140,10 @@ class Parser
                     ([$pnct]*)                            # end
                     $f
                     ($|[\[\]}<]|(?=[$pnct]{1,2}[^0-9]|\s|\)))  # tail
-                /x".$this->regex_snippets['mod'], array(&$this, "fSpan"), $text);
+                    /x".$this->regex_snippets['mod'],
+                    array(&$this, "fSpan"),
+                    $text
+                );
             }
         }
         $this->span_depth--;
@@ -2334,14 +2346,18 @@ class Parser
 
     protected function noteRefs($text)
     {
-        $text = preg_replace_callback("/
+        $text = preg_replace_callback(
+            "/
             \[                   #  start
             ({$this->c})         # !atts
             \#
             ([^\]!]+?)           # !label
             ([!]?)               # !nolink
             \]
-        /Ux", array(&$this, "fParseNoteRefs"), $text);
+            /Ux",
+            array(&$this, "fParseNoteRefs"),
+            $text
+        );
         return $text;
     }
 
@@ -2491,7 +2507,8 @@ class Parser
 
     protected function links($text)
     {
-        return preg_replace_callback('/
+        return preg_replace_callback(
+            '/
             (^|(?<=[\s>.\(\|])|[{[])   # $pre
             "                          #  start
             (' . $this->c . ')         # $atts
@@ -2502,7 +2519,10 @@ class Parser
             (\/)?                      # $slash
             ([^'.$this->regex_snippets['wrd'].'\/]*?)  # $post
             ([\]}]|(?=\s|$|\)|\|))     # $tail
-            /x'.$this->regex_snippets['mod'], array(&$this, "fLink"), $text);
+            /x'.$this->regex_snippets['mod'],
+            array(&$this, "fLink"),
+            $text
+        );
     }
 
 
@@ -2698,7 +2718,8 @@ class Parser
 
     protected function images($text)
     {
-        return preg_replace_callback('/
+        return preg_replace_callback(
+            '/
             (?:[[{])?                  # pre
             \!                         # opening !
             (\<|\=|\>)?                # optional alignment              $algn
@@ -2710,7 +2731,10 @@ class Parser
             \!                         # closing
             (?::(\S+)(?<![\]).,]))?    # optional href sans final punct. $href
             (?:[\]}]|(?=[.,\s)|]|$))   # lookahead: space , . ) | or end of string ... "|" needed if image in table cell
-        /x'.$this->regex_snippets['mod'], array(&$this, "fImage"), $text);
+            /x'.$this->regex_snippets['mod'],
+            array(&$this, "fImage"),
+            $text
+        );
     }
 
 
