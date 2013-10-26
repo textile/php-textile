@@ -2850,7 +2850,7 @@ class Parser
 
     protected function retrieve($text)
     {
-        if (is_array($this->shelf)) {
+        if ($this->shelf) {
             do {
                 $old = $text;
                 $text = str_replace(array_keys($this->shelf), $this->shelf, $text);
