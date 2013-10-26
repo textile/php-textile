@@ -2860,7 +2860,6 @@ class Textile
         $size   = false;
 
         list(, $algn, $atts, $url, $title, $href) = array_pad($m, 6, null);
-        $url = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
 
         if ('' !== $algn) {
             $vals = array('<' => 'left', '=' => 'center', '>' => 'right');
