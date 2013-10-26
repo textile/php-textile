@@ -2,6 +2,12 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
+h3. Version 3.5.3 - upcoming
+
+* Fix double image URL encoding (closes "#102":https://github.com/textile/php-textile/issues/102.)
+* Fix URL reference token spoofing.
+* Link aliases follow same allowed URL schemes as normal links.
+
 h2. "Version 3.5.2 - 2013/10/25":https://github.com/textile/php-textile/releases/tag/v3.5.2
 
 * Improved support for Redcloth-style definition lists.
