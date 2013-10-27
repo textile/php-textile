@@ -1218,7 +1218,7 @@ class Textile
             '$1'.$txt_quote_double_close,           // Double closing
             $txt_quote_double_open,                 // Default double opening
             (('html5' === $this->doctype) ? '<abbr title="$2">$1</abbr>' : '<acronym title="$2">$1</acronym>'),     // 3+ uppercase acronym
-            '<span class="caps">glyph:$1</span>$2', // 3+ uppercase
+            '<span class="caps">'.$this->uid.':glyph:$1</span>$2', // 3+ uppercase
             '$1'.$txt_ellipsis,                     // Ellipsis
             $txt_emdash,                            // em dash
             ' '.$txt_endash.' ',                    // en dash
@@ -3140,7 +3140,7 @@ class Textile
 
     protected function replaceGlyphs($text)
     {
-        return preg_replace('/glyph:([^<]+)/', '$1', $text);
+        return preg_replace('/'.$this->uid.':glyph:([^<]+)/', '$1', $text);
     }
 
     /**
