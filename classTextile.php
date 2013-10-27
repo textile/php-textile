@@ -807,14 +807,6 @@ class Textile
     protected $notes = array();
 
     /**
-     * Stores shelved URLs.
-     *
-     * @var array
-     */
-
-    protected $urlshelf = array();
-
-    /**
      * Stores URL references.
      *
      * @var array
@@ -831,14 +823,6 @@ class Textile
     protected $span_depth = 0;
 
     /**
-     * Stores tag index.
-     *
-     * @var int
-     */
-
-    protected $tag_index = 1;
-
-    /**
      * Unique ID used for reference tokens.
      *
      * @var string
@@ -853,6 +837,14 @@ class Textile
      */
 
     protected $refIndex = 1;
+
+    /**
+     * Stores references values.
+     *
+     * @var array
+     */
+
+    protected $refCache = array();
 
     /**
      * Constructor.
@@ -1131,14 +1123,8 @@ class Textile
     protected function textileCommon($text, $lite)
     {
         $text = $this->cleanWhiteSpace($text);
-
-        while (1) {
-            $this->uid = 'textileRef' . uniqid(rand());
-
-            if (strpos($text, $this->uid) === false) {
-                break;
-            }
-        }
+        $this->uid = 'textileRef:'.uniqid(rand()).':';
+        str_replace($this->uid, '', $text);
 
         if ($lite) {
             $this->blocktag_whitelist = array('bq', 'p');
@@ -1249,12 +1235,12 @@ class Textile
         $this->unreferencedNotes = array();
         $this->notelist_cache    = array();
         $this->notes      = array();
-        $this->urlshelf   = array();
         $this->urlrefs    = array();
         $this->shelf      = array();
         $this->fn         = array();
         $this->span_depth = 0;
-        $this->tag_index  = 1;
+        $this->refIndex   = 1;
+        $this->refCache   = array();
         $this->note_index = 1;
         $this->rel        = $rel;
         $this->lite       = $lite;
@@ -2255,35 +2241,38 @@ class Textile
 
     protected function storeTags($opentag, $closetag = '')
     {
-        $key = ($this->tag_index++);
+        $tags = array();
 
-        $key = str_pad((string) $key, 10, '0', STR_PAD_LEFT).'z'; // $key must be of fixed length to allow proper matching in retrieveTags
-        $this->tagCache[$key] = array('open' => $opentag, 'close' => $closetag);
-        $tags = array(
-            'open'  => "textileSpanReference{$this->uid}opentag{$key} ",
-            'close' => " textileSpanReference{$this->uid}closetag{$key}",
-        );
+        $this->refCache[$this->refIndex] = $opentag;
+        $tags['open'] = $this->uid.$this->refIndex.':ospan ';
+        $this->refIndex++;
+
+        $this->refCache[$this->refIndex] = $closetag;
+        $tags['close'] = ' '.$this->uid.$this->refIndex.':cspan';
+        $this->refIndex++;
+
         return $tags;
     }
 
 
     protected function retrieveTags($text)
     {
-        $text = preg_replace_callback('/textileSpanReference'.$this->uid.'opentag([\d]{10}z) /', array(&$this, 'fRetrieveOpenTags'), $text);
-        $text = preg_replace_callback('/ textileSpanReference'.$this->uid.'closetag([\d]{10}z)/', array(&$this, 'fRetrieveCloseTags'), $text);
+        $text = preg_replace_callback('/'.$this->uid.'(\d+):ospan /', array(&$this, 'fRetrieveTags'), $text);
+        $text = preg_replace_callback('/ '.$this->uid.'(\d+):cspan/', array(&$this, 'fRetrieveTags'), $text);
         return $text;
     }
 
+    /**
+     * Retrieves a tag from the tag cache.
+     *
+     * @param  array $m Options
+     * @return string
+     * @see    Textile::retrieveTags()
+     */
 
-    protected function fRetrieveOpenTags($m)
+    protected function fRetrieveTags($m)
     {
-        return $this->tagCache[$m[1]]['open'];
-    }
-
-
-    protected function fRetrieveCloseTags($m)
-    {
-        return $this->tagCache[$m[1]]['close'];
+        return $this->refCache[$m[1]];
     }
 
 
@@ -2738,9 +2727,8 @@ class Textile
             return '';
         }
 
-        $ref = md5($text).'z';
-        $this->urlshelf[$ref] = $text;
-        return 'textileUrlReference'.$this->uid.':'.$ref;
+        $this->refCache[$this->refIndex] = $text;
+        return $this->uid.($this->refIndex++).':url';
     }
 
     /**
@@ -2756,7 +2744,7 @@ class Textile
 
     protected function retrieveURLs($text)
     {
-        return preg_replace_callback('/textileUrlReference'.$this->uid.':(\w{32}z)/', array(&$this, 'retrieveURL'), $text);
+        return preg_replace_callback('/'.$this->uid.'(\d+):url/', array(&$this, 'retrieveURL'), $text);
     }
 
     /**
@@ -2769,11 +2757,11 @@ class Textile
     protected function retrieveURL($m)
     {
         $ref = $m[1];
-        if (!isset($this->urlshelf[$ref])) {
+        if (!isset($this->refCache[$ref])) {
             return $ref;
         }
 
-        $url = $this->urlshelf[$ref];
+        $url = $this->refCache[$ref];
         if (isset($this->urlrefs[$url])) {
             $url = $this->urlrefs[$url];
         }
@@ -2976,7 +2964,7 @@ class Textile
 
     protected function shelve($val)
     {
-        $i = 'textileShelveReference'.$this->uid.'i'.($this->refIndex++).'z';
+        $i = $this->uid.($this->refIndex++).':shelve';
         $this->shelf[$i] = $val;
         return $i;
     }
@@ -3105,7 +3093,7 @@ class Textile
 
     /**
      * Replaces glyphs in the given input.
-     * 
+     *
      * This method performs typographical glyph replacements. The input is split
      * across HTML-like tags in order to avoid attempting glyph
      * replacements within tags.
