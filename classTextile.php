@@ -505,6 +505,22 @@ class Textile
     protected $c;
 
     /**
+     * Pattern that matches class, style and language attributes.
+     *
+     * @var string
+     */
+
+    protected $lc;
+
+    /**
+     * Whitelisted block tags.
+     *
+     * @var array
+     */
+
+    protected $blocktag_whitelist = array();
+
+    /**
      * Pattern for punctation.
      *
      * @var string
