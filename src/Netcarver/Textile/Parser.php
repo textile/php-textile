@@ -1003,8 +1003,8 @@ class Parser
         $this->prepare($lite, $noimage, $rel);
         $this->url_schemes = $this->unrestricted_url_schemes;
 
-        // Use of the $encode flag is discouraged. Calling textileEncode() is prefered.
         if ($encode) {
+            trigger_error('Use of the $encode argument is discouraged. Use Parser::textileEncode() instead.', E_DEPRECATED);
             return $this->textileEncode($text);
         }
 
