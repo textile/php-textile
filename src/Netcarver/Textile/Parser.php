@@ -808,6 +808,7 @@ class Parser
             $this->doctype = $doctype;
         }
 
+        $this->uid = 'textileRef:'.uniqid(rand()).':';
         $this->a = "(?:$this->hlgn|$this->vlgn)*";
         $this->s = "(?:$this->cspn|$this->rspn)*";
         $this->c = "(?:$this->clas|$this->styl|$this->lnge|$this->hlgn)*";
@@ -1068,7 +1069,6 @@ class Parser
     protected function textileCommon($text, $lite)
     {
         $text = $this->cleanWhiteSpace($text);
-        $this->uid = 'textileRef:'.uniqid(rand()).':';
         str_replace($this->uid, '', $text);
 
         if ($lite) {
