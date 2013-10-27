@@ -2803,61 +2803,49 @@ class Parser
     protected function fImage($m)
     {
         $extras = '';
-        $align  = '';
-        $alt    = '';
-        $height = '';
-        $width  = '';
-        $size   = false;
 
-        list(, $algn, $atts, $url, $title, $href) = array_pad($m, 6, null);
+        list(, $align, $atts, $url, $title, $href) = array_pad($m, 6, null);
 
-        if ('' !== $algn) {
-            $vals = array('<' => 'left', '=' => 'center', '>' => 'right');
-            if (isset($vals[$algn])) {
-                if ('html5' === $this->doctype) {
-                    $extras = "align-{$vals[$algn]}";
-                } else {
-                    $align = $vals[$algn];
-                }
+        $alignments = array(
+            '<' => 'left',
+            '=' => 'center',
+            '>' => 'right',
+        );
+
+        if (isset($alignments[$align])) {
+            if ('html5' === $this->doctype) {
+                $extras = 'align-'.$alignments[$align];
+            } else {
+                $align = $alignments[$align];
             }
         }
 
         if ($title) {
             $title = $this->encodeHTML($title);
-            $alt   = $title;
         }
+
+        $img = $this->newTag('img', $this->parseAttribsToArray($atts, '', 1, $extras))
+            ->align($align)
+            ->alt($title, true)
+            ->src($this->shelveURL($url), true)
+            ->title($title);
 
         if (!$this->dimensionless_images && $this->isRelUrl($url)) {
             $real_location = realpath($this->doc_root.ltrim($url, $this->ds));
 
             if ($real_location) {
-                $size = getimagesize($real_location);
+                if ($size = getimagesize($real_location)) {
+                    $img->height($size[1])->width($size[0]);
+                }
             }
         }
 
-        if ($size) {
-            $height = $size[1];
-            $width  = $size[0];
-        }
-
-        $img  = $this
-                    ->newTag('img', $this->parseAttribsToArray($atts, '', 1, $extras))
-                    ->align($align)
-                    ->alt($alt, true)
-                    ->height($height)
-                    ->src($this->shelveURL($url), true)
-                    ->title($title)
-                    ->width($width)
-                    ;
-
         $out = (string) $img;
+
         if ($href) {
             $href = $this->shelveURL($href);
-            $link = $this
-                        ->newTag('a', array(), false)
-                        ->href($href)
-                        ->rel($this->rel);
-            $out  = (string) $link . "$img</a>";
+            $link = $this->newTag('a', array(), false)->href($href)->rel($this->rel);
+            $out = (string) $link . "$img</a>";
         }
 
         return $this->shelve($out);
