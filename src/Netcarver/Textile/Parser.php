@@ -976,7 +976,7 @@ class Parser
      * @param  bool   $lite    Switch to lite mode
      * @param  bool   $encode  Encode input and return
      * @param  bool   $noimage Disables images
-     * @param  bool   $strict  FALSE to strip whitespace before parsing
+     * @param  bool   $strict  This argument is ignored
      * @param  string $rel     Relationship attribute applied to generated links
      * @return string Parsed $text
      * @see    Parser::textileRestricted()
@@ -996,9 +996,7 @@ class Parser
             return $this->textileEncode($text);
         }
 
-        if (!$strict) {
-            $text = $this->cleanWhiteSpace($text);
-        }
+        $text = $this->cleanWhiteSpace($text);
 
         return $this->textileCommon($text, $lite);
     }
