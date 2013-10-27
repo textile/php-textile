@@ -972,6 +972,18 @@ class Parser
     /**
      * Parses the given Textile input in un-restricted mode.
      *
+     * This method should be used to parse any trusted Textile
+     * input, such as articles created by well-known
+     * authorised users.
+     *
+     * This method allows users to mix raw HTML and Textile.
+     * If you want to parse untrusted input, see the
+     * textileRestricted method instead. Using this less
+     * restrictive method on untrusted input, like comments
+     * and forum posts, will lead to XSS issues, as users
+     * will be able to use any HTML code, JavaScript links
+     * and Textile attributes in their input.
+     *
      * @param  string $text    The Textile input to parse
      * @param  bool   $lite    Switch to lite mode
      * @param  bool   $encode  Encode input and return
@@ -999,15 +1011,15 @@ class Parser
         return $this->textileCommon($text, $lite);
     }
 
-
     /**
      * Parses the given Textile input in restricted mode.
      *
      * This method should be used for any untrusted user input,
      * including comments or forum posts.
      *
-     * This method escapes any raw HTML input, links only whitelisted URL
-     * schemes and by default also prevents the use of images and
+     * This method escapes any raw HTML input, ignores unsafe
+     * attributes, links only whitelisted URL schemes
+     * and by default also prevents the use of images and
      * extra Textile formatting, accepting only paragraphs
      * and blockquotes as valid block tags.
      *
@@ -1075,7 +1087,6 @@ class Parser
 
         return $text;
     }
-
 
     /**
      * Prepares the glyph patterns from the symbol table.
