@@ -1140,7 +1140,7 @@ class Textile
     protected function textileCommon($text, $lite)
     {
         $text = $this->cleanWhiteSpace($text);
-        str_replace($this->uid, '', $text);
+        $text = str_replace($this->uid, '', $text);
 
         if ($lite) {
             $this->blocktag_whitelist = array('bq', 'p');
