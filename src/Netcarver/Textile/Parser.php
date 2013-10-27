@@ -996,8 +996,6 @@ class Parser
             return $this->textileEncode($text);
         }
 
-        $text = $this->cleanWhiteSpace($text);
-
         return $this->textileCommon($text, $lite);
     }
 
@@ -1033,7 +1031,6 @@ class Parser
 
         // Escape any raw html
         $text = $this->encodeHTML($text, 0);
-        $text = $this->cleanWhiteSpace($text);
 
         return $this->textileCommon($text, $lite);
     }
@@ -1050,6 +1047,8 @@ class Parser
 
     protected function textileCommon($text, $lite)
     {
+        $text = $this->cleanWhiteSpace($text);
+
         while (1) {
             $this->uid = 'textileRef' . uniqid(rand());
 
