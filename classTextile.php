@@ -1562,15 +1562,17 @@ class Textile
         $tatts = $this->parseAttribs($matches[1], 'table');
 
         $sum = trim($matches[2]) ? ' summary="'.htmlspecialchars(trim($matches[2]), ENT_QUOTES, 'UTF-8').'"' : '';
-        $cap       = '';
-        $colgrp    = '';
+        $cap = '';
+        $colgrp = '';
         $last_rgrp = '';
-        $c_row     = 1;
+        $c_row = 1;
+
         foreach (preg_split("/\|\s*?$/m", $matches[3], -1, PREG_SPLIT_NO_EMPTY) as $row) {
 
             $row = ltrim($row);
 
-            // Caption -- can only occur on row 1, otherwise treat '|=. foo |...' as a normal center-aligned cell.
+            // Caption -- can only occur on row 1, otherwise treat '|=. foo |...'
+            // as a normal center-aligned cell.
             if (($c_row <= 1) && preg_match("/^\|\=($this->s$this->a$this->c)\. ([^\n]*)(.*)/s", ltrim($row), $cmtch)) {
                 $capts = $this->parseAttribs($cmtch[1]);
                 $cap = "\t<caption".$capts.">".trim($cmtch[2])."</caption>\n";
@@ -1579,23 +1581,29 @@ class Textile
                     continue;
                 }
             }
+
             $c_row += 1;
 
             // Colgroup
             if (preg_match("/^\|:($this->s$this->a$this->c\. .*)/m", ltrim($row), $gmtch)) {
-                $nl = strpos($row, "\n");    // Is this colgroup def missing a closing pipe? If so, there will be a newline in the middle of $row somewhere.
-                $idx=0;
+                // Is this colgroup def missing a closing pipe? If so, there
+                // will be a newline in the middle of $row somewhere.
+                $nl = strpos($row, "\n");
+                $idx = 0;
+
                 foreach (explode('|', str_replace('.', '', $gmtch[1])) as $col) {
                     $gatts = $this->parseAttribs(trim($col), 'col');
                     $colgrp .= "\t<col".(($idx==0) ? "group".$gatts.">" : $gatts." />")."\n";
                     $idx++;
                 }
+
                 $colgrp .= "\t</colgroup>\n";
 
                 if ($nl === false) {
                     continue;
                 } else {
-                    $row = ltrim(substr($row, $nl));        // Recover from our missing pipe and process the rest of the line...
+                    // Recover from our missing pipe and process the rest of the line.
+                    $row = ltrim(substr($row, $nl));
                 }
             }
 
@@ -1615,8 +1623,10 @@ class Textile
 
             $cells = array();
             $cellctr = 0;
+
             foreach (explode("|", $row) as $cell) {
                 $ctyp = "d";
+
                 if (preg_match("/^_(?=[\s[:punct:]])/", $cell)) {
                     $ctyp = "h";
                 }
@@ -1630,6 +1640,7 @@ class Textile
 
                 if (!$this->lite) {
                     $a = array();
+
                     if (preg_match('/(\s*)(.*)/s', $cell, $a)) {
                         $cell = $this->redclothLists($a[2]);
                         $cell = $this->textileLists($cell);
@@ -1637,13 +1648,14 @@ class Textile
                     }
                 }
 
-                if ($cellctr>0) {
+                if ($cellctr > 0) {
                     // Ignore first 'cell': it precedes the opening pipe
                     $cells[] = $this->doTagBr("t$ctyp", "\t\t\t<t$ctyp$catts>$cell</t$ctyp>");
                 }
 
                 $cellctr++;
             }
+
             $grp = (($rgrp && $last_rgrp) ? "\t</t".$last_rgrp.">\n" : '') . (($rgrp) ? "\t<t".$rgrp.$rgrpatts.">\n" : '');
             $last_rgrp = ($rgrp) ? $rgrp : $last_rgrp;
             $rows[] = $grp."\t\t<tr$ratts>\n" . join("\n", $cells) . ($cells ? "\n" : "") . "\t\t</tr>";
@@ -1893,8 +1905,11 @@ class Textile
 
     protected function fPBr($m)
     {
-        $tmp     = preg_replace("~<br\s*/?>\s*\n(?![\s|])~i", "\n", $m[3]); // Normalise <br/>\n(not space or |) -> \n(not space or |)
-        $content = preg_replace("/\n(?![\s|])/", '<br />', $tmp);           // then \n(not space or |) -> <br />
+        // Replaces <br/>\n instances that are not followed by white-space,
+        // or at end, with single LF.
+        $content = preg_replace("~<br\s*/?>\s*\n(?![\s|])~i", "\n", $m[3]);
+        // Replaces those LFs that aren't followed by white-space, or at end, with <br />.
+        $content = preg_replace("/\n(?![\s|])/", '<br />', $content);
         return '<'.$m[1].$m[2].'>'.$content.$m[4];
     }
 
@@ -1925,7 +1940,7 @@ class Textile
     {
         $blocktags = join('|', $this->blocktag_whitelist);
 
-        $text = preg_split('/(\n{2,})/', $text, null, PREG_SPLIT_DELIM_CAPTURE);
+        $textblocks = preg_split('/(\n{2,})/', $text, null, PREG_SPLIT_DELIM_CAPTURE);
 
         $tag  = 'p';
         $atts = '';
@@ -1938,19 +1953,19 @@ class Textile
 
         $out  = array();
 
-        foreach ($text as $key => $line) {
+        foreach ($textblocks as $key => $block) {
 
             // Line is just whitespace, keep it for the next block.
-            if (trim($line) === '') {
+            if (trim($block) === '') {
                 if ($eatWhitespace === false) {
-                    $whitespace .= $line;
+                    $whitespace .= $block;
                 }
                 continue;
             }
 
             $eatWhitespace = false;
             $anon = 0;
-            if (preg_match("/^($blocktags)($this->a$this->c)\.(\.?)(?::(\S+))? (.*)$/Ss", $line, $m)) {
+            if (preg_match("/^($blocktags)($this->a$this->c)\.(\.?)(?::(\S+))? (.*)$/Ss", $block, $m)) {
                 // Last block was extended, so close it
                 if ($ext) {
                     $out[count($out)-1] .= $c1;
@@ -1962,33 +1977,33 @@ class Textile
 
                 // Leave off c1 if this block is extended, we'll close it at the start of the next block
                 if ($ext) {
-                    $line = $o1.$o2.$content.$c2;
+                    $block = $o1.$o2.$content.$c2;
                 } else {
-                    $line = $o1.$o2.$content.$c2.$c1;
+                    $block = $o1.$o2.$content.$c2.$c1;
                 }
             } else {
                 // Anonymous block
                 $anon = 1;
-                if ($ext || !preg_match('/^ /', $line)) {
-                    list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0, $tag, $atts, $ext, $cite, $line));
+                if ($ext || !preg_match('/^ /', $block)) {
+                    list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0, $tag, $atts, $ext, $cite, $block));
                     // Skip $o1/$c1 because this is part of a continuing extended block
                     if ($tag == 'p' && !$this->hasRawText($content)) {
-                        $line = $content;
+                        $block = $content;
                     } else {
-                        $line = $o2.$content.$c2;
+                        $block = $o2.$content.$c2;
                     }
                 } else {
-                    $line = $this->graf($line);
+                    $block = $this->graf($block);
                 }
             }
 
-            $line = $this->doPBr($line);
-            $line = $whitespace . preg_replace('/<br>/', '<br />', $line);
+            $block = $this->doPBr($block);
+            $block = $whitespace . preg_replace('/<br>/', '<br />', $block);
 
             if ($ext && $anon) {
-                $out[count($out)-1] .= $line;
+                $out[count($out)-1] .= $block;
             } elseif (!$eat) {
-                $out[] = $line;
+                $out[] = $block;
             }
 
             if ($eat) {
@@ -3231,7 +3246,7 @@ class Textile
 
     /**
      * Replaces glyphs in the given input.
-     * 
+     *
      * This method performs typographical glyph replacements. The input is split
      * across HTML-like tags in order to avoid attempting glyph
      * replacements within tags.
