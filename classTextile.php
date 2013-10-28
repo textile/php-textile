@@ -2592,15 +2592,14 @@ class Textile
         }
 
         // Build the link (if any).
-        $_ = '<span id="noteref'.$refid.'">'.$num.'</span>';
+        $out = '<span id="noteref'.$refid.'">'.$num.'</span>';
+
         if (!$nolink) {
-            $_ = '<a href="#note'.$id.'">'.$_.'</a>';
+            $out = '<a href="#note'.$id.'">'.$out.'</a>';
         }
 
         // Build the reference.
-        $_ = $this->replaceMarkers($this->symbols['nl_ref_pattern'], array('atts' => $atts, 'marker' => $_));
-
-        return $_;
+        return $this->replaceMarkers($this->symbols['nl_ref_pattern'], array('atts' => $atts, 'marker' => $out));
     }
 
     /**
@@ -3293,7 +3292,9 @@ class Textile
             '<'        => 'left',
             '='        => 'center',
             '>'        => 'right',
-            '<>'       => 'justify');
+            '<>'       => 'justify',
+        );
+
         return (isset($vals[$in])) ? $vals[$in] : '';
     }
 
@@ -3309,7 +3310,9 @@ class Textile
         $vals = array(
             '^' => 'top',
             '-' => 'middle',
-            '~' => 'bottom');
+            '~' => 'bottom',
+        );
+
         return (isset($vals[$in])) ? $vals[$in] : '';
     }
 
