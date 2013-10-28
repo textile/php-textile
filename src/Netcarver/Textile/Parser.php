@@ -3221,7 +3221,9 @@ class Parser
             '<'        => 'left',
             '='        => 'center',
             '>'        => 'right',
-            '<>'       => 'justify');
+            '<>'       => 'justify',
+        );
+
         return (isset($vals[$in])) ? $vals[$in] : '';
     }
 
@@ -3237,7 +3239,9 @@ class Parser
         $vals = array(
             '^' => 'top',
             '-' => 'middle',
-            '~' => 'bottom');
+            '~' => 'bottom',
+        );
+
         return (isset($vals[$in])) ? $vals[$in] : '';
     }
 
