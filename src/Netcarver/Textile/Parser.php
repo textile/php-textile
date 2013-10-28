@@ -2341,7 +2341,7 @@ class Parser
 
         if (empty($this->notelist_cache[$index])) {
             // If not in cache, build the entry...
-            $o = array();
+            $out = array();
 
             if (!empty($this->notes)) {
                 foreach ($this->notes as $seq => $info) {
@@ -2350,9 +2350,9 @@ class Parser
                     if (!empty($info['def'])) {
                         $id = $info['id'];
                         extract($info['def']);
-                        $o[] = "\t".'<li'.$atts.'>'.$links.'<span id="note'.$id.'"> </span>'.$content.'</li>';
+                        $out[] = "\t".'<li'.$atts.'>'.$links.'<span id="note'.$id.'"> </span>'.$content.'</li>';
                     } else {
-                        $o[] = "\t".'<li'.$atts.'>'.$links.' Undefined Note [#'.$info['seq'].'].</li>';
+                        $out[] = "\t".'<li'.$atts.'>'.$links.' Undefined Note [#'.$info['seq'].'].</li>';
                     }
                 }
             }
@@ -2361,22 +2361,20 @@ class Parser
                 foreach ($this->unreferencedNotes as $seq => $info) {
                     if (!empty($info['def'])) {
                         extract($info['def']);
-                        $o[] = "\t".'<li'.$atts.'>'.$content.'</li>';
+                        $out[] = "\t".'<li'.$atts.'>'.$content.'</li>';
                     }
                 }
             }
 
-            $this->notelist_cache[$index] = join("\n", $o);
+            $this->notelist_cache[$index] = join("\n", $out);
         }
 
-        $_ = ($this->notelist_cache[$index]) ? $this->notelist_cache[$index] : '';
-
-        if (!empty($_)) {
+        if ($this->notelist_cache[$index]) {
             $list_atts = $this->parseAttribs($att);
-            $_ = "<ol$list_atts>\n$_\n</ol>";
+            return "<ol$list_atts>\n{$this->notelist_cache[$index]}\n</ol>";
         }
 
-        return $_;
+        return '';
     }
 
     /**
@@ -2413,15 +2411,16 @@ class Parser
         } elseif ($backlink_type === '^') {
             return '<sup><a href="#noteref'.$info['refids'][0].'">'.$i.'</a></sup>';
         } else {
-            $_ = array();
+            $out = array();
+
             foreach ($info['refids'] as $id) {
-                $_[] = '<sup><a href="#noteref'.$id.'">'. (($decode) ? $this->decodeHigh($i_) : $i_) .'</a></sup>';
+                $out[] = '<sup><a href="#noteref'.$id.'">'. (($decode) ? $this->decodeHigh($i_) : $i_) .'</a></sup>';
                 if ($allow_inc) {
                     $i_++;
                 }
             }
-            $_ = join(' ', $_);
-            return $_;
+
+            return join(' ', $out);
         }
     }
 
@@ -2522,15 +2521,14 @@ class Parser
         }
 
         // Build the link (if any).
-        $_ = '<span id="noteref'.$refid.'">'.$num.'</span>';
+        $out = '<span id="noteref'.$refid.'">'.$num.'</span>';
+
         if (!$nolink) {
-            $_ = '<a href="#note'.$id.'">'.$_.'</a>';
+            $out = '<a href="#note'.$id.'">'.$out.'</a>';
         }
 
         // Build the reference.
-        $_ = $this->replaceMarkers($this->symbols['nl_ref_pattern'], array('atts' => $atts, 'marker' => $_));
-
-        return $_;
+        return $this->replaceMarkers($this->symbols['nl_ref_pattern'], array('atts' => $atts, 'marker' => $out));
     }
 
     /**
