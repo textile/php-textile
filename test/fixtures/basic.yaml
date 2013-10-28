@@ -9,6 +9,73 @@ options:
   adaptor_options:
     restricted: false
 
+HTML tag case insensitivity & closure:
+  input: |
+    <hr>
+
+    <hr/>
+
+    <hr >
+
+    <hr />
+
+    <hr  >
+
+    <hr  />
+
+    <HR>
+
+    <HR/>
+
+    <HR >
+
+    <HR />
+
+    <HR  >
+
+    <HR  />
+
+    <p>Hello World!</p>
+
+    <P>Hello World!</P>
+
+    <P>Hello World!</p>
+
+    <p>Hello World!</P>
+
+  expect: |
+    <hr>
+
+    <hr/>
+
+    <hr >
+
+    <hr />
+
+    <hr  >
+
+    <hr  />
+
+    <HR>
+
+    <HR/>
+
+    <HR >
+
+    <HR />
+
+    <HR  >
+
+    <HR  />
+
+    <p>Hello World!</p>
+
+    <P>Hello World!</P>
+
+    <P>Hello World!</p>
+
+    <p>Hello World!</P>
+
 Mixed HTML & Textile:
   input : |
     <p>*foo*</p>
