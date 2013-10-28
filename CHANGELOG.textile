@@ -10,6 +10,7 @@ h2. Version 3.5.3 - upcoming
 * Fix memory leaking tag cache. Tag cache is never reset between @textileThis()@ and @textileRestricted()@ calls referencing the same instance.
 * Fix rare instances where a link displays a wrong URL mentioned elsewhere in the document.
 * Link aliases follow same allowed URL schemes as normal links.
+* Update @hasRawText()@ and @fPBr()@ to detect a wider range of raw HTML & XHTML
 
 h2. "Version 3.5.2 - 2013/10/25":https://github.com/textile/php-textile/releases/tag/v3.5.2
 

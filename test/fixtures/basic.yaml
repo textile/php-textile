@@ -9,6 +9,135 @@ options:
   adaptor_options:
     restricted: false
 
+
+hasRawText() tag case insensitivity & closure:
+  note: Although xhtml calls for lower-case tag names with all tags closed (even on void elements), Textile doesn't care if xhtml in its input is well formed, it just has to output it verbatim. Therefore we use the more relaxed HTML5 rules (allowing for mixed case element names) for detecting 'raw' input text. In addition, xhtml allows void tags to be closed like normal tags (so <hr></hr> is valid in xhtml) and Textile should let these through untouched too.
+  input: |
+    <hr>
+
+    <hr/>
+
+    <hr >
+
+    <hr />
+
+    <hr  >
+
+    <hr  />
+
+    <hr></hr>
+
+    <hr class="whatnot"></hr >
+
+    <hr  ></hr  >
+
+    <HR>
+
+    <HR/>
+
+    <HR >
+
+    <HR />
+
+    <HR  >
+
+    <HR  />
+
+    <img src="blahblah.jpg" />
+
+    <p>Hello World!</p>
+
+    <P>Hello World!</P>
+
+    <P>Hello World!</p>
+
+    <p>Hello World!</P>
+
+  expect: |
+    <hr>
+
+    <hr/>
+
+    <hr >
+
+    <hr />
+
+    <hr  >
+
+    <hr  />
+
+    <hr></hr>
+
+    <hr class="whatnot"></hr >
+
+    <hr  ></hr  >
+
+    <HR>
+
+    <HR/>
+
+    <HR >
+
+    <HR />
+
+    <HR  >
+
+    <HR  />
+
+    <img src="blahblah.jpg" />
+
+    <p>Hello World!</p>
+
+    <P>Hello World!</P>
+
+    <P>Hello World!</p>
+
+    <p>Hello World!</P>
+
+Case insensitive p breaks:
+  input : |
+    I spoke.
+    And none replied.
+
+    I spoke.<br>
+    And none replied.
+
+    I spoke.<br/>
+    And none replied.
+
+    I spoke.<br />
+    And none replied.
+
+    I spoke.<BR>
+    And none replied.
+
+    I spoke.<BR/>
+    And none replied.
+
+    I spoke.<BR />
+    And none replied.
+  expect: |
+    <p>I spoke.<br />
+    And none replied.</p>
+
+    <p>I spoke.<br />
+    And none replied.</p>
+
+    <p>I spoke.<br />
+    And none replied.</p>
+
+    <p>I spoke.<br />
+    And none replied.</p>
+
+    <p>I spoke.<br />
+    And none replied.</p>
+
+    <p>I spoke.<br />
+    And none replied.</p>
+
+    <p>I spoke.<br />
+    And none replied.</p>
+
 Mixed HTML & Textile:
   input : |
     <p>*foo*</p>

@@ -1457,8 +1457,8 @@ class Parser
 
     protected function hasRawText($text)
     {
-        $r = trim(preg_replace('@<(p|blockquote|div|form|table|ul|ol|dl|pre|h\d)[^>]*?'.chr(62).'.*</\1>@s', '', trim($text)));
-        $r = trim(preg_replace('@<(hr|br)[^>]*?/>@', '', $r));
+        $r = trim(preg_replace('@<(p|hr|br|img|blockquote|div|form|table|ul|ol|dl|pre|h\d)[^>]*?'.chr(62).'.*</\1[^>]*?>@si', '', trim($text)));
+        $r = trim(preg_replace('@<(br|hr|img)[^>]*?/?>@i', '', $r));
         return '' != $r;
     }
 
@@ -1822,7 +1822,8 @@ class Parser
 
     protected function fPBr($m)
     {
-        $content = preg_replace("@((?!<br>\n|<br />\n))+\n(?![\s|])@", '$1<br />', $m[3]);
+        $tmp     = preg_replace("~<br\s*/?>\s*\n(?![\s|])~i", "\n", $m[3]);  // Normalise <br/>\n(not space or |) -> \n(not space or |)
+        $content = preg_replace("/\n(?![\s|])/", '<br />', $tmp);           // then \n(not space or |) -> <br />
         return '<'.$m[1].$m[2].'>'.$content.$m[4];
     }
 
