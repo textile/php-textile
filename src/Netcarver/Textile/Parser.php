@@ -1857,7 +1857,7 @@ class Parser
     {
         $blocktags = join('|', $this->blocktag_whitelist);
 
-        $text = preg_split('/(\n{2,})/', $text, null, PREG_SPLIT_DELIM_CAPTURE);
+        $textblocks = preg_split('/(\n{2,})/', $text, null, PREG_SPLIT_DELIM_CAPTURE);
 
         $tag  = 'p';
         $atts = '';
@@ -1870,19 +1870,19 @@ class Parser
 
         $out  = array();
 
-        foreach ($text as $key => $line) {
+        foreach ($textblocks as $key => $block) {
 
             // Line is just whitespace, keep it for the next block.
-            if (trim($line) === '') {
+            if (trim($block) === '') {
                 if ($eatWhitespace === false) {
-                    $whitespace .= $line;
+                    $whitespace .= $block;
                 }
                 continue;
             }
 
             $eatWhitespace = false;
             $anon = 0;
-            if (preg_match("/^($blocktags)($this->a$this->c)\.(\.?)(?::(\S+))? (.*)$/Ss", $line, $m)) {
+            if (preg_match("/^($blocktags)($this->a$this->c)\.(\.?)(?::(\S+))? (.*)$/Ss", $block, $m)) {
                 // Last block was extended, so close it
                 if ($ext) {
                     $out[count($out)-1] .= $c1;
@@ -1894,33 +1894,33 @@ class Parser
 
                 // Leave off c1 if this block is extended, we'll close it at the start of the next block
                 if ($ext) {
-                    $line = $o1.$o2.$content.$c2;
+                    $block = $o1.$o2.$content.$c2;
                 } else {
-                    $line = $o1.$o2.$content.$c2.$c1;
+                    $block = $o1.$o2.$content.$c2.$c1;
                 }
             } else {
                 // Anonymous block
                 $anon = 1;
-                if ($ext || !preg_match('/^ /', $line)) {
-                    list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0, $tag, $atts, $ext, $cite, $line));
+                if ($ext || !preg_match('/^ /', $block)) {
+                    list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0, $tag, $atts, $ext, $cite, $block));
                     // Skip $o1/$c1 because this is part of a continuing extended block
                     if ($tag == 'p' && !$this->hasRawText($content)) {
-                        $line = $content;
+                        $block = $content;
                     } else {
-                        $line = $o2.$content.$c2;
+                        $block = $o2.$content.$c2;
                     }
                 } else {
-                    $line = $this->graf($line);
+                    $block = $this->graf($block);
                 }
             }
 
-            $line = $this->doPBr($line);
-            $line = $whitespace . preg_replace('/<br>/', '<br />', $line);
+            $block = $this->doPBr($block);
+            $block = $whitespace . preg_replace('/<br>/', '<br />', $block);
 
             if ($ext && $anon) {
-                $out[count($out)-1] .= $line;
+                $out[count($out)-1] .= $block;
             } elseif (!$eat) {
-                $out[] = $line;
+                $out[] = $block;
             }
 
             if ($eat) {
@@ -3163,7 +3163,7 @@ class Parser
 
     /**
      * Replaces glyphs in the given input.
-     * 
+     *
      * This method performs typographical glyph replacements. The input is split
      * across HTML-like tags in order to avoid attempting glyph
      * replacements within tags.
