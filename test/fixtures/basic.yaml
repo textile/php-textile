@@ -94,6 +94,50 @@ hasRawText() tag case insensitivity & closure:
 
     <p>Hello World!</P>
 
+Case insensitive p breaks:
+  input : |
+    I spoke.
+    And none replied.
+
+    I spoke.<br>
+    And none replied.
+
+    I spoke.<br/>
+    And none replied.
+
+    I spoke.<br />
+    And none replied.
+
+    I spoke.<BR>
+    And none replied.
+
+    I spoke.<BR/>
+    And none replied.
+
+    I spoke.<BR />
+    And none replied.
+  expect: |
+    <p>I spoke.<br />
+    And none replied.</p>
+
+    <p>I spoke.<br />
+    And none replied.</p>
+
+    <p>I spoke.<br />
+    And none replied.</p>
+
+    <p>I spoke.<br />
+    And none replied.</p>
+
+    <p>I spoke.<br />
+    And none replied.</p>
+
+    <p>I spoke.<br />
+    And none replied.</p>
+
+    <p>I spoke.<br />
+    And none replied.</p>
+
 Mixed HTML & Textile:
   input : |
     <p>*foo*</p>
