@@ -1457,8 +1457,8 @@ class Parser
 
     protected function hasRawText($text)
     {
-        $r = trim(preg_replace('@<(p|blockquote|div|form|table|ul|ol|dl|pre|h\d)[^>]*?'.chr(62).'.*</\1>@si', '', trim($text)));
-        $r = trim(preg_replace('@<(hr|br)[^>]*?/?>@i', '', $r));
+        $r = trim(preg_replace('@<(p|hr|br|img|blockquote|div|form|table|ul|ol|dl|pre|h\d)[^>]*?'.chr(62).'.*</\1[^>]*?>@si', '', trim($text)));
+        $r = trim(preg_replace('@<(br|hr|img)[^>]*?/?>@i', '', $r));
         return '' != $r;
     }
 

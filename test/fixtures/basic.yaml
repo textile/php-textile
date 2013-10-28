@@ -9,7 +9,9 @@ options:
   adaptor_options:
     restricted: false
 
+
 HTML tag case insensitivity & closure:
+  note: Although xhtml calls for lower-case tag names with all tags closed (even on void elements), it isn't necessary for Textile to care if the xhtml is well formed. Therefore we use the more relaxed HTML5 rules. However, xhtml also allows void tags to be closed like normal tags (so <hr></hr> is valid in xhtml) therefore Textile has to let that through untouched too.
   input: |
     <hr>
 
@@ -23,6 +25,12 @@ HTML tag case insensitivity & closure:
 
     <hr  />
 
+    <hr></hr>
+
+    <hr class="whatnot"></hr >
+
+    <hr  ></hr  >
+
     <HR>
 
     <HR/>
@@ -34,6 +42,8 @@ HTML tag case insensitivity & closure:
     <HR  >
 
     <HR  />
+
+    <img src="blahblah.jpg" />
 
     <p>Hello World!</p>
 
@@ -56,6 +66,12 @@ HTML tag case insensitivity & closure:
 
     <hr  />
 
+    <hr></hr>
+
+    <hr class="whatnot"></hr >
+
+    <hr  ></hr  >
+
     <HR>
 
     <HR/>
@@ -67,6 +83,8 @@ HTML tag case insensitivity & closure:
     <HR  >
 
     <HR  />
+
+    <img src="blahblah.jpg" />
 
     <p>Hello World!</p>
 
