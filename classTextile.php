@@ -497,7 +497,7 @@ class Textile
     protected $s;
 
     /**
-     * ?
+     * Pattern that matches a class, style, language and horisontal alignment attributes.
      *
      * @var string
      */
@@ -2111,6 +2111,14 @@ class Textile
         return array($o1, $o2, $content, $c2, $c1, $eat);
     }
 
+    /**
+     * Formats a footnote.
+     *
+     * @param  string $marker The marker
+     * @param  string $atts   Attributes
+     * @param  bool   $anchor TRUE, if its a reference link
+     * @return string Processed footnote
+     */
 
     protected function formatFootnote($marker, $atts = '', $anchor = true)
     {
@@ -2118,6 +2126,13 @@ class Textile
         return $this->replaceMarkers($pattern, array('atts' => $atts, 'marker' => $marker));
     }
 
+    /**
+     * Replaces markers with replacements in the given input.
+     *
+     * @param  string $text         The input
+     * @param  array  $replacements Marker replacement pairs
+     * @return string
+     */
 
     protected function replaceMarkers($text, $replacements)
     {
@@ -2129,6 +2144,15 @@ class Textile
         return $text;
     }
 
+    /**
+     * Parses HTML comments in the given input.
+     *
+     * This method finds HTML comments in the given input
+     * and replaces them with reference tokens.
+     *
+     * @param  string $text Textile input
+     * @return string $text Processed input
+     */
 
     protected function getHTMLComments($text)
     {
@@ -2144,6 +2168,15 @@ class Textile
         return $text;
     }
 
+    /**
+     * Formats a HTML comment.
+     *
+     * Stores the comment on the shelf and returns
+     * a reference token wrapped in to a HTML comment.
+     *
+     * @param  array  $m Options
+     * @return string Reference token wrapped to a HTML comment tags
+     */
 
     protected function fParseHTMLComments($m)
     {
@@ -2157,6 +2190,12 @@ class Textile
         return "<!--$content-->";
     }
 
+    /**
+     * Parses paragraphs in the given input.
+     *
+     * @param  string $text Textile input
+     * @return string Processed input
+     */
 
     protected function graf($text)
     {
@@ -2231,6 +2270,13 @@ class Textile
         return $text;
     }
 
+    /**
+     * Formats a span tag and stores it on the shelf.
+     *
+     * @param  array  $m Options
+     * @return string Content wrapped to reference tokens
+     * @see    Textile::spans()
+     */
 
     protected function fSpan($m)
     {
@@ -2254,6 +2300,13 @@ class Textile
         return $out;
     }
 
+    /**
+     * Stores a tag pair in the tag cache.
+     *
+     * @param  string $opentag  Opening tag
+     * @param  string $closetag Closing tag
+     * @return array  Reference tokens for both opening and closing tag
+     */
 
     protected function storeTags($opentag, $closetag = '')
     {
@@ -2270,6 +2323,16 @@ class Textile
         return $tags;
     }
 
+    /**
+     * Replaces reference tokens with corresponding shelved span tags.
+     *
+     * This method puts all shelved span tags back to the final,
+     * parsed input.
+     *
+     * @param  string $text The input
+     * @return string Processed text
+     * @see    Textile::storeTags()
+     */
 
     protected function retrieveTags($text)
     {
@@ -2291,6 +2354,16 @@ class Textile
         return $this->refCache[$m[1]];
     }
 
+    /**
+     * Parses note lists in the given input.
+     *
+     * This method should be ran after other blocks
+     * have been processed, but before reference tokens
+     * have been replaced with their replacements.
+     *
+     * @param  string $text Textile input
+     * @return string Processed input
+     */
 
     protected function placeNoteLists($text)
     {
@@ -2321,6 +2394,12 @@ class Textile
         return $text;
     }
 
+    /**
+     * Formats a note list.
+     *
+     * @param  array  $m Options
+     * @return string Processed note list
+     */
 
     protected function fNoteLists($m)
     {
@@ -2371,6 +2450,17 @@ class Textile
         return $_;
     }
 
+    /**
+     * Renders a note back reference link.
+     *
+     * This method renders an array of back reference
+     * links for notes.
+     *
+     * @param  array  $info    Options
+     * @param  string $g_links Reference type
+     * @param  int    $i       Instance count
+     * @return string Processed input
+     */
 
     protected function makeBackrefLink(&$info, $g_links, $i)
     {
@@ -2406,6 +2496,16 @@ class Textile
         }
     }
 
+    /**
+     * Formats note definitions.
+     *
+     * This method formats notes and stores them in
+     * note cache for later use and to build reference
+     * links.
+     *
+     * @param  array  $m Options
+     * @return string Empty string
+     */
 
     protected function fParseNoteDefs($m)
     {
@@ -2427,6 +2527,15 @@ class Textile
         return '';
     }
 
+    /**
+     * Parses note references in the given input.
+     *
+     * This method replaces note reference tags with
+     * links.
+     *
+     * @param  string $text Textile input
+     * @return string
+     */
 
     protected function noteRefs($text)
     {
@@ -2445,13 +2554,19 @@ class Textile
         return $text;
     }
 
+    /**
+     * Formats note reference links.
+     *
+     * By the time this function is called, all note lists will have been
+     * processed into the notes array, and we can resolve the link numbers in
+     * the order we process the references.
+     *
+     * @param  array  $m Options
+     * @return string Note reference
+     */
 
     protected function fParseNoteRefs($m)
     {
-        // By the time this function is called, all the defs will have been processed
-        // into the notes array. So now we can resolve the link numbers in the order
-        // we process the refs...
-
         list(, $atts, $label, $nolink) = $m;
         $atts = $this->parseAttribs($atts);
         $nolink = ($nolink === '!');
@@ -2465,7 +2580,7 @@ class Textile
         }
 
         // Make our anchor point & stash it for possible use in backlinks when the
-        // note list is generated later...
+        // note list is generated later.
         $refid = uniqid(rand());
         $this->notes[$label]['refids'][] = $refid;
 
@@ -2477,13 +2592,13 @@ class Textile
             $id = $this->notes[$label]['id'];
         }
 
-        // Build the link (if any)...
+        // Build the link (if any).
         $_ = '<span id="noteref'.$refid.'">'.$num.'</span>';
         if (!$nolink) {
             $_ = '<a href="#note'.$id.'">'.$_.'</a>';
         }
 
-        // Build the reference...
+        // Build the reference.
         $_ = $this->replaceMarkers($this->symbols['nl_ref_pattern'], array('atts' => $atts, 'marker' => $_));
 
         return $_;
@@ -2788,6 +2903,7 @@ class Textile
     /**
      * Completes and formats a URL.
      *
+     * @param  string $url The URL
      * @return string
      */
 
@@ -3016,12 +3132,31 @@ class Textile
         return $out;
     }
 
+    /**
+     * Uses the specified callback method to format the content between end and start nodes.
+     *
+     * @param  string $text   The input to format
+     * @param  string $start  The start node to look for
+     * @param  string $end    The end node to look for
+     * @param  string $method The callback method
+     * @return string Processed input
+     */
 
     protected function doSpecial($text, $start, $end, $method = 'fSpecial')
     {
         return preg_replace_callback('/(^|\s|[|[({>])'.preg_quote($start, '/').'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}|])?/ms', array(&$this, $method), $text);
     }
 
+    /**
+     * Formats blocks that should display HTML as text.
+     *
+     * Convert special characters to HTML entities. This
+     * is the default formatted used by doSpecial method.
+     *
+     * @param  array $m Options
+     * @return string Formatted input
+     * @see    Parser::doSpecial()
+     */
 
     protected function fSpecial($m)
     {
@@ -3097,7 +3232,7 @@ class Textile
 
     /**
      * Replaces glyphs in the given input.
-     *
+     * 
      * This method performs typographical glyph replacements. The input is split
      * across HTML-like tags in order to avoid attempting glyph
      * replacements within tags.
@@ -3179,12 +3314,28 @@ class Textile
         return (isset($vals[$in])) ? $vals[$in] : '';
     }
 
+    /**
+     * Converts character codes in the given input from HTML numeric character reference to character code.
+     *
+     * Conversion is done according to Textile's multi-byte conversion map.
+     *
+     * @param  string $text    The input
+     * @param  string $charset The character set
+     * @return string Processed input
+     */
 
     protected function encodeHigh($text, $charset = 'UTF-8')
     {
         return ($this->mb) ? mb_encode_numericentity($text, $this->cmap, $charset) : htmlentities($text, ENT_NOQUOTES, $charset);
     }
 
+    /**
+     * Converts numeric HTML character references to character code.
+     *
+     * @param  string $text    The input
+     * @param  string $charset The character set
+     * @return string Processed input
+     */
 
     protected function decodeHigh($text, $charset = 'UTF-8')
     {
