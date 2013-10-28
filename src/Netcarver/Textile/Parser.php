@@ -2682,8 +2682,9 @@ class Parser
     {
         list(, $pre, $atts, $text, $title, $url, $slash, $post, $tail) = $m;
 
-        // Strip any ':' or '?' characters from the end of the url and return them to $post. This seems to be needed
-        // when using the unicode version of the word character class in the regex.
+        // Strip any ':' or '?' characters from the end of the URL and return them
+        // to $post. This seems to be needed when using the unicode version of the
+        // word character class in the regex.
         $a = array();
         if (preg_match('/^(.*)([?:]+)$/'.$this->regex_snippets['mod'], $url, $a)) {
             $url   = $a[1];
@@ -2715,7 +2716,8 @@ class Parser
         $text  = trim($text);
         $title = $this->encodeHTML($title);
 
-        // If the text was in parenthesis and there was no title then the regex will have an empty $text and a non-empty $title so...
+        // If the text was in parenthesis and there was no title, then the regex
+        // will have an empty $text and a non-empty $title.
         if (empty($text) && !empty($title)) {
             $text  = "($title)";
             $title = '';
