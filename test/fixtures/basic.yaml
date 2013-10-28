@@ -10,8 +10,8 @@ options:
     restricted: false
 
 
-HTML tag case insensitivity & closure:
-  note: Although xhtml calls for lower-case tag names with all tags closed (even on void elements), it isn't necessary for Textile to care if the xhtml is well formed. Therefore we use the more relaxed HTML5 rules. However, xhtml also allows void tags to be closed like normal tags (so <hr></hr> is valid in xhtml) therefore Textile has to let that through untouched too.
+hasRawText() tag case insensitivity & closure:
+  note: Although xhtml calls for lower-case tag names with all tags closed (even on void elements), it isn't necessary for Textile to care if the xhtml is well formed, merely to output it verbatim. Therefore we use the more relaxed HTML5 for detecting 'raw' text to echo. However, xhtml also allows void tags to be closed like normal tags (so <hr></hr> is valid in xhtml) therefore Textile should let this through untouched too.
   input: |
     <hr>
 
