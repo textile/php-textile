@@ -2685,10 +2685,10 @@ class Parser
         // Strip any ':' or '?' characters from the end of the URL and return them
         // to $post. This seems to be needed when using the unicode version of the
         // word character class in the regex.
-        $a = array();
-        if (preg_match('/^(.*)([?:]+)$/'.$this->regex_snippets['mod'], $url, $a)) {
-            $url   = $a[1];
-            $post .= $a[2];
+
+        if (preg_match('/^(.*)([?:]+)$/'.$this->regex_snippets['mod'], $url, $matches)) {
+            $url   = $matches[1];
+            $post .= $matches[2];
         }
 
         $uri_parts = array();
