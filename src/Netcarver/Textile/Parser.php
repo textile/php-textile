@@ -1822,7 +1822,7 @@ class Parser
 
     protected function fPBr($m)
     {
-        $tmp     = preg_replace("~<br\s*/?>\s*\n(?![\s|])~i", "\n", $m[3]);  // Normalise <br/>\n(not space or |) -> \n(not space or |)
+        $tmp     = preg_replace("~<br\s*/?>\s*\n(?![\s|])~i", "\n", $m[3]); // Normalise <br/>\n(not space or |) -> \n(not space or |)
         $content = preg_replace("/\n(?![\s|])/", '<br />', $tmp);           // then \n(not space or |) -> <br />
         return '<'.$m[1].$m[2].'>'.$content.$m[4];
     }

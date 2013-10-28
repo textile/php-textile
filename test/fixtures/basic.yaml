@@ -9,7 +9,6 @@ options:
   adaptor_options:
     restricted: false
 
-
 hasRawText() tag case insensitivity & closure:
   note: Although xhtml calls for lower-case tag names with all tags closed (even on void elements), Textile doesn't care if xhtml in its input is well formed, it just has to output it verbatim. Therefore we use the more relaxed HTML5 rules (allowing for mixed case element names) for detecting 'raw' input text. In addition, xhtml allows void tags to be closed like normal tags (so <hr></hr> is valid in xhtml) and Textile should let these through untouched too.
   input: |
