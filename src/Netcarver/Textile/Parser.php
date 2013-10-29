@@ -1746,7 +1746,7 @@ class Parser
                     $lists[$tl] = 2; // We're already in a <dl> so flag not to start another
                 }
 
-                $tabs = str_repeat("\t", strlen($tl));
+                $tabs = str_repeat("\t", strlen($tl)-1);
                 $atts = $this->parseAttribs($atts);
                 if (!isset($lists[$tl])) {
                     $lists[$tl] = 1;
@@ -1852,7 +1852,7 @@ class Parser
 
     protected function fBr($m)
     {
-        $content = preg_replace("@(.+)(?<!<br>|<br />)\n(?![#*;:\s|])@", '$1<br />', $m[3]);
+        $content = preg_replace("@(.+)(?<!<br>|<br />|</li>|</dd>|</dt>)\n(?![#*;:\s|])@", '$1<br />', $m[3]);
         return '<'.$m[1].$m[2].'>'.$content.$m[4];
     }
 
