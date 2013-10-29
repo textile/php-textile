@@ -1337,7 +1337,6 @@ class Textile
     {
         $out = '';
         $o = $this->parseAttribsToArray($in, $element, $include_id, $autoclass);
-        ksort($o);
 
         if (count($o)) {
             foreach ($o as $k => $v) {
@@ -1459,6 +1458,7 @@ class Textile
                 $o['lang']  = $this->cleanAttribs($lang);
             }
 
+            ksort($o);
             return $o;
         } else {
             $class = trim($class . ' ' . $autoclass);
@@ -1516,6 +1516,7 @@ class Textile
             $o['width'] = $this->cleanAttribs($width);
         }
 
+        ksort($o);
         return $o;
     }
 
