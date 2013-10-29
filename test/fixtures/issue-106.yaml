@@ -1,0 +1,70 @@
+adaptor: textile
+options:
+  showfailures: true
+  showpasses: true
+  showdiffs: true
+  debug: false
+  format: html
+  adaptor_options:
+    restricted: false
+
+Issue 106:
+  input  : |
+    __(think)__ and __(talk)__
+
+    __(think)think__ and __(talk)talk__
+
+  expect : |
+    <p><i>(think)</i> and <i>(talk)</i></p>
+
+    <p><i class="think">think</i> and <i class="talk">talk</i></p>
+
+All span patterns with and without classes:
+  input  : |
+    __(think)__ and __(talk)__ and *(walk)* or *(run)* or _(sleep)_ and _(dream_of_sheep)_
+
+    ~(think)~ and ~(talk)~ and ^(walk)^ or ^(run)^ or %(sleep)% and %(dream_of_sheep)%
+
+    -(think)- and -(talk)- and +(walk)+ or +(run)+ or **(sleep)** and **(dream_of_sheep)**
+
+    ??(think)?? and ??(talk)??
+
+    __(c)(think)__ and __(c)(talk)__ and *(c)(walk)* or *(c)(run)* or _(c)(sleep)_ and _(c)(dream_of_sheep)_
+
+    ~(c)(think)~ and ~(c)(talk)~ and ^(c)(walk)^ or ^(c)(run)^ or %(c)(sleep)% and %(c)(dream_of_sheep)%
+
+    -(c)(think)- and -(c)(talk)- and +(c)(walk)+ or +(c)(run)+ or **(c)(sleep)** and **(c)(dream_of_sheep)**
+
+    ??(c)(think)?? and ??(c)(talk)??
+
+  expect : |
+    <p><i>(think)</i> and <i>(talk)</i> and <strong>(walk)</strong> or <strong>(run)</strong> or <em>(sleep)</em> and <em>(dream_of_sheep)</em></p>
+
+    <p><sub>(think)</sub> and <sub>(talk)</sub> and <sup>(walk)</sup> or <sup>(run)</sup> or <span>(sleep)</span> and <span>(dream_of_sheep)</span></p>
+
+    <p><del>(think)</del> and <del>(talk)</del> and <ins>(walk)</ins> or <ins>(run)</ins> or <b>(sleep)</b> and <b>(dream_of_sheep)</b></p>
+
+    <p><cite>(think)</cite> and <cite>(talk)</cite></p>
+
+    <p><i class="c">(think)</i> and <i class="c">(talk)</i> and <strong class="c">(walk)</strong> or <strong class="c">(run)</strong> or <em class="c">(sleep)</em> and <em class="c">(dream_of_sheep)</em></p>
+
+    <p><sub class="c">(think)</sub> and <sub class="c">(talk)</sub> and <sup class="c">(walk)</sup> or <sup class="c">(run)</sup> or <span class="c">(sleep)</span> and <span class="c">(dream_of_sheep)</span></p>
+
+    <p><del class="c">(think)</del> and <del class="c">(talk)</del> and <ins class="c">(walk)</ins> or <ins class="c">(run)</ins> or <b class="c">(sleep)</b> and <b class="c">(dream_of_sheep)</b></p>
+
+    <p><cite class="c">(think)</cite> and <cite class="c">(talk)</cite></p>
+
+Expanded patterns with other attributes:
+  input  : |
+    __[think]__ and __{talk}__ and *[walk]* or *{run}* or _[sleep]_ and _{dream_of_sheep}_
+
+    ~[think]~ and ~{talk}~ and ^[walk]^ or ^{run}^ or %[sleep]% and %{dream_of_sheep}%
+
+    __[en][think]__ and __(c)[talk]__ and *[en](walk)* or *(c){run}* or _[en](sleep)_ and _(c)[dream_of_sheep]_
+
+  expect : |
+    <p><i>[think]</i> and <i>{talk}</i> and <strong>[walk]</strong> or <strong>{run}</strong> or <em>[sleep]</em> and <em>{dream_of_sheep}</em></p>
+
+    <p><sub>[think]</sub> and <sub>{talk}</sub> and <sup>[walk]</sup> or <sup>{run}</sup> or <span>[sleep]</span> and <span>{dream_of_sheep}</span></p>
+
+    <p><i lang="en">[think]</i> and <i class="c">[talk]</i> and <strong lang="en">(walk)</strong> or <strong class="c">{run}</strong> or <em lang="en">(sleep)</em> and <em class="c">[dream_of_sheep]</em></p>
