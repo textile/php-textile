@@ -1266,7 +1266,6 @@ class Parser
     {
         $out = '';
         $o = $this->parseAttribsToArray($in, $element, $include_id, $autoclass);
-        ksort($o);
 
         if (count($o)) {
             foreach ($o as $k => $v) {
@@ -1388,6 +1387,7 @@ class Parser
                 $o['lang']  = $this->cleanAttribs($lang);
             }
 
+            ksort($o);
             return $o;
         } else {
             $class = trim($class . ' ' . $autoclass);
@@ -1445,6 +1445,7 @@ class Parser
             $o['width'] = $this->cleanAttribs($width);
         }
 
+        ksort($o);
         return $o;
     }
 
