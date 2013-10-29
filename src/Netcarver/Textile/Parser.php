@@ -1510,7 +1510,7 @@ class Parser
                     continue;
                 }
             }
-    
+
             $c_row += 1;
 
             // Colgroup
@@ -1519,13 +1519,13 @@ class Parser
                 // will be a newline in the middle of $row somewhere.
                 $nl = strpos($row, "\n");
                 $idx = 0;
-    
+
                 foreach (explode('|', str_replace('.', '', $gmtch[1])) as $col) {
                     $gatts = $this->parseAttribs(trim($col), 'col');
                     $colgrp .= "\t<col".(($idx==0) ? "group".$gatts.">" : $gatts." />")."\n";
                     $idx++;
                 }
-    
+
                 $colgrp .= "\t</colgroup>\n";
 
                 if ($nl === false) {
