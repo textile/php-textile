@@ -2194,17 +2194,17 @@ class Parser
         $this->span_depth++;
 
         if ($this->span_depth <= $this->max_span_depth) {
-            foreach ($span_tags as $f) {
-                $f = preg_quote($f);
+            foreach ($span_tags as $tag) {
+                $tag = preg_quote($tag);
                 $text = preg_replace_callback(
                     "/
                     (^|(?<=[\s>$pnct\(])|[{[])            # pre
-                    ($f)(?!$f)                            # tag
+                    ($tag)(?!$tag)                        # tag
                     ({$this->lc})                         # atts - do not use horizontal alignment; it kills html tags within inline elements.
                     (?::(\S+))?                           # cite
-                    ([^\s$f]+|\S.*?[^\s$f\n])             # content
+                    ([^\s$tag]+|\S.*?[^\s$tag\n])         # content
                     ([$pnct]*)                            # end
-                    $f
+                    $tag
                     ($|[\[\]}<]|(?=[$pnct]{1,2}[^0-9]|\s|\)))  # tail
                     /x".$this->regex_snippets['mod'],
                     array(&$this, "fSpan"),
