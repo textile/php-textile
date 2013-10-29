@@ -2026,7 +2026,7 @@ class Parser
             $cite = $this->shelveURL($cite);
             $cite = ($cite != '') ? ' cite="' . $cite . '"' : '';
             $o1 = "<blockquote$cite$atts>\n";
-            $o2 = "\t\t<p".$this->parseAttribs($att, '', 0).">";
+            $o2 = "\t<p".$this->parseAttribs($att, '', 0).">";
             $c2 = "</p>";
             $c1 = "\n</blockquote>";
         } elseif ($tag == 'bc') {
