@@ -1,0 +1,26 @@
+adaptor: textile
+options:
+  showfailures: true
+  showpasses: true
+  showdiffs: true
+  debug: false
+  format: html
+  adaptor_options:
+    restricted: false
+
+Citations are strange beasts:
+  input  : |
+    bq.:http://textpattern.com/ Code is pottery.
+
+    ??:http://textpattern.com Code is pottery.??
+
+    Please, add visual feedback to link _:active_ and _:hover_ events
+
+  expect : |
+    <blockquote cite="http://textpattern.com/">
+    	<p>Code is pottery.</p>
+    </blockquote>
+
+    <p><cite cite="http://textpattern.com">Code is pottery.</cite></p>
+    
+    <p>Please, add visual feedback to link <em>:active</em> and <em>:hover</em> events</p>
