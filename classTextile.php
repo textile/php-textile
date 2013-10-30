@@ -411,7 +411,7 @@ class Textile
      * @var string
      */
 
-    protected $ver = '2.5.2';
+    protected $ver = '2.5.3';
 
     /**
      * Regular expression snippets.
