@@ -1441,7 +1441,6 @@ Foreign character and quote support :
 
     <p><span class="caps">SÆLGES</span> d&#8217;être</p>
 
-
 Code blocks, pre and exclusions :
   input : |
     bc(input). You can't _*touch*_ *_this_*... Hammer time.
@@ -1680,7 +1679,6 @@ Ordered Lists:
     #22 22
     # 23
     # 24
-
 
   expect: |
     <p>test</p>
@@ -2247,7 +2245,6 @@ Redcloth Definition list:
     - fabric
     - cloth := woven threads
 
-
   expect: |
     <dl>
     	<dt class="hot"><strong>coffee</strong></dt>
@@ -2688,7 +2685,6 @@ Note Links.:
     	<li><sup><a href="#noteref">a</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
     	<li><sup><a href="#noteref">a</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
     </ol>
-
 
 Unlinked Note References with backlinked and unreferenced defs.:
   input: |
