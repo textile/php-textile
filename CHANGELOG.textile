@@ -15,6 +15,7 @@ h2. Version 3.5.3 - upcoming
 * Unify attribute order with Redcloth.
 * Reduce list and blockquote indentation level to match paragraphs and other block tags.
 * Restrict how spans are parsed (closes "#106":https://github.com/textile/php-textile/issues/106.)
+* Fix citations on spans (closes "#120":https://github.com/textile/php-textile/issues/120.)
 
 h2. "Version 3.5.2 - 2013/10/25":https://github.com/textile/php-textile/releases/tag/v3.5.2
 
