@@ -2356,14 +2356,14 @@ Complex definition list:
     bq. Don't suck the brown stuff off of 2 pence coins; it ain't chocolate.
   expect : |
     <blockquote>
-    		<p>Don&#8217;t suck the brown stuff off of 2 pence coins; it ain&#8217;t chocolate.</p>
+    	<p>Don&#8217;t suck the brown stuff off of 2 pence coins; it ain&#8217;t chocolate.</p>
     </blockquote>
 1-line blockquote 2:
   input  : |
     bq. Don't suck the **brown stuff(tm)** off of "2 pence":http://royalmint.gov.uk coins; it ain't chocolate.
   expect : |
     <blockquote>
-    		<p>Don&#8217;t suck the <b>brown stuff&#8482;</b> off of <a href="http://royalmint.gov.uk">2 pence</a> coins; it ain&#8217;t chocolate.</p>
+    	<p>Don&#8217;t suck the <b>brown stuff&#8482;</b> off of <a href="http://royalmint.gov.uk">2 pence</a> coins; it ain&#8217;t chocolate.</p>
     </blockquote>
 n-line blockquote:
   input  : |
@@ -2372,7 +2372,7 @@ n-line blockquote:
     p. That's all.
   expect : |
     <blockquote>
-    		<p>Don&#8217;t suck the <b>brown stuff&#8482;</b> off of <a href="http://royalmint.gov.uk">2 pence</a> coins; it ain&#8217;t chocolate.</p>
+    	<p>Don&#8217;t suck the <b>brown stuff&#8482;</b> off of <a href="http://royalmint.gov.uk">2 pence</a> coins; it ain&#8217;t chocolate.</p>
     </blockquote>
 
     <p>That&#8217;s all.</p>
@@ -2382,7 +2382,7 @@ Blockquote with citation source :
     bq.:http://textism.com/ Text...
   expect : |
     <blockquote cite="http://textism.com/">
-    		<p>Text&#8230;</p>
+    	<p>Text&#8230;</p>
     </blockquote>
 
 All capitals comment post :
