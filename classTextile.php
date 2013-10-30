@@ -1335,11 +1335,24 @@ class Textile
 
     protected function parseAttribs($in, $element = '', $include_id = true, $autoclass = '')
     {
-        $out = '';
         $o = $this->parseAttribsToArray($in, $element, $include_id, $autoclass);
 
-        if (count($o)) {
-            foreach ($o as $k => $v) {
+        return $this->formatAttributeString($o);
+    }
+
+    /**
+     * Converts an array of named attribute => value mappings to a string.
+     *
+     * @param array $attribute_array
+     * @return string
+     */
+
+    protected function formatAttributeString(array $attribute_array)
+    {
+        $out = '';
+
+        if (count($attribute_array)) {
+            foreach ($attribute_array as $k => $v) {
                 $out .= " $k=\"$v\"";
             }
         }
@@ -2301,8 +2314,13 @@ class Textile
         list(, $pre, $tag, $atts, $cite, $content, $end, $tail) = $m;
 
         $tag  = $this->span_tags[$tag];
-        $atts = $this->parseAttribs($atts);
-        $atts .= ($cite != '') ? ' cite="' . trim($cite) . '"' : '';
+
+        $atts = $this->parseAttribsToArray($atts);
+        if ($cite != '') {
+            $atts['cite'] = trim($cite);
+            ksort($atts);
+        }
+        $atts = $this->formatAttributeString($atts);
 
         $content = $this->spans($content);
 
