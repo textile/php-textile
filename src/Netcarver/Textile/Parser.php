@@ -2243,8 +2243,13 @@ class Parser
         list(, $pre, $tag, $atts, $cite, $content, $end, $tail) = $m;
 
         $tag  = $this->span_tags[$tag];
-        $atts = $this->parseAttribs($atts);
-        $atts .= ($cite != '') ? ' cite="' . trim($cite) . '"' : '';
+
+        $atts = $this->parseAttribsToArray($atts);
+        if ($cite != '') {
+            $atts['cite'] = trim($cite);
+            ksort($atts);
+        }
+        $atts = $this->formatAttributeString($atts);
 
         $content = $this->spans($content);
 

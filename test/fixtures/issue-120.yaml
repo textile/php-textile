@@ -31,4 +31,4 @@ Citations are strange beasts:
 
     <p>Please, add visual feedback to link <em cite="active">active</em> and <em cite="hover">hover</em> events</p>
 
-    <p>Please, add visual feedback to link <em class="c" lang="en" cite="active">:active</em> and <em cite="hover">:hover</em> events</p>
+    <p>Please, add visual feedback to link <em cite="active" class="c" lang="en">:active</em> and <em cite="hover">:hover</em> events</p>
