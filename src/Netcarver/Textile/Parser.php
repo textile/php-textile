@@ -392,7 +392,7 @@ class Parser
     protected $styl = "(?:\{[^}\n]+\})";
 
     /**
-     * ?
+     * Regular expression pattern for column spans in tables.
      *
      * @var string
      */
@@ -400,7 +400,7 @@ class Parser
     protected $cspn = "(?:\\\\\d+)";
 
     /**
-     * ?
+     * Regular expression for row spans in tables.
      *
      * @var string
      */
