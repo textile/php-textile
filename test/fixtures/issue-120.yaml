@@ -16,6 +16,10 @@ Citations are strange beasts:
 
     Please, add visual feedback to link _:active_ and _:hover_ events
 
+    Please, add visual feedback to link _:active active_ and _:hover hover_ events
+
+    Please, add visual feedback to link _(c)[en]:active :active_ and _:hover :hover_ events
+
   expect : |
     <blockquote cite="http://textpattern.com/">
     	<p>Code is pottery.</p>
@@ -24,3 +28,7 @@ Citations are strange beasts:
     <p><cite cite="http://textpattern.com">Code is pottery.</cite></p>
     
     <p>Please, add visual feedback to link <em>:active</em> and <em>:hover</em> events</p>
+
+    <p>Please, add visual feedback to link <em cite="active">active</em> and <em cite="hover">hover</em> events</p>
+
+    <p>Please, add visual feedback to link <em class="c" lang="en" cite="active">:active</em> and <em cite="hover">:hover</em> events</p>
