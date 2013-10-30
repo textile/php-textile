@@ -2273,7 +2273,7 @@ class Textile
                     ($tag)(?!$tag)                        # tag
                     ({$this->lc})                         # atts - do not use horizontal alignment; it kills html tags within inline elements.
                     (?!$tag)
-                    (?::(\S+))?                           # cite
+                    (?::(\S+[^$tag]\s))?                  # cite
                     ([^\s$tag]+|\S.*?[^\s$tag\n])         # content
                     ([$pnct]*)                            # end
                     $tag
@@ -2302,7 +2302,7 @@ class Textile
 
         $tag  = $this->span_tags[$tag];
         $atts = $this->parseAttribs($atts);
-        $atts .= ($cite != '') ? 'cite="' . $cite . '"' : '';
+        $atts .= ($cite != '') ? ' cite="' . trim($cite) . '"' : '';
 
         $content = $this->spans($content);
 
