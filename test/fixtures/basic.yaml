@@ -418,9 +418,9 @@ Other Ruud stuff :
 
     <p>**</p>
 
-    	<ul>
-    		<li>item1</li>
-    	</ul>
+    <ul>
+    	<li>item1</li>
+    </ul>
 
 Punctuation:
   input  : |
@@ -1616,30 +1616,30 @@ Basic Ordered List:
     ## black
     # blue
   expect: |
+    <ol>
+    	<li>Ordered</li>
+    	<li>List</li>
+    	<li>Live
     	<ol>
-    		<li>Ordered</li>
-    		<li>List</li>
-    		<li>Live
-    		<ol>
-    			<li>Including<br />
+    		<li>Including<br />
     some newline</li>
-    			<li>And underlings</li>
-    		</ol></li>
-    		<li>&#8230; aaaaand back out</li>
-    	</ol>
+    		<li>And underlings</li>
+    	</ol></li>
+    	<li>&#8230; aaaaand back out</li>
+    </ol>
 
     <p>And here we are with some <em class="alt">Other colours</em></p>
 
+    <ol>
+    	<li>red
     	<ol>
-    		<li>red
-    		<ol>
-    			<li>greeny<br />
+    		<li>greeny<br />
     browny<br />
     pinkish</li>
-    			<li>black</li>
-    		</ol></li>
-    		<li>blue</li>
-    	</ol>
+    		<li>black</li>
+    	</ol></li>
+    	<li>blue</li>
+    </ol>
 
 Ordered Lists:
   input:  |
@@ -1685,51 +1685,51 @@ Ordered Lists:
   expect: |
     <p>test</p>
 
-    	<ol class="first" id="list" start="1">
-    		<li>one</li>
-    		<li>two</li>
-    		<li>three</li>
-    	</ol>
+    <ol class="first" id="list" start="1">
+    	<li>one</li>
+    	<li>two</li>
+    	<li>three</li>
+    </ol>
 
     <p>test</p>
 
-    	<ol class="ordered" id="list2">
-    		<li>one</li>
-    		<li>two</li>
-    		<li>three</li>
-    	</ol>
+    <ol class="ordered" id="list2">
+    	<li>one</li>
+    	<li>two</li>
+    	<li>three</li>
+    </ol>
 
     <p>test</p>
 
-    	<ol class="class_4" start="4">
-    		<li>four</li>
-    		<li>five</li>
-    		<li>six</li>
-    	</ol>
+    <ol class="class_4" start="4">
+    	<li>four</li>
+    	<li>five</li>
+    	<li>six</li>
+    </ol>
 
     <p>test</p>
 
-    	<ol start="7">
-    		<li>seven</li>
-    		<li>eight</li>
-    		<li>nine</li>
-    	</ol>
+    <ol start="7">
+    	<li>seven</li>
+    	<li>eight</li>
+    	<li>nine</li>
+    </ol>
 
     <p>test</p>
 
-    	<ol>
-    		<li>one</li>
-    		<li>two</li>
-    		<li>three</li>
-    	</ol>
+    <ol>
+    	<li>one</li>
+    	<li>two</li>
+    	<li>three</li>
+    </ol>
 
     <p>test</p>
 
-    	<ol start="22">
-    		<li>22</li>
-    		<li>23</li>
-    		<li>24</li>
-    	</ol>
+    <ol start="22">
+    	<li>22</li>
+    	<li>23</li>
+    	<li>24</li>
+    </ol>
 
 Multi-level ordered list with continuation:
   input:  |
@@ -1758,34 +1758,34 @@ Multi-level ordered list with continuation:
   expect: |
     <p>test</p>
 
-    	<ol>
-    		<li>one
-    		<ol start="3">
-    			<li>one.three</li>
-    			<li>one.four</li>
-    			<li>one.five</li>
-    		</ol></li>
-    		<li>two</li>
-    	</ol>
+    <ol>
+    	<li>one
+    	<ol start="3">
+    		<li>one.three</li>
+    		<li>one.four</li>
+    		<li>one.five</li>
+    	</ol></li>
+    	<li>two</li>
+    </ol>
 
     <p>test</p>
 
-    	<ol class="continuation" id="section2" start="3">
-    		<li>three</li>
-    		<li>four
-    		<ol start="6">
-    			<li>four.six</li>
-    			<li>four.seven</li>
-    		</ol></li>
-    		<li>five</li>
-    	</ol>
+    <ol class="continuation" id="section2" start="3">
+    	<li>three</li>
+    	<li>four
+    	<ol start="6">
+    		<li>four.six</li>
+    		<li>four.seven</li>
+    	</ol></li>
+    	<li>five</li>
+    </ol>
 
     <p>test</p>
 
-    	<ol start="21">
-    		<li>twenty-one</li>
-    		<li>twenty-two</li>
-    	</ol>
+    <ol start="21">
+    	<li>twenty-one</li>
+    	<li>twenty-two</li>
+    </ol>
 
 Basic Unordered lists:
   input: |
@@ -1805,23 +1805,23 @@ Basic Unordered lists:
   expect: |
     <h3>How about some unordered goodness?</h3>
 
-    	<ul class="class">
-    		<li>Bullet</li>
-    		<li>List</li>
-    		<li>Here
-    		<ul>
-    			<li>With</li>
-    			<li>Subs</li>
-    		</ul></li>
-    		<li>and regulars</li>
-    	</ul>
+    <ul class="class">
+    	<li>Bullet</li>
+    	<li>List</li>
+    	<li>Here
+    	<ul>
+    		<li>With</li>
+    		<li>Subs</li>
+    	</ul></li>
+    	<li>and regulars</li>
+    </ul>
 
     <p><em>colours</em></p>
 
-    	<ul>
-    		<li>yellow</li>
-    		<li>cyan</li>
-    	</ul>
+    <ul>
+    	<li>yellow</li>
+    	<li>cyan</li>
+    </ul>
 
 Mixed lists:
   input  : |
@@ -1840,23 +1840,23 @@ Mixed lists:
   expect : |
     <p>test</p>
 
-    	<ul>
-    		<li>bullet
-    		<ol>
-    			<li>number</li>
-    			<li>number
-    			<ul>
-    				<li>bullet</li>
-    			</ul></li>
-    			<li>number</li>
-    			<li>number with<br />
-    a break</li>
-    		</ol></li>
-    		<li>bullet
+    <ul>
+    	<li>bullet
+    	<ol>
+    		<li>number</li>
+    		<li>number
     		<ul>
-    			<li>okay</li>
+    			<li>bullet</li>
     		</ul></li>
-    		</ul>
+    		<li>number</li>
+    		<li>number with<br />
+    a break</li>
+    	</ol></li>
+    	<li>bullet
+    	<ul>
+    		<li>okay</li>
+    	</ul></li>
+    	</ul>
 
 Issue 61... Spans in tables :
   input  : |
@@ -2165,17 +2165,17 @@ Lists in tables:
   expect: |
     <table>
     		<tr>
-    			<td>	<ul>
-    		<li>Foo<sup>2</sup></li>
-    		<li><em>bar</em></li>
-    		<li><sub>baz</sub></li>
-    	</ul></td>
+    			<td><ul>
+    	<li>Foo<sup>2</sup></li>
+    	<li><em>bar</em></li>
+    	<li><sub>baz</sub></li>
+    </ul></td>
     		</tr>
     		<tr>
-    			<td>	<ol start="4">
-    		<li><strong>Four</strong></li>
-    		<li><i>Five</i></li>
-    	</ol></td>
+    			<td><ol start="4">
+    	<li><strong>Four</strong></li>
+    	<li><i>Five</i></li>
+    </ol></td>
     		</tr>
     		<tr>
     			<td><dl>
@@ -2185,27 +2185,27 @@ Lists in tables:
     	<dd>Also hot, but a little less black</dd>
     	<dt class="cold">milk</dt>
     	<dd><p>Nourishing beverage for baby cows.<br />
-    Cold drink that goes great with cookies.</p></dd><br />
+    Cold drink that goes great with cookies.</p></dd>
     </dl></td>
     		</tr>
     		<tr>
-    			<td>	<ul>
-    		<li>bullet
-    		<ol>
-    			<li>number</li>
-    			<li>number
-    			<ul>
-    				<li>bullet</li>
-    			</ul></li>
-    			<li>number</li>
-    			<li>number with<br />
-    a break</li>
-    		</ol></li>
-    		<li>bullet
+    			<td><ul>
+    	<li>bullet
+    	<ol>
+    		<li>number</li>
+    		<li>number
     		<ul>
-    			<li>okay</li>
+    			<li>bullet</li>
     		</ul></li>
-    		</ul></td>
+    		<li>number</li>
+    		<li>number with<br />
+    a break</li>
+    	</ol></li>
+    	<li>bullet
+    	<ul>
+    		<li>okay</li>
+    	</ul></li>
+    	</ul></td>
     		</tr>
     </table>
 
@@ -2216,12 +2216,12 @@ Simple Definition lists:
     : Def 2
     : Def 3
   expect: |
-    	<dl class="class" id="id">
-    		<dt>Term 1</dt>
-    		<dd>Def 1</dd>
-    		<dd>Def 2</dd>
-    		<dd>Def 3</dd>
-    	</dl>
+    <dl class="class" id="id">
+    	<dt>Term 1</dt>
+    	<dd>Def 1</dd>
+    	<dd>Def 2</dd>
+    	<dd>Def 3</dd>
+    </dl>
 
 Redcloth Definition list:
   input:  |
@@ -2318,38 +2318,38 @@ Complex definition list:
   expect: |
     <h2>A definition list</h2>
 
-    	<dl class="class" id="id">
-    		<dt>Term 1</dt>
-    		<dd>Def 1</dd>
-    		<dd>Def 2</dd>
-    		<dd>Def 3
+    <dl class="class" id="id">
+    	<dt>Term 1</dt>
+    	<dd>Def 1</dd>
+    	<dd>Def 2</dd>
+    	<dd>Def 3
+    	<dl>
+    		<dt>Center</dt>
+    		<dt><acronym title="Why Em Cee Ayy"><span class="caps">NATO</span></acronym></dt>
+    		<dd>Subdef 1</dd>
+    		<dd>Subdef 2
     		<dl>
-    			<dt>Center</dt>
-    			<dt><acronym title="Why Em Cee Ayy"><span class="caps">NATO</span></acronym></dt>
-    			<dd>Subdef 1</dd>
-    			<dd>Subdef 2
-    			<dl>
-    				<dt>SubSub Term</dt>
-    				<dd>SubSub Def 1</dd>
-    				<dd>SubSub Def 2</dd>
-    				<dd>Subsub Def 3<br />
+    			<dt>SubSub Term</dt>
+    			<dd>SubSub Def 1</dd>
+    			<dd>SubSub Def 2</dd>
+    			<dd>Subsub Def 3<br />
     With newline</dd>
-    				<dd>Subsub Def 4</dd>
-    			</dl></dd>
-    			<dd>Subdef 3</dd>
+    			<dd>Subsub Def 4</dd>
     		</dl></dd>
-    		<dd><span class="caps">DEF</span> 4</dd>
-    		<dt>Term 2</dt>
-    		<dd>Another def</dd>
-    		<dd>And another</dd>
-    		<dd>One more
-    		<dl>
-    			<dd>A def without a term</dd>
-    			<dd>More defness</dd>
-    		</dl></dd>
-    		<dt>Third term for good measure</dt>
-    		<dd>My definition of a boombastic jazz</dd>
-    	</dl>
+    		<dd>Subdef 3</dd>
+    	</dl></dd>
+    	<dd><span class="caps">DEF</span> 4</dd>
+    	<dt>Term 2</dt>
+    	<dd>Another def</dd>
+    	<dd>And another</dd>
+    	<dd>One more
+    	<dl>
+    		<dd>A def without a term</dd>
+    		<dd>More defness</dd>
+    	</dl></dd>
+    	<dt>Third term for good measure</dt>
+    	<dd>My definition of a boombastic jazz</dd>
+    </dl>
 
 1-line blockquote :
   input  : |
@@ -2820,9 +2820,9 @@ Smileys still smileys? :
     dark side<br />
     :) </p>
 
-    	<dl class="c" lang="de">
-    		<dt>Item</dt>
-    	</dl>
+    <dl class="c" lang="de">
+    	<dt>Item</dt>
+    </dl>
 
 Styles on phrase modifiers :
   input:  |
@@ -3040,20 +3040,20 @@ Tight tables... :
     			<td> is </td>
     			<td> a </td>
     			<td> row </td>
-    			<td> 	<ul>
-    		<li>with a list</li>
-    		<li>inside it</li>
-    	</ul></td>
+    			<td> <ul>
+    	<li>with a list</li>
+    	<li>inside it</li>
+    </ul></td>
     		</tr>
     		<tr>
     			<td>This</td>
     			<td>is</td>
     			<td>a</td>
     			<td>row</td>
-    			<td>	<ul>
-    		<li>with a list</li>
-    		<li>inside it</li>
-    	</ul></td>
+    			<td><ul>
+    	<li>with a list</li>
+    	<li>inside it</li>
+    </ul></td>
     		</tr>
     </table>
 
@@ -3238,9 +3238,9 @@ Empty things... :
 
     <p>&amp; &amp;</p>
 
-    	<ul>
-    		<li>*</li>
-    	</ul>
+    <ul>
+    	<li>*</li>
+    </ul>
 
     <p>_ _</p>
 
@@ -3268,21 +3268,21 @@ Empty things... :
 
     <p><code> </code></p>
 
-    	<ol>
-    		<li>#</li>
-    	</ol>
+    <ol>
+    	<li>#</li>
+    </ol>
 
     <p>$ $</p>
 
     <p>! !</p>
 
-    	<dl>
-    		<dd>:</dd>
-    	</dl>
+    <dl>
+    	<dd>:</dd>
+    </dl>
 
-    	<dl>
-    		<dt>;</dt>
-    	</dl>
+    <dl>
+    	<dt>;</dt>
+    </dl>
 
     <p>. .</p>
 
