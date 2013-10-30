@@ -2272,6 +2272,7 @@ class Textile
                     (^|(?<=[\s>$pnct\(])|[{[])            # pre
                     ($tag)(?!$tag)                        # tag
                     ({$this->lc})                         # atts - do not use horizontal alignment; it kills html tags within inline elements.
+                    (?!$tag)
                     (?::(\S+))?                           # cite
                     ([^\s$tag]+|\S.*?[^\s$tag\n])         # content
                     ([$pnct]*)                            # end
