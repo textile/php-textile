@@ -487,6 +487,7 @@ Punctuation:
     <p>Here is a <span class="example">&#8216;spanned&#8217;</span> word.</p>
 
     <p>The <acronym title="National Health Service"><span class="caps">NHS</span></acronym>&#8217; charter states&#8230;</p>
+
 Dashes and ellipsis :
   notes  : |
       '--' should be replaced with em-dash, ' - ' with en-dash (but not inside another sequence of characters) and '...' with elipsis.
@@ -568,6 +569,7 @@ Tricky Open Quotes... :
     <p>Hello {&#8216;(mum) &amp; dad&#8217;}, see&#8230;</p>
 
     <p>[&#8216;Well, well (well)&#8217;] &#8230;</p>
+
 Notextile :
   input  : |
     ==*no* <b>textile</b>==
@@ -1131,6 +1133,7 @@ Links :
     <p><a class="linkclass" href="linkurl" id="linkid" lang="de-de" title="Link Title"><img alt="img/link text" class="imgclass" id="imgid" src="imgurl" title="img/link text" /></a></p>
 
     <p><a class="myclass" href="http://slashdot.org/">(just in case you were wondering)</a></p>
+
 Unicode Links :
   input  : |
     "Übermensch":https://de.wikipedia.org/wiki/Übermensch
