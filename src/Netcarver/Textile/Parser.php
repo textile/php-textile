@@ -2116,11 +2116,7 @@ class Parser
     protected function getHTMLComments($text)
     {
         $text = preg_replace_callback(
-            "/
-            \<!--    #  start
-            (.*?)    # !content *not* greedy
-            -->      #  end
-            /sx",
+            "/\<!--(?P<content>.*?)-->/sx",
             array(&$this, "fParseHTMLComments"),
             $text
         );
@@ -2139,14 +2135,11 @@ class Parser
 
     protected function fParseHTMLComments($m)
     {
-        list(, $content) = $m;
         if ($this->restricted) {
-            $content = $this->shelve($this->rEncodeHTML($content));
-        } else {
-            $content = $this->shelve($content);
+            $m['content'] = $this->rEncodeHTML($m['content']);
         }
 
-        return "<!--$content-->";
+        return '<!--'.$this->shelve($m['content']).'-->';
     }
 
     /**
