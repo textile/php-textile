@@ -3147,7 +3147,7 @@ class Parser
 
     protected function footnoteRefs($text)
     {
-        return preg_replace_callback('/(?<=\S)\[(\d+)(!?)\]\s?/U'.$this->regex_snippets['mod'], array(&$this, 'footnoteID'), $text);
+        return preg_replace_callback('/(?<=\S)\[(?P<id>\d+)(?P<nolink>!?)\]\s?/U'.$this->regex_snippets['mod'], array(&$this, 'footnoteID'), $text);
     }
 
     /**
@@ -3159,16 +3159,15 @@ class Parser
 
     protected function footnoteID($m)
     {
-        list(, $id, $nolink) = array_pad($m, 3, '');
         $backref = ' class="footnote"';
 
-        if (empty($this->fn[$id])) {
-            $this->fn[$id] = $a = uniqid(rand());
-            $backref .= " id=\"fnrev$a\"";
+        if (empty($this->fn[$m['id']])) {
+            $this->fn[$m['id']] = $id = uniqid(rand());
+            $backref .= " id=\"fnrev$id\"";
         }
 
-        $fnid = $this->fn[$id];
-        $footref = ('!' == $nolink) ? $id : '<a href="#fn'.$fnid.'">'.$id.'</a>';
+        $fnid = $this->fn[$m['id']];
+        $footref = ('!' == $m['nolink']) ? $m['id'] : '<a href="#fn'.$fnid.'">'.$m['id'].'</a>';
         $footref = $this->formatFootnote($footref, $backref, false);
 
         return $footref;
