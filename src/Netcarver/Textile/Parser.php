@@ -2765,7 +2765,7 @@ class Parser
             $pattern[] = preg_quote($scheme.':', '/');
         }
 
-        $pattern = '/^\[(.+)\]((?:'.join('|', $pattern).'|\/)\S+)(?=\s|$)/Um';
+        $pattern = '/^\[(?P<alias>.+)\](?P<url>(?:'.join('|', $pattern).'|\/)\S+)(?=\s|$)/Um';
         return preg_replace_callback($pattern.$this->regex_snippets['mod'], array(&$this, "refs"), $text);
     }
 
@@ -2779,11 +2779,10 @@ class Parser
 
     protected function refs($m)
     {
-        list(, $flag, $url) = $m;
         $uri_parts = array();
-        $this->parseURI($url, $uri_parts);
-        $url = ltrim($this->rebuildURI($uri_parts)); // Encodes URL if needed.
-        $this->urlrefs[$flag] = $url;
+        $this->parseURI($m['url'], $uri_parts);
+        // Encodes URL if needed.
+        $this->urlrefs[$m['alias']] = ltrim($this->rebuildURI($uri_parts));
         return '';
     }
 
