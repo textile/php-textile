@@ -2351,7 +2351,7 @@ class Parser
         }
 
         // Replace list markers...
-        $text = preg_replace_callback("@<p>notelist({$this->c})(?:\:([$wrd|{$this->syms}]))?([\^!]?)(\+?)\.?[\s]*</p>@U$mod", array(&$this, "fNoteLists"), $text);
+        $text = preg_replace_callback("@<p>notelist(?P<atts>{$this->c})(?:\:(?P<startchar>[$wrd|{$this->syms}]))?(?P<links>[\^!]?)(?P<extras>\+?)\.?[\s]*</p>@U$mod", array(&$this, "fNoteLists"), $text);
 
         return $text;
     }
@@ -2365,12 +2365,11 @@ class Parser
 
     protected function fNoteLists($m)
     {
-        list(, $att, $start_char, $g_links, $extras) = $m;
-        if (!$start_char) {
-            $start_char = 'a';
+        if (!$m['startchar']) {
+            $m['startchar'] = 'a';
         }
 
-        $index = $g_links.$extras.$start_char;
+        $index = $m['links'].$m['extras'].$m['startchar'];
 
         if (empty($this->notelist_cache[$index])) {
             // If not in cache, build the entry...
@@ -2378,7 +2377,7 @@ class Parser
 
             if (!empty($this->notes)) {
                 foreach ($this->notes as $seq => $info) {
-                    $links = $this->makeBackrefLink($info, $g_links, $start_char);
+                    $links = $this->makeBackrefLink($info, $m['links'], $m['startchar']);
                     $atts = '';
                     if (!empty($info['def'])) {
                         $id = $info['id'];
@@ -2390,7 +2389,7 @@ class Parser
                 }
             }
 
-            if ('+' == $extras && !empty($this->unreferencedNotes)) {
+            if ('+' == $m['extras'] && !empty($this->unreferencedNotes)) {
                 foreach ($this->unreferencedNotes as $seq => $info) {
                     if (!empty($info['def'])) {
                         extract($info['def']);
@@ -2403,8 +2402,8 @@ class Parser
         }
 
         if ($this->notelist_cache[$index]) {
-            $list_atts = $this->parseAttribs($att);
-            return "<ol$list_atts>\n{$this->notelist_cache[$index]}\n</ol>";
+            $atts = $this->parseAttribs($m['atts']);
+            return "<ol$atts>\n{$this->notelist_cache[$index]}\n</ol>";
         }
 
         return '';
