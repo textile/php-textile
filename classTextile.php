@@ -2187,11 +2187,7 @@ class Textile
     protected function getHTMLComments($text)
     {
         $text = preg_replace_callback(
-            "/
-            \<!--    #  start
-            (.*?)    # !content *not* greedy
-            -->      #  end
-            /sx",
+            "/\<!--(?P<content>.*?)-->/sx",
             array(&$this, "fParseHTMLComments"),
             $text
         );
@@ -2210,14 +2206,11 @@ class Textile
 
     protected function fParseHTMLComments($m)
     {
-        list(, $content) = $m;
         if ($this->restricted) {
-            $content = $this->shelve($this->rEncodeHTML($content));
-        } else {
-            $content = $this->shelve($content);
+            $m['content'] = $this->rEncodeHTML($m['content']);
         }
 
-        return "<!--$content-->";
+        return '<!--'.$this->shelve($m['content']).'-->';
     }
 
     /**
@@ -2282,15 +2275,15 @@ class Textile
                 $tag = preg_quote($tag);
                 $text = preg_replace_callback(
                     "/
-                    (^|(?<=[\s>$pnct\(])|[{[])            # pre
-                    ($tag)(?!$tag)                        # tag
-                    ({$this->lc})                         # atts - do not use horizontal alignment; it kills html tags within inline elements.
+                    (?P<pre>^|(?<=[\s>$pnct\(])|[{[])
+                    (?P<tag>$tag)(?!$tag)
+                    (?P<atts>{$this->lc})
                     (?!$tag)
-                    (?::(\S+[^$tag]\s))?                  # cite
-                    ([^\s$tag]+|\S.*?[^\s$tag\n])         # content
-                    ([$pnct]*)                            # end
+                    (?::(?P<cite>\S+[^$tag]\s))?
+                    (?P<content>[^\s$tag]+|\S.*?[^\s$tag\n])
+                    (?P<end>[$pnct]*)
                     $tag
-                    ($|[\[\]}<]|(?=[$pnct]{1,2}[^0-9]|\s|\)))  # tail
+                    (?P<tail>$|[\[\]}<]|(?=[$pnct]{1,2}[^0-9]|\s|\)))
                     /x".$this->regex_snippets['mod'],
                     array(&$this, "fSpan"),
                     $text
@@ -2311,26 +2304,23 @@ class Textile
 
     protected function fSpan($m)
     {
-        list(, $pre, $tag, $atts, $cite, $content, $end, $tail) = $m;
+        $tag = $this->span_tags[$m['tag']];
+        $atts = $this->parseAttribsToArray($m['atts']);
 
-        $tag  = $this->span_tags[$tag];
-
-        $atts = $this->parseAttribsToArray($atts);
-        if ($cite != '') {
-            $atts['cite'] = trim($cite);
+        if ($m['cite'] != '') {
+            $atts['cite'] = trim($m['cite']);
             ksort($atts);
         }
+
         $atts = $this->formatAttributeString($atts);
-
-        $content = $this->spans($content);
-
+        $content = $this->spans($m['content']);
         $opentag = '<'.$tag.$atts.'>';
         $closetag = '</'.$tag.'>';
         $tags = $this->storeTags($opentag, $closetag);
-        $out = "{$tags['open']}{$content}{$end}{$tags['close']}";
+        $out = "{$tags['open']}{$content}{$m['end']}{$tags['close']}";
 
-        if (($pre && !$tail) || ($tail && !$pre)) {
-            $out = $pre.$out.$tail;
+        if (($m['pre'] && !$m['tail']) || ($m['tail'] && !$m['pre'])) {
+            $out = $m['pre'].$out.$m['tail'];
         }
 
         return $out;
@@ -2372,8 +2362,8 @@ class Textile
 
     protected function retrieveTags($text)
     {
-        $text = preg_replace_callback('/'.$this->uid.'(\d+):ospan /', array(&$this, 'fRetrieveTags'), $text);
-        $text = preg_replace_callback('/ '.$this->uid.'(\d+):cspan/', array(&$this, 'fRetrieveTags'), $text);
+        $text = preg_replace_callback('/'.$this->uid.'(?P<token>\d+):ospan /', array(&$this, 'fRetrieveTags'), $text);
+        $text = preg_replace_callback('/ '.$this->uid.'(?P<token>\d+):cspan/', array(&$this, 'fRetrieveTags'), $text);
         return $text;
     }
 
@@ -2387,7 +2377,7 @@ class Textile
 
     protected function fRetrieveTags($m)
     {
-        return $this->refCache[$m[1]];
+        return $this->refCache[$m['token']];
     }
 
     /**
@@ -2425,7 +2415,7 @@ class Textile
         }
 
         // Replace list markers...
-        $text = preg_replace_callback("@<p>notelist({$this->c})(?:\:([$wrd|{$this->syms}]))?([\^!]?)(\+?)\.?[\s]*</p>@U$mod", array(&$this, "fNoteLists"), $text);
+        $text = preg_replace_callback("@<p>notelist(?P<atts>{$this->c})(?:\:(?P<startchar>[$wrd|{$this->syms}]))?(?P<links>[\^!]?)(?P<extras>\+?)\.?[\s]*</p>@U$mod", array(&$this, "fNoteLists"), $text);
 
         return $text;
     }
@@ -2439,12 +2429,11 @@ class Textile
 
     protected function fNoteLists($m)
     {
-        list(, $att, $start_char, $g_links, $extras) = $m;
-        if (!$start_char) {
-            $start_char = 'a';
+        if (!$m['startchar']) {
+            $m['startchar'] = 'a';
         }
 
-        $index = $g_links.$extras.$start_char;
+        $index = $m['links'].$m['extras'].$m['startchar'];
 
         if (empty($this->notelist_cache[$index])) {
             // If not in cache, build the entry...
@@ -2452,7 +2441,7 @@ class Textile
 
             if (!empty($this->notes)) {
                 foreach ($this->notes as $seq => $info) {
-                    $links = $this->makeBackrefLink($info, $g_links, $start_char);
+                    $links = $this->makeBackrefLink($info, $m['links'], $m['startchar']);
                     $atts = '';
                     if (!empty($info['def'])) {
                         $id = $info['id'];
@@ -2464,7 +2453,7 @@ class Textile
                 }
             }
 
-            if ('+' == $extras && !empty($this->unreferencedNotes)) {
+            if ('+' == $m['extras'] && !empty($this->unreferencedNotes)) {
                 foreach ($this->unreferencedNotes as $seq => $info) {
                     if (!empty($info['def'])) {
                         extract($info['def']);
@@ -2477,8 +2466,8 @@ class Textile
         }
 
         if ($this->notelist_cache[$index]) {
-            $list_atts = $this->parseAttribs($att);
-            return "<ol$list_atts>\n{$this->notelist_cache[$index]}\n</ol>";
+            $atts = $this->parseAttribs($m['atts']);
+            return "<ol$atts>\n{$this->notelist_cache[$index]}\n</ol>";
         }
 
         return '';
@@ -2575,14 +2564,7 @@ class Textile
     protected function noteRefs($text)
     {
         $text = preg_replace_callback(
-            "/
-            \[                   #  start
-            ({$this->c})         # !atts
-            \#
-            ([^\]!]+?)           # !label
-            ([!]?)               # !nolink
-            \]
-            /Ux",
+            "/\[(?P<atts>{$this->c})\#(?P<label>[^\]!]+?)(?P<nolink>[!]?)\]/Ux",
             array(&$this, "fParseNoteRefs"),
             $text
         );
@@ -2602,29 +2584,28 @@ class Textile
 
     protected function fParseNoteRefs($m)
     {
-        list(, $atts, $label, $nolink) = $m;
-        $atts = $this->parseAttribs($atts);
-        $nolink = ($nolink === '!');
+        $atts = $this->parseAttribs($m['atts']);
+        $nolink = ($m['nolink'] === '!');
 
         // Assign a sequence number to this reference if there isn't one already.
 
-        if (empty($this->notes[$label]['seq'])) {
-            $num = $this->notes[$label]['seq'] = ($this->note_index++);
+        if (empty($this->notes[$m['label']]['seq'])) {
+            $num = $this->notes[$m['label']]['seq'] = ($this->note_index++);
         } else {
-            $num = $this->notes[$label]['seq'];
+            $num = $this->notes[$m['label']]['seq'];
         }
 
         // Make our anchor point & stash it for possible use in backlinks when the
         // note list is generated later.
         $refid = uniqid(rand());
-        $this->notes[$label]['refids'][] = $refid;
+        $this->notes[$m['label']]['refids'][] = $refid;
 
         // If we are referencing a note that hasn't had the definition parsed yet, then assign it an ID.
 
-        if (empty($this->notes[$label]['id'])) {
-            $id = $this->notes[$label]['id'] = uniqid(rand());
+        if (empty($this->notes[$m['label']]['id'])) {
+            $id = $this->notes[$m['label']]['id'] = uniqid(rand());
         } else {
-            $id = $this->notes[$label]['id'];
+            $id = $this->notes[$m['label']]['id'];
         }
 
         // Build the link (if any).
@@ -2855,7 +2836,7 @@ class Textile
             $pattern[] = preg_quote($scheme.':', '/');
         }
 
-        $pattern = '/^\[(.+)\]((?:'.join('|', $pattern).'|\/)\S+)(?=\s|$)/Um';
+        $pattern = '/^\[(?P<alias>.+)\](?P<url>(?:'.join('|', $pattern).'|\/)\S+)(?=\s|$)/Um';
         return preg_replace_callback($pattern.$this->regex_snippets['mod'], array(&$this, "refs"), $text);
     }
 
@@ -2869,11 +2850,10 @@ class Textile
 
     protected function refs($m)
     {
-        list(, $flag, $url) = $m;
         $uri_parts = array();
-        $this->parseURI($url, $uri_parts);
-        $url = ltrim($this->rebuildURI($uri_parts)); // Encodes URL if needed.
-        $this->urlrefs[$flag] = $url;
+        $this->parseURI($m['url'], $uri_parts);
+        // Encodes URL if needed.
+        $this->urlrefs[$m['alias']] = ltrim($this->rebuildURI($uri_parts));
         return '';
     }
 
@@ -2911,7 +2891,7 @@ class Textile
 
     protected function retrieveURLs($text)
     {
-        return preg_replace_callback('/'.$this->uid.'(\d+):url/', array(&$this, 'retrieveURL'), $text);
+        return preg_replace_callback('/'.$this->uid.'(?P<token>\d+):url/', array(&$this, 'retrieveURL'), $text);
     }
 
     /**
@@ -2923,12 +2903,11 @@ class Textile
 
     protected function retrieveURL($m)
     {
-        $ref = $m[1];
-        if (!isset($this->refCache[$ref])) {
-            return $ref;
+        if (!isset($this->refCache[$m['token']])) {
+            return $m['token'];
         }
 
-        $url = $this->refCache[$ref];
+        $url = $this->refCache[$m['token']];
         if (isset($this->urlrefs[$url])) {
             $url = $this->urlrefs[$url];
         }
@@ -3090,8 +3069,7 @@ class Textile
 
     protected function fCode($m)
     {
-        list(, $before, $text, $after) = array_pad($m, 4, '');
-        return $before.$this->shelve('<code>'.$this->rEncodeHTML($text).'</code>').$after;
+        return $m['before'].$this->shelve('<code>'.$this->rEncodeHTML($m['content']).'</code>');
     }
 
     /**
@@ -3103,8 +3081,7 @@ class Textile
 
     protected function fPre($m)
     {
-        list(, $before, $text, $after) = array_pad($m, 4, '');
-        return $before.'<pre>'.$this->shelve($this->rEncodeHTML($text)).'</pre>'.$after;
+        return $m['before'].'<pre>'.$this->shelve($this->rEncodeHTML($m['content'])).'</pre>';
     }
 
     /**
@@ -3180,7 +3157,7 @@ class Textile
 
     protected function doSpecial($text, $start, $end, $method = 'fSpecial')
     {
-        return preg_replace_callback('/(^|\s|[|[({>])'.preg_quote($start, '/').'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}|])?/ms', array(&$this, $method), $text);
+        return preg_replace_callback('/(?P<before>^|\s|[|[({>])'.preg_quote($start, '/').'(?P<content>.*?)'.preg_quote($end, '/').'/ms', array(&$this, $method), $text);
     }
 
     /**
@@ -3196,9 +3173,7 @@ class Textile
 
     protected function fSpecial($m)
     {
-        // A special block like notextile or code
-        list(, $before, $text, $after) = array_pad($m, 4, '');
-        return $before.$this->shelve($this->encodeHTML($text)).$after;
+        return $m['before'].$this->shelve($this->encodeHTML($m['content']));
     }
 
     /**
@@ -3223,8 +3198,7 @@ class Textile
 
     protected function fTextile($m)
     {
-        list(, $before, $notextile, $after) = array_pad($m, 4, '');
-        return $before.$this->shelve($notextile).$after;
+        return $m['before'].$this->shelve($m['content']);
     }
 
     /**
@@ -3239,7 +3213,7 @@ class Textile
 
     protected function footnoteRefs($text)
     {
-        return preg_replace_callback('/(?<=\S)\[(\d+)(!?)\]\s?/U'.$this->regex_snippets['mod'], array(&$this, 'footnoteID'), $text);
+        return preg_replace_callback('/(?<=\S)\[(?P<id>\d+)(?P<nolink>!?)\]\s?/U'.$this->regex_snippets['mod'], array(&$this, 'footnoteID'), $text);
     }
 
     /**
@@ -3251,16 +3225,15 @@ class Textile
 
     protected function footnoteID($m)
     {
-        list(, $id, $nolink) = array_pad($m, 3, '');
         $backref = ' class="footnote"';
 
-        if (empty($this->fn[$id])) {
-            $this->fn[$id] = $a = uniqid(rand());
-            $backref .= " id=\"fnrev$a\"";
+        if (empty($this->fn[$m['id']])) {
+            $this->fn[$m['id']] = $id = uniqid(rand());
+            $backref .= " id=\"fnrev$id\"";
         }
 
-        $fnid = $this->fn[$id];
-        $footref = ('!' == $nolink) ? $id : '<a href="#fn'.$fnid.'">'.$id.'</a>';
+        $fnid = $this->fn[$m['id']];
+        $footref = ('!' == $m['nolink']) ? $m['id'] : '<a href="#fn'.$fnid.'">'.$m['id'].'</a>';
         $footref = $this->formatFootnote($footref, $backref, false);
 
         return $footref;
