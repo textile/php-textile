@@ -2820,7 +2820,7 @@ class Parser
 
     protected function retrieveURLs($text)
     {
-        return preg_replace_callback('/'.$this->uid.'(\d+):url/', array(&$this, 'retrieveURL'), $text);
+        return preg_replace_callback('/'.$this->uid.'(?P<token>\d+):url/', array(&$this, 'retrieveURL'), $text);
     }
 
     /**
@@ -2832,12 +2832,11 @@ class Parser
 
     protected function retrieveURL($m)
     {
-        $ref = $m[1];
-        if (!isset($this->refCache[$ref])) {
-            return $ref;
+        if (!isset($this->refCache[$m['token']])) {
+            return $m['token'];
         }
 
-        $url = $this->refCache[$ref];
+        $url = $this->refCache[$m['token']];
         if (isset($this->urlrefs[$url])) {
             $url = $this->urlrefs[$url];
         }
