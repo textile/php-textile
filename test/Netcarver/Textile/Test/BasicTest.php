@@ -10,8 +10,51 @@ class BasicTest extends \PHPUnit_Framework_TestCase
      * @dataProvider provider
      */
 
-    public function testAdd($expect, $input, $name)
+    public function testAdd($name, $test)
     {
+        if (isset($test['doctype'])) {
+            $textile = new Textile($test['doctype']);
+        }
+        else
+        {
+            $textile = new Textile();
+        }
+
+        if (isset($test['setup'][0])) {
+            foreach ($test['setup'][0] as $method => $value) {
+                $textile->$method($value);
+            }
+        }
+
+        if (isset($test['method'])) {
+            $method = trim($test['method']);
+        }
+        else {
+            $method = 'textileThis';
+        }
+
+        if (isset($test['arguments'][0])) {
+            $args = array_values($test['arguments'][0]);
+        }
+        else {
+            $args = array();
+        }
+
+        $expect = rtrim($test['expect']);
+        array_unshift($args, $test['input']);
+        $input = rtrim(call_user_func_array(array($textile, $method), $args));
+
+        foreach (array('expect', 'input') as $variable) {
+            $$variable = preg_replace(
+                array(
+                    '/ id="(fn|note)[a-z0-9]*"/',
+                    '/ href="#(fn|note)[a-z0-9]*"/',
+                ),
+                '',
+                $$variable
+            );
+        }
+
         $this->assertEquals($expect, $input, 'In section: '.$name);
     }
 
@@ -77,50 +120,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
                         continue;
                     }
 
-                    if (isset($test['doctype'])) {
-                        $textile = new Textile($test['doctype']);
-                    }
-                    else
-                    {
-                        $textile = new Textile();
-                    }
-
-                    if (isset($test['setup'][0])) {
-                        foreach ($test['setup'][0] as $method => $value) {
-                            $textile->$method($value);
-                        }
-                    }
-
-                    if (isset($test['method'])) {
-                        $method = trim($test['method']);
-                    }
-                    else {
-                        $method = 'textileThis';
-                    }
-
-                    if (isset($test['arguments'][0])) {
-                        $args = array_values($test['arguments'][0]);
-                    }
-                    else {
-                        $args = array();
-                    }
-
-                    $expect = rtrim($test['expect']);
-                    array_unshift($args, $test['input']);
-                    $input = rtrim(call_user_func_array(array($textile, $method), $args));
-
-                    foreach (array('expect', 'input') as $variable) {
-                        $$variable = preg_replace(
-                            array(
-                                '/ id="(fn|note)[a-z0-9]*"/',
-                                '/ href="#(fn|note)[a-z0-9]*"/',
-                            ),
-                            '',
-                            $$variable
-                        );
-                    }
-
-                    $out[] = array($expect, $input, $name);
+                    $out[] = array($name, $test);
                 }
             }
         }
