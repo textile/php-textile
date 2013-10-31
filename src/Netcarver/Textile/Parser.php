@@ -2998,6 +2998,7 @@ class Parser
 
     protected function fCode($m)
     {
+        $m = array_merge(array('after' => ''), $m);
         return $m['before'].$this->shelve('<code>'.$this->rEncodeHTML($m['content']).'</code>').$m['after'];
     }
 
@@ -3010,6 +3011,7 @@ class Parser
 
     protected function fPre($m)
     {
+        $m = array_merge(array('after' => ''), $m);
         return $m['before'].'<pre>'.$this->shelve($this->rEncodeHTML($m['content'])).'</pre>'.$m['after'];
     }
 
@@ -3102,6 +3104,7 @@ class Parser
 
     protected function fSpecial($m)
     {
+        $m = array_merge(array('after' => ''), $m);
         return $m['before'].$this->shelve($this->encodeHTML($m['content'])).$m['after'];
     }
 
@@ -3127,6 +3130,7 @@ class Parser
 
     protected function fTextile($m)
     {
+        $m = array_merge(array('after' => ''), $m);
         return $m['before'].$this->shelve($m['content']).$m['after'];
     }
 
