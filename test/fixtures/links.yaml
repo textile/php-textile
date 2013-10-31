@@ -1,0 +1,15 @@
+adaptor: textile
+options:
+  showfailures: true
+  showpasses: true
+  showdiffs: true
+  debug: false
+  format: html
+  adaptor_options:
+    restricted: false
+
+Redcloth links:
+  input  : |
+
+  expect : |
+
