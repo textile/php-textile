@@ -2500,14 +2500,7 @@ class Parser
     protected function noteRefs($text)
     {
         $text = preg_replace_callback(
-            "/
-            \[                   #  start
-            ({$this->c})         # !atts
-            \#
-            ([^\]!]+?)           # !label
-            ([!]?)               # !nolink
-            \]
-            /Ux",
+            "/\[(?P<atts>{$this->c})\#(?P<label>[^\]!]+?)(?P<nolink>[!]?)\]/Ux",
             array(&$this, "fParseNoteRefs"),
             $text
         );
@@ -2527,29 +2520,28 @@ class Parser
 
     protected function fParseNoteRefs($m)
     {
-        list(, $atts, $label, $nolink) = $m;
-        $atts = $this->parseAttribs($atts);
-        $nolink = ($nolink === '!');
+        $atts = $this->parseAttribs($m['atts']);
+        $nolink = ($m['nolink'] === '!');
 
         // Assign a sequence number to this reference if there isn't one already.
 
-        if (empty($this->notes[$label]['seq'])) {
-            $num = $this->notes[$label]['seq'] = ($this->note_index++);
+        if (empty($this->notes[$m['label']]['seq'])) {
+            $num = $this->notes[$m['label']]['seq'] = ($this->note_index++);
         } else {
-            $num = $this->notes[$label]['seq'];
+            $num = $this->notes[$m['label']]['seq'];
         }
 
         // Make our anchor point & stash it for possible use in backlinks when the
         // note list is generated later.
         $refid = uniqid(rand());
-        $this->notes[$label]['refids'][] = $refid;
+        $this->notes[$m['label']]['refids'][] = $refid;
 
         // If we are referencing a note that hasn't had the definition parsed yet, then assign it an ID.
 
-        if (empty($this->notes[$label]['id'])) {
-            $id = $this->notes[$label]['id'] = uniqid(rand());
+        if (empty($this->notes[$m['label']]['id'])) {
+            $id = $this->notes[$m['label']]['id'] = uniqid(rand());
         } else {
-            $id = $this->notes[$label]['id'];
+            $id = $this->notes[$m['label']]['id'];
         }
 
         // Build the link (if any).
