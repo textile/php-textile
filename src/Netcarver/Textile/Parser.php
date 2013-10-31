@@ -2211,15 +2211,15 @@ class Parser
                 $tag = preg_quote($tag);
                 $text = preg_replace_callback(
                     "/
-                    (^|(?<=[\s>$pnct\(])|[{[])            # pre
-                    ($tag)(?!$tag)                        # tag
-                    ({$this->lc})                         # atts - do not use horizontal alignment; it kills html tags within inline elements.
+                    (?P<pre>^|(?<=[\s>$pnct\(])|[{[])
+                    (?P<tag>$tag)(?!$tag)
+                    (?P<atts>{$this->lc})
                     (?!$tag)
-                    (?::(\S+[^$tag]\s))?                  # cite
-                    ([^\s$tag]+|\S.*?[^\s$tag\n])         # content
-                    ([$pnct]*)                            # end
+                    (?::(?P<cite>\S+[^$tag]\s))?
+                    (?P<content>[^\s$tag]+|\S.*?[^\s$tag\n])
+                    (?P<end>[$pnct]*)
                     $tag
-                    ($|[\[\]}<]|(?=[$pnct]{1,2}[^0-9]|\s|\)))  # tail
+                    (?P<tail>$|[\[\]}<]|(?=[$pnct]{1,2}[^0-9]|\s|\)))
                     /x".$this->regex_snippets['mod'],
                     array(&$this, "fSpan"),
                     $text
@@ -2240,26 +2240,23 @@ class Parser
 
     protected function fSpan($m)
     {
-        list(, $pre, $tag, $atts, $cite, $content, $end, $tail) = $m;
+        $tag = $this->span_tags[$m['tag']];
+        $atts = $this->parseAttribsToArray($m['atts']);
 
-        $tag  = $this->span_tags[$tag];
-
-        $atts = $this->parseAttribsToArray($atts);
-        if ($cite != '') {
-            $atts['cite'] = trim($cite);
+        if ($m['cite'] != '') {
+            $atts['cite'] = trim($m['cite']);
             ksort($atts);
         }
+
         $atts = $this->formatAttributeString($atts);
-
-        $content = $this->spans($content);
-
+        $content = $this->spans($m['content']);
         $opentag = '<'.$tag.$atts.'>';
         $closetag = '</'.$tag.'>';
         $tags = $this->storeTags($opentag, $closetag);
-        $out = "{$tags['open']}{$content}{$end}{$tags['close']}";
+        $out = "{$tags['open']}{$content}{$m['end']}{$tags['close']}";
 
-        if (($pre && !$tail) || ($tail && !$pre)) {
-            $out = $pre.$out.$tail;
+        if (($m['pre'] && !$m['tail']) || ($m['tail'] && !$m['pre'])) {
+            $out = $m['pre'].$out.$m['tail'];
         }
 
         return $out;
