@@ -2998,8 +2998,7 @@ class Parser
 
     protected function fCode($m)
     {
-        $m = array_merge(array('after' => ''), $m);
-        return $m['before'].$this->shelve('<code>'.$this->rEncodeHTML($m['content']).'</code>').$m['after'];
+        return $m['before'].$this->shelve('<code>'.$this->rEncodeHTML($m['content']).'</code>');
     }
 
     /**
@@ -3011,8 +3010,7 @@ class Parser
 
     protected function fPre($m)
     {
-        $m = array_merge(array('after' => ''), $m);
-        return $m['before'].'<pre>'.$this->shelve($this->rEncodeHTML($m['content'])).'</pre>'.$m['after'];
+        return $m['before'].'<pre>'.$this->shelve($this->rEncodeHTML($m['content'])).'</pre>';
     }
 
     /**
@@ -3088,7 +3086,7 @@ class Parser
 
     protected function doSpecial($text, $start, $end, $method = 'fSpecial')
     {
-        return preg_replace_callback('/(?P<before>^|\s|[|[({>])'.preg_quote($start, '/').'(?P<content>.*?)'.preg_quote($end, '/').'(?P<after>\s|$|[\])}|])?/ms', array(&$this, $method), $text);
+        return preg_replace_callback('/(?P<before>^|\s|[|[({>])'.preg_quote($start, '/').'(?P<content>.*?)'.preg_quote($end, '/').'/ms', array(&$this, $method), $text);
     }
 
     /**
@@ -3104,8 +3102,7 @@ class Parser
 
     protected function fSpecial($m)
     {
-        $m = array_merge(array('after' => ''), $m);
-        return $m['before'].$this->shelve($this->encodeHTML($m['content'])).$m['after'];
+        return $m['before'].$this->shelve($this->encodeHTML($m['content']));
     }
 
     /**
@@ -3130,8 +3127,7 @@ class Parser
 
     protected function fTextile($m)
     {
-        $m = array_merge(array('after' => ''), $m);
-        return $m['before'].$this->shelve($m['content']).$m['after'];
+        return $m['before'].$this->shelve($m['content']);
     }
 
     /**
