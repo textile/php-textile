@@ -9,30 +9,6 @@ options:
   adaptor_options:
     restricted: false
 
-Complex links :
-  notes  : >
-    Pulled from (or inspired by) the Redcloth link fixtures...
-  input  : |
-    The ION coding style document found at "IONCodingStyleGuide.doc":http://perforce:8081/@md=d&cd=//&c=82E@//depot/systest/system/main/pub/doc/IONCodingStyleGuide.doc?ac=22 codifies a couple of rules to ensure reasonably consistent code and documentation of libraries in ION. Test text
-
-    "(myclass)[fr-FR]{color:red} just in case you were wondering(Title!)":http://slashdot.org/
-
-    "He said it is "very unlikely" the "economic stimulus" works":http://slashdot.org/
-
-    ""Open the pod bay doors please, HAL."":http://www.youtube.com/watch?v=npN9l2Bd06s
-
-    Here is [^"[de] "A def[inition]" (title)":url^] if you can believe it!
-  expect : |
-    <p>The <span class="caps">ION</span> coding style document found at <a href="http://perforce:8081/@md%3Dd%26cd%3D//%26c%3D82E@//depot/systest/system/main/pub/doc/IONCodingStyleGuide.doc?ac=22">IONCodingStyleGuide.doc</a> codifies a couple of rules to ensure reasonably consistent code and documentation of libraries in <span class="caps">ION</span>. Test text</p>
-
-    <p><a class="myclass" href="http://slashdot.org/" lang="fr-FR" style="color:red;" title="Title!">just in case you were wondering</a></p>
-
-    <p><a href="http://slashdot.org/">He said it is &#8220;very unlikely&#8221; the &#8220;economic stimulus&#8221; works</a></p>
-
-    <p><a href="http://www.youtube.com/watch?v=npN9l2Bd06s">&#8220;Open the pod bay doors please, <span class="caps">HAL</span>.&#8221;</a></p>
-
-    <p>Here is <sup><a href="url" lang="de" title="title">&#8220;A def[inition]&#8221;</a></sup> if you can believe it!</p>
-
 Link and image encoding :
   input : |
     !http://example.com/?size=60&file=image.png!
@@ -977,4 +953,28 @@ Link in quotes. :
     "Here's a "(class#id)link(with a title)":http://cnn.com?a=b&c=d#end_of_page."
   expect : |
     <p>&#8220;Here&#8217;s a <a class="class" href="http://cnn.com?a=b&amp;c=d#end_of_page" id="id" title="with a title">link</a>.&#8221;</p>
+
+Complex links :
+  notes  : >
+    Pulled from (or inspired by) the Redcloth link fixtures...
+  input  : |
+    The ION coding style document found at "IONCodingStyleGuide.doc":http://perforce:8081/@md=d&cd=//&c=82E@//depot/systest/system/main/pub/doc/IONCodingStyleGuide.doc?ac=22 codifies a couple of rules to ensure reasonably consistent code and documentation of libraries in ION. Test text
+
+    "(myclass)[fr-FR]{color:red} just in case you were wondering(Title!)":http://slashdot.org/
+
+    "He said it is "very unlikely" the "economic stimulus" works":http://slashdot.org/
+
+    ""Open the pod bay doors please, HAL."":http://www.youtube.com/watch?v=npN9l2Bd06s
+
+    Here is [^"[de] "A def[inition]" (title)":url^] if you can believe it!
+  expect : |
+    <p>The <span class="caps">ION</span> coding style document found at <a href="http://perforce:8081/@md%3Dd%26cd%3D//%26c%3D82E@//depot/systest/system/main/pub/doc/IONCodingStyleGuide.doc?ac=22">IONCodingStyleGuide.doc</a> codifies a couple of rules to ensure reasonably consistent code and documentation of libraries in <span class="caps">ION</span>. Test text</p>
+
+    <p><a class="myclass" href="http://slashdot.org/" lang="fr-FR" style="color:red;" title="Title!">just in case you were wondering</a></p>
+
+    <p><a href="http://slashdot.org/">He said it is &#8220;very unlikely&#8221; the &#8220;economic stimulus&#8221; works</a></p>
+
+    <p><a href="http://www.youtube.com/watch?v=npN9l2Bd06s">&#8220;Open the pod bay doors please, <span class="caps">HAL</span>.&#8221;</a></p>
+
+    <p>Here is <sup><a href="url" lang="de" title="title">&#8220;A def[inition]&#8221;</a></sup> if you can believe it!</p>
 
