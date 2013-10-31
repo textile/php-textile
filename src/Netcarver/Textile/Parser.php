@@ -2298,8 +2298,8 @@ class Parser
 
     protected function retrieveTags($text)
     {
-        $text = preg_replace_callback('/'.$this->uid.'(\d+):ospan /', array(&$this, 'fRetrieveTags'), $text);
-        $text = preg_replace_callback('/ '.$this->uid.'(\d+):cspan/', array(&$this, 'fRetrieveTags'), $text);
+        $text = preg_replace_callback('/'.$this->uid.'(?P<token>\d+):ospan /', array(&$this, 'fRetrieveTags'), $text);
+        $text = preg_replace_callback('/ '.$this->uid.'(?P<token>\d+):cspan/', array(&$this, 'fRetrieveTags'), $text);
         return $text;
     }
 
@@ -2313,7 +2313,7 @@ class Parser
 
     protected function fRetrieveTags($m)
     {
-        return $this->refCache[$m[1]];
+        return $this->refCache[$m['token']];
     }
 
     /**
