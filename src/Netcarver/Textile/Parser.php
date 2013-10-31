@@ -2998,8 +2998,7 @@ class Parser
 
     protected function fCode($m)
     {
-        list(, $before, $text, $after) = array_pad($m, 4, '');
-        return $before.$this->shelve('<code>'.$this->rEncodeHTML($text).'</code>').$after;
+        return $m['before'].$this->shelve('<code>'.$this->rEncodeHTML($m['content']).'</code>').$m['after'];
     }
 
     /**
@@ -3011,8 +3010,7 @@ class Parser
 
     protected function fPre($m)
     {
-        list(, $before, $text, $after) = array_pad($m, 4, '');
-        return $before.'<pre>'.$this->shelve($this->rEncodeHTML($text)).'</pre>'.$after;
+        return $m['before'].'<pre>'.$this->shelve($this->rEncodeHTML($m['content'])).'</pre>'.$m['after'];
     }
 
     /**
@@ -3088,7 +3086,7 @@ class Parser
 
     protected function doSpecial($text, $start, $end, $method = 'fSpecial')
     {
-        return preg_replace_callback('/(^|\s|[|[({>])'.preg_quote($start, '/').'(.*?)'.preg_quote($end, '/').'(\s|$|[\])}|])?/ms', array(&$this, $method), $text);
+        return preg_replace_callback('/(?P<before>^|\s|[|[({>])'.preg_quote($start, '/').'(?P<content>.*?)'.preg_quote($end, '/').'(?P<after>\s|$|[\])}|])?/ms', array(&$this, $method), $text);
     }
 
     /**
@@ -3104,9 +3102,7 @@ class Parser
 
     protected function fSpecial($m)
     {
-        // A special block like notextile or code
-        list(, $before, $text, $after) = array_pad($m, 4, '');
-        return $before.$this->shelve($this->encodeHTML($text)).$after;
+        return $m['before'].$this->shelve($this->encodeHTML($m['content'])).$m['after'];
     }
 
     /**
@@ -3131,8 +3127,7 @@ class Parser
 
     protected function fTextile($m)
     {
-        list(, $before, $notextile, $after) = array_pad($m, 4, '');
-        return $before.$this->shelve($notextile).$after;
+        return $m['before'].$this->shelve($m['content']).$m['after'];
     }
 
     /**
