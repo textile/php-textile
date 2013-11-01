@@ -1,0 +1,40 @@
+adaptor: textile
+options:
+  showfailures: true
+  showpasses: true
+  showdiffs: true
+  debug: false
+  format: html
+  adaptor_options:
+    restricted: false
+
+HTM5 image alignment:
+  doctype : html5
+  input  : |
+    !>10x10.gif!
+
+    !=10x10.gif!
+
+    !<10x10.gif!
+
+  expect : |
+    <p><img alt="" class="align-right" height="10" src="10x10.gif" width="10" /></p>
+
+    <p><img alt="" class="align-center" height="10" src="10x10.gif" width="10" /></p>
+
+    <p><img alt="" class="align-left" height="10" src="10x10.gif" width="10" /></p>
+
+XHTML image alignment:
+  input  : |
+    !>10x10.gif!
+
+    !=10x10.gif!
+
+    !<10x10.gif!
+
+  expect : |
+    <p><img align="right" alt="" height="10" src="10x10.gif" width="10" /></p>
+
+    <p><img align="center" alt="" height="10" src="10x10.gif" width="10" /></p>
+
+    <p><img align="left" alt="" height="10" src="10x10.gif" width="10" /></p>

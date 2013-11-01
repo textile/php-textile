@@ -3227,6 +3227,7 @@ class Parser
         if (isset($alignments[$align])) {
             if ('html5' === $this->doctype) {
                 $extras = 'align-'.$alignments[$align];
+                $align = '';
             } else {
                 $align = $alignments[$align];
             }
