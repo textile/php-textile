@@ -3536,7 +3536,7 @@ class Parser
 
     protected function replaceGlyphs($text)
     {
-        return preg_replace('/'.$this->uid.':glyph:([^<]+)/', '$1', $text);
+        return str_replace($this->uid.':glyph:', '', $text);
     }
 
     /**
