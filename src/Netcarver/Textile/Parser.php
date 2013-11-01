@@ -3484,8 +3484,8 @@ class Parser
 
     protected function fGlyphQuotedQuote($m)
     {
-        // Check the correct closing character was found...
-        if ($m['post'] !== @$this->quotes[$m['pre']]) {
+        // Check the correct closing character was found.
+        if (!isset($this->quotes[$m['pre']]) || $m['post'] !== $this->quotes[$m['pre']]) {
             return $m[0];
         }
 
