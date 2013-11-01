@@ -724,6 +724,14 @@ class Textile
     protected $doctype;
 
     /**
+     * Link start marker
+     *
+     * @var string
+     */
+
+    protected $link_start_marker;
+
+    /**
      * Substitution symbols.
      *
      * Basic symbols used in textile glyph replacements. To override these, call
@@ -889,6 +897,7 @@ class Textile
             $this->doctype = $doctype;
         }
 
+        $this->link_start_marker = 'lsm:'.uniqid(rand()).':';
         $this->uid = 'textileRef:'.uniqid(rand()).':';
         $this->a = "(?:$this->hlgn|$this->vlgn)*";
         $this->s = "(?:$this->cspn|$this->rspn)*";
@@ -2845,8 +2854,8 @@ class Textile
                     // already in order.
                     $pre_link   = implode('"', $possible_start_quotes);
 
-                    // Re-assemble the link starts with a specific ':"' marker for the next regex.
-                    $slices[$i] = $pre_link . ':"' . $link_start;
+                    // Re-assemble the link starts with a specific marker for the next regex.
+                    $slices[$i] = $pre_link . $this->link_start_marker . '"' . $link_start;
                 }
 
                 // Add the last part back
@@ -2879,7 +2888,7 @@ class Textile
         return preg_replace_callback(
             '/
             (?P<pre>\[)?                  # Optionally open with a square bracket eg. Look ["here":url]
-            :"                            # literal :" marks start of the link
+            '.$this->link_start_marker.'" # marks start of the link
             (?P<inner>.+?)                # capture the content of the inner "..." part of the link, can be anything but
                                           # do not worry about matching class, id, lang or title yet
             ":                            # literal ": marks end of atts + text + title block
@@ -2908,7 +2917,7 @@ class Textile
 
         // Reject invalid urls such as "linktext": which has no url part.
         if ('' === $url) {
-            return strtr($in, array(':"'=>'"'));
+            return str_replace($this->link_start_marker, '', $in);
         }
 
         // Split inner into $atts, $text and $title..
@@ -3057,7 +3066,7 @@ class Textile
         $scheme_ok      = ('' === $scheme) || $scheme_in_list;
 
         if (!$scheme_ok) {
-            return strtr($in, array(':"'=>'"'));
+            return str_replace($this->link_start_marker, '', $in);
         }
 
         // Handle self-referencing links...
@@ -3424,6 +3433,8 @@ class Textile
         $out = preg_replace("/^[ \t]*\n/m", "\n", $out);
         // Removes leading and ending blank lines.
         $out = trim($out, "\n");
+        // Ensure there are no link start marks in the input document.
+        $out = str_replace($this->link_start_marker, '', $out);
         return $out;
     }
 
