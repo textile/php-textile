@@ -1154,20 +1154,20 @@ class Parser
             '/([0-9]+[\])]?[\'"]? ?)[xX]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]+)/'.$mod,   // Dimension sign
             '/('.$wrd.'|\))\'('.$wrd.')/'.$mod,     // I'm an apostrophe
             '/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod,    // Back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
-            "/([([{])'(?=\S)/",                     // Single open following open bracket
-            '/(\S)\'(?=\s|'.$pnc.'|<|$)/',          // Single closing
+            "/([([{])'(?=\S)/".$mod,                // Single open following open bracket
+            '/(\S)\'(?=\s|'.$pnc.'|<|$)/'.$mod,     // Single closing
             "/'/",                                  // Default single opening
-            '/([([{])"(?=\S)/',                     // Double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
-            '/(\S)"(?=\s|'.$pnc.'|<|$)/',           // Double closing
+            '/([([{])"(?=\S)/'.$mod,                // Double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
+            '/(\S)"(?=\s|'.$pnc.'|<|$)/'.$mod,      // Double closing
             '/"/',                                  // Default double opening
             '/\b(['.$abr.']['.$acr.']{2,})\b(?:[(]([^)]*)[)])/'.$mod,  // 3+ uppercase acronym
             '/(?<=\s|^|[>(;-])(['.$abr.']{3,})(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod,  // 3+ uppercase
             '/([^.]?)\.{3}/',                       // Ellipsis
             '/--/',                                 // em dash
             '/ - /',                                // en dash
-            '/(\b ?|\s|^)[([]TM[])]/i',             // Trademark
-            '/(\b ?|\s|^)[([]R[])]/i',              // Registered
-            '/(\b ?|\s|^)[([]C[])]/i',              // Copyright
+            '/(\b ?|\s|^)[([]TM[])]/i'.$mod,        // Trademark
+            '/(\b ?|\s|^)[([]R[])]/i'.$mod,         // Registered
+            '/(\b ?|\s|^)[([]C[])]/i'.$mod,         // Copyright
             '/[([]1\/4[])]/',                       // 1/4
             '/[([]1\/2[])]/',                       // 1/2
             '/[([]3\/4[])]/',                       // 3/4
