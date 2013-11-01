@@ -27,7 +27,7 @@ False start of link cases :
 
     <p>Under and :&#8220;over&#8221;: the wall.</p>
 
-    <p>Under and :&#8220;over&#8221;:/ the wall.</p>
+    <p>Under and :<a href="/">over</a> the wall.</p>
 
     <p>Under and <a href="/">over</a> the wall.</p>
 
