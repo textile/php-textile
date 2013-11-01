@@ -820,6 +820,14 @@ class Parser
     );
 
     /**
+     * Regular expression that matches starting quotes.
+     *
+     * @var string
+     */
+
+    protected $quote_starts;
+
+    /**
      * Constructor.
      *
      * @param string $doctype The output document type, either 'xhtml' or 'html5'
