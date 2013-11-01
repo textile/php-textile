@@ -3459,7 +3459,7 @@ class Parser
     /**
      * Parses and shelves quoted quotes in the given input.
      *
-     * @param string $text The text to search for quoted quotes
+     * @param  string $text The text to search for quoted quotes
      * @return string
      */
 
@@ -3471,9 +3471,9 @@ class Parser
     /**
      * Formats quoted quotes and stores it on the shelf.
      *
-     * @param array $m named regex parts
+     * @param  array  $m Named regular expression parts
      * @return string Input with quoted quotes removed and replaced with tokens
-     * @see Textile::glyphQuotedQuote
+     * @see    Textile::glyphQuotedQuote()
      */
 
     protected function fGlyphQuotedQuote($m)
