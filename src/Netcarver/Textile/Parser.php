@@ -798,12 +798,26 @@ class Parser
     protected $refCache = array();
 
     /**
-     * Stores matched open and closed quotes.
+     * Matched open and closed quotes.
      *
      * @var array
      */
 
-    protected $quotes = array();
+    protected $quotes = array(
+        '"' => '"',
+        "'" => "'",
+        '(' => ')',
+        '{' => '}',
+        '[' => ']',
+        '«' => '»',
+        '»' => '«',
+        '‹' => '›',
+        '›' => '‹',
+        '„' => '“',
+        '‚' => '‘',
+        '‘' => '’',
+        '”' => '“',
+    );
 
     /**
      * Constructor.
@@ -854,23 +868,7 @@ class Parser
         }
         extract($this->regex_snippets);
         $this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
-
-        $this->quotes = array(
-            '"' => '"',
-            "'" => "'",
-            '(' => ')',
-            '{' => '}',
-            '[' => ']',
-            '«' => '»',
-            '»' => '«',
-            '‹' => '›',
-            '›' => '‹',
-            '„' => '“',
-            '‚' => '‘',
-            '‘' => '’',
-            '”' => '“',
-        );
-        $this->quote_starts = strtr(preg_quote(implode('|', array_keys($this->quotes))), array('\|'=>'|'));
+        $this->quote_starts = strtr(preg_quote(implode('|', array_keys($this->quotes))), array('\|' => '|'));
 
         if (defined('DIRECTORY_SEPARATOR')) {
             $this->ds = constant('DIRECTORY_SEPARATOR');
