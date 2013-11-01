@@ -97,12 +97,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('&amp; &amp; &#124; &amp;#x0022 &#x0022;', $textile->textileEncode('& &amp; &#124; &#x0022 &#x0022;'));
     }
 
-    public function testPublicProperties()
-    {
-        $textile = new Textile();
-        
-    }
-
     public function provider()
     {
         chdir(dirname(dirname(dirname(__DIR__))));
