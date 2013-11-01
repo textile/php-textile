@@ -2987,8 +2987,6 @@ class Parser
         } while ($popped);
 
         $url = implode('', $url_chars);
-        unset($url_chars);
-
         $uri_parts = array();
         $this->parseURI($url, $uri_parts);
 
