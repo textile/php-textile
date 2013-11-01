@@ -651,6 +651,14 @@ class Parser
     protected $doctype;
 
     /**
+     * Link start marker
+     *
+     * @var string
+     */
+
+    protected $link_start_marker;
+
+    /**
      * Substitution symbols.
      *
      * Basic symbols used in textile glyph replacements. To override these, call
@@ -816,6 +824,7 @@ class Parser
             $this->doctype = $doctype;
         }
 
+        $this->link_start_marker = 'lsm:'.uniqid(rand()).':';
         $this->uid = 'textileRef:'.uniqid(rand()).':';
         $this->a = "(?:$this->hlgn|$this->vlgn)*";
         $this->s = "(?:$this->cspn|$this->rspn)*";
@@ -2679,18 +2688,139 @@ class Parser
 
     protected function links($text)
     {
+        $text = $this->markStartOfLinks($text);
+        return $this->replaceLinks($text);
+    }
+
+    /**
+     * Finds and marks the start of well formed links in the input text.
+     *
+     * @param string $text String to search for link starting positions.
+     * @return string Text with links marked.
+     * @see    Parser::links()
+     */
+
+    protected function markStartOfLinks($text)
+    {
+        // Slice text on '":' boundaries. These always occur in inline
+        // links between the link text and the url part and are much more
+        // infrequent than '"' characters so we have less possible links
+        // to process.
+        $slices = preg_split('/":/', $text);
+
+        try {
+            if (count($slices) > 1) {
+
+                // There are never any start of links in the last slice, so pop it
+                // off (we'll glue it back later).
+                $last_slice = array_pop($slices);
+
+                foreach ($slices as $i => $slice) {
+
+                    // Cut this slice into possible starting points wherever we
+                    // find a '"' character. Any of these parts could represent
+                    // the start of the link text - we have to find which one.
+                    $possible_start_quotes = explode('"', $slice);
+                    $n = count($possible_start_quotes);
+
+                    // Cleanup situations like...
+                    // "He said it is "very unlikely" the stimulus works ":url
+                    //                           Space at end ----------^
+                    $possible_start_quotes[$n-1] = rtrim($possible_start_quotes[$n-1]);
+
+                    // Init the balanced count. If this is still zero at the end
+                    // of our do loop we'll mark the " that caused it to balance
+                    // and move on to the next link.
+                    $balanced = 0;
+
+                    // Vars we need in our balance checking loop...
+                    $linkparts = array();
+                    $iter = 0;
+
+                    do {
+                        // Starting at the end, pop off the previous part of the
+                        // slice's fragments.
+                        $possibilty = array_pop($possible_start_quotes);
+                        if (null === $possibilty) {
+                            throw new exception("Malformed link found.");
+                        }
+
+                        // Add this part to those parts that make up the link text.
+                        $linkparts[] = $possibilty;
+                        $len = strlen($possibilty) > 0;
+
+                        $first = substr($possibilty, 0, 1);
+                        $last  = substr($possibilty, -1, 1);
+
+                        if ($len) {
+                            // did this part inc or dec the balanced count?
+                            if (!ctype_space($first)) {
+                                $balanced--;
+                            }
+                            if ('=' == $last) {
+                                $balanced--;
+                            }
+                            if (!ctype_space($last)) {
+                                $balanced++;
+                            }
+                        }
+
+                        // If quotes occur next to each other, we get zero length strings.
+                        // eg. ...""Open the door, HAL!"":url...
+                        // In this case we count a zero length in the last position as a
+                        // closing quote and others as opening quotes.
+                        if (!$len) {
+                            $balanced = (!$iter++) ? $balanced+1 : $balanced-1;
+                        }
+
+                    } while (0 != $balanced);
+
+                    // rebuild the link's text by reversing the parts and sticking them back
+                    // together with quotes.
+                    $link_start = implode('"', array_reverse($linkparts));
+
+                    // rebuild the remaining stuff that goes before the link but that's
+                    // already in order.
+                    $pre_link   = implode('"', $possible_start_quotes);
+
+                    // Re-assemble the link starts with a specific marker for the next regex.
+                    $slices[$i] = $pre_link . $this->link_start_marker . '"' . $link_start;
+                }
+
+                // Add the last part back
+                array_push($slices, $last_slice);
+            }
+
+            // Re-assemble the full text with the start and end markers
+            $text = implode('":', $slices);
+
+        } catch (exception $e) {
+            // If we got an exception marking the links then let the replace regex try sorting it out...
+        }
+
+        return $text;
+    }
+
+    /**
+     * Replaces links with a token and stores it on the shelf.
+     *
+     * @param  array  $m options
+     * @return string reference token for the shelved content
+     * @see    Parser::links()
+     */
+
+    protected function replaceLinks($text)
+    {
+        $stopchars = "\s|^'\"*";
+
         return preg_replace_callback(
             '/
-            (^|(?<=[\s>.\(\|])|[{[])   # $pre
-            "                          #  start
-            (' . $this->c . ')         # $atts
-            ([^"]+?)                   # $text
-            (?:\(([^)]+?)\)(?="))?     # $title
-            ":
-            ('.$this->urlch.'+?)       # $url
-            (\/)?                      # $slash
-            ([^'.$this->regex_snippets['wrd'].'\/]*?)  # $post
-            ([\]}]|(?=\s|$|\)|\|))     # $tail
+            (?P<pre>\[)?                  # Optionally open with a square bracket eg. Look ["here":url]
+            '.$this->link_start_marker.'" # marks start of the link
+            (?P<inner>.+?)                # capture the content of the inner "..." part of the link, can be anything but
+                                          # do not worry about matching class, id, lang or title yet
+            ":                            # literal ": marks end of atts + text + title block
+            (?P<urlx>[^'.$stopchars.']*)  # url upto a stopchar
             /x'.$this->regex_snippets['mod'],
             array(&$this, "fLink"),
             $text
@@ -2700,35 +2830,174 @@ class Parser
     /**
      * Formats a link and stores it on the shelf.
      *
-     * @param  array  $m Options
-     * @return string Reference token for the shelved content
-     * @see    Parser::links()
+     * @param  array  $m options
+     * @return string reference token for the shelved content
+     * @see    Parser::replaceLinks()
      */
 
     protected function fLink($m)
     {
-        list(, $pre, $atts, $text, $title, $url, $slash, $post, $tail) = $m;
+        $in    = $m[0];
+        $pre   = $m['pre'];
+        $inner = $m['inner'];
+        $url   = $m['urlx'];
+        $m = array();
 
-        // Strip any ':' or '?' characters from the end of the URL and return them
-        // to $post. This seems to be needed when using the unicode version of the
-        // word character class in the regex.
-
-        if (preg_match('/^(.*)([?:]+)$/'.$this->regex_snippets['mod'], $url, $matches)) {
-            $url   = $matches[1];
-            $post .= $matches[2];
+        // Reject invalid urls such as "linktext": which has no url part.
+        if ('' === $url) {
+            return str_replace($this->link_start_marker, '', $in);
         }
 
+        // Split inner into $atts, $text and $title..
+        preg_match(
+            '/
+            ^
+            (?P<atts>' . $this->c . ')   # $atts (if any)
+            (?P<text>                    # $text is...
+            (!.+!)                       #     an image
+            |                            #   else...
+            \(?[^(]+?                    #     link text
+            )                            # end of $text
+            (?:\((?P<title>[^)]+?)\))?   # $title (if any)
+            $
+            /x'.$this->regex_snippets['mod'],
+            $inner,
+            $m
+        );
+        $atts  = isset($m['atts'])  ? $m['atts']  : '';
+        $text  = isset($m['text'])  ? trim($m['text'])  : $inner;
+        $title = isset($m['title']) ? $m['title'] : '';
+        $m = array();
+
+        // In cases like; "(myclass) (just in case you were wondering)":http://slashdot.org/
+        // Where the middle text field is empty but there is a valid title field, we use that for the text.
+        if (!$text && $title) {
+            $text  = "($title)";
+            $title = '';
+        }
+
+        $pop = $tight = '';
+        $url_chars = array();
+        $counts = array(
+            '['  => null,
+            ']'  => substr_count($url, ']'), # We need to know how many closing square brackets we have
+            '('  => null,
+            ')'  => null,
+        );
+
+        // Look for footnotes or other square-bracket delimieted stuff at the end of the url...
+        // eg. "text":url][otherstuff... will have "[otherstuff" popped back out.
+        //     "text":url?q[]=x][123]    will have "[123]" popped off the back, the remaining closing square brackets
+        //                               will later be tested for balance
+        if ($counts[']']) {
+            if (1 === preg_match('@(?P<url>^.*\])(?P<tight>\[.*?)$@' . $this->regex_snippets['mod'], $url, $m)) {
+                $url         = $m['url'];
+                $tight       = $m['tight'];
+                $m = array();
+            }
+        }
+
+        // Split off any trailing text that isn't part of an array assignment.
+        // eg. "text":...?q[]=value1&q[]=value2 ... is ok
+        //     "text":...?q[]=value1]following  ... would have "following" popped back out and the remaining square bracket
+        //                                          will later be tested for balance
+        if ($counts[']']) {
+            if (1 === preg_match('@(?P<url>^.*\])(?!=)(?P<end>.*?)$@' . $this->regex_snippets['mod'], $url, $m)) {
+                $url         = $m['url'];
+                $tight       = $m['end'] . $tight;
+                $m = array();
+            }
+        }
+
+        // Does this need to be mb_ enabled? We are only searching for text in the ASCII charset anyway
+        // Create an array of (possibly) multi-byte characters.
+        // This is going to allow us to pop off any non-matched or nonsense chars from the url
+        $len = strlen($url);
+        $url_chars = str_split($url);
+
+        // Now we have the array of all the multi-byte chars in the url we will parse the uri backwards and pop off
+        // any chars that don't belong there (like . or , or unmatched brackets of various kinds)...
+        $first = true;
+        do {
+            $c = array_pop($url_chars);
+            $popped = false;
+            switch ($c) {
+
+                // Textile URL shouldn't end in these characters, we pop them off the end and push them out the back of the url again.
+                case '!':
+                case '?':
+                case ':':
+                case ';':
+                case '.':
+                case ',':
+                    $pop = $c . $pop;
+                    $popped = true;
+                    break;
+
+                case ']':
+                    // If we find a closing square bracket we are going to see if it is balanced.
+                    // If it is balanced with matching opening bracket then it is part of the URL else we spit it back
+                    // out of the URL.
+                    if (null===$counts['[']) {
+                        $counts['['] = substr_count($url, '[');
+                    }
+
+                    if ($counts['['] === $counts[']']) {
+                        // It is balanced, so keep it
+                        array_push($url_chars, $c);
+                    } else {
+                        // In the case of un-matched closing square brackets we just eat it
+                        $popped = true;
+                        $counts[']'] -= 1;
+                        if ($first) {
+                            $pre = '';
+                        }
+                    }
+                    break;
+
+                case ')':
+                    if (null===$counts[')']) {
+                        $counts['('] = substr_count($url, '(');
+                        $counts[')'] = substr_count($url, ')');
+                    }
+
+                    if ($counts['('] === $counts[')']) {
+                        // It is balanced, so keep it
+                        array_push($url_chars, $c);
+                    } else {
+                        // Unbalanced so spit it out the back end
+                        $pop = $c . $pop;
+                        $counts[')'] -= 1;
+                        $popped = true;
+                    }
+                    break;
+
+                default:
+                    // We have an acceptable character for the end of the url so put it back and exit the character popping loop
+                    array_push($url_chars, $c);
+                    break;
+            }
+            $first = false;
+        } while ($popped);
+
+        // Pull the possibly truncated URL back together...
+        $url = implode('', $url_chars);
+        unset($url_chars);
+
+        // Parse the url into constituent parts...
         $uri_parts = array();
         $this->parseURI($url, $uri_parts);
 
+        // Check this is a valid uri scheme...
         $scheme         = $uri_parts['scheme'];
         $scheme_in_list = in_array($scheme, $this->url_schemes);
         $scheme_ok      = ('' === $scheme) || $scheme_in_list;
 
         if (!$scheme_ok) {
-            return $m[0];
+            return str_replace($this->link_start_marker, '', $in);
         }
 
+        // Handle self-referencing links...
         if ('$' === $text) {
             if ($scheme_in_list) {
                 $text = ltrim($this->rebuildURI($uri_parts, 'authority,path,query,fragment', false), '/');
@@ -2736,11 +3005,12 @@ class Parser
                 if (isset($this->urlrefs[$url])) {
                     $url = urldecode($this->urlrefs[$url]);
                 }
+
                 $text = $url;
             }
         }
 
-        $text  = trim($text);
+        $text = trim($text);
         $title = $this->encodeHTML($title);
 
         // If the text was in parenthesis and there was no title, then the regex
@@ -2756,18 +3026,12 @@ class Parser
 
         $text = $this->spans($text);
         $text = $this->glyphs($text);
-        $url  = $this->shelveURL($this->rebuildURI($uri_parts) . $slash);
-
+        $url  = $this->shelveURL($this->rebuildURI($uri_parts));
         $a    = $this->newTag('a', $this->parseAttribsToArray($atts), false)->title($title)->href($url, true)->rel($this->rel);
         $tags = $this->storeTags((string) $a, '</a>');
-        $out  = $tags['open'].$text.$tags['close'];
+        $out  = $this->shelve($tags['open'].trim($text).$tags['close']);
 
-        if (($pre && !$tail) || ($tail && !$pre)) {
-            $out = $pre.$out.$post.$tail;
-            $post = '';
-        }
-
-        return $this->shelve($out).$post;
+        return $pre . $out . $pop . $tight;	// return the shelf id and the $pop'd characters
     }
 
      /**
@@ -3097,6 +3361,8 @@ class Parser
         $out = preg_replace("/^[ \t]*\n/m", "\n", $out);
         // Removes leading and ending blank lines.
         $out = trim($out, "\n");
+        // Ensure there are no link start marks in the input document.
+        $out = str_replace($this->link_start_marker, '', $out);
         return $out;
     }
 
