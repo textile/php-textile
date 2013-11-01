@@ -31,8 +31,24 @@ Links... :
 
 Links in tables... :
   input:  |
+    | ""福島駅"":http://ja.wikipedia.org/wiki/福島駅_(大阪府)/?q[]=x |
+
+    |""福島駅"":http://ja.wikipedia.org/wiki/福島駅_(大阪府)/?q[]=x|
+
     |""福島駅"":http://ja.wikipedia.org/wiki/福島駅_(大阪府)/?q[]=x.|
   expect: |
+    <table>
+    		<tr>
+    			<td> <a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_%28%E5%A4%A7%E9%98%AA%E5%BA%9C%29/?q[]=x">&#8220;福島駅&#8221;</a> </td>
+    		</tr>
+    </table>
+
+    <table>
+    		<tr>
+    			<td><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_%28%E5%A4%A7%E9%98%AA%E5%BA%9C%29/?q[]=x">&#8220;福島駅&#8221;</a></td>
+    		</tr>
+    </table>
+
     <table>
     		<tr>
     			<td><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_%28%E5%A4%A7%E9%98%AA%E5%BA%9C%29/?q[]=x">&#8220;福島駅&#8221;</a>.</td>
