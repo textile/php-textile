@@ -820,6 +820,14 @@ class Parser
     protected $quote_starts;
 
     /**
+     * Ordered list starts.
+     *
+     * @var array
+     */
+
+    protected $olstarts = array();
+
+    /**
      * Constructor.
      *
      * @param string $doctype The output document type, either 'xhtml' or 'html5'
