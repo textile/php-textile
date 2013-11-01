@@ -790,6 +790,14 @@ class Parser
     protected $refCache = array();
 
     /**
+     * Stores matched open and closed quotes.
+     *
+     * @var array
+     */
+
+    protected $quotes = array();
+
+    /**
      * Constructor.
      *
      * @param string $doctype The output document type, either 'xhtml' or 'html5'
@@ -837,6 +845,23 @@ class Parser
         }
         extract($this->regex_snippets);
         $this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
+
+        $this->quotes = array(
+            '"' => '"',
+            "'" => "'",
+            '(' => ')',
+            '{' => '}',
+            '[' => ']',
+            '«' => '»',
+            '»' => '«',
+            '‹' => '›',
+            '›' => '‹',
+            '„' => '“',
+            '‚' => '‘',
+            '‘' => '’',
+            '”' => '“',
+        );
+        $this->quote_starts = strtr(preg_quote(implode('|', array_keys($this->quotes))), array('\|'=>'|'));
 
         if (defined('DIRECTORY_SEPARATOR')) {
             $this->ds = constant('DIRECTORY_SEPARATOR');
@@ -2159,6 +2184,7 @@ class Parser
 
         $text = $this->getHTMLComments($text);     // HTML comments --
         $text = $this->getRefs($text);             // Consume link aliases
+        $text = $this->glyphQuotedQuote($text);    // Treat quoted quote as a special glyph.
         $text = $this->links($text);               // Generate links
 
         if (!$this->noimage) {
@@ -3166,6 +3192,37 @@ class Parser
         $footref = $this->formatFootnote($footref, $backref, false);
 
         return $footref;
+    }
+
+    /**
+     * Parses and shelves quoted quotes in the given input.
+     *
+     * @param string $text The text to search for quoted quotes
+     * @return string
+     */
+
+    protected function glyphQuotedQuote($text)
+    {
+        return preg_replace_callback('/ (?P<pre>'.$this->quote_starts.')"(?P<post>.) /'.$this->regex_snippets['mod'], array(&$this, "fGlyphQuotedQuote"), $text);
+    }
+
+    /**
+     * Formats quoted quotes and stores it on the shelf.
+     *
+     * @param array $m named regex parts
+     * @return string Input with quoted quotes removed and replaced with tokens
+     * @see Textile::glyphQuotedQuote
+     */
+
+    protected function fGlyphQuotedQuote($m)
+    {
+        // Check the correct closing character was found...
+        if ($m['post'] !== @$this->quotes[$m['pre']]) {
+            return $m[0];
+        }
+
+        $glyph = ' ' . strtr($m['pre'], array( '"'=>'&#8220;', "'"=>'&#8216;', ' '=>'&nbsp;' )) . '"' . strtr($m['post'], array( '"'=> '&#8221;', "'"=>'&#8217;', ' '=>'&nbsp;' )) . ' ';
+        return $this->shelve($glyph);
     }
 
     /**

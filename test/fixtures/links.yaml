@@ -1,0 +1,1002 @@
+adaptor: textile
+options:
+  showfailures: true
+  showpasses: true
+  showdiffs: true
+  debug: false
+  format: html
+  doctype: xhtml
+  adaptor_options:
+    restricted: false
+
+False start of link cases :
+  input : |
+    Hello :"world"!
+
+    Under and :"over":
+
+    Under and :"over": the wall.
+
+    Under and :"over":/ the wall.
+
+    Under and "over":/ the wall.
+  expect: |
+    <p>Hello :&#8220;world&#8221;!</p>
+
+    <p>Under and :&#8220;over&#8221;:</p>
+
+    <p>Under and :&#8220;over&#8221;: the wall.</p>
+
+    <p>Under and :<a href="/">over</a> the wall.</p>
+
+    <p>Under and <a href="/">over</a> the wall.</p>
+
+Link and image encoding :
+  input : |
+    !http://example.com/?size=60&file=image.png!
+
+    !http://example.com/needs<&"encoding.png!
+
+    "Requires encoding":http://example.com/?foo&bar
+
+    "Entity is merely part of text":http://example.com/?foo&amp;bar
+
+    "In path component":http://example.com/&.html
+  expect : |
+    <p><img alt="" src="http://example.com/?size=60&amp;file=image.png" /></p>
+
+    <p><img alt="" src="http://example.com/needs&lt;&amp;&quot;encoding.png" /></p>
+
+    <p><a href="http://example.com/?foo&amp;bar">Requires encoding</a></p>
+
+    <p><a href="http://example.com/?foo&amp;amp;bar">Entity is merely part of text</a></p>
+
+    <p><a href="http://example.com/%26.html">In path component</a></p>
+
+URLs as non-links :
+  notes  : Straight URL text sequences should not be converted to a hyperlink.
+  input  : |
+    http://cnn.com
+
+    "http://cnn.com"
+
+    "http://cnn.com(is a website)"
+  expect : |
+    <p>http://cnn.com</p>
+
+    <p>&#8220;http://cnn.com&#8221;</p>
+
+    <p>&#8220;http://cnn.com(is a website)&#8221;</p>
+
+URI-Schemes :
+  input  : |
+    "link with no scheme":textileit.com
+
+    "link with http":http://textileit.com
+
+    "link with https":https://textileit.com
+
+    "link with ftp":ftp://textileit.com
+
+    "link with ftp alias":uri-alias4
+
+    "link with sftp":sftp://foobar@textileit.com
+
+    "$":sftp://foobar@textileit.com
+
+    Find it "here":http://github.com/netcarver/some+thing+completely+different on github.
+
+    "link with sftp alias":uri-alias3
+
+    "link with file1":file://host.example.com/folder/file.ext
+
+    "$":file://host.example.com/folder/file.ext
+
+    "link with file2":file:///c:/folder/file.ext
+
+    "link with file alias":uri-alias2
+
+    "$":file:///c:/folder/file.ext
+
+    "link with tel":tel:123123123123123123-123
+
+    "$":tel:123123123123123123-123
+
+    "int tel":uri-alias1
+
+    "link with mailto":mailto:contact+alt@textileit.com
+
+    "link with mailto alias":uri-alias6
+
+    "link with callto":callto:textileit.com
+
+    "link with callto alias":uri-alias5
+
+    "$":callto:textileit.com
+    [uri-alias1]tel:+123-(0)-123123123-123
+    [uri-alias2]file:///c:/folder/file.ext
+    [uri-alias3]sftp://foo@bar.net
+    [uri-alias4]ftp://foo@bar.net
+    [uri-alias5]callto:textileit.com
+    [uri-alias6]mailto:contact@textileit.com
+  expect : |
+    <p><a href="textileit.com">link with no scheme</a></p>
+
+    <p><a href="http://textileit.com">link with http</a></p>
+
+    <p><a href="https://textileit.com">link with https</a></p>
+
+    <p><a href="ftp://textileit.com">link with ftp</a></p>
+
+    <p><a href="ftp://foo@bar.net">link with ftp alias</a></p>
+
+    <p><a href="sftp://foobar@textileit.com">link with sftp</a></p>
+
+    <p><a href="sftp://foobar@textileit.com">foobar@textileit.com</a></p>
+
+    <p>Find it <a href="http://github.com/netcarver/some+thing+completely+different">here</a> on github.</p>
+
+    <p><a href="sftp://foo@bar.net">link with sftp alias</a></p>
+
+    <p><a href="file://host.example.com/folder/file.ext">link with file1</a></p>
+
+    <p><a href="file://host.example.com/folder/file.ext">host.example.com/folder/file.ext</a></p>
+
+    <p><a href="file:/c%3A/folder/file.ext">link with file2</a></p>
+
+    <p><a href="file:/c%3A/folder/file.ext">link with file alias</a></p>
+
+    <p><a href="file:/c%3A/folder/file.ext">c:/folder/file.ext</a></p>
+
+    <p><a href="tel:123123123123123123-123">link with tel</a></p>
+
+    <p><a href="tel:123123123123123123-123">123123123123123123-123</a></p>
+
+    <p><a href="tel:%2B123-%280%29-123123123-123">int tel</a></p>
+
+    <p><a href="mailto:contact%2Balt@textileit.com">link with mailto</a></p>
+
+    <p><a href="mailto:contact@textileit.com">link with mailto alias</a></p>
+
+    <p><a href="callto:textileit.com">link with callto</a></p>
+
+    <p><a href="callto:textileit.com">link with callto alias</a></p>
+
+    <p><a href="callto:textileit.com">textileit.com</a></p>
+
+Self-Hyperlink :
+  input  : |
+    Relative link to "$":testit.php?testfilename=textile/basic.
+
+    Relative link to "$":/testit.php?testfilename=textile/basic.
+
+    Send spam to "$":mailto://blackhole@sun.comet please!
+
+    An auto-hyperlink to "$":http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown is -not- possible.
+
+    An auto-hyperlink (with title) to "$(Comparison of Textile2 and Markdown)":http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown is -not- possible.
+
+    An auto-hyperlink (with atts) to "(class#id)[en-au]$(Comparison of Textile2 and Markdown)":http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown is -not- possible.
+  expect : |
+    <p>Relative link to <a href="testit.php?testfilename=textile/basic">testit.php?testfilename=textile/basic</a>.</p>
+
+    <p>Relative link to <a href="/testit.php?testfilename=textile/basic">/testit.php?testfilename=textile/basic</a>.</p>
+
+    <p>Send spam to <a href="mailto://blackhole@sun.comet">blackhole@sun.comet</a> please!</p>
+
+    <p>An auto-hyperlink to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown">mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
+
+    <p>An auto-hyperlink (with title) to <a href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown" title="Comparison of Textile2 and Markdown">mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
+
+    <p>An auto-hyperlink (with atts) to <a class="class" href="http://mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown" id="id" lang="en-au" title="Comparison of Textile2 and Markdown">mojomojo.org/documentation/textile_vs_markdown#Textile2_vs._MultiMarkdown</a> is <del>not</del> possible.</p>
+
+Self-referencing link alias :
+  input  : |
+    Here is "$":0, and "another link":0, to the ^["$":0]^ site.
+    [0]http://thresholdstate.com/?q=true
+
+    Please check on "$":4 for any updates.
+    [4]https://de.wikipedia.org/wiki/Übermensch
+  expect : |
+    <p>Here is <a href="http://thresholdstate.com/?q=true">http://thresholdstate.com/?q=true</a>, and <a href="http://thresholdstate.com/?q=true">another link</a>, to the <sup><a href="http://thresholdstate.com/?q=true">http://thresholdstate.com/?q=true</a></sup> site.</p>
+
+    <p>Please check on <a href="https://de.wikipedia.org/wiki/%C3%9Cbermensch">https://de.wikipedia.org/wiki/Übermensch</a> for any updates.</p>
+
+Links :
+  input  : |
+    "link text":http://example.com
+
+    "link text":http://example.com.
+
+    "link text":http://example.com,
+
+    "link text":http://example.com?
+
+    "link text":http://example.com:
+
+    "link text":http://example.com:80
+
+    "link text":http://example.com;
+
+    "link text":http://example.com|
+
+    "link text":http://example.com*
+
+    "textile":/..!
+
+    "link text":http://example.com/
+
+    "link text":http://example.com/.
+
+    "link text":http://example.com/,
+
+    "link text":http://example.com/?
+
+    "link text":http://example.com/:
+
+    "link text":http://example.com/:80
+
+    "link text":http://example.com/;
+
+    "link text":http://example.com/|
+
+    "link text":http://example.com/*
+
+    ("link text":http://example.com)
+
+    ("link text":http://example.com/)
+
+    (Try "this link":http://example.com/)
+
+    ("link text":http://example.com/ go go go!)
+
+    "link text":/example
+
+    "link text(with title)":http://example.com/
+
+    Here is "a link":0, and "another link":0 to a site.
+    [0]http://thresholdstate.com/
+
+    Here is "a link":1, and "another link":1 to a site.
+    [1]http://thresholdstate.com/?q[]=true
+
+    Here is "a link":ts, and "another link":ts, to the same site.
+    [ts]http://thresholdstate.com/?q[]=true
+
+    "link text(with title)":https://example.com/
+
+    "link text(with title)":ftp://example.com/
+
+    "link text(with title)":mailto:contact@example.com
+
+    "(class#id)[de-de]$(title)":http://textpattern.com
+
+    "(class#id)[en-gb]{text-transform:uppercase}Try this link(Link title)":http://textile.sitemonks.com
+
+    "(linkclass#linkid)[de-de]!(imgclass#imgid)imgurl(img/link text)!(Link Title)":linkurl
+
+    "Tcl":../html/tcltk.html
+
+    "(myclass) (just in case you were wondering)":http://slashdot.org/
+
+    "Participar (para) poder":http://www.unicef.org/argentina/spanish/cartilla_3(1).pdf
+  expect : |
+    <p><a href="http://example.com">link text</a></p>
+
+    <p><a href="http://example.com">link text</a>.</p>
+
+    <p><a href="http://example.com">link text</a>,</p>
+
+    <p><a href="http://example.com">link text</a>?</p>
+
+    <p><a href="http://example.com">link text</a>:</p>
+
+    <p><a href="http://example.com:80">link text</a></p>
+
+    <p><a href="http://example.com">link text</a>;</p>
+
+    <p><a href="http://example.com">link text</a>|</p>
+
+    <p><a href="http://example.com">link text</a>*</p>
+
+    <p><a href="/">textile</a>..!</p>
+
+    <p><a href="http://example.com/">link text</a></p>
+
+    <p><a href="http://example.com/">link text</a>.</p>
+
+    <p><a href="http://example.com/">link text</a>,</p>
+
+    <p><a href="http://example.com/">link text</a>?</p>
+
+    <p><a href="http://example.com/">link text</a>:</p>
+
+    <p><a href="http://example.com/%3A80">link text</a></p>
+
+    <p><a href="http://example.com/">link text</a>;</p>
+
+    <p><a href="http://example.com/">link text</a>|</p>
+
+    <p><a href="http://example.com/">link text</a>*</p>
+
+    <p>(<a href="http://example.com">link text</a>)</p>
+
+    <p>(<a href="http://example.com/">link text</a>)</p>
+
+    <p>(Try <a href="http://example.com/">this link</a>)</p>
+
+    <p>(<a href="http://example.com/">link text</a> go go go!)</p>
+
+    <p><a href="/example">link text</a></p>
+
+    <p><a href="http://example.com/" title="with title">link text</a></p>
+
+    <p>Here is <a href="http://thresholdstate.com/">a link</a>, and <a href="http://thresholdstate.com/">another link</a> to a site.</p>
+
+    <p>Here is <a href="http://thresholdstate.com/?q[]=true">a link</a>, and <a href="http://thresholdstate.com/?q[]=true">another link</a> to a site.</p>
+
+    <p>Here is <a href="http://thresholdstate.com/?q[]=true">a link</a>, and <a href="http://thresholdstate.com/?q[]=true">another link</a>, to the same site.</p>
+
+    <p><a href="https://example.com/" title="with title">link text</a></p>
+
+    <p><a href="ftp://example.com/" title="with title">link text</a></p>
+
+    <p><a href="mailto:contact@example.com" title="with title">link text</a></p>
+
+    <p><a class="class" href="http://textpattern.com" id="id" lang="de-de" title="title">textpattern.com</a></p>
+
+    <p><a class="class" href="http://textile.sitemonks.com" id="id" lang="en-gb" style="text-transform:uppercase;" title="Link title">Try this link</a></p>
+
+    <p><a class="linkclass" href="linkurl" id="linkid" lang="de-de" title="Link Title"><img alt="img/link text" class="imgclass" id="imgid" src="imgurl" title="img/link text" /></a></p>
+
+    <p><a href="../html/tcltk.html">Tcl</a></p>
+
+    <p><a class="myclass" href="http://slashdot.org/">(just in case you were wondering)</a></p>
+
+    <p><a href="http://www.unicef.org/argentina/spanish/cartilla_3%281%29.pdf">Participar (para) poder</a></p>
+
+Quoted double-quote in links:
+  input  : |
+    "The use of the character " in textile":help.html..!
+
+    ""The use of the character " in textile"":help.html..!
+
+    ""The use of the character """ in textile"":help.html..!
+
+    "The use of the character """ in textile":help.html..!
+
+    "The use of the character '"' in textile":help.html..!
+
+    ""The use of the character '"' in textile"":help.html..!
+
+    "The use of the character {"} in textile":help.html..!
+
+    ""The use of the character {"} in textile"":help.html..!
+
+    "The use of the character ["] in textile":help.html..!
+
+    ""The use of the character ["] in textile"":help.html..!
+
+    "The use of the character (") in textile":help.html..!
+
+    ""The use of the character (") in textile"":help.html..!
+
+    "The use of the character «"» in textile":help.html..!
+
+    ""The use of the character «"» in textile"":help.html..!
+
+    "The use of the character »"« in textile":help.html..!
+
+    "The use of the character ‹"› in textile":help.html..!
+
+    "The use of the character ›"‹ in textile":help.html..!
+
+    "The use of the character „"“ in textile":help.html..!
+
+    "The use of the character ‚"‘ in textile":help.html..!
+
+    "The use of the character ‘"’ in textile":help.html..!
+
+    "The use of the character ”"“ in textile":help.html..!
+
+    "'The use of the character " in textile'":help.html..!
+  expect : |
+    <p><a href="help.html">The use of the character &#8220; in textile</a>..!</p>
+
+    <p><a href="help.html">&#8220;The use of the character &#8220; in textile&#8221;</a>..!</p>
+
+    <p><a href="help.html">&#8220;The use of the character &#8220;"&#8221; in textile&#8221;</a>..!</p>
+
+    <p><a href="help.html">The use of the character &#8220;"&#8221; in textile</a>..!</p>
+
+    <p><a href="help.html">The use of the character &#8216;"&#8217; in textile</a>..!</p>
+
+    <p><a href="help.html">&#8220;The use of the character &#8216;"&#8217; in textile&#8221;</a>..!</p>
+
+    <p><a href="help.html">The use of the character {"} in textile</a>..!</p>
+
+    <p><a href="help.html">&#8220;The use of the character {"} in textile&#8221;</a>..!</p>
+
+    <p><a href="help.html">The use of the character ["] in textile</a>..!</p>
+
+    <p><a href="help.html">&#8220;The use of the character ["] in textile&#8221;</a>..!</p>
+
+    <p><a href="help.html">The use of the character (") in textile</a>..!</p>
+
+    <p><a href="help.html">&#8220;The use of the character (") in textile&#8221;</a>..!</p>
+
+    <p><a href="help.html">The use of the character «"» in textile</a>..!</p>
+
+    <p><a href="help.html">&#8220;The use of the character «"» in textile&#8221;</a>..!</p>
+
+    <p><a href="help.html">The use of the character »"« in textile</a>..!</p>
+
+    <p><a href="help.html">The use of the character ‹"› in textile</a>..!</p>
+
+    <p><a href="help.html">The use of the character ›"‹ in textile</a>..!</p>
+
+    <p><a href="help.html">The use of the character „"“ in textile</a>..!</p>
+
+    <p><a href="help.html">The use of the character ‚"‘ in textile</a>..!</p>
+
+    <p><a href="help.html">The use of the character ‘"’ in textile</a>..!</p>
+
+    <p><a href="help.html">The use of the character ”"“ in textile</a>..!</p>
+
+    <p><a href="help.html">&#8216;The use of the character &#8220; in textile&#8217;</a>..!</p>
+
+Redcloth Links:
+  input  : |
+    "testing":
+
+    "Link":/foo.html, me
+
+    "Link":/foo.html! me
+
+    "Link":/foo.html; me
+
+    "Link":/foo.html.
+
+    "(just in case you were wondering)":http://slashdot.org/
+
+    "(myclass) (just in case you were wondering)":http://slashdot.org/
+
+    "It is (very) fortunate that this works":http://slashdot.org/
+
+    "link text":#1
+
+    "link text":#a
+
+    "link text":#a1
+
+    "link text":#a10
+
+    "link text":?1
+
+    "link text":?a
+
+    "link text":?a1
+
+    "link text":?a10
+
+    "link text":?q[]=1
+
+    "link text":?q[]=a
+
+    "link text":?q[]=a1
+
+    "link text":?q[]=a10
+
+    "link text":index.html
+
+    "link text":index.html#1
+
+    "link text":index.html#a
+
+    "link text":index.html#a1
+
+    "link text":index.html#a10
+
+    "link text":http://example.com/
+
+    "link text":http://example.com/#1
+
+    "link text":http://example.com/#a
+
+    "link text":http://example.com/#a1
+
+    "link text":http://example.com/#a10
+
+    "link text":http://example.com/index.html
+
+    "link text":http://example.com/index.html#a
+
+    "link text":http://example.com/index.html#1
+
+    "link text":http://example.com/index.html#a1
+
+    "link text":http://example.com/index.html#a10
+
+    "link text":http://example.com/?foo=bar
+
+    "link text":http://example.com/?foo=bar#a
+
+    "link text":http://example.com/?foo=bar#1
+
+    "link text":http://example.com/?foo=bar#a1
+
+    "link text":http://example.com/?foo=bar#a10
+
+    "link text":http://example.com/?foo=bar&a=b
+
+    "link text":http://example.com/?foo=bar&a=b#1
+
+    "link text":http://example.com/?foo=bar&a=b#a
+
+    "link text":http://example.com/?foo=bar&a=b#a1
+
+    "link text":http://example.com/?foo=bar&a=b#a10
+
+    This is a "link":http://example.com/
+
+    This is a "link":http://example.com/.
+
+    This is a "link":http://example.com/index.html.
+
+    "link text":http://example.com/#1
+
+    "link text":http://example.com/#a
+
+    "link text":http://example.com/#a1
+
+    "link text":http://example.com/#a10
+
+    "link text":http://example.com/index.html
+
+    "link text":http://example.com/index.html#a
+
+    "link text":http://example.com/index.html#1
+
+    "link text":http://example.com/index.html#a1
+
+    "link text":http://example.com/index.html#a10
+
+    "link text":http://example.com/?foo=bar
+
+    "link text":http://example.com/?foo=bar#a
+
+    "link & text":http://example.com/?foo=bar#a
+
+    "link text":http://example.com/?foo=bar#1
+
+    "link text":http://example.com/?foo=bar#a1
+
+    "link text":http://example.com/?foo=bar#a10
+
+    "link text":http://example.com/?foo=bar&a=b
+
+    "link text":http://example.com/?foo=bar&a=b#1
+
+    "link text":http://example.com/?foo=bar&a=b#a
+
+    "link text":http://example.com/?foo=bar&a=b#a1
+
+    "link text":http://example.com/?foo=bar&a=b#a10
+
+    This is a "link":http://example.com/
+
+    This is a "link":http://example.com/.
+
+    This is a "link":http://example.com/index.html.
+
+    "link & text":http://example.com/?foo=bar#a
+
+    (This is a "link":http://example.com/?foo=bar#a10) but this is not.
+
+    "(link) text(link title)":http://example.com/
+
+    "(link)text (link title)":http://example.com/
+
+    "(link) text (link title)":http://example.com/
+
+    "Dive Into XML":http://www.xml.com/pub/au/164
+
+    "Lab Exercises":../lab/exercises/exercises.html.
+
+    Go to "discuss":http://www.dreammoods.com/cgibin/cutecast/cutecast.pl?forum=1&thread=26627 to discuss.
+
+    * "rubylang":http://www.ruby-lang.org/en/
+  expect : |
+    <p>&#8220;testing&#8221;:</p>
+
+    <p><a href="/foo.html">Link</a>, me</p>
+
+    <p><a href="/foo.html">Link</a>! me</p>
+
+    <p><a href="/foo.html">Link</a>; me</p>
+
+    <p><a href="/foo.html">Link</a>.</p>
+
+    <p><a href="http://slashdot.org/">(just in case you were wondering)</a></p>
+
+    <p><a class="myclass" href="http://slashdot.org/">(just in case you were wondering)</a></p>
+    
+    <p><a href="http://slashdot.org/">It is (very) fortunate that this works</a></p>
+
+    <p><a href="#1">link text</a></p>
+
+    <p><a href="#a">link text</a></p>
+
+    <p><a href="#a1">link text</a></p>
+
+    <p><a href="#a10">link text</a></p>
+
+    <p><a href="?1">link text</a></p>
+
+    <p><a href="?a">link text</a></p>
+
+    <p><a href="?a1">link text</a></p>
+
+    <p><a href="?a10">link text</a></p>
+
+    <p><a href="?q[]=1">link text</a></p>
+
+    <p><a href="?q[]=a">link text</a></p>
+
+    <p><a href="?q[]=a1">link text</a></p>
+
+    <p><a href="?q[]=a10">link text</a></p>
+
+    <p><a href="index.html">link text</a></p>
+
+    <p><a href="index.html#1">link text</a></p>
+
+    <p><a href="index.html#a">link text</a></p>
+
+    <p><a href="index.html#a1">link text</a></p>
+
+    <p><a href="index.html#a10">link text</a></p>
+
+    <p><a href="http://example.com/">link text</a></p>
+
+    <p><a href="http://example.com/#1">link text</a></p>
+
+    <p><a href="http://example.com/#a">link text</a></p>
+
+    <p><a href="http://example.com/#a1">link text</a></p>
+
+    <p><a href="http://example.com/#a10">link text</a></p>
+
+    <p><a href="http://example.com/index.html">link text</a></p>
+
+    <p><a href="http://example.com/index.html#a">link text</a></p>
+
+    <p><a href="http://example.com/index.html#1">link text</a></p>
+
+    <p><a href="http://example.com/index.html#a1">link text</a></p>
+
+    <p><a href="http://example.com/index.html#a10">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar#a">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar#1">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar#a1">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar#a10">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar&amp;a=b">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar&amp;a=b#1">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar&amp;a=b#a">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar&amp;a=b#a1">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar&amp;a=b#a10">link text</a></p>
+
+    <p>This is a <a href="http://example.com/">link</a></p>
+
+    <p>This is a <a href="http://example.com/">link</a>.</p>
+
+    <p>This is a <a href="http://example.com/index.html">link</a>.</p>
+
+    <p><a href="http://example.com/#1">link text</a></p>
+
+    <p><a href="http://example.com/#a">link text</a></p>
+
+    <p><a href="http://example.com/#a1">link text</a></p>
+
+    <p><a href="http://example.com/#a10">link text</a></p>
+
+    <p><a href="http://example.com/index.html">link text</a></p>
+
+    <p><a href="http://example.com/index.html#a">link text</a></p>
+
+    <p><a href="http://example.com/index.html#1">link text</a></p>
+
+    <p><a href="http://example.com/index.html#a1">link text</a></p>
+
+    <p><a href="http://example.com/index.html#a10">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar#a">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar#a">link &amp; text</a></p>
+
+    <p><a href="http://example.com/?foo=bar#1">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar#a1">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar#a10">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar&amp;a=b">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar&amp;a=b#1">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar&amp;a=b#a">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar&amp;a=b#a1">link text</a></p>
+
+    <p><a href="http://example.com/?foo=bar&amp;a=b#a10">link text</a></p>
+
+    <p>This is a <a href="http://example.com/">link</a></p>
+
+    <p>This is a <a href="http://example.com/">link</a>.</p>
+
+    <p>This is a <a href="http://example.com/index.html">link</a>.</p>
+
+    <p><a href="http://example.com/?foo=bar#a">link &amp; text</a></p>
+
+    <p>(This is a <a href="http://example.com/?foo=bar#a10">link</a>) but this is not.</p>
+
+    <p><a class="link" href="http://example.com/" title="link title">text</a></p>
+
+    <p><a class="link" href="http://example.com/" title="link title">text</a></p>
+
+    <p><a class="link" href="http://example.com/" title="link title">text</a></p>
+
+    <p><a href="http://www.xml.com/pub/au/164">Dive Into <span class="caps">XML</span></a></p>
+
+    <p><a href="../lab/exercises/exercises.html">Lab Exercises</a>.</p>
+
+    <p>Go to <a href="http://www.dreammoods.com/cgibin/cutecast/cutecast.pl?forum=1&amp;thread=26627">discuss</a> to discuss.</p>
+
+    <ul>
+    	<li><a href="http://www.ruby-lang.org/en/">rubylang</a></li>
+    </ul>
+
+Links in tables... :
+  input:  |
+    | "abc":url |
+
+    | "abc":url|
+    
+    |"abc":url |
+    
+    |"abc":url|
+
+    |"abc":url|"def":url2|
+
+    |"(class)abc(title)":url|"[en-GB]def[inition]":url2|
+
+    |""福島駅"":http://ja.wikipedia.org/wiki/福島駅_(大阪府)/?q[]=x.|
+
+    |["(class)[de] "A def[inition]" (title)":../uri?q[x]=123#fr]|
+  expect: |
+    <table>
+    		<tr>
+    			<td> <a href="url">abc</a> </td>
+    		</tr>
+    </table>
+
+    <table>
+    		<tr>
+    			<td> <a href="url">abc</a></td>
+    		</tr>
+    </table>
+
+    <table>
+    		<tr>
+    			<td><a href="url">abc</a> </td>
+    		</tr>
+    </table>
+
+    <table>
+    		<tr>
+    			<td><a href="url">abc</a></td>
+    		</tr>
+    </table>
+
+    <table>
+    		<tr>
+    			<td><a href="url">abc</a></td>
+    			<td><a href="url2">def</a></td>
+    		</tr>
+    </table>
+
+    <table>
+    		<tr>
+    			<td><a class="class" href="url" title="title">abc</a></td>
+    			<td><a href="url2" lang="en-GB">def[inition]</a></td>
+    		</tr>
+    </table>
+
+    <table>
+    		<tr>
+    			<td><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_%28%E5%A4%A7%E9%98%AA%E5%BA%9C%29/?q[]=x">&#8220;福島駅&#8221;</a>.</td>
+    		</tr>
+    </table>
+
+    <table>
+    		<tr>
+    			<td><a class="class" href="../uri?q[x]=123#fr" lang="de" title="title">&#8220;A def[inition]&#8221;</a></td>
+    		</tr>
+    </table>
+
+Array Links :
+  input  : |
+    "Array link":/search?phparray[]=test
+
+    Here is "my link":http://github.com?param[]=value with some other...
+
+    In a sentence "my link":http://github.com?param[]=value. And another "link":https://github.com/netcarver/textile?q[]=1&enc=true, you may not like!
+
+    In a sentence "my link":http://github.com?param[]=val&par2[]=val2&l=en&enc=utf-8#end.
+
+    ...blah blah ^["on github":http://github.com?param[]=val&par2[]=val2&l=en&enc=utf-8#end]^ blah...
+
+    ...blah blah[^["on github":http://github.com?param[]=val&par2[]=val2&l=en&enc=utf-8#end]^]blah...
+
+    ...blah blah (for more details look on "github":http://github.com?q[]=one,2#end) blah blah...
+
+    [Here] is "a link":0, and "another link":0, to the ^["same":https://github.com/netcarver/?lang=en&q[]]^ site.
+    [0]http://thresholdstate.com/?q[]=true
+  expect: |
+    <p><a href="/search?phparray[]=test">Array link</a></p>
+
+    <p>Here is <a href="http://github.com?param[]=value">my link</a> with some other&#8230;</p>
+
+    <p>In a sentence <a href="http://github.com?param[]=value">my link</a>. And another <a href="https://github.com/netcarver/textile?q[]=1&amp;enc=true">link</a>, you may not like!</p>
+
+    <p>In a sentence <a href="http://github.com?param[]=val&amp;par2[]=val2&amp;l=en&amp;enc=utf-8#end">my link</a>.</p>
+
+    <p>&#8230;blah blah <sup><a href="http://github.com?param[]=val&amp;par2[]=val2&amp;l=en&amp;enc=utf-8#end">on github</a></sup> blah&#8230;</p>
+
+    <p>&#8230;blah blah<sup><a href="http://github.com?param[]=val&amp;par2[]=val2&amp;l=en&amp;enc=utf-8#end">on github</a></sup>blah&#8230;</p>
+
+    <p>&#8230;blah blah (for more details look on <a href="http://github.com?q[]=one,2#end">github</a>) blah blah&#8230;</p>
+
+    <p>[Here] is <a href="http://thresholdstate.com/?q[]=true">a link</a>, and <a href="http://thresholdstate.com/?q[]=true">another link</a>, to the <sup><a href="https://github.com/netcarver/?lang=en&amp;q[]">same</a></sup> site.</p>
+
+Unicode Links :
+  input  : |
+    "Übermensch":https://de.wikipedia.org/wiki/Übermensch
+
+    "$":https://de.wikipedia.org/wiki/Übermensch
+
+    "福島駅":link5 this is a test -- no trailing slash.
+
+    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash":link3
+
+    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash":https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ
+
+    "福島駅":link6 this is a test -- with a trailing slash.
+
+    "福島駅":http://ja.wikipedia.org/wiki/福島駅_(大阪府), what do you think?
+
+    "福島駅":http://ja.wikipedia.org/wiki/福島駅_(大阪府)/?q[]=x.
+
+    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash":link4
+
+    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash":https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ/
+
+    "Google":link1 or "secure google":link2
+    [link1]http://google.com
+    [link2]https://google.com
+    [link3]https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ
+    [link4]https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ/
+    [link5]http://ja.wikipedia.org/wiki/福島駅_(大阪府)
+    [link6]http://ja.wikipedia.org/wiki/福島駅_(大阪府)/
+  expect : |
+    <p><a href="https://de.wikipedia.org/wiki/%C3%9Cbermensch">Übermensch</a></p>
+
+    <p><a href="https://de.wikipedia.org/wiki/%C3%9Cbermensch">de.wikipedia.org/wiki/Übermensch</a></p>
+
+    <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_%28%E5%A4%A7%E9%98%AA%E5%BA%9C%29">福島駅</a> this is a test &#8212; no trailing slash.</p>
+
+    <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash</a></p>
+
+    <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash</a></p>
+
+    <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_%28%E5%A4%A7%E9%98%AA%E5%BA%9C%29/">福島駅</a> this is a test &#8212; with a trailing slash.</p>
+
+    <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_%28%E5%A4%A7%E9%98%AA%E5%BA%9C%29">福島駅</a>, what do you think?</p>
+
+    <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_%28%E5%A4%A7%E9%98%AA%E5%BA%9C%29/?q[]=x">福島駅</a>.</p>
+
+    <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F/">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash</a></p>
+
+    <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F/">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash</a></p>
+
+    <p><a href="http://google.com">Google</a> or <a href="https://google.com">secure google</a></p>
+
+Non-whitelisted link schemes :
+  input :  |
+    "I'm a bad link":parp://parp.com
+  expect : |
+    <p>&#8220;I&#8217;m a bad link&#8221;:parp://parp.com</p>
+
+Mixed XHTML and Textile Links :
+  assert : skip
+  notes  : >
+    Reported here... http://forum.textpattern.com/viewtopic.php?pid=157506#p157506
+  input  : |
+    <a href="http://example.org" title="_dummy">example.org</a> _word_ abc
+
+    "example.org(_dummy)":http://example.org _word_ abc
+  expect : |
+    <p><a href="http://example.org" title="_dummy">example.org</a> <em>word</em> abc</p>
+
+    <p><a href="http://example.org" title="_dummy">example.org</a> <em>word</em> abc</p>
+
+Links with quoted text :
+  notes  : >
+    Single quotes link text are fine, but double quotes break the link. Use &quot; in this case.
+  input  : |
+    "How free markets 'address' health care(title)":http://krugman.blogs.nytimes.com/2009/07/25/why-markets-cant-cure-healthcare/
+
+    "How free markets &quot;address&quot; health care(title)":http://krugman.blogs.nytimes.com/2009/07/25/why-markets-cant-cure-healthcare/
+
+  expect : |
+    <p><a href="http://krugman.blogs.nytimes.com/2009/07/25/why-markets-cant-cure-healthcare/" title="title">How free markets &#8216;address&#8217; health care</a></p>
+
+    <p><a href="http://krugman.blogs.nytimes.com/2009/07/25/why-markets-cant-cure-healthcare/" title="title">How free markets &quot;address&quot; health care</a></p>
+
+Images with links :
+  input  : |
+    Here's the favicon from the TXP(Textpattern) website... !http://textpattern.com/favicon.ico(title text)!:http://textpattern.com
+
+    Again, this time left aligned. !<(class#id1)http://textpattern.com/favicon.ico(title text)!:http://textpattern.com
+
+    And again, to the right! !>(class#id2)http://textpattern.com/favicon.ico(title text)!:http://textpattern.com
+  expect : |
+    <p>Here&#8217;s the favicon from the <acronym title="Textpattern"><span class="caps">TXP</span></acronym> website&#8230; <a href="http://textpattern.com"><img alt="title text" src="http://textpattern.com/favicon.ico" title="title text" /></a></p>
+
+    <p>Again, this time left aligned. <a href="http://textpattern.com"><img align="left" alt="title text" class="class" id="id1" src="http://textpattern.com/favicon.ico" title="title text" /></a></p>
+
+    <p>And again, to the right! <a href="http://textpattern.com"><img align="right" alt="title text" class="class" id="id2" src="http://textpattern.com/favicon.ico" title="title text" /></a></p>
+
+Link in quotes. :
+  input  : |
+    "Here's a "(class#id)link(with a title)":http://cnn.com?a=b&c=d#end_of_page."
+  expect : |
+    <p>&#8220;Here&#8217;s a <a class="class" href="http://cnn.com?a=b&amp;c=d#end_of_page" id="id" title="with a title">link</a>.&#8221;</p>
+
+Complex links :
+  notes  : >
+    Pulled from (or inspired by) the Redcloth link fixtures...
+  input  : |
+    The ION coding style document found at "IONCodingStyleGuide.doc":http://perforce:8081/@md=d&cd=//&c=82E@//depot/systest/system/main/pub/doc/IONCodingStyleGuide.doc?ac=22 codifies a couple of rules to ensure reasonably consistent code and documentation of libraries in ION. Test text
+
+    "(myclass)[fr-FR]{color:red} just in case you were wondering(Title!)":http://slashdot.org/
+
+    "He said it is "very unlikely" the "economic stimulus" works":http://slashdot.org/
+
+    ""Open the pod bay doors please, HAL."":http://www.youtube.com/watch?v=npN9l2Bd06s
+
+    Here is [^"[de] "A def[inition]" (title)":url^] if you can believe it!
+  expect : |
+    <p>The <span class="caps">ION</span> coding style document found at <a href="http://perforce:8081/@md%3Dd%26cd%3D//%26c%3D82E@//depot/systest/system/main/pub/doc/IONCodingStyleGuide.doc?ac=22">IONCodingStyleGuide.doc</a> codifies a couple of rules to ensure reasonably consistent code and documentation of libraries in <span class="caps">ION</span>. Test text</p>
+
+    <p><a class="myclass" href="http://slashdot.org/" lang="fr-FR" style="color:red;" title="Title!">just in case you were wondering</a></p>
+
+    <p><a href="http://slashdot.org/">He said it is &#8220;very unlikely&#8221; the &#8220;economic stimulus&#8221; works</a></p>
+
+    <p><a href="http://www.youtube.com/watch?v=npN9l2Bd06s">&#8220;Open the pod bay doors please, <span class="caps">HAL</span>.&#8221;</a></p>
+
+    <p>Here is <sup><a href="url" lang="de" title="title">&#8220;A def[inition]&#8221;</a></sup> if you can believe it!</p>
+
