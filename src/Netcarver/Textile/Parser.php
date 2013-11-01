@@ -2747,7 +2747,7 @@ class Parser
                         // slice's fragments.
                         $possibilty = array_pop($possible_start_quotes);
                         if (null === $possibilty) {
-                            throw new exception("Malformed link found.");
+                            throw new \Exception("Malformed link found.");
                         }
 
                         // Add this part to those parts that make up the link text.
@@ -2799,7 +2799,7 @@ class Parser
             // Re-assemble the full text with the start and end markers
             $text = implode('":', $slices);
 
-        } catch (exception $e) {
+        } catch (\Exception $e) {
             // If we got an exception marking the links then let the replace regex try sorting it out...
         }
 
