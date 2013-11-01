@@ -2759,13 +2759,13 @@ class Parser
 
                         if ($len) {
                             // did this part inc or dec the balanced count?
-                            if (!ctype_space($first)) {
+                            if (!preg_match('/\s/'.$this->regex_snippets['mod'], $first)) {
                                 $balanced--;
                             }
                             if ('=' == $last) {
                                 $balanced--;
                             }
-                            if (!ctype_space($last)) {
+                            if (!preg_match('/\s/'.$this->regex_snippets['mod'], $last)) {
                                 $balanced++;
                             }
                         }
