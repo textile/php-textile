@@ -2980,15 +2980,12 @@ class Parser
             $first = false;
         } while ($popped);
 
-        // Pull the possibly truncated URL back together...
         $url = implode('', $url_chars);
         unset($url_chars);
 
-        // Parse the url into constituent parts...
         $uri_parts = array();
         $this->parseURI($url, $uri_parts);
 
-        // Check this is a valid uri scheme...
         $scheme         = $uri_parts['scheme'];
         $scheme_in_list = in_array($scheme, $this->url_schemes);
         $scheme_ok      = ('' === $scheme) || $scheme_in_list;
@@ -2997,7 +2994,6 @@ class Parser
             return str_replace($this->link_start_marker, '', $in);
         }
 
-        // Handle self-referencing links...
         if ('$' === $text) {
             if ($scheme_in_list) {
                 $text = ltrim($this->rebuildURI($uri_parts, 'authority,path,query,fragment', false), '/');
@@ -3031,7 +3027,7 @@ class Parser
         $tags = $this->storeTags((string) $a, '</a>');
         $out  = $this->shelve($tags['open'].trim($text).$tags['close']);
 
-        return $pre . $out . $pop . $tight;	// return the shelf id and the $pop'd characters
+        return $pre . $out . $pop . $tight;
     }
 
      /**
