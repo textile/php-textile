@@ -2882,7 +2882,6 @@ class Textile
 
     protected function replaceLinks($text)
     {
-        //$w = $this->regex_snippets['wrd'];
         $stopchars = "\s|^'\"*";
 
         return preg_replace_callback(
