@@ -868,7 +868,7 @@ class Parser
         }
         extract($this->regex_snippets);
         $this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
-        $this->quote_starts = strtr(preg_quote(implode('|', array_keys($this->quotes))), array('\|' => '|'));
+        $this->quote_starts = implode('|', array_map('preg_quote', array_keys($this->quotes)));
 
         if (defined('DIRECTORY_SEPARATOR')) {
             $this->ds = constant('DIRECTORY_SEPARATOR');
