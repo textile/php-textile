@@ -651,14 +651,6 @@ class Parser
     protected $doctype;
 
     /**
-     * Link start marker
-     *
-     * @var string
-     */
-
-    protected $link_start_marker;
-
-    /**
      * Substitution symbols.
      *
      * Basic symbols used in textile glyph replacements. To override these, call
@@ -846,7 +838,6 @@ class Parser
             $this->doctype = $doctype;
         }
 
-        $this->link_start_marker = 'lsm:'.uniqid(rand()).':';
         $this->uid = 'textileRef:'.uniqid(rand()).':';
         $this->a = "(?:$this->hlgn|$this->vlgn)*";
         $this->s = "(?:$this->cspn|$this->rspn)*";
@@ -2790,7 +2781,7 @@ class Parser
                     $pre_link   = implode('"', $possible_start_quotes);
 
                     // Re-assemble the link starts with a specific marker for the next regex.
-                    $slices[$i] = $pre_link . $this->link_start_marker . '"' . $link_start;
+                    $slices[$i] = $pre_link . $this->uid.'linkStartMarker:"' . $link_start;
                 }
 
                 // Add the last part back
@@ -2822,7 +2813,7 @@ class Parser
         return preg_replace_callback(
             '/
             (?P<pre>\[)?                  # Optionally open with a square bracket eg. Look ["here":url]
-            '.$this->link_start_marker.'" # marks start of the link
+            '.$this->uid.'linkStartMarker:" # marks start of the link
             (?P<inner>.+?)                # capture the content of the inner "..." part of the link, can be anything but
                                           # do not worry about matching class, id, lang or title yet
             ":                            # literal ": marks end of atts + text + title block
@@ -2851,7 +2842,7 @@ class Parser
 
         // Reject invalid urls such as "linktext": which has no url part.
         if ('' === $url) {
-            return str_replace($this->link_start_marker, '', $in);
+            return str_replace($this->uid.'linkStartMarker:', '', $in);
         }
 
         // Split inner into $atts, $text and $title..
@@ -2995,7 +2986,7 @@ class Parser
         $scheme_ok      = ('' === $scheme) || $scheme_in_list;
 
         if (!$scheme_ok) {
-            return str_replace($this->link_start_marker, '', $in);
+            return str_replace($this->uid.'linkStartMarker:', '', $in);
         }
 
         if ('$' === $text) {
@@ -3361,8 +3352,6 @@ class Parser
         $out = preg_replace("/^[ \t]*\n/m", "\n", $out);
         // Removes leading and ending blank lines.
         $out = trim($out, "\n");
-        // Ensure there are no link start marks in the input document.
-        $out = str_replace($this->link_start_marker, '', $out);
         return $out;
     }
 
