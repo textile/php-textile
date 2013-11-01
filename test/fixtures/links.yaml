@@ -9,6 +9,28 @@ options:
   adaptor_options:
     restricted: false
 
+False start of link cases :
+  input : |
+    Hello :"world"!
+
+    Under and :"over":
+
+    Under and :"over": the wall.
+
+    Under and :"over":/ the wall.
+
+    Under and "over":/ the wall.
+  expect: |
+    <p>Hello :&#8220;world&#8221;!</p>
+
+    <p>Under and :&#8220;over&#8221;:</p>
+
+    <p>Under and :&#8220;over&#8221;: the wall.</p>
+
+    <p>Under and :&#8220;over&#8221;:/ the wall.</p>
+
+    <p>Under and <a href="/">over</a> the wall.</p>
+
 Link and image encoding :
   input : |
     !http://example.com/?size=60&file=image.png!
