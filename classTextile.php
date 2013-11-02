@@ -2811,7 +2811,7 @@ class Textile
                         // slice's fragments.
 
                         if (null === $possibility) {
-                            throw new \Exception("Malformed link found.");
+                            throw new exception("Malformed link found.");
                         }
 
                         // Add this part to those parts that make up the link text.
