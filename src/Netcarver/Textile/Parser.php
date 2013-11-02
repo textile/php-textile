@@ -408,7 +408,7 @@ class Parser
     protected $rspn = "(?:\/\d+)";
 
     /**
-     * ?
+     * Regular expression for horizontal or vertical alignment.
      *
      * @var string
      */
@@ -416,7 +416,7 @@ class Parser
     protected $a;
 
     /**
-     * ?
+     * Regular expression for column or row spans in tables.
      *
      * @var string
      */
