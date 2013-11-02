@@ -12,9 +12,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     {
         if (isset($test['doctype'])) {
             $textile = new Textile($test['doctype']);
-        }
-        else
-        {
+        } else {
             $textile = new Textile();
         }
 
@@ -26,15 +24,13 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 
         if (isset($test['method'])) {
             $method = trim($test['method']);
-        }
-        else {
+        } else {
             $method = 'textileThis';
         }
 
         if (isset($test['arguments'][0])) {
             $args = array_values($test['arguments'][0]);
-        }
-        else {
+        } else {
             $args = array();
         }
 
@@ -103,10 +99,8 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         $out = array();
         chdir(__DIR__ . '/fixtures');
 
-        if ($files = glob('*.yaml'))
-        {
-            foreach ($files as $file)
-            {
+        if ($files = glob('*.yaml')) {
+            foreach ($files as $file) {
                 $yaml = Yaml::parse($file);
 
                 foreach ($yaml as $name => $test) {
