@@ -2745,10 +2745,18 @@ class Parser
 
                 foreach ($slices as &$slice) {
 
+                    // If there is no possible start quote then this slice is not a link
+                    if (false === strpos($slice, '"')) {
+                        continue;
+                    }
+
                     // Cut this slice into possible starting points wherever we
                     // find a '"' character. Any of these parts could represent
                     // the start of the link text - we have to find which one.
                     $possible_start_quotes = explode('"', $slice);
+
+                    // Start our search for the start of the link with the closest prior
+                    // quote mark.
                     $possibility = rtrim(array_pop($possible_start_quotes));
 
                     // Init the balanced count. If this is still zero at the end
