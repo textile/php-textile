@@ -43,8 +43,8 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         foreach (array('expect', 'input') as $variable) {
             $$variable = preg_replace(
                 array(
-                    '/ id="(fn|note)[a-z0-9]*"/',
-                    '/ href="#(fn|note)[a-z0-9]*"/',
+                    '/ id="(fn|note)[a-z0-9\-]*"/',
+                    '/ href="#(fn|note)[a-z0-9\-]*"/',
                 ),
                 '',
                 $$variable

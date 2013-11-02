@@ -828,6 +828,22 @@ class Parser
     protected $olstarts = array();
 
     /**
+     * Link prefix.
+     *
+     * @var string
+     */
+
+    protected $linkPrefix;
+
+    /**
+     * Link index.
+     *
+     * @var int
+     */
+
+    protected $linkIndex = 1;
+
+    /**
      * Constructor.
      *
      * @param string $doctype The output document type, either 'xhtml' or 'html5'
@@ -846,7 +862,9 @@ class Parser
             $this->doctype = $doctype;
         }
 
-        $this->uid = 'textileRef:'.uniqid(rand()).':';
+        $uid = uniqid(rand());
+        $this->uid = 'textileRef:'.$uid.':';
+        $this->linkPrefix = $uid.'-';
         $this->a = "(?:$this->hlgn|$this->vlgn)*";
         $this->s = "(?:$this->cspn|$this->rspn)*";
         $this->c = "(?:$this->clas|$this->styl|$this->lnge|$this->hlgn)*";
@@ -1216,6 +1234,11 @@ class Parser
 
     protected function prepare($lite, $noimage, $rel)
     {
+        if ($this->linkIndex >= 1000000) {
+            $this->linkPrefix .= '-';
+            $this->linkIndex = 1;
+        }
+
         $this->unreferencedNotes = array();
         $this->notelist_cache    = array();
         $this->notes      = array();
@@ -2506,7 +2529,7 @@ class Parser
 
         // Assign an id if the note reference parse hasn't found the label yet.
         if (empty($this->notes[$label]['id'])) {
-            $this->notes[$label]['id'] = uniqid(rand());
+            $this->notes[$label]['id'] = $this->linkPrefix . ($this->linkIndex++);
         }
 
         // Ignores subsequent defs using the same label
@@ -2566,13 +2589,13 @@ class Parser
 
         // Make our anchor point & stash it for possible use in backlinks when the
         // note list is generated later.
-        $refid = uniqid(rand());
+        $refid = $this->linkPrefix . ($this->linkIndex++);
         $this->notes[$m['label']]['refids'][] = $refid;
 
         // If we are referencing a note that hasn't had the definition parsed yet, then assign it an ID.
 
         if (empty($this->notes[$m['label']]['id'])) {
-            $id = $this->notes[$m['label']]['id'] = uniqid(rand());
+            $id = $this->notes[$m['label']]['id'] = $this->linkPrefix . ($this->linkIndex++);
         } else {
             $id = $this->notes[$m['label']]['id'];
         }
@@ -3440,7 +3463,7 @@ class Parser
         $backref = ' class="footnote"';
 
         if (empty($this->fn[$m['id']])) {
-            $this->fn[$m['id']] = $id = uniqid(rand());
+            $this->fn[$m['id']] = $id = $this->linkPrefix . ($this->linkIndex++);
             $backref .= " id=\"fnrev$id\"";
         }
 
