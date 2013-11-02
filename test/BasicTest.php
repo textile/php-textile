@@ -50,6 +50,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertEquals($expect, $input, 'In section: '.$name);
+        $this->assertEquals('', implode(', ', array_keys(get_object_vars($textile))), 'Leaking public class properties.');
     }
 
     public function testGetVersion()
