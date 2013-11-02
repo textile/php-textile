@@ -175,10 +175,14 @@ Basic glyphs:
     "Textile(c)" is a registered(r) 'trademark' of Textpattern(tm) -- or TXP(That's textpattern!) -- at least it was - back in '88 when 2x4 was (+/-)5(o)C ... QED!
 
     p{font-size: 200%;}. 2(1/4) 3(1/2) 4(3/4)
+
+    "." ".." "..." '.' '..' '...' Allow quoted periods.
   expect : |
     <p>&#8220;Textile&#169;&#8221; is a registered&#174; &#8216;trademark&#8217; of Textpattern&#8482; &#8212; or <acronym title="That&#8217;s textpattern!"><span class="caps">TXP</span></acronym> &#8212; at least it was &#8211; back in &#8217;88 when 2&#215;4 was &#177;5&#176;C &#8230; <span class="caps">QED</span>!</p>
 
     <p style="font-size: 200%;">2&#188; 3&#189; 4&#190;</p>
+
+    <p>&#8220;.&#8221; &#8220;..&#8221; &#8220;&#8230;&#8221; &#8216;.&#8217; &#8216;..&#8217; &#8216;&#8230;&#8217; Allow quoted periods.</p>
 
 Classes and IDs:
   input  : |
