@@ -920,7 +920,7 @@ class Parser
      *
      * @param  string $name  Name of the symbol to assign a new value to.
      * @param  string $value New value for the symbol.
-     * @return object $this
+     * @return Parser
      */
 
     public function setSymbol($name, $value)
