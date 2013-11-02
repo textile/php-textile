@@ -2934,7 +2934,7 @@ class Parser
                     // If we find a closing square bracket we are going to see if it is balanced.
                     // If it is balanced with matching opening bracket then it is part of the URL else we spit it back
                     // out of the URL.
-                    if (null===$counts['[']) {
+                    if (null === $counts['[']) {
                         $counts['['] = substr_count($url, '[');
                     }
 
@@ -2952,7 +2952,7 @@ class Parser
                     break;
 
                 case ')':
-                    if (null===$counts[')']) {
+                    if (null === $counts[')']) {
                         $counts['('] = substr_count($url, '(');
                         $counts[')'] = substr_count($url, ')');
                     }
