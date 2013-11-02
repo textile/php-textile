@@ -2078,7 +2078,7 @@ class Parser
 
         if (preg_match("/fn(\d+)/", $tag, $fns)) {
             $tag = 'p';
-            $fnid = empty($this->fn[$fns[1]]) ? $fns[1] : $this->fn[$fns[1]];
+            $fnid = empty($this->fn[$fns[1]]) ? $this->linkPrefix . ($this->linkIndex++) : $this->fn[$fns[1]];
 
             // If there is an author-specified ID goes on the wrapper & the auto-id gets pushed to the <sup>
             $supp_id = '';
