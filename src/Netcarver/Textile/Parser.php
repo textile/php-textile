@@ -3468,7 +3468,7 @@ class Parser
      *
      * @param  array  $m Named regular expression parts
      * @return string Input with quoted quotes removed and replaced with tokens
-     * @see    Textile::glyphQuotedQuote()
+     * @see    Parser::glyphQuotedQuote()
      */
 
     protected function fGlyphQuotedQuote($m)
