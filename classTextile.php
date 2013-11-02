@@ -3251,7 +3251,7 @@ class Textile
             '/
             (?:[[{])?                  # pre
             \!                         # opening !
-            (\<|\=|\>)?                # optional alignment              $algn
+            (\<|\=|\>|&lt;|&gt;)?      # optional alignment              $algn
             ('.$this->lc.')            # optional style,class atts       $atts
             (?:\.\s)?                  # optional dot-space
             ([^\s(!]+)                 # presume this is the src         $url
@@ -3293,6 +3293,8 @@ class Textile
             } else {
                 $align = $alignments[$align];
             }
+        } else {
+            $align = '';
         }
 
         if ($title) {
