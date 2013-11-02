@@ -724,14 +724,6 @@ class Textile
     protected $doctype;
 
     /**
-     * Link start marker
-     *
-     * @var string
-     */
-
-    protected $link_start_marker;
-
-    /**
      * Substitution symbols.
      *
      * Basic symbols used in textile glyph replacements. To override these, call
@@ -871,12 +863,42 @@ class Textile
     protected $refCache = array();
 
     /**
-     * Stores matched open and closed quotes.
+     * Matched open and closed quotes.
      *
      * @var array
      */
 
-    protected $quotes = array();
+        protected $quotes = array(
+        '"' => '"',
+        "'" => "'",
+        '(' => ')',
+        '{' => '}',
+        '[' => ']',
+        '«' => '»',
+        '»' => '«',
+        '‹' => '›',
+        '›' => '‹',
+        '„' => '“',
+        '‚' => '‘',
+        '‘' => '’',
+        '”' => '“',
+    );
+
+    /**
+     * Regular expression that matches starting quotes.
+     *
+     * @var string
+     */
+
+    protected $quote_starts;
+
+    /**
+     * Ordered list starts.
+     *
+     * @var array
+     */
+
+    protected $olstarts = array();
 
     /**
      * Constructor.
@@ -897,7 +919,6 @@ class Textile
             $this->doctype = $doctype;
         }
 
-        $this->link_start_marker = 'lsm:'.uniqid(rand()).':';
         $this->uid = 'textileRef:'.uniqid(rand()).':';
         $this->a = "(?:$this->hlgn|$this->vlgn)*";
         $this->s = "(?:$this->cspn|$this->rspn)*";
@@ -927,23 +948,7 @@ class Textile
         }
         extract($this->regex_snippets);
         $this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
-
-        $this->quotes = array(
-            '"' => '"',
-            "'" => "'",
-            '(' => ')',
-            '{' => '}',
-            '[' => ']',
-            '«' => '»',
-            '»' => '«',
-            '‹' => '›',
-            '›' => '‹',
-            '„' => '“',
-            '‚' => '‘',
-            '‘' => '’',
-            '”' => '“',
-        );
-        $this->quote_starts = strtr(preg_quote(implode('|', array_keys($this->quotes))), array('\|'=>'|'));
+        $this->quote_starts = implode('|', array_map('preg_quote', array_keys($this->quotes)));
 
         if (defined('DIRECTORY_SEPARATOR')) {
             $this->ds = constant('DIRECTORY_SEPARATOR');
@@ -1220,20 +1225,20 @@ class Textile
             '/([0-9]+[\])]?[\'"]? ?)[xX]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]+)/'.$mod,   // Dimension sign
             '/('.$wrd.'|\))\'('.$wrd.')/'.$mod,     // I'm an apostrophe
             '/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod,    // Back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
-            "/([([{])'(?=\S)/",                     // Single open following open bracket
-            '/(\S)\'(?=\s|'.$pnc.'|<|$)/',          // Single closing
+            "/([([{])'(?=\S)/".$mod,                // Single open following open bracket
+            '/(\S)\'(?=\s|'.$pnc.'|<|$)/'.$mod,     // Single closing
             "/'/",                                  // Default single opening
-            '/([([{])"(?=\S)/',                     // Double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
-            '/(\S)"(?=\s|'.$pnc.'|<|$)/',           // Double closing
+            '/([([{])"(?=\S)/'.$mod,                // Double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
+            '/(\S)"(?=\s|'.$pnc.'|<|$)/'.$mod,      // Double closing
             '/"/',                                  // Default double opening
             '/\b(['.$abr.']['.$acr.']{2,})\b(?:[(]([^)]*)[)])/'.$mod,  // 3+ uppercase acronym
             '/(?<=\s|^|[>(;-])(['.$abr.']{3,})(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod,  // 3+ uppercase
             '/([^.]?)\.{3}/',                       // Ellipsis
             '/--/',                                 // em dash
             '/ - /',                                // en dash
-            '/(\b ?|\s|^)[([]TM[])]/i',             // Trademark
-            '/(\b ?|\s|^)[([]R[])]/i',              // Registered
-            '/(\b ?|\s|^)[([]C[])]/i',              // Copyright
+            '/(\b ?|\s|^)[([]TM[])]/i'.$mod,        // Trademark
+            '/(\b ?|\s|^)[([]R[])]/i'.$mod,         // Registered
+            '/(\b ?|\s|^)[([]C[])]/i'.$mod,         // Copyright
             '/[([]1\/4[])]/',                       // 1/4
             '/[([]1\/2[])]/',                       // 1/2
             '/[([]3\/4[])]/',                       // 3/4
@@ -2786,80 +2791,71 @@ class Textile
                 // off (we'll glue it back later).
                 $last_slice = array_pop($slices);
 
-                foreach ($slices as $i => $slice) {
+                foreach ($slices as &$slice) {
 
                     // Cut this slice into possible starting points wherever we
                     // find a '"' character. Any of these parts could represent
                     // the start of the link text - we have to find which one.
                     $possible_start_quotes = explode('"', $slice);
-                    $n = count($possible_start_quotes);
-
-                    // Cleanup situations like...
-                    // "He said it is "very unlikely" the stimulus works ":url
-                    //                           Space at end ----------^
-                    $possible_start_quotes[$n-1] = rtrim($possible_start_quotes[$n-1]);
+                    $possibility = rtrim(array_pop($possible_start_quotes));
 
                     // Init the balanced count. If this is still zero at the end
                     // of our do loop we'll mark the " that caused it to balance
                     // and move on to the next link.
                     $balanced = 0;
-
-                    // Vars we need in our balance checking loop...
                     $linkparts = array();
                     $iter = 0;
 
-                    do {
+                    while (1) {
                         // Starting at the end, pop off the previous part of the
                         // slice's fragments.
-                        $possibilty = array_pop($possible_start_quotes);
-                        if (null === $possibilty) {
-                            throw new exception("Malformed link found.");
+
+                        if (null === $possibility) {
+                            throw new \Exception("Malformed link found.");
                         }
 
                         // Add this part to those parts that make up the link text.
-                        $linkparts[] = $possibilty;
-                        $len = strlen($possibilty) > 0;
-
-                        $first = substr($possibilty, 0, 1);
-                        $last  = substr($possibilty, -1, 1);
+                        $linkparts[] = $possibility;
+                        $len = strlen($possibility) > 0;
 
                         if ($len) {
                             // did this part inc or dec the balanced count?
-                            if (!ctype_space($first)) {
+                            if (preg_match('/^\S|=$/'.$this->regex_snippets['mod'], $possibility)) {
                                 $balanced--;
                             }
-                            if ('=' == $last) {
-                                $balanced--;
-                            }
-                            if (!ctype_space($last)) {
+
+                            if (preg_match('/\S$/'.$this->regex_snippets['mod'], $possibility)) {
                                 $balanced++;
                             }
-                        }
-
-                        // If quotes occur next to each other, we get zero length strings.
-                        // eg. ...""Open the door, HAL!"":url...
-                        // In this case we count a zero length in the last position as a
-                        // closing quote and others as opening quotes.
-                        if (!$len) {
+                        } else {
+                            // If quotes occur next to each other, we get zero length strings.
+                            // eg. ...""Open the door, HAL!"":url...
+                            // In this case we count a zero length in the last position as a
+                            // closing quote and others as opening quotes.
                             $balanced = (!$iter++) ? $balanced+1 : $balanced-1;
                         }
 
-                    } while (0 != $balanced);
+                        if ($balanced <= 0) {
+                            break;
+                        }
 
-                    // rebuild the link's text by reversing the parts and sticking them back
+                        $possibility = array_pop($possible_start_quotes);
+                    }
+
+                    // Rebuild the link's text by reversing the parts and sticking them back
                     // together with quotes.
                     $link_start = implode('"', array_reverse($linkparts));
 
-                    // rebuild the remaining stuff that goes before the link but that's
+                    // Rebuild the remaining stuff that goes before the link but that's
                     // already in order.
-                    $pre_link   = implode('"', $possible_start_quotes);
+                    $pre_link = implode('"', $possible_start_quotes);
 
                     // Re-assemble the link starts with a specific marker for the next regex.
-                    $slices[$i] = $pre_link . $this->link_start_marker . '"' . $link_start;
+                    $slice = $pre_link . $this->uid.'linkStartMarker:"' . $link_start;
                 }
 
                 // Add the last part back
-                array_push($slices, $last_slice);
+                $slices[] = $last_slice;
             }
 
             // Re-assemble the full text with the start and end markers
@@ -2887,7 +2883,7 @@ class Textile
         return preg_replace_callback(
             '/
             (?P<pre>\[)?                  # Optionally open with a square bracket eg. Look ["here":url]
-            '.$this->link_start_marker.'" # marks start of the link
+            '.$this->uid.'linkStartMarker:" # marks start of the link
             (?P<inner>.+?)                # capture the content of the inner "..." part of the link, can be anything but
                                           # do not worry about matching class, id, lang or title yet
             ":                            # literal ": marks end of atts + text + title block
@@ -2916,7 +2912,7 @@ class Textile
 
         // Reject invalid urls such as "linktext": which has no url part.
         if ('' === $url) {
-            return str_replace($this->link_start_marker, '', $in);
+            return str_replace($this->uid.'linkStartMarker:', '', $in);
         }
 
         // Split inner into $atts, $text and $title..
@@ -3009,13 +3005,13 @@ class Textile
                     // If we find a closing square bracket we are going to see if it is balanced.
                     // If it is balanced with matching opening bracket then it is part of the URL else we spit it back
                     // out of the URL.
-                    if (null===$counts['[']) {
+                    if (null === $counts['[']) {
                         $counts['['] = substr_count($url, '[');
                     }
 
                     if ($counts['['] === $counts[']']) {
                         // It is balanced, so keep it
-                        array_push($url_chars, $c);
+                        $url_chars[] = $c;
                     } else {
                         // In the case of un-matched closing square brackets we just eat it
                         $popped = true;
@@ -3027,14 +3023,14 @@ class Textile
                     break;
 
                 case ')':
-                    if (null===$counts[')']) {
+                    if (null === $counts[')']) {
                         $counts['('] = substr_count($url, '(');
                         $counts[')'] = substr_count($url, ')');
                     }
 
                     if ($counts['('] === $counts[')']) {
                         // It is balanced, so keep it
-                        array_push($url_chars, $c);
+                        $url_chars[] = $c;
                     } else {
                         // Unbalanced so spit it out the back end
                         $pop = $c . $pop;
@@ -3045,15 +3041,13 @@ class Textile
 
                 default:
                     // We have an acceptable character for the end of the url so put it back and exit the character popping loop
-                    array_push($url_chars, $c);
+                    $url_chars[] = $c;
                     break;
             }
             $first = false;
         } while ($popped);
 
         $url = implode('', $url_chars);
-        unset($url_chars);
-
         $uri_parts = array();
         $this->parseURI($url, $uri_parts);
 
@@ -3062,7 +3056,7 @@ class Textile
         $scheme_ok      = ('' === $scheme) || $scheme_in_list;
 
         if (!$scheme_ok) {
-            return str_replace($this->link_start_marker, '', $in);
+            return str_replace($this->uid.'linkStartMarker:', '', $in);
         }
 
         if ('$' === $text) {
@@ -3428,8 +3422,6 @@ class Textile
         $out = preg_replace("/^[ \t]*\n/m", "\n", $out);
         // Removes leading and ending blank lines.
         $out = trim($out, "\n");
-        // Ensure there are no link start marks in the input document.
-        $out = str_replace($this->link_start_marker, '', $out);
         return $out;
     }
 
@@ -3530,7 +3522,7 @@ class Textile
     /**
      * Parses and shelves quoted quotes in the given input.
      *
-     * @param string $text The text to search for quoted quotes
+     * @param  string $text The text to search for quoted quotes
      * @return string
      */
 
@@ -3542,15 +3534,15 @@ class Textile
     /**
      * Formats quoted quotes and stores it on the shelf.
      *
-     * @param array $m named regex parts
+     * @param  array  $m Named regular expression parts
      * @return string Input with quoted quotes removed and replaced with tokens
-     * @see Textile::glyphQuotedQuote
+     * @see    Textile::glyphQuotedQuote()
      */
 
     protected function fGlyphQuotedQuote($m)
     {
-        // Check the correct closing character was found...
-        if ($m['post'] !== @$this->quotes[$m['pre']]) {
+        // Check the correct closing character was found.
+        if (!isset($this->quotes[$m['pre']]) || $m['post'] !== $this->quotes[$m['pre']]) {
             return $m[0];
         }
 
@@ -3603,7 +3595,7 @@ class Textile
 
     protected function replaceGlyphs($text)
     {
-        return preg_replace('/'.$this->uid.':glyph:([^<]+)/', '$1', $text);
+        return str_replace($this->uid.':glyph:', '', $text);
     }
 
     /**
