@@ -465,7 +465,7 @@ class Textile
     protected $styl = "(?:\{[^}\n]+\})";
 
     /**
-     * ?
+     * Regular expression pattern for column spans in tables.
      *
      * @var string
      */
@@ -473,7 +473,7 @@ class Textile
     protected $cspn = "(?:\\\\\d+)";
 
     /**
-     * ?
+     * Regular expression for row spans in tables.
      *
      * @var string
      */
@@ -481,7 +481,7 @@ class Textile
     protected $rspn = "(?:\/\d+)";
 
     /**
-     * ?
+     * Regular expression for horizontal or vertical alignment.
      *
      * @var string
      */
@@ -489,7 +489,7 @@ class Textile
     protected $a;
 
     /**
-     * ?
+     * Regular expression for column or row spans in tables.
      *
      * @var string
      */
@@ -868,7 +868,7 @@ class Textile
      * @var array
      */
 
-        protected $quotes = array(
+    protected $quotes = array(
         '"' => '"',
         "'" => "'",
         '(' => ')',
