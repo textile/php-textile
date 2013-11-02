@@ -2784,7 +2784,7 @@ class Parser
                 }
 
                 // Add the last part back
-                array_push($slices, $last_slice);
+                $slices[] = $last_slice;
             }
 
             // Re-assemble the full text with the start and end markers
