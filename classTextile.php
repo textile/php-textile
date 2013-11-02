@@ -1001,7 +1001,7 @@ class Textile
                 return $this->symbols[$name];
             }
 
-            throw new \InvalidArgumentException('The specified name does not match any symbols.');
+            throw new InvalidArgumentException('The specified name does not match any symbols.');
         }
 
         return $this->symbols;
