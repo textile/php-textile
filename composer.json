@@ -1,0 +1,8 @@
+{
+    "require": {
+        "sculpin/sculpin": "2.*@dev",
+        "dflydev/embedded-composer-console": "@dev",
+        "dflydev/embedded-composer-core": "@dev",
+        "composer/composer": "@dev"
+    }
+}

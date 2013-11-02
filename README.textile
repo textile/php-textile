@@ -1,0 +1,6 @@
+h1. PHP-Textile website
+
+h2. Building
+
+bc. $ composer install
+$ ./vendor/bin/sculpin --generate

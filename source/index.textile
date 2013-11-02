@@ -1,0 +1,7 @@
+---
+layout: default
+title: Home
+nav_name: Home
+---
+
+h1. Index page
