@@ -325,8 +325,7 @@ Ordered List Start & Continuation:
  * Textile parser.
  *
  * @example
- * use Netcarver\Textile\Parser;
- * $parser = new Parser();
+ * $parser = new \Netcarver\Textile\Parser();
  * echo $parser->textileThis('h1. Hello World!');
  */
 
@@ -963,6 +962,7 @@ class Parser
      * @param  string $prefix  The string to prefix all relative image paths with
      * @return Parser
      * @example
+     * $parser = new \Netcarver\Textile\Parser();
      * $parser->setRelativeImagePrefix('http://static.example.com/');
      */
 
@@ -983,7 +983,7 @@ class Parser
      * @param  bool   $dimensionless TRUE to disable image dimensions, FALSE to enable
      * @return Parser
      * @example
-     * $parser = new Parser();
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser->setDimensionlessImages(false)->textileThis('Hello World!');
      */
 
@@ -1024,7 +1024,7 @@ class Parser
      * @param  string $text The text to be encoded
      * @return string The encoded text
      * @example
-     * $parser = new Parser();
+     * $parser = new \Netcarver\Textile\Parser();
      * $parser->textileEncode('Some content to encode.');
      */
 
@@ -1059,8 +1059,7 @@ class Parser
      * @return string Parsed $text
      * @see    Parser::textileRestricted()
      * @example
-     * use Netcarver\Textile\Parser;
-     * $parser = new Parser();
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser->textileThis('h1. Hello World!');
      */
 
@@ -1096,8 +1095,7 @@ class Parser
      * @return string Parsed $text
      * @see    Parser::textileThis()
      * @example
-     * use Netcarver\Textile\Parser;
-     * $parser = new Parser();
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser->textileRestricted('h1. Hello World!');
      */
 
