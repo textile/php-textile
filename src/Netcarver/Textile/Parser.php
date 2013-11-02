@@ -2940,7 +2940,7 @@ class Parser
 
                     if ($counts['['] === $counts[']']) {
                         // It is balanced, so keep it
-                        array_push($url_chars, $c);
+                        $url_chars[] = $c;
                     } else {
                         // In the case of un-matched closing square brackets we just eat it
                         $popped = true;
@@ -2959,7 +2959,7 @@ class Parser
 
                     if ($counts['('] === $counts[')']) {
                         // It is balanced, so keep it
-                        array_push($url_chars, $c);
+                        $url_chars[] = $c;
                     } else {
                         // Unbalanced so spit it out the back end
                         $pop = $c . $pop;
@@ -2970,7 +2970,7 @@ class Parser
 
                 default:
                     // We have an acceptable character for the end of the url so put it back and exit the character popping loop
-                    array_push($url_chars, $c);
+                    $url_chars[] = $c;
                     break;
             }
             $first = false;
