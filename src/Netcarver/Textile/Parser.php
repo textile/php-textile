@@ -1007,7 +1007,7 @@ class Parser
      * $parser = new \Netcarver\Textile\Parser();
      * if ($parser->getDimensionlessImages() === true)
      * {
-     *     echo 'Images won't have dimensions.';
+     *     echo 'Images do not get dimensions.';
      * }
      */
 
