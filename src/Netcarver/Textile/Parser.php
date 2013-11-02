@@ -2720,76 +2720,67 @@ class Parser
                 // off (we'll glue it back later).
                 $last_slice = array_pop($slices);
 
-                foreach ($slices as $i => $slice) {
+                foreach ($slices as &$slice) {
 
                     // Cut this slice into possible starting points wherever we
                     // find a '"' character. Any of these parts could represent
                     // the start of the link text - we have to find which one.
                     $possible_start_quotes = explode('"', $slice);
-                    $n = count($possible_start_quotes);
-
-                    // Cleanup situations like...
-                    // "He said it is "very unlikely" the stimulus works ":url
-                    //                           Space at end ----------^
-                    $possible_start_quotes[$n-1] = rtrim($possible_start_quotes[$n-1]);
+                    $possibility = rtrim(array_pop($possible_start_quotes));
 
                     // Init the balanced count. If this is still zero at the end
                     // of our do loop we'll mark the " that caused it to balance
                     // and move on to the next link.
                     $balanced = 0;
-
-                    // Vars we need in our balance checking loop...
                     $linkparts = array();
                     $iter = 0;
 
-                    do {
+                    while (1) {
                         // Starting at the end, pop off the previous part of the
                         // slice's fragments.
-                        $possibilty = array_pop($possible_start_quotes);
-                        if (null === $possibilty) {
+
+                        if (null === $possibility) {
                             throw new \Exception("Malformed link found.");
                         }
 
                         // Add this part to those parts that make up the link text.
-                        $linkparts[] = $possibilty;
-                        $len = strlen($possibilty) > 0;
-
-                        $first = substr($possibilty, 0, 1);
-                        $last  = substr($possibilty, -1, 1);
+                        $linkparts[] = $possibility;
+                        $len = strlen($possibility) > 0;
 
                         if ($len) {
                             // did this part inc or dec the balanced count?
-                            if (!preg_match('/\s/'.$this->regex_snippets['mod'], $first)) {
+                            if (preg_match('/^\S|=$/'.$this->regex_snippets['mod'], $possibility)) {
                                 $balanced--;
                             }
-                            if ('=' == $last) {
-                                $balanced--;
-                            }
-                            if (!preg_match('/\s/'.$this->regex_snippets['mod'], $last)) {
+
+                            if (preg_match('/\S$/'.$this->regex_snippets['mod'], $possibility)) {
                                 $balanced++;
                             }
-                        }
-
-                        // If quotes occur next to each other, we get zero length strings.
-                        // eg. ...""Open the door, HAL!"":url...
-                        // In this case we count a zero length in the last position as a
-                        // closing quote and others as opening quotes.
-                        if (!$len) {
+                        } else {
+                            // If quotes occur next to each other, we get zero length strings.
+                            // eg. ...""Open the door, HAL!"":url...
+                            // In this case we count a zero length in the last position as a
+                            // closing quote and others as opening quotes.
                             $balanced = (!$iter++) ? $balanced+1 : $balanced-1;
                         }
 
-                    } while (0 != $balanced);
+                        if ($balanced <= 0) {
+                            break;
+                        }
 
-                    // rebuild the link's text by reversing the parts and sticking them back
+                        $possibility = array_pop($possible_start_quotes);
+                    }
+
+                    // Rebuild the link's text by reversing the parts and sticking them back
                     // together with quotes.
                     $link_start = implode('"', array_reverse($linkparts));
 
-                    // rebuild the remaining stuff that goes before the link but that's
+                    // Rebuild the remaining stuff that goes before the link but that's
                     // already in order.
-                    $pre_link   = implode('"', $possible_start_quotes);
+                    $pre_link = implode('"', $possible_start_quotes);
 
                     // Re-assemble the link starts with a specific marker for the next regex.
-                    $slices[$i] = $pre_link . $this->uid.'linkStartMarker:"' . $link_start;
+                    $slice = $pre_link . $this->uid.'linkStartMarker:"' . $link_start;
                 }
 
                 // Add the last part back
