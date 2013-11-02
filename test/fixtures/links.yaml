@@ -9,10 +9,82 @@ options:
   adaptor_options:
     restricted: false
 
-False start of link cases :
+Left and right:
+  input : |
+    "Left":/ and "Right":/
+
+    "Left":/ and "Right":
+
+    "Left":/ and "middle": and "Right":
+
+    "Left": and "Right":/
+
+    "Left": and "middle": and "Right":/
+
+    "Left": and "Right":
+  expect: |
+    <p><a href="/">Left</a> and <a href="/">Right</a></p>
+
+    <p><a href="/">Left</a> and &#8220;Right&#8221;:</p>
+
+    <p><a href="/">Left</a> and &#8220;middle&#8221;: and &#8220;Right&#8221;:</p>
+
+    <p>&#8220;Left&#8221;: and <a href="/">Right</a></p>
+
+    <p>&#8220;Left&#8221;: and &#8220;middle&#8221;: and <a href="/">Right</a></p>
+
+    <p>&#8220;Left&#8221;: and &#8220;Right&#8221;:</p>
+
+Right said Fred - no space:
+  input : |
+    Right said Fred"
+
+    Right said Fred":
+
+    Right said Fred":/
+
+    "Right said Fred":/
+  expect: |
+    <p>Right said Fred&#8221;</p>
+
+    <p>Right said Fred&#8221;:</p>
+
+    <p>Right said Fred&#8221;:/</p>
+
+    <p><a href="/">Right said Fred</a></p>
+
+Right said Fred - spaces:
+  input : |
+    Right said Fred "
+
+    Right said Fred ":
+
+    Right said Fred ":/
+
+    "Right said Fred ":/
+  expect: |
+    <p>Right said Fred &#8220;</p>
+
+    <p>Right said Fred &#8220;:</p>
+
+    <p>Right said Fred &#8220;:/</p>
+
+    <p><a href="/">Right said Fred</a></p>
+
+Fred said:
+  input : |
+    Fred said, ":We'll just have to leave it standing on the landing:".
+  expect: |
+    <p>Fred said, &#8220;:We&#8217;ll just have to leave it standing on the landing:&#8221;.</p>
+
+False link:
   input : |
     Hello :"world"!
+  expect: |
+    <p>Hello :&#8220;world&#8221;!</p>
 
+Under and over:
+  input : |
     Under and :"over":
 
     Under and :"over": the wall.
@@ -21,8 +93,6 @@ False start of link cases :
 
     Under and "over":/ the wall.
   expect: |
-    <p>Hello :&#8220;world&#8221;!</p>
-
     <p>Under and :&#8220;over&#8221;:</p>
 
     <p>Under and :&#8220;over&#8221;: the wall.</p>
