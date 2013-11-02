@@ -846,6 +846,9 @@ class Parser
      * Constructor.
      *
      * @param string $doctype The output document type, either 'xhtml' or 'html5'
+     * @example
+     * $parser = new \Netcarver\Textile\Parser('html');
+     * echo $parser->textileThis('HTML(HyperText Markup Language)");
      */
 
     public function __construct($doctype = 'xhtml')
@@ -1000,6 +1003,12 @@ class Parser
      * the state of the $dimensionless_images property.
      *
      * @return bool TRUE if images will not get dimensions, FALSE otherwise
+     * @example
+     * $parser = new \Netcarver\Textile\Parser();
+     * if ($parser->getDimensionlessImages() === true)
+     * {
+     *     echo 'Images won't have dimensions.';
+     * }
      */
 
     public function getDimensionlessImages()
@@ -1011,6 +1020,9 @@ class Parser
      * Gets Textile version number.
      *
      * @return string Version
+     * @example
+     * $parser = new \Netcarver\Textile\Parser();
+     * echo $parser->getVersion();
      */
 
     public function getVersion()
