@@ -1,0 +1,23 @@
+adaptor: textile
+options:
+  showfailures: true
+  showpasses: true
+  showdiffs: true
+  debug: false
+  format: html
+  adaptor_options:
+    restricted: false
+
+Issue 65:
+  input : |
+    bc.. ; Content-type: text/javascript
+    ; Cache-Control: no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0
+    ; Expires: Sat, 24 Jul 2003 05:00:00 GMT
+    ; Last-Modified: Wed, 1 Jan 2025 05:00:00 GMT
+    ; Pragma: no-cache
+  expect: |
+    <pre><code>; Content-type: text/javascript
+    ; Cache-Control: no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0
+    ; Expires: Sat, 24 Jul 2003 05:00:00 GMT
+    ; Last-Modified: Wed, 1 Jan 2025 05:00:00 GMT
+    ; Pragma: no-cache</code></pre>
