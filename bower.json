@@ -3,6 +3,7 @@
     "directory": "bower_components",
     "dependencies": {
         "google-code-prettify": "1.0.0",
-        "requirejs": "2.1.9"
+        "requirejs": "2.1.9",
+        "preboot": "*"
     }
 }
