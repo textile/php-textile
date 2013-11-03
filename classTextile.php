@@ -2905,7 +2905,7 @@ class Textile
             // Re-assemble the full text with the start and end markers
             $text = implode('":', $slices);
 
-        } catch (exception $e) {
+        } catch (Exception $e) {
             // If we got an exception marking the links then let the replace regex try sorting it out...
         }
 
@@ -2917,7 +2917,7 @@ class Textile
      *
      * @param  array  $m options
      * @return string reference token for the shelved content
-     * @see    textile::links()
+     * @see    Textile::links()
      */
 
     protected function replaceLinks($text)
