@@ -1044,7 +1044,7 @@ class Textile
 
     public function setDimensionlessImages($dimensionless = true)
     {
-        $this->dimensionless_images = $dimensionless;
+        $this->dimensionless_images = (bool) $dimensionless;
         return $this;
     }
 
@@ -1059,7 +1059,7 @@ class Textile
 
     public function getDimensionlessImages()
     {
-        return $this->dimensionless_images;
+        return (bool) $this->dimensionless_images;
     }
 
     /**
