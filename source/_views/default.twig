@@ -1,9 +1,28 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en-GB" dir="ltr">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PHP-Textile</title>
 </head>
 <body>
-    {% block content %}{% endblock %}
+    <header>
+        <h1><a href="{{ site.url }}">{{ site.title }}</a></h1>
+        <p>{{ site.slogan }}</p>
+
+        <nav>
+            <ul>
+                <li><a href="{{ site.url }}/">Home</a></li>
+                <li><a href="{{ site.url }}/docs">Docs</a></li>
+                <li><a href="{{ site.url }}/blog">Blog</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer></footer>
 </body>
 </html>
