@@ -1955,6 +1955,8 @@ class Parser
     {
         $blocktags = join('|', $this->blocktag_whitelist);
 
+        $text = $this->prePadLists($text);
+
         $textblocks = preg_split('/(\n{2,})/', $text, null, PREG_SPLIT_DELIM_CAPTURE);
 
         $tag  = 'p';
@@ -3396,6 +3398,52 @@ class Parser
         // Removes leading and ending blank lines.
         $out = trim($out, "\n");
         return $out;
+    }
+
+    /**
+     * Makes sure that all lists can be detected.
+     *
+     * Allows lists that are not separated from the previous text with a
+     * double line-feed to be processed correcly.
+     *
+     * @param  string $text  The input to adjust.
+     * @return string Input with lists pre-padded.
+     */
+
+    protected function prePadLists($text)
+    {
+        $blocktags       = join('|', $this->blocktag_whitelist);
+        $block           = "(?P<block>(?P<tag>$blocktags)($this->a$this->c)\.(\.?)(?::(\S+))?\s)?";
+        $pre             = ".*?";
+        $list_item       = "[#*;:]+(?:_|[\d]+)?$this->lc[ .].*\n";
+        $non_blank_lines = ".+\n";
+        $text = preg_replace_callback(
+            "/^($block)(?P<pre>$pre)\n(?P<list>(?:$list_item)(?:$non_blank_lines)*)\n/m" . $this->regex_snippets['mod'],
+            array(&$this, "fPrePadLists"),
+            $text . "\n\n"
+        );
+        return rtrim($text, "\n");
+    }
+
+    /**
+     * Pre-pad lists when needed.
+     *
+     * @param array $m
+     * @return string
+     */
+
+    protected function fPrePadLists($m)
+    {
+        $no_block        = !isset($m['block']) ||  empty($m['block']);
+        $has_pre         =  isset($m['pre'])   && !empty($m['pre']);
+        $p_block         =  isset($m['tag'])   && 'p' === $m['tag'];
+        $pre_not_special =  !preg_match('/^[#*;:|]/', $m['pre']);
+
+        if (($p_block) || ($no_block && $has_pre && $pre_not_special)) {
+            return $m['block'] . $m['pre'] . "\n\n" . $m['list'] . "\n";
+        }
+
+        return $m[0];
     }
 
     /**
