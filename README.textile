@@ -11,7 +11,7 @@ h2. Branches
 
 *This is the README for the master branch.*
 
-Currently both branches are feature synchronised at the point they are tagged, and new features and bugfixes will go into both branches (where possible) for the time being, but this _will_ change at some point in the future.
+Currently both branches are feature synchronised at the point they are tagged, and new features and bugfixes will go into both branches (where possible) for the time being, but this _will_ change after the v3.5.4/v2.5.4 releases at which point the 2.5 branch will be feature frozen.
 
 From time to time other branches may be present in the repository. These represent transient development or hotfix branches and should not be used for live sites/projects.
 
