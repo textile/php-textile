@@ -8,7 +8,7 @@ options:
   adaptor_options:
     restricted: false
 
-Issue 22:
+Issue 22 - ul:
   input : |
     Shopping list
     * Carrots
@@ -24,6 +24,22 @@ Issue 22:
     * Carrots
     * Onions
     * Chicken
+
+    p(list). Shopping list
+    *.
+    *(carrots) Carrots
+    *(onions) Onions
+    *(chicken) Chicken
+
+    p(c).. Here is a paragraph
+
+    Or two about our shopping list...
+    *.
+    *(carrots) Carrots
+    *(onions) Onions
+    *(chicken) Chicken
+
+    p. That's it.
   expect: |
     <p>Shopping list</p>
 
@@ -48,6 +64,67 @@ Issue 22:
     	<li>Onions</li>
     	<li>Chicken</li>
     </ul>
+
+    <p class="list">Shopping list</p>
+
+    <ul>
+    	<li class="carrots">Carrots</li>
+    	<li class="onions">Onions</li>
+    	<li class="chicken">Chicken</li>
+    </ul>
+
+    <p class="c">Here is a paragraph</p>
+
+    <p class="c">Or two about our shopping list&#8230;</p>
+
+    <ul>
+    	<li class="carrots">Carrots</li>
+    	<li class="onions">Onions</li>
+    	<li class="chicken">Chicken</li>
+    </ul>
+
+    <p>That&#8217;s it.</p>
+
+Issue 22 - ol:
+  input : |
+    Shopping list
+    # Carrots
+    # Onions
+    # Chicken
+
+    p. Shopping list
+    # Carrots
+    # Onions
+    # Chicken
+
+    p[en]. Shopping list
+    # Carrots
+    # Onions
+    # Chicken
+  expect: |
+    <p>Shopping list</p>
+
+    <ol>
+    	<li>Carrots</li>
+    	<li>Onions</li>
+    	<li>Chicken</li>
+    </ol>
+
+    <p>Shopping list</p>
+
+    <ol>
+    	<li>Carrots</li>
+    	<li>Onions</li>
+    	<li>Chicken</li>
+    </ol>
+
+    <p lang="en">Shopping list</p>
+
+    <ol>
+    	<li>Carrots</li>
+    	<li>Onions</li>
+    	<li>Chicken</li>
+    </ol>
 
 Simple Definition lists:
   input: |
