@@ -1989,15 +1989,14 @@ class Parser
                     $out[count($out)-1] .= $c1;
                 }
 
-                // New block
+                // Extract the new block's parts
                 extract($m);
                 list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock($m);
 
                 // Leave off c1 if this block is extended, we'll close it at the start of the next block
-                if ($ext) {
-                    $block = $o1.$o2.$content.$c2;
-                } else {
-                    $block = $o1.$o2.$content.$c2.$c1;
+                $block = $o1.$o2.$content.$c2;
+                if (!$ext) {
+                    $block .= $c1;
                 }
             } else {
                 if ($ext || !preg_match('/^ /', $block)) {
