@@ -1962,7 +1962,7 @@ class Parser
         $ext = '';
         $out = array();
 
-        foreach ($textblocks as $key => $block) {
+        foreach ($textblocks as $block) {
 
             // Line is just whitespace, keep it for the next block.
             if (trim($block) === '') {
