@@ -2971,6 +2971,17 @@ class Parser
                     $popped = true;
                     break;
 
+                case '>':
+                    $urlLeft = implode('', $url_chars);
+
+                    if (preg_match('@(?P<tag><\/[a-z]+)$@', $urlLeft, $m)) {
+                        $url_chars = str_split(substr($urlLeft, 0, strlen($m['tag']) * -1));
+                        $pop = $m['tag'] . $c . $pop;
+                        $popped = true;
+                    }
+
+                    break;
+
                 case ']':
                     // If we find a closing square bracket we are going to see if it is balanced.
                     // If it is balanced with matching opening bracket then it is part of the URL else we spit it back
