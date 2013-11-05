@@ -8,7 +8,7 @@ options:
   adaptor_options:
     restricted: false
 
-Citations are strange beasts:
+Links wrapped in HTML tags:
   input  : |
     <span>"link":http://example.com</span>
 
