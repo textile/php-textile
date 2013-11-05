@@ -7,11 +7,11 @@ h1. Textile for PHP
 h2. Branches
 
 |^=. "master":https://github.com/textile/php-textile/tree/master | Has a multi-file, namespaced, "PSR-0/1/2":https://github.com/php-fig/fig-standards/tree/master/accepted compliant version of Textile. Releases from master are tagged v3.5.x !https://travis-ci.org/textile/php-textile.png?branch=master!:https://travis-ci.org/textile/php-textile |^=. _Requires PHP5.3+_ |
-|^=. "2.5":https://github.com/textile/php-textile/tree/2.5       | Holds a single-file version of Textile representing the v2.5.x releases. It is *not* PSR-0 compliant but attempts to follow PSR-1 and PSR-2 in other respects.               !https://travis-ci.org/textile/php-textile.png?branch=2.5!:https://travis-ci.org/textile/php-textile    |^=. _Requires PHP5.0+_ |
+|^=. "2.5":https://github.com/textile/php-textile/tree/2.5       | Holds a feature-frozen single-file version of Textile representing the v2.5.x releases. It is *not* PSR-0 compliant but attempts to follow PSR-1 and PSR-2 in other respects.               !https://travis-ci.org/textile/php-textile.png?branch=2.5!:https://travis-ci.org/textile/php-textile    |^=. _Requires PHP5.0+_ |
 
 *This is the README for the master branch.*
 
-Currently both branches are feature synchronised at the point they are tagged, and new features and bugfixes will go into both branches (where possible) for the time being, but this _will_ change after the v3.5.4/v2.5.4 releases at which point the 2.5 branch will be feature frozen.
+This branch is the active development branch and should be used whenever possible as the 2.5 branch was feature frozen at v2.5.4 and only receives critical security updates.
 
 From time to time other branches may be present in the repository. These represent transient development or hotfix branches and should not be used for live sites/projects.
 
