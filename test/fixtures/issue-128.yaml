@@ -1,0 +1,29 @@
+adaptor: textile
+options:
+  showfailures: true
+  showpasses: true
+  showdiffs: true
+  debug: false
+  format: html
+  adaptor_options:
+    restricted: false
+
+Links wrapped in HTML tags:
+  input  : |
+    <span>"link":http://example.com</span>
+
+    <span>??"link":http://example.com??</span>
+
+    <span>"link":http://example.com</span>.
+
+    "link":http://example.com/</span>linkText
+
+  expect : |
+    <p><span><a href="http://example.com">link</a></span></p>
+
+    <p><span><cite><a href="http://example.com">link</a></cite></span></p>
+
+    <p><span><a href="http://example.com">link</a></span>.</p>
+
+    <p><a href="http://example.com/%3C/span%3ElinkText">link</a></p>
+
