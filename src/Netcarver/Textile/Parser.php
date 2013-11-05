@@ -1953,7 +1953,7 @@ class Parser
 
     protected function blocks($text)
     {
-        $blocktags = join('|', $this->blocktag_whitelist);
+        $regex = '/^(?P<tag>' . join('|', $this->blocktag_whitelist) . ')(?P<atts>' . $this->a . $this->c . ')\.(?P<ext>\.?)(?::(?P<cite>\S+))? (?P<graf>.*)$/Ss' . $this->regex_snippets['mod'];
 
         $textblocks = preg_split('/(\n{2,})/', $text, null, PREG_SPLIT_DELIM_CAPTURE);
 
@@ -1980,7 +1980,7 @@ class Parser
 
             $eatWhitespace = false;
             $anon = 0;
-            if (preg_match("/^($blocktags)($this->a$this->c)\.(\.?)(?::(\S+))? (.*)$/Ss", $block, $m)) {
+            if (preg_match($regex, $block, $m)) {
                 // Last block was extended, so close it
                 if ($ext) {
                     $out[count($out)-1] .= $c1;
