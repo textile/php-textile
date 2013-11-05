@@ -1979,8 +1979,9 @@ class Parser
             }
 
             $eatWhitespace = false;
-            $anon = 0;
-            if (preg_match($regex, $block, $m)) {
+            $anonymous_block = !preg_match($regex, $block, $m);
+
+            if (!$anonymous_block) {
                 // Last block was extended, so close it
                 if ($ext) {
                     $out[count($out)-1] .= $c1;
@@ -1997,8 +1998,6 @@ class Parser
                     $block = $o1.$o2.$content.$c2.$c1;
                 }
             } else {
-                // Anonymous block
-                $anon = 1;
                 if ($ext || !preg_match('/^ /', $block)) {
                     list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0, $tag, $atts, $ext, $cite, $block));
                     // Skip $o1/$c1 because this is part of a continuing extended block
@@ -2015,7 +2014,7 @@ class Parser
             $block = $this->doPBr($block);
             $block = $whitespace . preg_replace('/<br>/', '<br />', $block);
 
-            if ($ext && $anon) {
+            if ($ext && $anonymous_block) {
                 $out[count($out)-1] .= $block;
             } elseif (!$eat) {
                 $out[] = $block;
