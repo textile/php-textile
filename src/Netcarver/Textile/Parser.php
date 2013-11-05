@@ -1957,16 +1957,10 @@ class Parser
 
         $textblocks = preg_split('/(\n{2,})/', $text, null, PREG_SPLIT_DELIM_CAPTURE);
 
-        $tag  = 'p';
-        $atts = '';
-        $cite = '';
-        $graf = '';
-        $ext  = '';
-        $eat  = false;
-        $whitespace = '';
         $eatWhitespace = false;
-
-        $out  = array();
+        $whitespace = '';
+        $ext = '';
+        $out = array();
 
         foreach ($textblocks as $key => $block) {
 
@@ -1976,6 +1970,14 @@ class Parser
                     $whitespace .= $block;
                 }
                 continue;
+            }
+
+            if (!$ext) {
+                $tag   = 'p';
+                $atts  = '';
+                $cite  = '';
+                $graf  = '';
+                $eat   = false;
             }
 
             $eatWhitespace = false;
@@ -2026,13 +2028,6 @@ class Parser
                 $whitespace = '';
             }
 
-            if (!$ext) {
-                $tag  = 'p';
-                $atts = '';
-                $cite = '';
-                $graf = '';
-                $eat  = false;
-            }
         }
 
         if ($ext) {
