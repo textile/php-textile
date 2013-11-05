@@ -1988,8 +1988,8 @@ class Parser
                 }
 
                 // New block
-                list(, $tag, $atts, $ext, $cite, $graf) = $m;
-                list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0, $tag, $atts, $ext, $cite, $graf));
+                extract($m);
+                list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock($m);
 
                 // Leave off c1 if this block is extended, we'll close it at the start of the next block
                 if ($ext) {
