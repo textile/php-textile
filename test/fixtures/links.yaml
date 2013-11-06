@@ -515,6 +515,20 @@ Quoted double-quote in links:
 
     <p><a href="help.html">&#8216;The use of the character &#8220; in textile&#8217;</a>..!</p>
 
+Encoded spaces:
+  input  : |
+    "Wiked space snakes":http://example.com/wiked%20rattling%20snakes
+
+    "Wiked space snakes":/example.com/wiked%20rattling%20snakes
+
+    "Wiked space snakes":example.com/wiked%20rattling%20snakes
+  expect: |
+    <p><a href="http://example.com/wiked%20rattling%20snakes">Wiked space snakes</a></p>
+
+    <p><a href="/example.com/wiked%20rattling%20snakes">Wiked space snakes</a></p>
+
+    <p><a href="example.com/wiked%20rattling%20snakes">Wiked space snakes</a></p>
+
 Redcloth Links:
   input  : |
     "testing":
