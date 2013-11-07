@@ -2,8 +2,40 @@
 <html lang="en-GB" dir="ltr">
 <head>
     <meta charset="utf-8">
+    <title>{{ page.title }} &mdash; {{ site.title }}</title>
+    <meta name="robots" content="index, follow">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHP-Textile</title>
+    <meta name="generator" content="Sculpin">
+    <meta name="application-name" content="PHP-Textile">
+
+    <meta property="og:site_name" content="{{ site.title }}">
+    <meta property="og:title" content="{{ page.title }} &mdash; {{ site.title }}">
+
+    {% if page.og_type %}
+        <meta property="og:type" content="{{ page.og_type }}">
+    {% else %}
+        <meta property="og:type" content="website">
+    {% endif %}
+
+    {% if page.og_image %}
+        <meta property="og:image" content="{{ page.og_image }}">
+    {% else %}
+        <meta property="og:image" content="{{ site.assets_url }}img/site-tile.png">
+    {% endif %}
+
+    {% if page.description %}
+        <meta property="og:description" content="{{ page.description }}">
+        <meta name="description" content="{{ page.description }}">
+    {% else %}
+        <meta property="og:description" content="{{ site.description }}">
+        <meta name="description" content="{{ site.description }}">
+    {% endif %}
+
+    <link rel="stylesheet" href="{{ site.assets_url }}css/main.css">
+
+    <!--[if lt IE 9]>
+        <link rel="stylesheet" href="{{ site.assets_url }}css/ie8.css">
+    <![endif]-->
 </head>
 <body>
     <header>
@@ -12,9 +44,9 @@
 
         <nav>
             <ul>
-                <li><a href="{{ site.url }}/">Home</a></li>
-                <li><a href="{{ site.url }}/docs">Docs</a></li>
-                <li><a href="{{ site.url }}/blog">Blog</a></li>
+                <li><a href="{{ site.url }}">Home</a></li>
+                <li><a href="{{ site.url }}docs">Docs</a></li>
+                <li><a href="{{ site.url }}blog">Blog</a></li>
             </ul>
         </nav>
     </header>
@@ -24,5 +56,6 @@
     </main>
 
     <footer></footer>
+    <script data-main="{{ site.assets_url }}js/main.js" src="{{ site.assets_url }}js/require.js"></script>
 </body>
 </html>
