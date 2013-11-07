@@ -40,7 +40,7 @@ module.exports = function (grunt)
 
         watch: {
             sass: {
-                files: ['assets/css/**.less'],
+                files: ['assets/css/**/*.less'],
                 tasks: ['less', 'cssmin']
             },
 
