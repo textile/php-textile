@@ -8,6 +8,7 @@ module.exports = function (grunt)
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-shell');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -55,6 +56,11 @@ module.exports = function (grunt)
             img: {
                 files: 'assets/img/**',
                 tasks: ['copy:img']
+            },
+
+            sculpin: {
+                files: ['source/**/*'],
+                tasks: ['shell:sculpingenerate']
             }
         },
 
@@ -114,11 +120,22 @@ module.exports = function (grunt)
                     }
                 ]
             }
+        },
+
+        shell: {
+            sculpingenerate: {
+                command: [
+                    './vendor/bin/sculpin generate'
+                ].join('&&'),
+                options: {
+                    stdout: true
+                }
+            }
         }
     });
 
     grunt.registerTask('test', ['jshint']);
     grunt.registerTask('default', ['watch']);
-    grunt.registerTask('build', ['jshint', 'uglify', 'less', 'cssmin', 'copy:img']);
+    grunt.registerTask('build', ['sculpingenerate', 'jshint', 'uglify', 'less', 'cssmin', 'copy:img']);
     grunt.registerTask('travis', ['jshint']);
 };
