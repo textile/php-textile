@@ -4,6 +4,7 @@ module.exports = function (grunt)
 
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -39,6 +40,12 @@ module.exports = function (grunt)
                 files: [
                     {expand: true, cwd: 'assets/img/', src: ['**'], dest: 'output_dev/assets/img/'}
                 ]
+            },
+
+            html: {
+                files: [
+                    {expand: true, cwd: 'tmp/output_dev/', src: ['**'], dest: 'output_dev/'}
+                ]
             }
         },
 
@@ -60,7 +67,7 @@ module.exports = function (grunt)
 
             sculpin: {
                 files: ['source/**/*'],
-                tasks: ['shell:sculpingenerate']
+                tasks: ['shell:sculpingenerate', 'htmlmin', 'copy:html']
             }
         },
 
@@ -131,11 +138,23 @@ module.exports = function (grunt)
                     stdout: true
                 }
             }
+        },
+
+        htmlmin: {
+            main: {
+                options: {
+                    removeComments: true,
+                    collapseWhitespace: true
+                },
+                files: [
+                    {expand: true, cwd: 'output_dev/', src: ['**/*.html'], dest: 'tmp/output_dev/'}
+                ]
+            }
         }
     });
 
     grunt.registerTask('test', ['jshint']);
     grunt.registerTask('default', ['watch']);
-    grunt.registerTask('build', ['sculpingenerate', 'jshint', 'uglify', 'less', 'cssmin', 'copy:img']);
+    grunt.registerTask('build', ['sculpingenerate', 'htmlmin', 'copy:html', 'jshint', 'uglify', 'less', 'cssmin', 'copy:img']);
     grunt.registerTask('travis', ['jshint']);
 };
