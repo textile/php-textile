@@ -4,6 +4,7 @@
     "dependencies": {
         "google-code-prettify": "1.0.0",
         "requirejs": "2.1.9",
-        "preboot": "*"
+        "preboot": "*",
+        "normalize-css": "1.1.3"
     }
 }
