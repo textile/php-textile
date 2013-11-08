@@ -2,10 +2,9 @@
 layout: default
 title: Home
 name: home
+header: |
+  <h1><a href="http://txstyle.org/">Textile</a> markup language parser for PHP.</h1>
+  <pre><code>$ composer require netcarver/textile</code></pre>
 ---
 
-notextile. <div class="headban">
-    <h1><a href="http://txstyle.org/">Textile</a> markup language parser for PHP.</h1>
-
-    <pre><code>$ composer require netcarver/textile</code></pre>
-</div>
+h1. Home
