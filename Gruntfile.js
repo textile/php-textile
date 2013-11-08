@@ -137,7 +137,18 @@ module.exports = function (grunt)
                 options: {
                     stdout: true
                 }
-            }
+            },
+            phpdoc: {
+                command: [
+                    'mkdir -f tmp',
+                    'rm -fR php-textile',
+                    'git clone git@github.com:textile/php-textile.php ./tmp/php-textile',
+                    './vendor/bin/phpdoc.php --directory="./tmp/php-textile/src/" --target="./tmp/phpdoc/" --template="xml"'
+                ].join('&&'),
+                options: {
+                    stdout: true
+                }
+            },
         },
 
         htmlmin: {
