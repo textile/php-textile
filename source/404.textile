@@ -1,0 +1,9 @@
+---
+layout: default
+title: 404
+name: 404
+---
+
+h1. 404
+
+Page not found.
