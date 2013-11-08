@@ -1,0 +1,7 @@
+---
+layout: default
+title: Support
+nav_name: support
+---
+
+h1. Support
