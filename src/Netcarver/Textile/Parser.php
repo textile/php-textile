@@ -2726,8 +2726,8 @@ class Parser
     /**
      * Finds and marks the start of well formed links in the input text.
      *
-     * @param string $text String to search for link starting positions.
-     * @return string Text with links marked.
+     * @param  string $text String to search for link starting positions
+     * @return string Text with links marked
      * @see    Parser::links()
      */
 
@@ -2832,10 +2832,10 @@ class Parser
     }
 
     /**
-     * Replaces links with a token and stores it on the shelf.
+     * Replaces links with tokens and stores them on the shelf.
      *
-     * @param  array  $m options
-     * @return string reference token for the shelved content
+     * @param  string $text The input
+     * @return string Processed input
      * @see    Parser::links()
      */
 
@@ -2860,8 +2860,8 @@ class Parser
     /**
      * Formats a link and stores it on the shelf.
      *
-     * @param  array  $m options
-     * @return string reference token for the shelved content
+     * @param  array  $m Options
+     * @return string Reference token for the shelved content
      * @see    Parser::replaceLinks()
      */
 
