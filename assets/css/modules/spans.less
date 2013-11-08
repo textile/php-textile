@@ -1,14 +1,14 @@
 a {
-    color: #37bddb;
+    color: @link-color;
     transition: color 0.5s;
-}
 
-a:hover {
-    color: #1d97b3;
-}
+    &:hover {
+        color: darken(@link-color, 15%);
+    }
 
-a:focus {
-    color: #000;
+    &:focus {
+        color: darken(@link-color, 50%);
+    }
 }
 
 strong, b {

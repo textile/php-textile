@@ -11,19 +11,19 @@ code a:hover {
 
 pre, code {
     color: #9da8ab;
-    font-family: Cousine, "Courier New", Consolas, Courier, monospace;
+    font-family: @font-family-monospace;
     font-size: 1em;
 }
 
 pre {
+    .box-sizing(border-box);
     background: #daeffa;
     padding: 1em;
     border: 1px solid #d0e8f0;
     border-radius: 0.25em;
     overflow: auto;
-    box-sizing: border-box;
-}
 
-pre code {
-    background: transparent;
+    code {
+        background: transparent;
+    }
 }
