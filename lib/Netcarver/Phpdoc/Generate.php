@@ -41,10 +41,54 @@ class Generate
         return '';
     }
 
+    /**
+     * Formats a path.
+     *
+     * @param SimpleXMLElement $xml
+     */
+
+    protected function formatPath($xml)
+    {
+        $path = str_replace(array('\\', '::'), '/', (string) $xml->full_name);
+        return $this->encodeLink($path);
+    }
+
+    /**
+     * Encodes a link.
+     */
+
+    protected function encodeLink($string)
+    {
+        return preg_replace('/[^a-z0-9\-\/_]/i', '', strtolower($string));
+    }
+
+    /**
+     * Create a path structure.
+     *
+     * @param SimpleXMLElement $xml
+     */
+
+    protected function createDirectoryTree($xml)
+    {
+        $mkdir = $this->dir;
+
+        if (!file_exists($mkdir)) {
+            mkdir($mkdir);
+        }
+
+        foreach (explode('/', $this->formatPath($xml)) as $directory) {
+            $mkdir .= '/' . $directory;
+
+            if (!file_exists($mkdir)) {
+                mkdir($mkdir);
+            }
+        }
+
+        return true;
+    }
+
     public function getClasses($xml)
     {
-        mkdir($this->dir . '/classes');
-
         $header = implode("\n", array(
             '---',
             'layout: default',
@@ -56,19 +100,13 @@ class Generate
         foreach ($xml->xpath('file/class|file/interface') as $class) {
 
             $classpage = array();
-            $mkdir = $this->dir . '/classes';
-
-            foreach (explode('\\', (string) $class->full_name) as $directory) {
-                $mkdir .= '/' . $directory;
-                mkdir($mkdir);
-            }
-
+            $this->createDirectoryTree($class);
             $contents = array();
 
             foreach ($class->xpath('method') as $method) {
                 $methodpage = array();
                 $methodpage[] = $header;
-                $methodpage[] = 'h1. ' . $method->full_name;
+                $methodpage[] = 'h1. ' . $class->name . '::' . $method->name;
 
                 foreach ($method->argument as $argument) {
                     
@@ -89,9 +127,12 @@ class Generate
                     $methodpage[] = $description;
                 }
 
-                $contents[] = '"' . (string) $method->name . '":' . (string) $method->name;
+                $contents[] = '"' . (string) $method->name . '":' . $this->encodeLink((string) $method->name);
 
-                file_put_contents($mkdir . '/' . (string) $method->name . '.textile', implode("\n\n", $methodpage)."\n");
+                file_put_contents(
+                    $this->dir . '/' . $this->formatPath($method) . '.textile',
+                    implode("\n\n", $methodpage)."\n"
+                );
             }
 
             $classpage[] = $header;
@@ -106,9 +147,12 @@ class Generate
                 $classpage[] = '* '.implode("\n* ", $contents);
             }
 
-            file_put_contents($this->dir . '/classes/'.str_replace('\\', '/', strval($class->full_name)).'.textile', implode("\n\n", $classpage)."\n");
+            file_put_contents(
+                $this->dir . '/' . $this->formatPath($class) . '.textile',
+                implode("\n\n", $classpage)."\n"
+            );
         }
     }
 }
 
-new Generate('./tmp/phpdoc/structure.xml', './source/docs');
+new Generate('./tmp/phpdoc/structure.xml', './source/docs/classes');
