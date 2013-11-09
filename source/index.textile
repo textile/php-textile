@@ -8,3 +8,7 @@ header: |
 ---
 
 h1. Home
+
+bc(language-php). use Netcarver\Textile\Parser as Textile;
+$textile = new Textile;
+echo $textile->textileThis('h1. Hello World!');
