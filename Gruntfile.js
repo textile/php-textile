@@ -164,6 +164,6 @@ module.exports = function (grunt)
 
     grunt.registerTask('test', ['jshint']);
     grunt.registerTask('default', ['watch']);
-    grunt.registerTask('build', ['sculpingenerate', 'htmlmin', 'copy:html', 'jshint', 'uglify', 'less', 'cssmin', 'copy:img']);
+    grunt.registerTask('build', ['shell:sculpingenerate', 'htmlmin', 'copy:html', 'jshint', 'uglify', 'less', 'cssmin', 'copy:img']);
     grunt.registerTask('travis', ['jshint']);
 };
