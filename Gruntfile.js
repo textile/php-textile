@@ -17,8 +17,7 @@ module.exports = function (grunt)
         less: {
             main: {
                 files: {
-                    'tmp/assets/css/main.css': 'assets/css/main.less',
-                    'tmp/assets/css/ie8.css': 'assets/css/ie8.less'
+                    'tmp/assets/css/main.css': 'assets/css/main.less'
                 }
             }
         },
@@ -29,8 +28,7 @@ module.exports = function (grunt)
                     keepSpecialComments: 0
                 },
                 files: {
-                    'output_dev/assets/css/main.css': ['tmp/assets/css/main.css'],
-                    'output_dev/assets/css/ie8.css': ['tmp/assets/css/ie8.css']
+                    'output_dev/assets/css/main.css': ['tmp/assets/css/main.css']
                 }
             }
         },
