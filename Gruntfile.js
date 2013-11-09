@@ -146,7 +146,7 @@ module.exports = function (grunt)
                 options: {
                     stdout: true
                 }
-            },
+            }
         },
 
         htmlmin: {
