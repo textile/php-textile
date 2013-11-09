@@ -2746,6 +2746,7 @@ class Parser
      * @param  string $text String to search for link starting positions
      * @return string Text with links marked
      * @see    Parser::links()
+     * @throws \Exception
      */
 
     protected function markStartOfLinks($text)
