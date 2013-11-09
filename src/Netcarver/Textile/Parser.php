@@ -324,9 +324,10 @@ Ordered List Start & Continuation:
 /**
  * Textile parser.
  *
- * @example
+ * <code>
  * $parser = new \Netcarver\Textile\Parser();
  * echo $parser->textileThis('h1. Hello World!');
+ * </code>
  */
 
 class Parser
@@ -845,10 +846,12 @@ class Parser
     /**
      * Constructor.
      *
-     * @param string $doctype The output document type, either 'xhtml' or 'html5'
-     * @example
+     * <code>
      * $parser = new \Netcarver\Textile\Parser('html');
      * echo $parser->textileThis('HTML(HyperText Markup Language)");
+     * </code>
+     *
+     * @param string $doctype The output document type, either 'xhtml' or 'html5'
      */
 
     public function __construct($doctype = 'xhtml')
@@ -962,11 +965,13 @@ class Parser
      * absolute or prefixed paths. This method is used to set that base path,
      * usually a absolute HTTP address pointing to a directory.
      *
-     * @param  string $prefix  The string to prefix all relative image paths with
-     * @return Parser
-     * @example
+     * <code>
      * $parser = new \Netcarver\Textile\Parser();
      * $parser->setRelativeImagePrefix('http://static.example.com/');
+     * </code>
+     *
+     * @param  string $prefix  The string to prefix all relative image paths with
+     * @return Parser
      */
 
     public function setRelativeImagePrefix($prefix = '')
@@ -983,11 +988,13 @@ class Parser
      * dimensions height images that specify a relative path, as long
      * as the image file can be accessed.
      *
-     * @param  bool   $dimensionless TRUE to disable image dimensions, FALSE to enable
-     * @return Parser
-     * @example
+     * <code>
      * $parser = new \Netcarver\Textile\Parser();
      * echo $parser->setDimensionlessImages(false)->textileThis('Hello World!');
+     * </code>
+     *
+     * @param  bool   $dimensionless TRUE to disable image dimensions, FALSE to enable
+     * @return Parser
      */
 
     public function setDimensionlessImages($dimensionless = true)
@@ -1002,13 +1009,15 @@ class Parser
      * This method will return the state of
      * the state of the $dimensionless_images property.
      *
-     * @return bool TRUE if images will not get dimensions, FALSE otherwise
-     * @example
+     * <code>
      * $parser = new \Netcarver\Textile\Parser();
      * if ($parser->getDimensionlessImages() === true)
      * {
      *     echo 'Images do not get dimensions.';
      * }
+     * </code>
+     *
+     * @return bool TRUE if images will not get dimensions, FALSE otherwise
      */
 
     public function getDimensionlessImages()
@@ -1019,10 +1028,12 @@ class Parser
     /**
      * Gets Textile version number.
      *
-     * @return string Version
-     * @example
+     * <code>
      * $parser = new \Netcarver\Textile\Parser();
      * echo $parser->getVersion();
+     * </code>
+     *
+     * @return string Version
      */
 
     public function getVersion()
@@ -1033,11 +1044,13 @@ class Parser
     /**
      * Encodes the given text.
      *
-     * @param  string $text The text to be encoded
-     * @return string The encoded text
-     * @example
+     * <code>
      * $parser = new \Netcarver\Textile\Parser();
      * $parser->textileEncode('Some content to encode.');
+     * </code>
+     *
+     * @param  string $text The text to be encoded
+     * @return string The encoded text
      */
 
     public function textileEncode($text)
@@ -1062,6 +1075,11 @@ class Parser
      * will be able to use any HTML code, JavaScript links
      * and Textile attributes in their input.
      *
+     * <code>
+     * $parser = new \Netcarver\Textile\Parser();
+     * echo $parser->textileThis('h1. Hello World!');
+     * </code>
+     *
      * @param  string $text    The Textile input to parse
      * @param  bool   $lite    Switch to lite mode
      * @param  bool   $encode  Encode input and return
@@ -1070,9 +1088,6 @@ class Parser
      * @param  string $rel     Relationship attribute applied to generated links
      * @return string Parsed $text
      * @see    Parser::textileRestricted()
-     * @example
-     * $parser = new \Netcarver\Textile\Parser();
-     * echo $parser->textileThis('h1. Hello World!');
      */
 
     public function textileThis($text, $lite = false, $encode = false, $noimage = false, $strict = false, $rel = '')
@@ -1100,15 +1115,17 @@ class Parser
      * extra Textile formatting, accepting only paragraphs
      * and blockquotes as valid block tags.
      *
+     * <code>
+     * $parser = new \Netcarver\Textile\Parser();
+     * echo $parser->textileRestricted('h1. Hello World!');
+     * </code>
+     *
      * @param  string $text    The Textile input to parse
      * @param  bool   $lite    Controls lite mode, allowing extra formatting
      * @param  bool   $noimage Allow images
      * @param  string $rel     Relationship attribute applied to generated links
      * @return string Parsed $text
      * @see    Parser::textileThis()
-     * @example
-     * $parser = new \Netcarver\Textile\Parser();
-     * echo $parser->textileRestricted('h1. Hello World!');
      */
 
     public function textileRestricted($text, $lite = true, $noimage = true, $rel = 'nofollow')
