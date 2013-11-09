@@ -22,7 +22,7 @@
 
     require(['jquery'], function ($)
     {
-        var code = $('pre code');
+        var code = $('pre[class^=language-] code');
 
         // Syntax highlighting.
 
