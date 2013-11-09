@@ -19,4 +19,21 @@
             }
         });
     });
+
+    require(['jquery'], function ($)
+    {
+        var code = $('pre code');
+
+        // Syntax highlighting.
+
+        if (code.length)
+        {
+            code.parent().addClass('prettyprint');
+
+            require(['prettify'], function ()
+            {
+                prettyPrint();
+            });
+        }
+    });
 })();
