@@ -847,7 +847,7 @@ class Parser
      * Constructor.
      *
      * <code>
-     * $parser = new \Netcarver\Textile\Parser('html');
+     * $parser = new \Netcarver\Textile\Parser('html5');
      * echo $parser->textileThis('HTML(HyperText Markup Language)");
      * </code>
      *
