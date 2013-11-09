@@ -18,6 +18,14 @@ class Generate
     {
         mkdir($this->dir . '/classes');
 
+        $header = implode("\n", array(
+            '---',
+            'layout: default',
+            'title: Docs',
+            'name: docs',
+            '---',
+        ));
+
         foreach ($xml->xpath('file/class|file/interface') as $class) {
 
             $classpage = array();
@@ -32,6 +40,7 @@ class Generate
 
             foreach ($class->xpath('method') as $method) {
                 $methodpage = array();
+                $methodpage[] = $header;
                 $methodpage[] = 'h1. ' . $method->full_name;
 
                 foreach ($method->argument as $argument) {
@@ -63,6 +72,7 @@ class Generate
                 file_put_contents($mkdir . '/' . (string) $method->name . '.textile', implode("\n\n", $methodpage)."\n");
             }
 
+            $classpage[] = $header;
             $classpage[] = 'h1. ' . $class->full_name;
             $classpage[] = (string) $class->docblock->description;
 
@@ -79,4 +89,4 @@ class Generate
     }
 }
 
-new Generate('./tmp/phpdoc/structure.xml', './tmp/docs');
+new Generate('./tmp/phpdoc/structure.xml', './source/docs');
