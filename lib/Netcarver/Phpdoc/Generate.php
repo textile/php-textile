@@ -57,9 +57,10 @@ class Generate
 
                 $methodpage[] = 'bc. '.$return.' '.$method->full_name;
                 $methodpage[] = (string) $method->docblock->description;
+                $description = $method->docblock->{'long-description'};
 
-                if ($method->docblock->{'long-description'}) {
-                    $methodpage[] = preg_replace('/(\S)\n(?!\n)/', '$1 ', (string) $method->docblock->{'long-description'});
+                if (count($description)) {
+                    $methodpage[] = preg_replace('/(\S)\n(?!\n)/', '$1 ', (string) $description);
                 }
 
                 $example = $method->xpath('docblock/tag[@name="example"]');
@@ -68,7 +69,8 @@ class Generate
                     $methodpage[] = 'bc. ' . $example[0]['description'];
                 }
 
-                $contents[] = (string) $method->full_name;
+                $contents[] = '"' . (string) $method->name . '":' . (string) $method->name;
+
                 file_put_contents($mkdir . '/' . (string) $method->name . '.textile', implode("\n\n", $methodpage)."\n");
             }
 
