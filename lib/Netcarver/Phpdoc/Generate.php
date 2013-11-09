@@ -107,9 +107,28 @@ class Generate
                 $methodpage = array();
                 $methodpage[] = $header;
                 $methodpage[] = 'h1. ' . $class->name . '::' . $method->name;
+                $signature = $arguments = array();
 
                 foreach ($method->argument as $argument) {
-                    
+                    $arguments[(string) $argument->name] = array(
+                        'name'        => (string) $argument->name,
+                        'type'        => (string) $argument->type,
+                        'default'     => (string) $argument->default,
+                        'description' => '',
+                    );
+                }
+
+                foreach ($method->xpath('docblock/tag[@name="param"]') as $param) {
+                    $arguments[(string) $param['variable']]['type'] = (string) $param['type'];
+                    $arguments[(string) $param['variable']]['description'] = (string) $param['description'];
+                }
+
+                foreach ($arguments as $argument) {
+                    if ($argument['default']) {
+                        $signature[] = '[' . $argument['type'] . ' ' . $argument['name'] . ' = ' . $argument['default']. ']';
+                    } else {
+                        $signature[] = $argument['type'] . ' ' . $argument['name'];
+                    }
                 }
 
                 $return = $method->xpath('docblock/tag[@name="return"]');
@@ -120,11 +139,29 @@ class Generate
                     $return = 'mixed';
                 }
 
-                $methodpage[] = 'bc. '.$return.' '.$method->full_name;
+                $methodpage[] = 'bc(language-php). ('.$return.') '.$class->full_name.'::'.$method->name.'('.implode(', ', $signature).')';
                 $methodpage[] = (string) $method->docblock->description;
 
                 if ($description = $this->formatLongDescription($method)) {
                     $methodpage[] = $description;
+                }
+
+                if ($arguments) {
+                    $params = array();
+                    $methodpage[] = 'h2. Parameters';
+
+                    foreach ($arguments as $argument) {
+                        if ($argument['default']) {
+                            $params[] = '; ' . $argument['name'] . ' = @' . $argument['default'] . '@';
+                        }
+                        else {
+                            $params[] = '; ' . $argument['name'];
+                        }
+
+                        $params[] = ': ' . $argument['type'] . ' ' . $argument['description'];
+                    }
+
+                    $methodpage[] = implode("\n", $params);
                 }
 
                 $contents[] = '"' . (string) $method->name . '":' . $this->encodeLink((string) $method->name);
