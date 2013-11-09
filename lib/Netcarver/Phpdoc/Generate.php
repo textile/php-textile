@@ -14,6 +14,33 @@ class Generate
         $this->getClasses($xml);
     }
 
+    /**
+     * Formats long description.
+     *
+     * @param SimpleXMLElement $xml
+     */
+
+    protected function formatLongDescription($xml)
+    {
+        $description = $xml->docblock->{'long-description'};
+
+        if (count($description)) {
+            $paragraphs = explode("\n\n", (string) $description);
+
+            foreach ($paragraphs as &$paragraph) {
+                if (strpos($paragraph, '<code>') === 0) {
+                    $paragraph = 'bc(language-php). ' . trim(substr($paragraph, 6, -7));
+                } else {
+                    $paragraph = str_replace("\n", ' ', trim($paragraph));
+                }
+            }
+
+            return implode("\n\n", $paragraphs);
+        }
+
+        return '';
+    }
+
     public function getClasses($xml)
     {
         mkdir($this->dir . '/classes');
@@ -57,16 +84,9 @@ class Generate
 
                 $methodpage[] = 'bc. '.$return.' '.$method->full_name;
                 $methodpage[] = (string) $method->docblock->description;
-                $description = $method->docblock->{'long-description'};
 
-                if (count($description)) {
-                    $methodpage[] = preg_replace('/(\S)\n(?!\n)/', '$1 ', (string) $description);
-                }
-
-                $example = $method->xpath('docblock/tag[@name="example"]');
-
-                if (count($example)) {
-                    $methodpage[] = 'bc. ' . $example[0]['description'];
+                if ($description = $this->formatLongDescription($method)) {
+                    $methodpage[] = $description;
                 }
 
                 $contents[] = '"' . (string) $method->name . '":' . (string) $method->name;
@@ -78,8 +98,8 @@ class Generate
             $classpage[] = 'h1. ' . $class->full_name;
             $classpage[] = (string) $class->docblock->description;
 
-            if ($class->docblock->{'long-description'}) {
-                $classpage[] = preg_replace('/(\S)\n(?!\n)/', '$1 ', (string) $class->docblock->{'long-description'});
+            if ($description = $this->formatLongDescription($class)) {
+                $classpage[] = $description;
             }
 
             if ($contents) {
