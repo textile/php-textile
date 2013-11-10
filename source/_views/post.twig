@@ -1,0 +1,20 @@
+{% extends "base.twig" %}
+{% block content_wrapper %}
+    <article>
+        {{ page.blocks.content|raw }}
+    </article>
+
+    {% if page.previous_post or page.next_post %}
+        <nav>
+            <ul>
+                {% if page.next_post %}
+                    <li>Next: <a href="{{ site.url }}{{ page.next_post.url }}" title="{{ page.next_post.title }}"><span class="title">{{ page.next_post.title }}</a></li>
+                    {% endif %}
+
+                {% if page.previous_post %}
+                    <li>Previous: <a href="{{ site.url }}{{ page.previous_post.url }}" title="{{ page.previous_post.title }}">{{ page.previous_post.title }}</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% endblock %}

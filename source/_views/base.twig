@@ -43,11 +43,11 @@
 <body id="page-{{ page.name }}">
     <header>
         <nav>
-            <h1><a href="{{ site.url }}">{{ site.title }}</a></h1>
+            <h1><a href="{{ site.url }}/">{{ site.title }}</a></h1>
             <ul>
-                <li class="docs"><a href="{{ site.url }}docs">Docs</a></li>
-                <li class="blog"><a href="{{ site.url }}blog">Blog</a></li>
-                <li class="support"><a href="{{ site.url }}support">Support</a></li>
+                <li class="docs"><a href="{{ site.url }}/docs">Docs</a></li>
+                <li class="blog"><a href="{{ site.url }}/blog">Blog</a></li>
+                <li class="support"><a href="{{ site.url }}/support">Support</a></li>
             </ul>
         </nav>
 
@@ -65,7 +65,9 @@
     {% endif %}
 
     <main>
-        {% block content %}{% endblock %}
+        {% block content_wrapper %}
+            {% block content %}{% endblock %}
+        {% endblock %}
     </main>
 
     <footer></footer>

@@ -1,0 +1,6 @@
+---
+layout: post
+title: 2.x hits EOL
+---
+
+The 2.5 branch is feature frozen and will only receive security updates from this point on. All new development is now concentrated in the master branch.

@@ -1,0 +1,38 @@
+---
+layout: default
+title: Blog
+name: blog
+generator: pagination
+use:
+    - posts
+---
+
+{% set year = '0' %}
+{% for post in page.pagination.items %}
+    {% set this_year %}{{ post.date | date("Y") }}{% endset %}
+{% if year != this_year %}
+  {% set month = '0' %}
+  {% set year = this_year %}
+{% endif %}
+{% set this_month %}{{ post.date | date("F") }}{% endset %}
+{% if month != this_month %}
+  {% set month = this_month %}
+  <h3>{{ month }} {{ year }}</h3>
+{% endif %}
+  <div>
+    <a href="{{ site.url }}{{ post.url }}">{{ post.title }}</a>
+  </div>
+{% endfor %}
+
+<div>
+{% if page.pagination.previous_page or page.pagination.next_page %}
+    <nav class="article clearfix">
+    {% if page.pagination.previous_page %}
+    <a class="previous" href="{{ site.url }}{{ page.pagination.previous_page.url }}" title="Previous Page"><span class="title">Previous Page</span></a>
+    {% endif %}
+    {% if page.pagination.next_page %}
+    <a class="next" href="{{ site.url }}{{ page.pagination.next_page.url }}" title="Next Page"><span class="title">Next Page</span></a>
+    {% endif %}
+    </nav>
+{% endif %}
+</div>
