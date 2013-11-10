@@ -227,4 +227,4 @@ class Generate
     }
 }
 
-new Generate('./tmp/phpdoc/structure.xml', './source/docs/classes');
+new Generate('./tmp/phpdoc/structure.xml', './source/docs/api');
