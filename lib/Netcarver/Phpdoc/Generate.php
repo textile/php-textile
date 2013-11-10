@@ -50,7 +50,7 @@ class Generate
     protected function formatPath($xml)
     {
         $path = str_replace(array('\\', '::'), '/', (string) $xml->full_name);
-        return $this->encodeLink($path);
+        return ltrim($this->encodeLink($path), '/');
     }
 
     /**
@@ -181,12 +181,47 @@ class Generate
             }
 
             if ($contents) {
+                $classpage[] = 'h2. Methods';
                 $classpage[] = '* '.implode("\n* ", $contents);
             }
 
             file_put_contents(
                 $this->dir . '/' . $this->formatPath($class) . '.textile',
                 implode("\n\n", $classpage)."\n"
+            );
+        }
+
+        $namespaces = array();
+
+        foreach ($xml->xpath('file/class') as $class) {
+            if ((string) $class['namespace']) {
+                $ns = '';
+
+                foreach (explode('\\', (string) $class['namespace']) as $part) {
+                    $ns .= '/' . $this->encodeLink($part);
+
+                    if (!isset($namespaces[$ns])) {
+                        $namespaces[$ns] = array(
+                            'namespace'  => (string) $class['namespace'],
+                            'classes'    => array(),
+                        );
+                    }
+
+                    $namespaces[$ns]['classes'][] = $class;
+                }
+            }
+        }
+
+        foreach ($namespaces as $file => $ns) {
+            $contents = array();
+
+            foreach ($ns['classes'] as $class) {
+                $contents[] = '* "' . (string) $class->full_name . '":' . substr($this->formatPath($class), strlen($file));
+            }
+
+            file_put_contents(
+                $this->dir . '/' . $file . '.textile',
+                $header."\n\nh1. ".$ns['namespace']."\n\n".implode("\n", $contents)."\n"
             );
         }
     }
