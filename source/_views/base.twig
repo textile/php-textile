@@ -49,13 +49,13 @@
                 <li class="blog"><a href="{{ site.url }}/blog">Blog</a></li>
                 <li class="support"><a href="{{ site.url }}/support">Support</a></li>
             </ul>
+            <form role="search" action="http://www.google.com/cse">
+                <i class="fa fa-search"></i>
+                <input type="search" name="q">
+                <input type="hidden" name="cx" value="">
+                <input type="hidden" name="ie" value="UTF-8">
+            </form>
         </nav>
-
-        <form role="search" action="http://www.google.com/cse">
-            <input type="search" name="q" placeholder="Search&hellip;">
-            <input type="hidden" name="cx" value="">
-            <input type="hidden" name="ie" value="UTF-8">
-        </form>
     </header>
 
     {% if page.header %}
