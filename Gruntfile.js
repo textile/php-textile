@@ -17,7 +17,7 @@ module.exports = function (grunt)
         less: {
             main: {
                 files: {
-                    'tmp/assets/css/main.css': 'assets/css/main.less'
+                    'tmp/assets/css/main.css': 'lib/assets/css/main.less'
                 }
             }
         },
@@ -36,7 +36,7 @@ module.exports = function (grunt)
         copy: {
             img: {
                 files: [
-                    {expand: true, cwd: 'assets/img/', src: ['**'], dest: 'output_dev/assets/img/'}
+                    {expand: true, cwd: 'lib/assets/img/', src: ['**'], dest: 'output_dev/assets/img/'}
                 ]
             },
 
@@ -49,17 +49,17 @@ module.exports = function (grunt)
 
         watch: {
             sass: {
-                files: ['assets/css/**/*.less'],
+                files: ['lib/assets/css/**/*.less'],
                 tasks: ['less', 'cssmin']
             },
 
             js: {
-                files: 'assets/js/**.js',
+                files: 'lib/assets/js/**.js',
                 tasks: ['jshint', 'uglify']
             },
 
             img: {
-                files: 'assets/img/**',
+                files: 'lib/assets/img/**',
                 tasks: ['copy:img']
             },
 
@@ -70,7 +70,7 @@ module.exports = function (grunt)
         },
 
         jshint: {
-            files: ['Gruntfile.js', 'assets/js/*.js'],
+            files: ['Gruntfile.js', 'lib/assets/js/*.js'],
             options: {
                 bitwise: true,
                 camelcase: true,
@@ -113,7 +113,7 @@ module.exports = function (grunt)
 
                 files: [
                     {
-                        'output_dev/assets/js/main.js': ['assets/js/main.js'],
+                        'output_dev/assets/js/main.js': ['lib/assets/js/main.js'],
                         'output_dev/assets/js/prettify.js': ['bower_components/google-code-prettify/src/prettify.js'],
                         'output_dev/assets/js/require.js': ['bower_components/requirejs/require.js']
                     },
