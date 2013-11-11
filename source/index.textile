@@ -4,7 +4,7 @@ title: Home
 name: home
 header: |
   <h1><a title="Humane web text generator" href="http://txstyle.org/">Textile</a> markup language parser for PHP</h1>
-  <pre><code>$ composer require netcarver/textile</code></pre>
+  <pre><span class="caption"><b>Step 1:</b> Install PHP-Textile v3.5.x to your project using Composer</span><code>$ composer require netcarver/textile:3.5.*</code></pre>
 ---
 
 h1. Home
