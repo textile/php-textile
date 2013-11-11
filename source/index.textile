@@ -3,7 +3,7 @@ layout: default
 title: Home
 name: home
 header: |
-  <h1><a href="http://txstyle.org/">Textile</a> markup language parser for PHP.</h1>
+  <h1><a title="Humane web text generator" href="http://txstyle.org/">Textile</a> markup language parser for PHP</h1>
   <pre><code>$ composer require netcarver/textile</code></pre>
 ---
 
