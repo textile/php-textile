@@ -22,16 +22,29 @@ pre {
     border: 1px solid #d0e8f0;
     border-radius: 0.25em;
     overflow: auto;
+    text-align: left;
 
     code {
         background: transparent;
     }
+}
+
+.code {
+    margin: 2em 0 0 0;
+
+    pre {
+        border-radius: 0 0 0.25em 0.25em;
+        border-top: 0;
+        margin: 0;
+    }
 
     .caption {
+        border-radius: 0.5em 0.5em 0 0;
         display: block;
-        margin: -2em -2em 2em -2em;
+        margin: 0;
         font-size: 0.5em;
         padding: 1em;
         font-family: @font-family-sans-serif;
+        text-align: center;
     }
 }
