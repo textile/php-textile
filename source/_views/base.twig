@@ -41,22 +41,26 @@
     <link rel="stylesheet" href="{{ site.assets_url }}css/main.css">
 </head>
 <body id="page-{{ page.name }}">
-    <header>
-        <nav>
+    <div class="header">
+        <header>
             <h1><a href="{{ site.url }}/">{{ site.title }}</a></h1>
-            <ul>
-                <li class="docs"><a href="{{ site.url }}/docs">Docs</a></li>
-                <li class="blog"><a href="{{ site.url }}/blog">Blog</a></li>
-                <li class="support"><a href="{{ site.url }}/support">Support</a></li>
-            </ul>
+
+            <nav>
+                <ul>
+                    <li class="docs"><a href="{{ site.url }}/docs">Docs</a></li>
+                    <li class="blog"><a href="{{ site.url }}/blog">Blog</a></li>
+                    <li class="support"><a href="{{ site.url }}/support">Support</a></li>
+                </ul>
+            </nav>
+
             <form role="search" action="http://www.google.com/cse">
                 <i class="fa fa-search"></i>
                 <input type="search" name="q">
                 <input type="hidden" name="cx" value="">
                 <input type="hidden" name="ie" value="UTF-8">
             </form>
-        </nav>
-    </header>
+        </header>
+    </div>
 
     {% if page.header %}
         <div class="masthead">
