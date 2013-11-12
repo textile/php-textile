@@ -7,10 +7,16 @@ header: |
   <div class="code">
   <p class="caption"><b>Step 1:</b> Install PHP-Textile v3.5.x to your project using Composer</p>
   <pre><code>$ composer require netcarver/textile:3.5.*</code></pre>
+  <ul class="tabs below"><li><a class="active" href="#">Step 1</a></li><li><a href="#">Step 2</a></li><li><a href="#">Step 3</a></li></ul>
   </div>
 ---
 
-h1. Home
+h1. Live editor
+
+notextile. <form method="post" action="http://txstyle.org/try/">
+    <p><textarea name="text" rows="20" cols="50"></textarea></p>
+    <p><button type="submit">Textile it</button></p>
+</form>
 
 bc(language-php). use Netcarver\Textile\Parser as Textile;
 $textile = new Textile;

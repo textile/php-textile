@@ -1,0 +1,24 @@
+.tabs {
+    padding: 0 1em;
+    list-style: none;
+    text-align: left;
+
+    li {
+        display: inline-block;
+    }
+
+    a {
+        border-radius: 0.25em 0.25em 0 0;
+        display: inline-block;
+        padding: 0.5em 1em;
+        text-decoration: none;
+    }
+
+    &.below {
+        margin: 0;
+
+        a {
+            border-radius: 0 0 0.25em 0.25em;
+        }
+    }
+}
