@@ -7,21 +7,23 @@ button,
 input[type=submit] {
     border: 0;
     outline: 0;
-    background: #37bddb;
-    color: #fff;
+    background: @button-default-color;
+    #gradient > .vertical(@button-default-color, darken(@button-default-color, 5%));
+    color: darken(@button-default-color, 40%);
     padding: 0.5em 1em;
     text-decoration: none;
     font-weight: bold;
-    border-radius: 0.3em;
+    border-radius: 0.25em;
     display: inline-block;
-    box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.3);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    transition: all 0.5s;
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.3), 0 1px 3px rgba(0, 0, 0, 0.15);
+    border: 1px solid darken(@button-default-color, 10%);
+    border-top-color: darken(@button-default-color, 5%);
+    border-bottom-color: darken(@button-default-color, 15%);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+    .transition(all 0.5s);
 
     &:hover,
     &:focus {
-        color: #fff;
-        background: #000;
-        border-color: #000;
+        /* Todo */
     }
 }
