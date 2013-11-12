@@ -26,8 +26,12 @@ textarea {
     border: 1px solid #ddd;
     .box-sizing(border-box);
     .transition(box-shadow 0.5s);
-    .box-shadow(0 1px 3px rgba(0, 0, 0, .25););
+    .box-shadow(inset 0 1px 3px rgba(0, 0, 0, 0.10););
     outline: 0;
     color: @text-color;
     .placeholder(#ddd);
+}
+
+textarea {
+    padding: 1em;
 }
