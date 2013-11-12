@@ -13,7 +13,7 @@ header: |
 
 h1. Live editor
 
-notextile. <form method="post" action="http://txstyle.org/try/">
+notextile. <form class="sandbox" method="post" action="#">
     <p><textarea name="text" rows="20" cols="50"></textarea></p>
     <p><button type="submit">Textile it</button></p>
 </form>
