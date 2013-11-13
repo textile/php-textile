@@ -24,6 +24,15 @@ input[type=submit] {
 
     &:hover,
     &:focus {
-        /* Todo */
+        background: lighten(@button-default-color, 4%);
+        #gradient > .vertical(lighten(@button-default-color, 4%), darken(@button-default-color, 1%));
     }
+}
+
+.busy [type=submit] {
+    color: transparent;
+    text-shadow: none;
+    .transition(none);
+    cursor: default;
+    box-shadow: none;
 }

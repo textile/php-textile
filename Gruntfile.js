@@ -115,7 +115,8 @@ module.exports = function (grunt)
                     {
                         'output_dev/assets/js/main.js': ['lib/assets/js/main.js'],
                         'output_dev/assets/js/prettify.js': ['bower_components/google-code-prettify/src/prettify.js'],
-                        'output_dev/assets/js/require.js': ['bower_components/requirejs/require.js']
+                        'output_dev/assets/js/require.js': ['bower_components/requirejs/require.js'],
+                        'output_dev/assets/js/spin.js': ['bower_components/spin.js/spin.js']
                     },
                     {
                         expand: true,

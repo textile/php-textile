@@ -13,7 +13,7 @@ header: |
 
 h1. Live editor
 
-notextile. <form class="sandbox" method="post" action="{{ site.sandbox_url }}">
+notextile. <form class="async sandbox" method="post" action="{{ site.sandbox_url }}">
     <p><textarea name="text" rows="5" cols="50" required></textarea></p>
     <p><button type="submit">Textile it</button></p>
 </form>
