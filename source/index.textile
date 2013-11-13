@@ -17,7 +17,3 @@ notextile. <form class="async sandbox" method="post" action="{{ site.sandbox_url
     <p><textarea name="text" rows="5" cols="50" required></textarea></p>
     <p><button type="submit">Textile it</button></p>
 </form>
-
-bc(language-php). use Netcarver\Textile\Parser as Textile;
-$textile = new Textile;
-echo $textile->textileThis('h1. Hello World!');
