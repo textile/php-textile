@@ -62,11 +62,13 @@
         </header>
     </div>
 
-    {% if page.header %}
-        <div class="masthead">
-            {{ page.header|raw }}
-        </div>
-    {% endif %}
+    {% block header %}
+        {% if page.header %}
+            <div class="masthead">
+                {{ page.header|raw }}
+            </div>
+        {% endif %}
+    {% endblock %}
 
     <main>
         {% block content_wrapper %}
