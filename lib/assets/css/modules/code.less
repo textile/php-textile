@@ -2,27 +2,32 @@
  * Code display.
  */
 
-code a,
-code a:hover {
-    color: inherit;
-    cursor: help;
-    text-decoration: none;
-}
-
 pre, code {
+    .box-sizing(border-box);
+    background: #daeffa;
+    border-radius: @border-small-radius;
     color: #9da8ab;
     font-family: @font-family-monospace;
     font-size: 1em;
+    text-align: left;
+
+    a {
+        color: inherit;
+        cursor: help;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            color: inherit;
+            text-decoration: underline;
+        }
+    }
 }
 
 pre {
-    .box-sizing(border-box);
-    background: #daeffa;
-    padding: 1em;
-    border: 1px solid #d0e8f0;
-    border-radius: 0.25em;
+    border: 1px solid darken(#daeffa, 10%);
     overflow: auto;
-    text-align: left;
+    padding: 1em;
 
     code {
         background: transparent;
@@ -34,7 +39,7 @@ pre {
     margin: 2em 0 0 0;
 
     pre {
-        border-radius: 0 0 0.25em 0.25em;
+        border-radius: 0 0 @border-small-radius @border-small-radius;
         border-top: 0;
         margin: 0;
     }
@@ -42,10 +47,10 @@ pre {
     .caption {
         border-radius: 0.5em 0.5em 0 0;
         display: block;
-        margin: 0;
-        font-size: 0.5em;
-        padding: 1em;
         font-family: @font-family-sans-serif;
+        font-size: 0.5em;
+        margin: 0;
+        padding: 1em;
         text-align: center;
     }
 }
