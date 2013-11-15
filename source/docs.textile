@@ -2,6 +2,7 @@
 layout: default
 title: Documentation
 name: docs
+header: <h1>Documentation</h1>
 ---
 
-h1. API documentation
+p. API documentation
