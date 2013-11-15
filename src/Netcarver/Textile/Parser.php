@@ -17,10 +17,10 @@ namespace Netcarver\Textile;
  * Thanks to Carlo Zottmann <carlo@g-blog.net> for refactoring
  * Textile's procedural code into a class framework
  *
- * Additions and fixes Copyright (c) 2006    Alex Shiels       http://thresholdstate.com/
+ * Additions and fixes Copyright (c) 2006    Alex Shiels       https://twitter.com/tellyworth
  * Additions and fixes Copyright (c) 2010    Stef Dawson       http://stefdawson.com/
- * Additions and fixes Copyright (c) 2010-13 Netcarver         http://github.com/netcarver
- * Additions and fixes Copyright (c) 2011    Jeff Soo          http://ipsedixit.net
+ * Additions and fixes Copyright (c) 2010-13 Netcarver         https://github.com/netcarver
+ * Additions and fixes Copyright (c) 2011    Jeff Soo          http://ipsedixit.net/
  * Additions and fixes Copyright (c) 2012    Robert Wetzlmayr  http://wetzlmayr.com/
  * Additions and fixes Copyright (c) 2012-13 Jukka Svahn       http://rahforum.biz/
  *

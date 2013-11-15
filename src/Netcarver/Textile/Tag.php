@@ -9,7 +9,7 @@
 namespace Netcarver\Textile;
 
 /*
- * Copyright (c) 2013, Netcarver http://github.com/netcarver
+ * Copyright (c) 2013, Netcarver https://github.com/netcarver
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
