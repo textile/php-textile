@@ -32,18 +32,19 @@ input[type=submit] {
         color: darken(@button-default-color, 40%);
         text-decoration: none;
     }
-}
 
-.busy [type=submit] {
-    color: transparent;
-    text-shadow: none;
-    .transition(none);
-    cursor: default;
-    box-shadow: none;
-}
+    .busy &,
+    &.busy {
+        color: transparent;
+        text-shadow: none;
+        .transition(none);
+        cursor: default;
+        box-shadow: none;
+    }
 
-.btn.small {
-    font-size: 0.5em;
-    border-radius: @border-small-radius * 2;
-    padding: 0.5em 0.7em;
+    &.small {
+        font-size: 0.5em;
+        border-radius: @border-small-radius * 2;
+        padding: 0.5em 0.7em;
+    }
 }
