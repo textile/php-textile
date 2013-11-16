@@ -1,0 +1,17 @@
+---
+layout: default
+title: Requirements
+name: docs
+---
+
+PHP-Textile library requires:
+
+* PHP 5.3.0 or newer.
+* "Ctype":http://php.net/manual/en/book.ctype.php extension.
+
+Optional, but highly recommended:
+
+* "Mbstring":http://php.net/manual/en/book.mbstring.php extension.
+* PCRE compiled with UTF-8 support.
+
+With out these optional components, PHP-Textile will not be able to process non-ASCII input properly.
