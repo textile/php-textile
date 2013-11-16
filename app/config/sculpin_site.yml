@@ -4,4 +4,6 @@ slogan: Textile markup language parser for PHP
 assets_url: /assets/
 description: Textile markup language parser for PHP
 sandbox_url: http://php-textile-sandbox.test/
+textile_url: http://txstyle.org/
+textile_slogan: Humane web text generator
 php_textile_version_minor: 3.5
