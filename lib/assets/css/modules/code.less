@@ -45,12 +45,18 @@ pre {
     }
 
     .caption {
-        border-radius: 0.5em 0.5em 0 0;
+        border-radius: @border-small-radius * 2 @border-small-radius * 2 0 0;
         display: block;
         font-family: @font-family-sans-serif;
         font-size: 0.5em;
         margin: 0;
         padding: 1em;
         text-align: center;
+    }
+
+    .notes {
+        margin: 1em 0 0 0;
+        font-size: 0.5em;
+        text-align: left;
     }
 }
