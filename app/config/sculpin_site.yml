@@ -5,5 +5,7 @@ assets_url: /assets/
 description: Textile markup language parser for PHP
 sandbox_url: http://php-textile-sandbox.test/
 textile_url: http://txstyle.org/
+github_url: https://github.com/textile/php-textile
 textile_slogan: Humane web text generator
 php_textile_version_minor: 3.5
+php_textile_version_latest: 3.5.4
