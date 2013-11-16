@@ -12,6 +12,6 @@ PHP-Textile library requires:
 Optional, but highly recommended:
 
 * "Mbstring":http://php.net/manual/en/book.mbstring.php extension.
-* PCRE compiled with UTF-8 support.
+* "PCRE":http://www.php.net/manual/en/book.pcre.php compiled with UTF-8 support.
 
 With out these optional components, PHP-Textile will not be able to process non-ASCII input properly.
