@@ -12,11 +12,15 @@ The recommended way to install PHP-Textile is via "Composer":https://getcomposer
 
 bc(language-sh). $ composer require "netcarver/textile {{ site.php_textile_version_minor }}.*"
 
+The above uses the "require":http://getcomposer.org/doc/03-cli.md#require command to install the latest stable version of "PHP-Textile":https://packagist.org/packages/netcarver/textile as listed on "Packagist":https://packagist.org/. To update your old PHP-Textile installation run "update":http://getcomposer.org/doc/03-cli.md#update command instead.
+
 h3. Manual
 
-You can also ==<a href="{{ site.github_url }}/archive/v{{ site.php_textile_version_latest }}.zip"><i class="fa fa-cloud-download"></i> download PHP-Textile as a ZIP archive</a>==, extract it and place the included @src@ directory somewhere to your project tree.
+You can also ==<a href="{{ site.github_url }}/archive/v{{ site.php_textile_version_latest }}.zip"><i class="fa fa-cloud-download"></i> download PHP-Textile as a ZIP archive</a>==, extract it and place the included @src@ directory somewhere to your project tree. You can even do this with a single command liner if you so wish:
 
 bc(language-sh). $ curl -L "{{ site.github_url }}/archive/v{{ site.php_textile_version_latest }}.tar.gz" | tar -zx
+
+The above uses cURL to download the latest TAR and extracts it with tar.
 
 h2(#autoload). Include PHP-Textile in your project
 
