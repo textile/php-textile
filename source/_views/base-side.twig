@@ -1,77 +1,7 @@
-<!DOCTYPE html>
-<html lang="en-GB" dir="ltr">
-<head>
-    <meta charset="utf-8">
-    <title>{{ page.title }} &mdash; {{ site.title }}</title>
-
-    {% if page.robots %}
-        <meta name="robots" content="{{ page.robots }}">
-    {% else %}
-        <meta name="robots" content="index, follow">
-    {% endif %}
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="Sculpin">
-    <meta name="application-name" content="{{ site.title }}">
-
-    <meta property="og:site_name" content="{{ site.title }}">
-    <meta property="og:title" content="{{ page.title }} &mdash; {{ site.title }}">
-
-    {% if page.og_type %}
-        <meta property="og:type" content="{{ page.og_type }}">
-    {% else %}
-        <meta property="og:type" content="website">
-    {% endif %}
-
-    {% if page.og_image %}
-        <meta property="og:image" content="{{ page.og_image }}">
-    {% else %}
-        <meta property="og:image" content="{{ site.assets_url }}img/site-tile.png">
-    {% endif %}
-
-    {% if page.description %}
-        <meta property="og:description" content="{{ page.description }}">
-        <meta name="description" content="{{ page.description }}">
-    {% else %}
-        <meta property="og:description" content="{{ site.description }}">
-        <meta name="description" content="{{ site.description }}">
-    {% endif %}
-
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-    <link rel="stylesheet" href="{{ site.assets_url }}css/main.css">
-</head>
-<body id="page-{{ page.name }}">
-    <div class="header">
-        <header>
-            <h1><a href="{{ site.url }}/">{{ site.title }}</a></h1>
-
-            <nav>
-                <ul>
-                    <li class="docs"><a href="{{ site.url }}/docs">Docs</a></li>
-                    <li class="blog"><a href="{{ site.url }}/blog">Blog</a></li>
-                    <li class="support"><a href="{{ site.url }}/support">Support</a></li>
-                </ul>
-            </nav>
-
-            <form role="search" action="http://www.google.com/cse">
-                <label for="q"><i class="fa fa-search" for="q"></i></label>
-                <input type="search" name="q" id="q">
-                <input type="hidden" name="cx" value="">
-                <input type="hidden" name="ie" value="UTF-8">
-            </form>
-        </header>
-    </div>
-
-    {% block header %}
-        {% if page.header %}
-            <div class="masthead">
-                {{ page.header|raw }}
-            </div>
-        {% endif %}
-    {% endblock %}
-
-    <main>
-        <div class="columns">
+{% extends "base.twig" %}
+{% block content_wrapper %}
+    <div class="columns">
+        <div class="side-navigation">
             {% if page.nav %}
                 <div class="context-navigation">
                     {% for items in page.nav %}
@@ -85,22 +15,11 @@
                 </div>
             {% endif %}
 
-            {% block content_wrapper %}
-                <div class="side-navigation">
-                    {% block side %}{% endblock %}
-                </div>
-                <div class="main-content">
-                    <h1>{{ page.title }}</h1>
-                    {% block content %}{% endblock %}
-                </div>
-            {% endblock %}
+            {% block side %}{% endblock %}
         </div>
-    </main>
-
-    <footer>
-        <p class="copy">&copy; PHP-Textile Team. PHP-Textile is released under the <a rel="nofollow" href="{{ site.github_url }}/master/LICENSE">BSD 3-Clause License</a>.</p>
-    </footer>
-
-    <script data-main="{{ site.assets_url }}js/main.js" src="{{ site.assets_url }}js/require.js"></script>
-</body>
-</html>
+        <div class="main-content">
+            <h1>{{ page.title }}</h1>
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}
