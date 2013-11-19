@@ -70,29 +70,31 @@
         {% endif %}
     {% endblock %}
 
-    <main class="columns">
-        {% if page.nav %}
-            <div class="context-navigation">
-                <ul>
+    <main>
+        <div class="columns">
+            {% if page.nav %}
+                <div class="context-navigation">
                     {% for items in page.nav %}
                         <h3>{{ items.name }}</h3>
-                        {% for item in items.value %}
-                            <li><a href="{{ site.url }}/{{ item.href }}">{{ item.name }}</a></li>
-                        {% endfor %}
+                        <ul>
+                            {% for item in items.value %}
+                                <li><a href="{{ site.url }}/{{ item.href }}">{{ item.name }}</a></li>
+                            {% endfor %}
+                        </ul>
                     {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
+                </div>
+            {% endif %}
 
-        {% block content_wrapper %}
-            <div class="side-navigation">
-                {% block side %}{% endblock %}
-            </div>
-            <div class="main-content">
-                <h1>{{ page.title }}</h1>
-                {% block content %}{% endblock %}
-            </div>
-        {% endblock %}
+            {% block content_wrapper %}
+                <div class="side-navigation">
+                    {% block side %}{% endblock %}
+                </div>
+                <div class="main-content">
+                    <h1>{{ page.title }}</h1>
+                    {% block content %}{% endblock %}
+                </div>
+            {% endblock %}
+        </div>
     </main>
 
     <footer>

@@ -14,5 +14,39 @@ main, footer {
     .main-content {
         .make-column(8);
         .make-column-offset(1);
+
+        > h1:first-child {
+            margin-top: 0.5em;
+        }
+    }
+}
+
+.side-navigation {
+    h2 {
+        font-size: 1em;
+    }
+
+    ul {
+        list-style: none;
+        padding-left: 0;
+
+        li {
+            padding-left: 0.8em;
+
+            &:before {
+                content: '\f10c';
+                font-family: FontAwesome;
+                display: inline-block;
+                margin-left: -1.6em;
+                width: 1.6em;
+                line-height: 2;
+                font-size: 0.5em;
+                vertical-align: middle;
+            }
+
+            &.active:before {
+                content: '\f111';
+            }
+        }
     }
 }
