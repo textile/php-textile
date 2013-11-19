@@ -6,7 +6,9 @@ name: home
 
 h1. Live editor
 
-notextile. <form class="async sandbox" method="post" action="{{ site.sandbox_url }}">
-    <p><textarea name="text" rows="5" cols="50" required></textarea></p>
+notextile.. <form class="async sandbox" method="post" action="{{ site.sandbox_url }}">
+    <p><textarea name="text" rows="5" cols="50" required>Any content written to this field is parsed using the latest stable version of "PHP-Textile":{{ site.url }}/.
+
+Write down some "Textile markup" and hit the *Textile it* button to preview the generated output -- pretty easy _huh?_</textarea></p>
     <p><button type="submit">Textile it</button></p>
 </form>
