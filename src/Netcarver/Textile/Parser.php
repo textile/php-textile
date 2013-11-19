@@ -872,6 +872,7 @@ class Parser
      * </code>
      *
      * @param string $doctype The output document type, either 'xhtml' or 'html5'
+     * @api
      */
 
     public function __construct($doctype = 'xhtml')
@@ -944,6 +945,7 @@ class Parser
      * @param  string $name  Name of the symbol to assign a new value to.
      * @param  string $value New value for the symbol.
      * @return Parser
+     * @api
      */
 
     public function setSymbol($name, $value)
@@ -962,6 +964,7 @@ class Parser
      * @param  string|null  $name The name of the symbol, or NULL if requesting the symbol table
      * @return array|string The symbol table or the requested symbol
      * @throws \InvalidArgumentException
+     * @api
      */
 
     public function getSymbol($name = null)
@@ -992,6 +995,7 @@ class Parser
      *
      * @param  string $prefix  The string to prefix all relative image paths with
      * @return Parser
+     * @api
      */
 
     public function setRelativeImagePrefix($prefix = '')
@@ -1015,6 +1019,7 @@ class Parser
      *
      * @param  bool   $dimensionless TRUE to disable image dimensions, FALSE to enable
      * @return Parser
+     * @api
      */
 
     public function setDimensionlessImages($dimensionless = true)
@@ -1038,6 +1043,7 @@ class Parser
      * </code>
      *
      * @return bool TRUE if images will not get dimensions, FALSE otherwise
+     * @api
      */
 
     public function getDimensionlessImages()
@@ -1054,6 +1060,7 @@ class Parser
      * </code>
      *
      * @return string Version
+     * @api
      */
 
     public function getVersion()
@@ -1071,6 +1078,7 @@ class Parser
      *
      * @param  string $text The text to be encoded
      * @return string The encoded text
+     * @api
      */
 
     public function textileEncode($text)
@@ -1108,6 +1116,7 @@ class Parser
      * @param  string $rel     Relationship attribute applied to generated links
      * @return string Parsed $text
      * @see    Parser::textileRestricted()
+     * @api
      */
 
     public function textileThis($text, $lite = false, $encode = false, $noimage = false, $strict = false, $rel = '')
@@ -1146,6 +1155,7 @@ class Parser
      * @param  string $rel     Relationship attribute applied to generated links
      * @return string Parsed $text
      * @see    Parser::textileThis()
+     * @api
      */
 
     public function textileRestricted($text, $lite = true, $noimage = true, $rel = 'nofollow')
