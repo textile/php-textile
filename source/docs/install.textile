@@ -1,0 +1,30 @@
+---
+layout: docs
+title: Include PHP-Textile in your project
+name: docs
+---
+
+h2. Composer
+
+If you haven't yet set up Composer for your project, you will want to include Composer's "autoloader file":http://getcomposer.org/doc/01-basic-usage.md#autoloading in your project bootstrap:
+
+bc(language-php). require './vendor/autoload.php';
+
+By default, the autoloader file is generated to the vendor directory, placed to the directory where you ran the @composer require@ command. PHP-Textile registers a "PSR-0 autoloader":https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md, and including the autoloader file allows you to access PHP-Textile library anywhere in your project.
+
+h2. Manual
+
+PHP-Textile supports any "PSR-0 style autoloaders":https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md, but you can also include the source files in your project manually:
+
+bc(language-php). require 'path/to/src/Netcarver/Textile/Parser.php';
+require 'path/to/src/Netcarver/Textile/DataBag.php';
+require 'path/to/src/Netcarver/Textile/Tag.php';
+
+Or point your PSR-0 autoloader to your PHP-Textile installation location. For instance using "Symfony ClassLoader Component":http://symfony.com/doc/2.0/components/class_loader.html:
+
+bc(language-php).. require '/path/to/src/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+use Symfony\Component\ClassLoader\UniversalClassLoader;
+
+$loader = new UniversalClassLoader();
+$loader->registerNamespace('Netcarver\Textile', 'path/to/src/');
+$loader->register();

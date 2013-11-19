@@ -3,3 +3,16 @@ main, footer {
     display: block;
     margin: auto;
 }
+
+.columns {
+    .make-row();
+
+    .side-navigation {
+        .make-column(3);
+    }
+
+    .main-content {
+        .make-column(8);
+        .make-column-offset(1);
+    }
+}

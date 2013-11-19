@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: docs
 title: Documentation
 name: docs
 header: <h1>Documentation</h1>

@@ -1,0 +1,17 @@
+---
+layout: docs
+title: Basic usage
+name: docs
+---
+
+PHP-Textile parser can be accessed through the "Netcarver\Textile\Parser":/docs/api/netcarver/textile/parser/ class. The class is highly configurable, and actual parsing happens with the "textileThis":/docs/api/netcarver/textile/parser/textilethis/ and "textileRestricted":/docs/api/netcarver/textile/parser/textilerestricted/ methods. Check out the "documentation":/docs/ for more information about the library. Basic parsing would be done like so:
+
+bc(language-php). $parser = new \Netcarver\Textile\Parser();
+echo $parser->textileThis('h1. Hello World!');
+
+If you are using PHP-Textile to format untrusted user-supplied input, blog comments for instance, use the "textileRestricted":/docs/api/netcarver/textile/parser/textilerestricted/ method instead:
+
+bc(language-php). $parser = new \Netcarver\Textile\Parser();
+echo $parser->textileRestricted('!bad/image/not/allowed.svg!');
+
+The method doesn't allow more powerful formatting options such as inline style, and removes any raw HTML.
