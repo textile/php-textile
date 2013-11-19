@@ -3,6 +3,5 @@ php:
   - 5.5
   - 5.4
 before_script:
-  - rm composer.json
-  - composer require symfony/yaml:2.3.*
-script: phpunit
+  - composer install
+script: ./vendor/bin/phpunit
