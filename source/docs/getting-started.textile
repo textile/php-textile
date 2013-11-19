@@ -18,7 +18,7 @@ You can also ==<a href="{{ site.github_url }}/archive/v{{ site.php_textile_versi
 
 bc. $ curl -L {{ site.github_url }}/archive/v{{ site.php_textile_version_latest }}.tar.gz | tar -zx
 
-h2. Include PHP-Textile in your project
+h2(#autoload). Include PHP-Textile in your project
 
 h3. Composer
 
