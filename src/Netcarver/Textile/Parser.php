@@ -324,10 +324,25 @@ Ordered List Start & Continuation:
 /**
  * Textile parser.
  *
+ * The Parser class takes Textile input and
+ * converts it to well formatted HTML. This is
+ * the library's main class, hosting the parsing
+ * functionality and exposing a simple
+ * public interface for you to use.
+ *
+ * The most basic use case would involve initialising
+ * a instance of the class and calling the textileThis
+ * method, parsing the given Textile input in unrestricted
+ * mode.
+ *
  * <code>
  * $parser = new \Netcarver\Textile\Parser();
  * echo $parser->textileThis('h1. Hello World!');
  * </code>
+ *
+ * @see Parser::__construct()
+ * @see Parser::textileThis()
+ * @see Parser::textileRestricted()
  */
 
 class Parser
@@ -845,6 +860,11 @@ class Parser
 
     /**
      * Constructor.
+     *
+     * The constructor allows setting options that affect the
+     * class instance as a whole, such as the output doctype.
+     * To instruct the parser to return HTML5 markup instead of
+     * XHTML, set $doctype argument to 'html5'.
      *
      * <code>
      * $parser = new \Netcarver\Textile\Parser('html5');
