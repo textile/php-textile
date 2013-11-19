@@ -4,9 +4,9 @@
 
 pre, code {
     .box-sizing(border-box);
-    background: #daeffa;
+    background: @code-background;
     border-radius: @border-small-radius;
-    color: #9da8ab;
+    color: @text-color;
     font-family: @font-family-monospace;
     font-size: 1em;
     text-align: left;
@@ -25,7 +25,7 @@ pre, code {
 }
 
 pre {
-    border: 1px solid darken(#daeffa, 10%);
+    border: 1px solid darken(@code-background, 4%);
     overflow: auto;
     padding: 1em;
 
