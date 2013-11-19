@@ -939,7 +939,7 @@ class Parser
      * Defines a substitution symbol.
      *
      * Call this you need to redefine a substitution symbol to
-     * be used when parsing a textile document.
+     * be used when parsing a Textile document.
      *
      * @param  string $name  Name of the symbol to assign a new value to.
      * @param  string $value New value for the symbol.
@@ -981,7 +981,7 @@ class Parser
      * Sets base image directory path.
      *
      * This is used when Textile is supplied with a relative image path.
-     * Allows client systems to have textile convert relative image paths to
+     * Allows client systems to have PHP-Textile convert relative image paths to
      * absolute or prefixed paths. This method is used to set that base path,
      * usually a absolute HTTP address pointing to a directory.
      *
@@ -1792,12 +1792,12 @@ class Parser
     }
 
     /**
-     * Parses textile list structures into HTML.
+     * Parses Textile list structures into HTML.
      *
      * Searches for ordered, un-ordered and definition lists in the
      * textile input and generates HTML lists for them.
      *
-     * @param  string $text The textile input
+     * @param  string $text The input
      * @return string The parsed text
      */
 
@@ -1807,7 +1807,7 @@ class Parser
     }
 
     /**
-     * Constructs a HTML list from a textile list structure.
+     * Constructs a HTML list from a Textile list structure.
      *
      * This method is used by Parser::textileLists() to process
      * found list structures.
@@ -1903,7 +1903,7 @@ class Parser
     }
 
     /**
-     * Determines the list type from the textile input symbol.
+     * Determines the list type from the Textile input symbol.
      *
      * @param  string $in Textile input containing the possible list marker
      * @return string Either 'd', 'o', 'u'
@@ -2293,7 +2293,7 @@ class Parser
      * Replaces Textile span tags with their equivalent HTML inline tags.
      *
      * @param  string $text The Textile document to perform the replacements in
-     * @return string The textile document with spans replaced by their HTML inline equivalents
+     * @return string The Textile document with spans replaced by their HTML inline equivalents
      */
 
     protected function spans($text)
