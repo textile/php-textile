@@ -3678,7 +3678,7 @@ class Parser
 
     protected function decodeHigh($text, $charset = 'UTF-8')
     {
-        $text = (ctype_digit($text)) ? "&#$text;" : "&$text;";
+        $text = (string) intval($text) === (string) $text ? "&#$text;" : "&$text;";
         return ($this->mb) ? mb_decode_numericentity($text, $this->cmap, $charset) : html_entity_decode($text, ENT_NOQUOTES, $charset);
     }
 
