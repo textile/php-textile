@@ -1851,13 +1851,14 @@ class Textile
 // -------------------------------------------------------------
 	function footnoteRef($text)
 	{
-		return preg_replace('/(?<=\S)\[([0-9]+)([\!]?)\](\s)?/Ue',
-			'$this->footnoteID(\'\1\',\'\2\',\'\3\')', $text);
+		return preg_replace_callback('/(?<=\S)\[([0-9]+)([\!]?)\](\s)?/U', array(&$this, 'footnoteID'), $text);
 	}
 
 // -------------------------------------------------------------
-	function footnoteID($id, $nolink, $t)
+	function footnoteID($m)
 	{
+		list(, $id, $nolink, $t) = array_pad($m, 4, '');
+
 		$backref = ' ';
 		if (empty($this->fn[$id])) {
 			$this->fn[$id] = $a = uniqid(rand());
