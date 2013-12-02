@@ -1310,7 +1310,7 @@ class Textile
 		if( !empty($this->notes) ) {
 			$o = array();
 			foreach( $this->notes as $label=>$info ) {
-				$i = @$info['seq'];
+				$i = isset($info['seq']) ? $info['seq'] : '';
 				if( !empty($i) ) {
 					$info['seq'] = $label;
 					$o[$i] = $info;
@@ -1406,7 +1406,7 @@ class Textile
 	{
 		list(, $label, $link, $att, $content) = $m;
 		# Assign an id if the note reference parse hasn't found the label yet.
-		$id = @$this->notes[$label]['id'];
+		$id = isset($this->notes[$label]['id']) ? $this->notes[$label]['id'] : '';
 		if( !$id )
 			$this->notes[$label]['id'] = uniqid(rand());
 
@@ -1447,7 +1447,7 @@ class Textile
 		$nolink = ($nolink === '!');
 
 		# Assign a sequence number to this reference if there isn't one already...
-		$num = @$this->notes[$label]['seq'];
+		$num = isset($this->notes[$label]['seq']) ? $this->notes[$label]['seq'] : '';
 		if( !$num )
 			$num = $this->notes[$label]['seq'] = ($this->note_index++);
 
@@ -1456,7 +1456,7 @@ class Textile
 		$this->notes[$label]['refids'][] = $refid = uniqid(rand());
 
 		# If we are referencing a note that hasn't had the definition parsed yet, then assign it an ID...
-		$id = @$this->notes[$label]['id'];
+		$id = isset($this->notes[$label]['id']) ? $this->notes[$label]['id'] : '';
 		if( !$id )
 			$id = $this->notes[$label]['id'] = uniqid(rand());
 
