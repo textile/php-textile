@@ -9,11 +9,6 @@
  */
 
 /*
-$HeadURL$
-$LastChangedRevision$
-*/
-
-/*
 
 _____________
 T E X T I L E
