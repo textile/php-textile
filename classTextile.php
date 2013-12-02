@@ -843,7 +843,7 @@ class Textile
 				$atts = $this->pba($atts);
 
 				preg_match( "/^(.*?)[\s]*:=(.*?)[\s]*(=:|:=)?[\s]*$/s", $content, $xm );
-				list( , $term, $def, ) = $xm;
+				list( , $term, $def, ) = array_pad($xm, 3, '');
 				$term = trim( $term );
 				$def  = trim( $def, ' ' );
 
