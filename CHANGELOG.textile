@@ -1,0 +1,87 @@
+h1. Changelog
+
+Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
+
+h2. "Version 2.4.1 - 2012/08/23":https://github.com/textile/php-textile/releases/tag/v2.4.1
+
+* Add @sftp@, @callto@, @tel@ and @file@ schemes to the URI whitelist in unrestricted mode.
+* Support international format @tel@ URIs via linkrefs (link aliases.)
+* Extend linkrefs to all available URI schemes in unrestricted mode.
+* Reverted looser matching of list-like structures as it introduced problems in block-level elements that
+  can legitimately have literals or other non-lists in them that are similar to textile's lists.
+  See issue #65 for some examples.
+* Fixed #61 which caused strong numeric strings at the start of a line to be turned into lists.
+* Reverted auto-breaking in table cells as it introduced #71 (breaking lists within table cells).
+* Fixed #67 which ran textile within table cells through the glyph routine twice.
+
+h2. "Version 2.4.0 - 2012/05/07":https://github.com/textile/php-textile/releases/tag/v2.4.0
+
+* Conditionally use utf8 in span regex pattern. Closes #53.
+* Small code cleanups
+* Convert \n to @<br/>@ inside table rows.
+* Added HTML comment block handling.
+* Added ability to control the start attribute and continuation of ordered lists.
+* Adds basic Redcloth-style definition list support.
+* Add ability to customise footnote refs and anchors.
+* Add https protocol to linkrefs.
+* Add unicode support for linkref urls.
+* Added redcloth style list continuation.
+* Loosen recognition of notedefs and notelists.
+* Better recognition of lists adjoined to previous text. (This was reverted in 2.4.1 as it caused issues inside block elements like bc. or bq.)
+* Bugfix: allow apostrophe between ) and a word character.
+* Allow notelist refs to be customised.
+
+h2. "Version 2.3.2 - 2012/03/20":https://github.com/textile/php-textile/releases/tag/v2.3.2
+
+* Allow multiple classes in block attributes.
+* Improve handling of (classA classB#Bad id) blocks.
+* Add span $tail fix & support for trailing [ in spans.
+* Add doctype to textile constructor & use abbr instead of acronym for html5 doctypes.
+* HTML5 doctype extends class rather than use invalid align attribute.
+* Allow auto-assigned classes to be output in restricted mode.
+* Add support for encoding Unicode characters in links.
+* Notelists: fix order of @sup@ and @a@. Fixes issue #20
+* Add simple set of symbols ¤§µ¶†‡•∗∴◊♠♣♥♦ to notelist regex. Requested in #38
+* Remove attributes from embedded code tag output by bc.
+* Simplify en-dash glyph rule -- should fix #50
+* Simplify self-hyperlinked text, remove the scheme for http, https, ftp and mailto link text.
+
+h2. "Version 2.3.0 - 2012/01/10":https://github.com/textile/php-textile/releases/tag/v2.3
+
+* Fix potential DoS in cleanba().
+* Fix the issue where class would eat the note label.
+* Sanitise image URLs.
+* Allow inline span tags to be applied within non-English quotation marks.
+* Allow non-English quotation marks inside inline span tags.
+* Allow pipe closure of captions.
+* Allow missing closing pipe in colgroups.
+* Note-style links can use index 0.
+* Encode quotes in restricted mode, rather than improperly leaving them as is.
+* Improve lang, style, id and class handling.
+* Add rel attributes to linked images.
+* Center aligned cells aren't treated as captions.
+* Removed use of deprecated @split()@ function.
+* Disallow unsafe block attributes in restricted mode.
+
+h2. "Version 2.2.0 - 2010/09/22":https://github.com/textile/php-textile/releases/tag/v2.2public
+
+This is our first release forked from "revision 3359":https://code.google.com/p/textpattern/source/detail?r=3359 of "Textpattern CMS":http://textpattern.com. Here are the changes since Textile v2.0.0:
+
+* Allow duplicate notelists with different backref characters.
+* Properly render empty table cells.
+* Add support for glyphs such as fractions, plus-minus and degrees.
+* Optimize glyph encoding setup.
+* Optimize style attribute processing.
+* Less restrictive paragraph breaking.
+* Output cleaner inline styles.
+* More restrictive apostrophe encoding and matching.
+* Remove horizontal and vertical alignment attributes from list elements.
+* Lists can use dot terminator.
+* Improved table generation: allow linebreaks in table cells, colgroups, thead, tbody and tfoot elements.
+* Add auto-numbered notelists.
+* Add Textile comment tag. Comments aren't displayed in the generated markup.
+* Add self-links where the URL can be used with the link text (@"$":http://example.com@).
+* Allow glyph parsing across tag boundaries.
+* Add definition lists.
+* Fix duplicate IDs in footnotes.
+* Caps span isn't added to acronyms.
