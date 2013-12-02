@@ -1,0 +1,18 @@
+{
+    "name": "netcarver/textile",
+    "description": "A lightweight markup language that takes (almost) plaintext and converts it into well formed HTML.",
+    "homepage": "https://github.com/textile/php-textile",
+    "support": {
+        "irc": "irc://irc.freenode.net/textile",
+        "wiki": "https://github.com/textile/php-textile/wiki",
+        "issues": "https://github.com/textile/php-textile/issues"
+    },
+    "license": "BSD-3-Clause",
+    "autoload": {
+        "classmap": ["classTextile.php"]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*",
+        "symfony/yaml": "2.3.*"
+    }
+}
