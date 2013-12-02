@@ -2,6 +2,11 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
+h2. "Version 2.4.2 - 2013/12/02":https://github.com/textile/php-textile/releases/tag/v2.4.2
+
+* Fix PHP 5.5 compatibility. Resolve E_DEPRECATED messages and drop @e@ regular expression modifier.
+* Fix suppressed notices.
+
 h2. "Version 2.4.1 - 2012/08/23":https://github.com/textile/php-textile/releases/tag/v2.4.1
 
 * Add @sftp@, @callto@, @tel@ and @file@ schemes to the URI whitelist in unrestricted mode.
