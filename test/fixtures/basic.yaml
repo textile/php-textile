@@ -1,0 +1,1333 @@
+adaptor: textile
+options:
+  showfailures: true
+  showpasses: true
+  showdiffs: true
+  debug: false
+  format: html          # Tester output format
+  doctype: xhtml        # Unit under test document output format
+  adaptor_options:
+    restricted: false
+
+Mixed HTML & Textile:
+  input : |
+    <p>*foo*</p>
+
+    <p>*foo*[^2^]</p>
+
+  expect: |
+    <p><strong>foo</strong></p>
+
+    <p><strong>foo</strong><sup>2</sup></p>
+
+Styled numbers:
+  input : |
+    _(class1 class2#id1)1_ *[en]2* **(#id)3** ??4?? __5__ %6% +7+ -(foobarbaz#boom bang)8- ~9~ ^10^
+
+    1[^st^], 2[^nd^], 3[^rd^]
+  expect: |
+    <p><em class="class1 class2" id="id1">1</em> <strong lang="en">2</strong> <b id="id">3</b> <cite>4</cite> <i>5</i> <span>6</span> <ins>7</ins> <del class="foobarbaz">8</del> <sub>9</sub> <sup>10</sup></p>
+
+    <p>1<sup>st</sup>, 2<sup>nd</sup>, 3<sup>rd</sup></p>
+
+Percentages...:
+  input : |
+    0 %1% _2_ 45% 6.7% %89.0
+  expect: |
+    <p>0 <span>1</span> <em>2</em> 45% 6.7% %89.0</p>
+
+Some redding:
+  input: |
+    h2{color:red}. Some redding
+  expect: |
+    <h2 style="color:red;">Some redding</h2>
+
+Basic glyphs:
+  input  : |
+    "Textile(c)" is a registered(r) 'trademark' of Textpattern(tm) -- or TXP(That's textpattern!) -- at least it was - back in '88 when 2x4 was (+/-)5(o)C ... QED!
+
+    p{font-size: 200%;}. 2(1/4) 3(1/2) 4(3/4)
+
+    "." ".." "..." '.' '..' '...' Allow quoted periods.
+  expect : |
+    <p>&#8220;Textile&#169;&#8221; is a registered&#174; &#8216;trademark&#8217; of Textpattern&#8482; &#8212; or <acronym title="That&#8217;s textpattern!"><span class="caps">TXP</span></acronym> &#8212; at least it was &#8211; back in &#8217;88 when 2&#215;4 was &#177;5&#176;C &#8230; <span class="caps">QED</span>!</p>
+
+    <p style="font-size: 200%;">2&#188; 3&#189; 4&#190;</p>
+
+    <p>&#8220;.&#8221; &#8220;..&#8221; &#8220;&#8230;&#8221; &#8216;.&#8217; &#8216;..&#8217; &#8216;&#8230;&#8217; Allow quoted periods.</p>
+
+Classes and IDs:
+  input  : |
+    p(c). Valid class
+
+    p(#id). Valid ID
+
+    p(c#id). Valid class and ID
+
+    p(c9). Valid class
+
+  expect : |
+    <p class="c">Valid class</p>
+
+    <p id="id">Valid ID</p>
+
+    <p class="c" id="id">Valid class and ID</p>
+
+    <p class="c9">Valid class</p>
+
+Table alignments:
+  input:  |
+    |_. attribute list |
+    |<. align left |
+    |>. align right|
+    |=. center |
+    |<>. justify me|
+    |^. valign top |
+    |~. bottom |
+
+    |_=. Grade |_=. Homeroom |_=. Type |_=. Tardy/Dismiss Time |_=. Student |
+    |=. 6 | Bates | Absent |=. - | Jones, Jeanne |
+    |=. 6 | O'Leary | Absent |=. - | Jones, Jackson |
+    |=. 7 | Garran | Absent |=. - | Jones, Lauren |
+    |=. 7 | Martin | Absent |=. - | Jones, Timothy |
+    |=. 7 | Martin | Tardy |=. 10:00 | Jones, John-Paul |
+    |=. 8 | Kast | Absent |=. - | Jones, Samuel |
+    |=. 8 | Woods | Absent |=. - | Jones, Evelyn |
+  expect: |
+    <table>
+    		<tr>
+    			<th>attribute list </th>
+    		</tr>
+    		<tr>
+    			<td style="text-align:left;">align left </td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:right;">align right</td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center;">center </td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:justify;">justify me</td>
+    		</tr>
+    		<tr>
+    			<td style="vertical-align:top;">valign top </td>
+    		</tr>
+    		<tr>
+    			<td style="vertical-align:bottom;">bottom </td>
+    		</tr>
+    </table>
+
+    <table>
+    		<tr>
+    			<th style="text-align:center;">Grade </th>
+    			<th style="text-align:center;">Homeroom </th>
+    			<th style="text-align:center;">Type </th>
+    			<th style="text-align:center;">Tardy/Dismiss Time </th>
+    			<th style="text-align:center;">Student </th>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center;">6 </td>
+    			<td> Bates </td>
+    			<td> Absent </td>
+    			<td style="text-align:center;">- </td>
+    			<td> Jones, Jeanne </td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center;">6 </td>
+    			<td> O&#8217;Leary </td>
+    			<td> Absent </td>
+    			<td style="text-align:center;">- </td>
+    			<td> Jones, Jackson </td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center;">7 </td>
+    			<td> Garran </td>
+    			<td> Absent </td>
+    			<td style="text-align:center;">- </td>
+    			<td> Jones, Lauren </td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center;">7 </td>
+    			<td> Martin </td>
+    			<td> Absent </td>
+    			<td style="text-align:center;">- </td>
+    			<td> Jones, Timothy </td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center;">7 </td>
+    			<td> Martin </td>
+    			<td> Tardy </td>
+    			<td style="text-align:center;">10:00 </td>
+    			<td> Jones, John-Paul </td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center;">8 </td>
+    			<td> Kast </td>
+    			<td> Absent </td>
+    			<td style="text-align:center;">- </td>
+    			<td> Jones, Samuel </td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center;">8 </td>
+    			<td> Woods </td>
+    			<td> Absent </td>
+    			<td style="text-align:center;">- </td>
+    			<td> Jones, Evelyn </td>
+    		</tr>
+    </table>
+
+Table colgroups and captions:
+  input  : |
+    |=. Testing colgroup and col syntax
+    |:\5. 80
+    |a|b|c|d|e|
+
+    |=. Testing colgroup and col syntax|
+    |:\5. 80|
+    |a|b|c|d|e|
+
+    |=. Testing colgroup and col syntax 
+    |:\5. 80 
+    |a|b|c|d|e|
+
+    |=. Testing colgroup and col syntax| 
+    |:\5. 80| 
+    |a|b|c|d|e|
+
+    |=. Testing colgroup and col syntax | 
+    |:\5. 80 | 
+    |a|b|c|d|e| 
+
+  expect : |
+    <table>
+    	<caption>Testing colgroup and col syntax</caption>
+    	<colgroup span="5" width="80">
+    	</colgroup>
+    		<tr>
+    			<td>a</td>
+    			<td>b</td>
+    			<td>c</td>
+    			<td>d</td>
+    			<td>e</td>
+    		</tr>
+    </table>
+
+    <table>
+    	<caption>Testing colgroup and col syntax</caption>
+    	<colgroup span="5" width="80">
+    	</colgroup>
+    		<tr>
+    			<td>a</td>
+    			<td>b</td>
+    			<td>c</td>
+    			<td>d</td>
+    			<td>e</td>
+    		</tr>
+    </table>
+
+    <table>
+    	<caption>Testing colgroup and col syntax</caption>
+    	<colgroup span="5" width="80">
+    	</colgroup>
+    		<tr>
+    			<td>a</td>
+    			<td>b</td>
+    			<td>c</td>
+    			<td>d</td>
+    			<td>e</td>
+    		</tr>
+    </table>
+
+    <table>
+    	<caption>Testing colgroup and col syntax</caption>
+    	<colgroup span="5" width="80">
+    	</colgroup>
+    		<tr>
+    			<td>a</td>
+    			<td>b</td>
+    			<td>c</td>
+    			<td>d</td>
+    			<td>e</td>
+    		</tr>
+    </table>
+
+    <table>
+    	<caption>Testing colgroup and col syntax</caption>
+    	<colgroup span="5" width="80">
+    	</colgroup>
+    		<tr>
+    			<td>a</td>
+    			<td>b</td>
+    			<td>c</td>
+    			<td>d</td>
+    			<td>e</td>
+    		</tr>
+    </table>
+
+Complex table with row- and col-spans:
+  input: |
+    h4. A more complicated table
+
+    table(tableclass#tableid){color:blue}.
+    |_. table |_. more |_. badass |
+    |\3. Horizontal span of 3|
+    (firstrow). |first|HAL(open the pod bay doors)|1|
+    |some|{color:green}. styled|content|
+    |/2. spans 2 rows|this is|quite a|
+    | deep test | don't you think?|
+    (lastrow). |fifth|I'm a lumberjack|5|
+    |sixth| _*bold italics*_ |6|
+  expect : |
+    <h4>A more complicated table</h4>
+
+    <table style="color:blue;" class="tableclass" id="tableid">
+    		<tr>
+    			<th>table </th>
+    			<th>more </th>
+    			<th>badass </th>
+    		</tr>
+    		<tr>
+    			<td colspan="3">Horizontal span of 3</td>
+    		</tr>
+    		<tr class="firstrow">
+    			<td>first</td>
+    			<td><acronym title="open the pod bay doors"><span class="caps">HAL</span></acronym></td>
+    			<td>1</td>
+    		</tr>
+    		<tr>
+    			<td>some</td>
+    			<td style="color:green;">styled</td>
+    			<td>content</td>
+    		</tr>
+    		<tr>
+    			<td rowspan="2">spans 2 rows</td>
+    			<td>this is</td>
+    			<td>quite a</td>
+    		</tr>
+    		<tr>
+    			<td> deep test </td>
+    			<td> don&#8217;t you think?</td>
+    		</tr>
+    		<tr class="lastrow">
+    			<td>fifth</td>
+    			<td>I&#8217;m a lumberjack</td>
+    			<td>5</td>
+    		</tr>
+    		<tr>
+    			<td>sixth</td>
+    			<td> <em><strong>bold italics</strong></em> </td>
+    			<td>6</td>
+    		</tr>
+    </table>
+
+Simple Definition lists:
+  input: |
+    ;(class#id) Term 1
+    : Def 1
+    : Def 2
+    : Def 3
+  expect: |
+    <dl class="class" id="id">
+    	<dt>Term 1</dt>
+    	<dd>Def 1</dd>
+    	<dd>Def 2</dd>
+    	<dd>Def 3</dd>
+    </dl>
+
+Redcloth Definition list:
+  input:  |
+    -(hot) *coffee* := Hot _and_ black
+    -(hot#tea) tea := Also hot, but a little less black
+    -(cold) milk := Nourishing beverage for baby cows.
+    Cold drink that goes great with cookies. =:
+
+    -(hot) coffee := Hot and black
+    -(hot#tea) tea := Also hot, but a little less black
+    -(cold) milk := 
+    Nourishing beverage for baby cows.
+    Cold drink that goes great with cookies. =:
+
+  expect: |
+    <dl>
+    	<dt class="hot"><strong>coffee</strong></dt>
+    	<dd>Hot <em>and</em> black</dd>
+    	<dt class="hot" id="tea">tea</dt>
+    	<dd>Also hot, but a little less black</dd>
+    	<dt class="cold">milk</dt>
+    	<dd>Nourishing beverage for baby cows.<br />
+    Cold drink that goes great with cookies.</dd>
+    </dl>
+
+    <dl>
+    	<dt class="hot">coffee</dt>
+    	<dd>Hot and black</dd>
+    	<dt class="hot" id="tea">tea</dt>
+    	<dd>Also hot, but a little less black</dd>
+    	<dt class="cold">milk</dt>
+    	<dd><p>Nourishing beverage for baby cows.<br />
+    Cold drink that goes great with cookies.</p></dd>
+    </dl>
+
+Complex definition list:
+  input: |
+    h2. A definition list
+
+    ;(class#id) Term 1
+    : Def 1
+    : Def 2
+    : Def 3
+    ;; Center
+    ;;  NATO(Why Em Cee Ayy)
+    :: Subdef 1
+    :: Subdef 2
+    ;;; SubSub Term
+    ::: SubSub Def 1
+    ::: SubSub Def 2
+    ::: Subsub Def 3
+    With newline
+    ::: Subsub Def 4
+    :: Subdef 3
+    : DEF 4
+    ; Term 2
+    : Another def
+    : And another
+    : One more
+    :: A def without a term
+    :: More defness
+    ; Third term for good measure
+    : My definition of a boombastic jazz
+  expect: |
+    <h2>A definition list</h2>
+
+    <dl class="class" id="id">
+    	<dt>Term 1</dt>
+    	<dd>Def 1</dd>
+    	<dd>Def 2</dd>
+    	<dd>Def 3
+    	<dl>
+    		<dt>Center</dt>
+    		<dt><acronym title="Why Em Cee Ayy"><span class="caps">NATO</span></acronym></dt>
+    		<dd>Subdef 1</dd>
+    		<dd>Subdef 2
+    		<dl>
+    			<dt>SubSub Term</dt>
+    			<dd>SubSub Def 1</dd>
+    			<dd>SubSub Def 2</dd>
+    			<dd>Subsub Def 3<br />
+    With newline</dd>
+    			<dd>Subsub Def 4</dd>
+    		</dl></dd>
+    		<dd>Subdef 3</dd>
+    	</dl></dd>
+    	<dd><span class="caps">DEF</span> 4</dd>
+    	<dt>Term 2</dt>
+    	<dd>Another def</dd>
+    	<dd>And another</dd>
+    	<dd>One more
+    	<dl>
+    		<dd>A def without a term</dd>
+    		<dd>More defness</dd>
+    	</dl></dd>
+    	<dt>Third term for good measure</dt>
+    	<dd>My definition of a boombastic jazz</dd>
+    </dl>
+
+1-line blockquote :
+  input  : |
+    bq. Don't suck the brown stuff off of 2 pence coins; it ain't chocolate.
+  expect : |
+    <blockquote>
+    	<p>Don&#8217;t suck the brown stuff off of 2 pence coins; it ain&#8217;t chocolate.</p>
+    </blockquote>
+1-line blockquote 2:
+  input  : |
+    bq. Don't suck the **brown stuff(tm)** off of "2 pence":http://royalmint.gov.uk coins; it ain't chocolate.
+  expect : |
+    <blockquote>
+    	<p>Don&#8217;t suck the <b>brown stuff&#8482;</b> off of <a href="http://royalmint.gov.uk">2 pence</a> coins; it ain&#8217;t chocolate.</p>
+    </blockquote>
+n-line blockquote:
+  input  : |
+    bq.. Don't suck the **brown stuff(tm)** off of "2 pence":http://royalmint.gov.uk coins; it ain't chocolate.
+
+    p. That's all.
+  expect : |
+    <blockquote>
+    	<p>Don&#8217;t suck the <b>brown stuff&#8482;</b> off of <a href="http://royalmint.gov.uk">2 pence</a> coins; it ain&#8217;t chocolate.</p>
+    </blockquote>
+
+    <p>That&#8217;s all.</p>
+
+Blockquote with citation source :
+  input  : |
+    bq.:http://textism.com/ Text...
+  expect : |
+    <blockquote cite="http://textism.com/">
+    	<p>Text&#8230;</p>
+    </blockquote>
+
+All capitals comment post :
+  input  : |
+    HELLO, I SEE YOU DON'T LIKE PEOPLE TO SHOUT. WHY?
+  expect : |
+    <p><span class="caps">HELLO</span>, I <span class="caps">SEE</span> <span class="caps">YOU</span> <span class="caps">DON</span>&#8217;T <span class="caps">LIKE</span> <span class="caps">PEOPLE</span> TO <span class="caps">SHOUT</span>. <span class="caps">WHY</span>?</p>
+
+New tables :
+  input  : |
+    |=(#captionola). My boombastic table caption. It must appear before the first thead/row
+    |^.
+    |_. thead-wrapped |_. column |
+    |~(footjob).
+    | tfoot-wrapped | column |
+    |-.
+    | tbody-wrapped | column |
+    | some more | columny goodness |
+    (colourful). | yet more | colourful rows |
+    | nothing much | here |
+    |-(nursery#rhyme).
+    | if we go down |=. to the woods today |
+    | we're sure of a | big surprise |
+  expect : |
+    <table>
+    	<caption id="captionola">My boombastic table caption. It must appear before the first thead/row</caption>
+    	<thead>
+    		<tr>
+    			<th>thead-wrapped </th>
+    			<th>column </th>
+    		</tr>
+    	</thead>
+    	<tfoot class="footjob">
+    		<tr>
+    			<td> tfoot-wrapped </td>
+    			<td> column </td>
+    		</tr>
+    	</tfoot>
+    	<tbody>
+    		<tr>
+    			<td> tbody-wrapped </td>
+    			<td> column </td>
+    		</tr>
+    		<tr>
+    			<td> some more </td>
+    			<td> columny goodness </td>
+    		</tr>
+    		<tr class="colourful">
+    			<td> yet more </td>
+    			<td> colourful rows </td>
+    		</tr>
+    		<tr>
+    			<td> nothing much </td>
+    			<td> here </td>
+    		</tr>
+    	</tbody>
+    	<tbody class="nursery" id="rhyme">
+    		<tr>
+    			<td> if we go down </td>
+    			<td style="text-align:center;">to the woods today </td>
+    		</tr>
+    		<tr>
+    			<td> we&#8217;re sure of a </td>
+    			<td> big surprise </td>
+    		</tr>
+    	</tbody>
+    </table>
+
+Simple table with newline in a cell:
+  input:  |
+    |_. Attribute |_. Default Value |_. Description |
+    | 'order' |=. 'cdo' | Optional: order of sections. Omit or leave blank for default copyright-date-owner order.
+    Valid values: 'cdo', 'cod' |
+  expect: |
+    <table>
+    		<tr>
+    			<th>Attribute </th>
+    			<th>Default Value </th>
+    			<th>Description </th>
+    		</tr>
+    		<tr>
+    			<td> &#8216;order&#8217; </td>
+    			<td style="text-align:center;">&#8216;cdo&#8217; </td>
+    			<td> Optional: order of sections. Omit or leave blank for default copyright-date-owner order.<br />
+    Valid values: &#8216;cdo&#8217;, &#8216;cod&#8217; </td>
+    		</tr>
+    </table>
+
+Tables with styles:
+  input:  |
+    table(#dvds){border-collapse:collapse}. Great films on DVD employing Textile summary, caption, thead, tfoot, two tbody elements and colgroups
+    |={font-size:140%;margin-bottom:15px}. DVDs with two Textiled tbody elements
+    |:\3. 100 |{background:#ddd}|250||50|300|
+    |^(header).
+    |_. Title |_. Starring |_. Director |_. Writer |_. Notes |
+    |~(footer).
+    |\5=. This is the tfoot, centred |
+    |-(toplist){background:#c5f7f6}.
+    | _The Usual Suspects_ | Benicio Del Toro, Gabriel Byrne, Stephen Baldwin, Kevin Spacey | Bryan Singer | Chris McQaurrie | One of the finest films ever made |
+    | _Se7en_ | Morgan Freeman, Brad Pitt, Kevin Spacey | David Fincher | Andrew Kevin Walker | Great psychological thriller |
+    | _Primer_ | David Sullivan, Shane Carruth | Shane Carruth | Shane Carruth | Amazing insight into trust and human psychology <br />rather than science fiction. Terrific! |
+    | _District 9_ | Sharlto Copley, Jason Cope | Neill Blomkamp | Neill Blomkamp, Terri Tatchell | Social commentary layered on thick,
+    but boy is it done well |
+    |-(medlist){background:#e7e895;}.
+    | _Arlington Road_ | Tim Robbins, Jeff Bridges | Mark Pellington | Ehren Kruger | Awesome study in neighbourly relations |
+    | _Phone Booth_ | Colin Farrell, Kiefer Sutherland, Forest Whitaker | Joel Schumacher | Larry Cohen | Edge-of-the-seat stuff in this
+    short but brilliantly executed thriller |
+  expect: |
+    <table style="border-collapse:collapse;" id="dvds" summary="Great films on DVD employing Textile summary, caption, thead, tfoot, two tbody elements and colgroups">
+    	<caption style="font-size:140%; margin-bottom:15px;"><span class="caps">DVD</span>s with two Textiled tbody elements</caption>
+    	<colgroup span="3" width="100">
+    	<col style="background:#ddd;" />
+    	<col width="250" />
+    	<col />
+    	<col width="50" />
+    	<col width="300" />
+    	</colgroup>
+    	<thead class="header">
+    		<tr>
+    			<th>Title </th>
+    			<th>Starring </th>
+    			<th>Director </th>
+    			<th>Writer </th>
+    			<th>Notes </th>
+    		</tr>
+    	</thead>
+    	<tfoot class="footer">
+    		<tr>
+    			<td style="text-align:center;" colspan="5">This is the tfoot, centred </td>
+    		</tr>
+    	</tfoot>
+    	<tbody style="background:#c5f7f6;" class="toplist">
+    		<tr>
+    			<td> <em>The Usual Suspects</em> </td>
+    			<td> Benicio Del Toro, Gabriel Byrne, Stephen Baldwin, Kevin Spacey </td>
+    			<td> Bryan Singer </td>
+    			<td> Chris McQaurrie </td>
+    			<td> One of the finest films ever made </td>
+    		</tr>
+    		<tr>
+    			<td> <em>Se7en</em> </td>
+    			<td> Morgan Freeman, Brad Pitt, Kevin Spacey </td>
+    			<td> David Fincher </td>
+    			<td> Andrew Kevin Walker </td>
+    			<td> Great psychological thriller </td>
+    		</tr>
+    		<tr>
+    			<td> <em>Primer</em> </td>
+    			<td> David Sullivan, Shane Carruth </td>
+    			<td> Shane Carruth </td>
+    			<td> Shane Carruth </td>
+    			<td> Amazing insight into trust and human psychology <br />
+    rather than science fiction. Terrific! </td>
+    		</tr>
+    		<tr>
+    			<td> <em>District 9</em> </td>
+    			<td> Sharlto Copley, Jason Cope </td>
+    			<td> Neill Blomkamp </td>
+    			<td> Neill Blomkamp, Terri Tatchell </td>
+    			<td> Social commentary layered on thick,<br />
+    but boy is it done well </td>
+    		</tr>
+    	</tbody>
+    	<tbody style="background:#e7e895;" class="medlist">
+    		<tr>
+    			<td> <em>Arlington Road</em> </td>
+    			<td> Tim Robbins, Jeff Bridges </td>
+    			<td> Mark Pellington </td>
+    			<td> Ehren Kruger </td>
+    			<td> Awesome study in neighbourly relations </td>
+    		</tr>
+    		<tr>
+    			<td> <em>Phone Booth</em> </td>
+    			<td> Colin Farrell, Kiefer Sutherland, Forest Whitaker </td>
+    			<td> Joel Schumacher </td>
+    			<td> Larry Cohen </td>
+    			<td> Edge-of-the-seat stuff in this<br />
+    short but brilliantly executed thriller </td>
+    		</tr>
+    	</tbody>
+    </table>
+
+Basic footref & footnote:
+  notes: |
+    Standard footrefs and footnotes from textile 2.0.
+    The textile tester removes the random ID from the text returned by textile in this test. This allows the rest of the output to be tested.
+  input: |
+    See[1] for details -- or perhaps[100] at a push.
+
+    fn1. Here are the details.
+
+    fn100(footy#otherid). A totally unrelated footnote.
+  expect : |
+    <p>See<sup class="footnote" id="fnrev"><a href="#fn">1</a></sup> for details &#8212; or perhaps<sup class="footnote" id="fnrev"><a href="#fn">100</a></sup> at a push.</p>
+
+    <p class="footnote" id="fn"><sup>1</sup> Here are the details.</p>
+
+    <p class="footy" id="otherid"><sup>100</sup> A totally unrelated footnote.</p>
+
+Cross linked footref and footnote :
+  notes  : |
+    Uses the '^' modifier on the footnote to turn on reverse linking to the *first* use of the corresponding reference
+    The textile tester removes the random ID from the text returned by textile in this test. This allows the rest of the output to be tested.
+  input  : |
+    See[2] for details, and later, reference it again[2].
+
+    fn2^(footy#otherid)[en]. Here are the details.
+  expect : |
+    <p>See<sup class="footnote" id="fnrev"><a href="#fn">2</a></sup> for details, and later, reference it again<sup class="footnote"><a href="#fn">2</a></sup>.</p>
+
+    <p class="footy" lang="en" id="otherid"><sup><a>2</a></sup> Here are the details.</p>
+
+Unlinked footref and footnote :
+  notes  : |
+    Uses the '!' modifier on the footref to turn off linking to the footnote
+    The textile tester removes the random ID from the text returned by textile in this test. This allows the rest of the output to be tested.
+  input  : |
+    See[3!] for details.
+
+    fn3. Here are the details.
+  expect : |
+    <p>See<sup class="footnote" id="fnrev">3</sup> for details.</p>
+
+    <p class="footnote" id="fn"><sup>3</sup> Here are the details.</p>
+
+Backlinked footref to footnote :
+  notes  : |
+    Uses the '!' modifier on the footref to turn off linking to the footnote
+    Uses the '^' modifier on the footnote to turn on reverse linking to the *first* use of the corresponding reference
+    The textile tester removes the random ID from the text returned by textile in this test. This allows the rest of the output to be tested.
+  input  : |
+    See[4!] for details.
+
+    fn4^. Here are the details.
+  expect : |
+    <p>See<sup class="footnote" id="fnrev">4</sup> for details.</p>
+
+    <p class="footnote" id="fn"><sup><a href="#fnrev">4</a></sup> Here are the details.</p>
+
+Simple Note Links:
+  input: |
+    Scientists say[#lavader] the moon is quite small. But I, for one, don't believe them. Others claim it to be made of cheese[#aardman]. If this proves true I suspect we are in for troubled times[#apollo13] as people argue over their "share" of the moon's cheese. In the end, its limited size[#lavader] may prove problematic.
+
+    note#lavader(noteclass). "Proof of the small moon hypothesis":http://antwrp.gsfc.nasa.gov/apod/ap080801.html. Copyright(c) Laurent Laveder
+
+    note#aardman(#noteid). "Proof of a cheese moon":http://www.imdb.com/title/tt0104361
+
+    note#apollo13. After all, things do go "wrong":http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident.
+
+    notelist{padding:1em;margin:1em;border-bottom:1px solid gray}.
+
+    notelist{padding:1em;margin:1em;border-bottom:1px solid gray}:§^.
+
+    notelist{padding:1em;margin:1em;border-bottom:1px solid gray}:‡.
+
+  expect: |
+    <p>Scientists say<sup><a href="#note"><span id="noteref">1</span></a></sup> the moon is quite small. But I, for one, don&#8217;t believe them. Others claim it to be made of cheese<sup><a href="#note"><span id="noteref">2</span></a></sup>. If this proves true I suspect we are in for troubled times<sup><a href="#note"><span id="noteref">3</span></a></sup> as people argue over their &#8220;share&#8221; of the moon&#8217;s cheese. In the end, its limited size<sup><a href="#note"><span id="noteref">1</span></a></sup> may prove problematic.</p>
+
+    <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
+    	<li class="noteclass"><sup><a href="#noteref">a</a></sup> <sup><a href="#noteref">b</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    	<li id="noteid"><sup><a href="#noteref">a</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    	<li><sup><a href="#noteref">a</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    </ol>
+
+    <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
+    	<li class="noteclass"><sup><a href="#noteref">§</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    	<li id="noteid"><sup><a href="#noteref">§</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    	<li><sup><a href="#noteref">§</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    </ol>
+
+    <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
+    	<li class="noteclass"><sup><a href="#noteref">‡</a></sup> <sup><a href="#noteref">‡</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    	<li id="noteid"><sup><a href="#noteref">‡</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    	<li><sup><a href="#noteref">‡</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    </ol>
+
+Note Links.:
+  input: |
+    Scientists say[#lavader] the moon is quite small. But I, for one, don't believe them. Others claim it to be made of cheese[#aardman]. If this proves true I suspect we are in for troubled times[#apollo13] as people argue over their "share" of the moon's cheese. In the end, its limited size[#lavader] may prove problematic.
+
+    note#lavader. "Proof of the small moon hypothesis":http://antwrp.gsfc.nasa.gov/apod/ap080801.html. Copyright(c) Laurent Laveder
+
+    note#aardman. "Proof of a cheese moon":http://www.imdb.com/title/tt0104361
+
+    note#apollo13. After all, things do go "wrong":http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident.
+
+    h2. Here are my references.
+
+    notelist{padding:1em;margin:1em;border-bottom:1px solid gray}.
+  expect: |
+    <p>Scientists say<sup><a href="#note"><span id="noteref">1</span></a></sup> the moon is quite small. But I, for one, don&#8217;t believe them. Others claim it to be made of cheese<sup><a href="#note"><span id="noteref">2</span></a></sup>. If this proves true I suspect we are in for troubled times<sup><a href="#note"><span id="noteref">3</span></a></sup> as people argue over their &#8220;share&#8221; of the moon&#8217;s cheese. In the end, its limited size<sup><a href="#note"><span id="noteref">1</span></a></sup> may prove problematic.</p>
+
+    <h2>Here are my references.</h2>
+
+    <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
+    	<li><sup><a href="#noteref">a</a></sup> <sup><a href="#noteref">b</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    	<li><sup><a href="#noteref">a</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    	<li><sup><a href="#noteref">a</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    </ol>
+
+Unlinked Note References with backlinked and unreferenced defs.:
+  input: |
+    Scientists say[#lavader!] the moon is quite small. But I, for one, don't believe them. Others claim it to be made of cheese[#aardman!]. If this proves true I suspect we are in for troubled times[#apollo13!] as people argue over their "share" of the moon's cheese. In the end, its limited size[#lavader!] may prove problematic.
+
+    note#unused. An unreferenced note.
+
+    note#lavader^. "Proof of the small moon hypothesis":http://antwrp.gsfc.nasa.gov/apod/ap080801.html. Copyright(c) Laurent Laveder
+
+    note#aardman^. "Proof of a cheese moon":http://www.imdb.com/title/tt0104361
+
+    note#apollo13^. After all, things do go "wrong":http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident.
+
+    notelist{padding:1em;margin:1em;border-bottom:1px solid gray}:α!+.
+  expect: |
+    <p>Scientists say<sup><span id="noteref">1</span></sup> the moon is quite small. But I, for one, don&#8217;t believe them. Others claim it to be made of cheese<sup><span id="noteref">2</span></sup>. If this proves true I suspect we are in for troubled times<sup><span id="noteref">3</span></sup> as people argue over their &#8220;share&#8221; of the moon&#8217;s cheese. In the end, its limited size<sup><span id="noteref">1</span></sup> may prove problematic.</p>
+
+    <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
+    	<li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    	<li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    	<li><sup><a href="#noteref">α</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    	<li>An unreferenced note.</li>
+    </ol>
+
+Malformed notelist :
+  input:  |
+    Scientists say[#lavader] the moon is quite small. But I, for one, don't believe them. Others claim it to be made of cheese[#aardman]. If this proves true I suspect we are in for troubled times[#apollo13!] as people argue over their "share" of the moon's cheese. In the end, its limited size[#lavader] may prove problematic.
+
+    note#unused An unreferenced note.
+
+    note#lavader^ "Proof of the small moon hypothesis":http://antwrp.gsfc.nasa.gov/apod/ap080801.html. Copyright(c) Laurent Laveder
+
+    note#aardman^ "Proof of a cheese moon":http://www.imdb.com/title/tt0104361
+
+    note#apollo13^ After all, things do go "wrong":http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident.
+
+    notelist{padding:1em;margin:1em;border-bottom:1px solid gray}:α!+
+  expect: |
+    <p>Scientists say<sup><a href="#note"><span id="noteref">1</span></a></sup> the moon is quite small. But I, for one, don&#8217;t believe them. Others claim it to be made of cheese<sup><a href="#note"><span id="noteref">2</span></a></sup>. If this proves true I suspect we are in for troubled times<sup><span id="noteref">3</span></sup> as people argue over their &#8220;share&#8221; of the moon&#8217;s cheese. In the end, its limited size<sup><a href="#note"><span id="noteref">1</span></a></sup> may prove problematic.</p>
+
+    <ol style="padding:1em; margin:1em; border-bottom:1px solid gray;">
+    	<li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://antwrp.gsfc.nasa.gov/apod/ap080801.html">Proof of the small moon hypothesis</a>. Copyright&#169; Laurent Laveder</li>
+    	<li><sup><a href="#noteref">α</a></sup><span id="note"> </span><a href="http://www.imdb.com/title/tt0104361">Proof of a cheese moon</a></li>
+    	<li><sup><a href="#noteref">α</a></sup><span id="note"> </span>After all, things do go <a href="http://en.wikipedia.org/wiki/Apollo_13#The_oxygen_tank_incident">wrong</a>.</li>
+    	<li>An unreferenced note.</li>
+    </ol>
+
+Issue 72 - spans around foreign chars :
+  input  : |
+    *W skład zestawu wchodzą*:
+
+    *W skład zestawu wchodzą*: 
+  expect : |
+    <p><strong>W skład zestawu wchodzą</strong>:</p>
+
+    <p><strong>W skład zestawu wchodzą</strong>: </p>
+
+Textile comments :
+  input  : |
+    ###. Here's a comment.
+
+    h3. Hello
+
+    ###. And
+    another
+    one.
+
+    Goodbye.
+  expect : |
+    <h3>Hello</h3>
+
+    <p>Goodbye.</p>
+
+Smileys still smileys? :
+  notes  : Make sure smileys don't get recognised as a definition list.
+  input  : |
+    :(
+
+    :)
+
+    :( 
+    :( 
+    :( 
+    :) 
+
+    Pinocchio!
+    :^)
+
+    Baboon!
+    :=)
+
+    Wink!
+    ;)
+
+    :[ 
+    :]
+
+    ;(
+    something
+    dark side
+    :) 
+
+    ;(c)[de] Item
+
+  expect : |
+    <p>:(</p>
+
+    <p>:)</p>
+
+    <p>:( <br />
+    :( <br />
+    :( <br />
+    :) </p>
+
+    <p>Pinocchio!<br />
+    :^)</p>
+
+    <p>Baboon!<br />
+    :=)</p>
+
+    <p>Wink!<br />
+    ;)</p>
+
+    <p>:[ <br />
+    :]</p>
+
+    <p>;(<br />
+    something<br />
+    dark side<br />
+    :) </p>
+
+    <dl class="c" lang="de">
+    	<dt>Item</dt>
+    </dl>
+
+Styles on phrase modifiers :
+  input:  |
+    ~{text-align:right;}My text~
+
+    %{text-align:right;}My text%
+
+    ^{text-align:right;}My text^
+
+    ??{text-align:right;}My text??
+
+    *{text-align:right;}My text*
+
+    **{text-align:right;}My text**
+
+    -{text-align:right;}My text-
+
+    +{text-align:right;}My text+
+
+    _{text-align:right;}My text_
+
+    __{text-align:right;}My text__
+
+    @{text-align:right;}My text@
+
+    _{content:大阪府;}Unicode style_
+  expect: |
+    <p><sub style="text-align:right;">My text</sub></p>
+
+    <p><span style="text-align:right;">My text</span></p>
+
+    <p><sup style="text-align:right;">My text</sup></p>
+
+    <p><cite style="text-align:right;">My text</cite></p>
+
+    <p><strong style="text-align:right;">My text</strong></p>
+
+    <p><b style="text-align:right;">My text</b></p>
+
+    <p><del style="text-align:right;">My text</del></p>
+
+    <p><ins style="text-align:right;">My text</ins></p>
+
+    <p><em style="text-align:right;">My text</em></p>
+
+    <p><i style="text-align:right;">My text</i></p>
+
+    <p><code>{text-align:right;}My text</code></p>
+
+    <p><em style="content:大阪府;">Unicode style</em></p>
+
+Classes/ids/langs on phrase modifiers :
+  input:  |
+    ~(c#id)[en]My text~
+
+    %(c#id)[En]My text%
+
+    ^(c#id)[EN]My text^
+
+    ??(c#id)[en-gb]My text??
+
+    *(c#id)[en-GB]My text*
+
+    **(c#id)[en-Gb]My text**
+
+    -(c#id)[ENG]My text-
+
+    +(c#id)[eng]My text+
+
+    _(c#id)[kjwwef89]My text_
+
+    __(c#id)[12]My text__
+
+    @(c#id)[Whatever]My text@
+  expect: |
+    <p><sub class="c" lang="en" id="id">My text</sub></p>
+
+    <p><span class="c" lang="En" id="id">My text</span></p>
+
+    <p><sup class="c" lang="EN" id="id">My text</sup></p>
+
+    <p><cite class="c" lang="en-gb" id="id">My text</cite></p>
+
+    <p><strong class="c" lang="en-GB" id="id">My text</strong></p>
+
+    <p><b class="c" lang="en-Gb" id="id">My text</b></p>
+
+    <p><del class="c" id="id">My text</del></p>
+
+    <p><ins class="c" id="id">My text</ins></p>
+
+    <p><em class="c" id="id">My text</em></p>
+
+    <p><i class="c" id="id">My text</i></p>
+
+    <p><code>(c#id)[Whatever]My text</code></p>
+
+Github Issue 50 (en-dash & strike) :
+  input:  |
+    fjfhfjhf
+    fhfhfh
+    xyz
+
+    - fjfhfjhf
+    - fhfhfh
+    - xyz
+
+    a -b-
+    a -b- 
+    a - b
+    a -b
+    a- b
+    a-b
+    -b
+    a-
+    b
+    a -
+    b
+    a - 
+    b
+  expect: |
+    <p>fjfhfjhf<br />
+    fhfhfh<br />
+    xyz</p>
+
+    <p>- fjfhfjhf<br />
+    - fhfhfh<br />
+    - xyz</p>
+
+    <p>a <del>b</del><br />
+    a <del>b</del> <br />
+    a &#8211; b<br />
+    a -b<br />
+    a- b<br />
+    a-b<br />
+    -b<br />
+    a-<br />
+    b<br />
+    a -<br />
+    b<br />
+    a &#8211; <br />
+    b</p>
+
+Empty things... :
+  input:  |
+    ''
+
+    ""
+
+    %%
+
+    ^^
+
+    &&
+
+    **
+
+    __
+
+    --
+
+    ++
+
+    ~~
+
+    {}
+
+    []
+
+    ()
+
+    <>
+
+    \\
+
+    //
+
+    ??
+
+    ==
+
+    @@
+
+    ##
+
+    $$
+
+    !!
+
+    ::
+
+    ;;
+
+    ..
+
+    ,,
+
+    ||
+
+    ` `
+
+    ' '
+
+    " "
+
+    % %
+
+    ^ ^
+
+    & &
+
+    * *
+
+    _ _
+
+    - -
+
+    + +
+
+    ~ ~
+
+    { }
+
+    [ ]
+
+    ( )
+
+    < >
+
+    \ \
+
+    / /
+
+    ? ?
+
+    = =
+
+    @ @
+
+    # #
+
+    $ $
+
+    ! !
+
+    : :
+
+    ; ;
+
+    . .
+
+    , ,
+
+  expect: |
+    <p>&#8216;&#8217;</p>
+
+    <p>&#8220;&#8221;</p>
+
+    <p>%%</p>
+
+    <p>^^</p>
+
+    <p>&amp;&amp;</p>
+
+    <p>**</p>
+
+    <p>__</p>
+
+    <p>&#8212;</p>
+
+    <p>++</p>
+
+    <p>~~</p>
+
+    <p>{}</p>
+
+    <p>[]</p>
+
+    <p>()</p>
+
+    <p>&lt;&gt;</p>
+
+    <p>\\</p>
+
+    <p>//</p>
+
+    <p>??</p>
+
+    <p>==</p>
+
+    <p><code></code></p>
+
+    <p>##</p>
+
+    <p>$$</p>
+
+    <p>!!</p>
+
+    <p>::</p>
+
+    <p>;;</p>
+
+    <p>..</p>
+
+    <p>,,</p>
+
+    <table>
+    		<tr>
+    			<td></td>
+    		</tr>
+    </table>
+
+    <p>` `</p>
+
+    <p>&#8216; &#8216;</p>
+
+    <p>&#8220; &#8220;</p>
+
+    <p>% %</p>
+
+    <p>^ ^</p>
+
+    <p>&amp; &amp;</p>
+
+    <ul>
+    	<li>*</li>
+    </ul>
+
+    <p>_ _</p>
+
+    <p>- -</p>
+
+    <p>+ +</p>
+
+    <p>~ ~</p>
+
+    <p>{ }</p>
+
+    <p>[ ]</p>
+
+    <p>( )</p>
+
+    <p>&lt; &gt;</p>
+
+    <p>\ \</p>
+
+    <p>/ /</p>
+
+    <p>? ?</p>
+
+    <p>= =</p>
+
+    <p><code> </code></p>
+
+    <ol>
+    	<li>#</li>
+    </ol>
+
+    <p>$ $</p>
+
+    <p>! !</p>
+
+    <dl>
+    	<dd>:</dd>
+    </dl>
+
+    <dl>
+    	<dt>;</dt>
+    </dl>
+
+    <p>. .</p>
+
+    <p>, ,</p>
+
+Restricted mode security filtering mode with default options :
+  method : textileRestricted
+  input  : |
+    !10x10.gif!
+
+    "bad protocol":file://local/file
+
+    "javascript link":javacript:window.alert()
+
+    "nofollow":http://example.com
+
+    notextile. <iframe src="xss/attempt"></iframe><&#123><script>window.alert('success')</script>
+
+    !http://example.com/<script>window.alert("Hello World!");</script>.png!
+
+    "test":link1
+    [link1]http://example.com/<script>window.alert("HelloWorld!");</script>
+  expect : |
+    <p>!10&#215;10.gif!</p>
+
+    <p>&#8220;bad protocol&#8221;:file://local/file</p>
+
+    <p>&#8220;javascript link&#8221;:javacript:window.alert()</p>
+
+    <p><a href="http://example.com" rel="nofollow">nofollow</a></p>
+
+    <p>notextile. &lt;iframe src=&#8220;xss/attempt&#8221;&gt;&lt;/iframe&gt;&lt;&amp;#123&gt;&lt;script&gt;window.alert(&#8216;success&#8217;)&lt;/script&gt;</p>
+
+    <p>!http://example.com/&lt;script&gt;window.alert(&#8220;Hello World!&#8221;);&lt;/script&gt;.png!</p>
+
+    <p><a href="http://example.com/%26lt%3Bscript%26gt%3Bwindow.alert%28%22HelloWorld%21%22%29%3B%26lt%3B/script%26gt%3B" rel="nofollow">test</a></p>
+
+Token references :
+  input : |
+    Hello textileopentag0000000001z World!
+  expect : |
+    <p>Hello textileopentag0000000001z World!</p>
+
+Link and image encoding :
+  input : |
+    !http://example.com/?size=60&file=image.png!
+
+    !http://example.com/needs<&"encoding.png!
+
+    "Requires encoding":http://example.com/?foo&bar
+
+    "Entity is merely part of text":http://example.com/?foo&amp;bar
+
+    "In path component":http://example.com/&.html
+  expect : |
+    <p><img src="http://example.com/?size=60&amp;amp;file=image.png" alt="" /></p>
+
+    <p><img src="http://example.com/needs&amp;lt;&amp;amp;&amp;quot;encoding.png" alt="" /></p>
+
+    <p><a href="http://example.com/?foo&amp;bar">Requires encoding</a></p>
+
+    <p><a href="http://example.com/?foo&amp;amp;bar">Entity is merely part of text</a></p>
+
+    <p><a href="http://example.com/%26.html">In path component</a></p>
