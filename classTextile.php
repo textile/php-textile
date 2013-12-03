@@ -1479,7 +1479,7 @@ class Textile
 	 **/
 	function parseURI( $uri, &$m )
 	{
-		$r = "@^((?<scheme>[^:/?#]+):)?(//(?<authority>[^/?#]*))?(?<path>[^?#]*)(\?(?<query>[^#]*))?(#(?<fragment>.*))?@";
+		$r = "@^((?P<scheme>[^:/?#]+):)?(//(?P<authority>[^/?#]*))?(?P<path>[^?#]*)(\?(?P<query>[^#]*))?(#(?P<fragment>.*))?@";
 		#       12                     3  4                      5              6  7                8 9
 		#
 		#	scheme    = $2
