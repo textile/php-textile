@@ -2,7 +2,9 @@ h1. Textile for PHP
 
 "Downloads":https://github.com/textile/php-textile/releases | "Textile reference":http://txstyle.org/article/43/a-short-introduction | "Live editor":http://txstyle.org/ | "Packagist":https://packagist.org/packages/netcarver/textile
 
-*Textile is a humane web text generator*. It takes lightweight, readable, plaintext-like markup language and converts it into well formed HTML. This repository contains a Textile parser for PHP. *The 2.4 branch contains PHP 4 compatible legacy version of PHP-Textile*. This branch is feature frozen as of 2012-08-23 and should be considered dropped. Do not use this for new installations, instead see v3.5.x and newer.
+*Textile is a humane web text generator*. It takes lightweight, readable, plaintext-like markup language and converts it into well formed HTML. This repository contains a Textile parser for PHP.
+
+The 2.4 branch contains PHP 4 compatible legacy version of PHP-Textile. This branch is feature frozen as of 2012-08-23 and should be considered dropped. Do not use this for new installations, instead see v3.5.x and newer.
 
 !https://travis-ci.org/textile/php-textile.png?branch=2.4!:https://travis-ci.org/textile/php-textile
 
