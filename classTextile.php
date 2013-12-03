@@ -329,29 +329,121 @@ Ordered List Start & Continuation:
 */
 
 // define these before including this file to override the standard glyphs
-@define('txt_quote_single_open',  '&#8216;');
-@define('txt_quote_single_close', '&#8217;');
-@define('txt_quote_double_open',  '&#8220;');
-@define('txt_quote_double_close', '&#8221;');
-@define('txt_apostrophe',         '&#8217;');
-@define('txt_prime',              '&#8242;');
-@define('txt_prime_double',       '&#8243;');
-@define('txt_ellipsis',           '&#8230;');
-@define('txt_emdash',             '&#8212;');
-@define('txt_endash',             '&#8211;');
-@define('txt_dimension',          '&#215;');
-@define('txt_trademark',          '&#8482;');
-@define('txt_registered',         '&#174;');
-@define('txt_copyright',          '&#169;');
-@define('txt_half',               '&#189;');
-@define('txt_quarter',            '&#188;');
-@define('txt_threequarters',      '&#190;');
-@define('txt_degrees',            '&#176;');
-@define('txt_plusminus',          '&#177;');
-@define('txt_has_unicode',        @preg_match('/\pL/u', 'a')); // Detect if Unicode is compiled into PCRE
-@define('txt_fn_ref_pattern',     '<sup{atts}>{marker}</sup>');
-@define('txt_fn_foot_pattern',    '<sup{atts}>{marker}</sup>');
-@define('txt_nl_ref_pattern',     '<sup{atts}>{marker}</sup>');
+
+if (!defined('txt_quote_single_open'))
+{
+	define('txt_quote_single_open', '&#8216;');
+}
+
+if (!defined('txt_quote_single_close'))
+{
+	define('txt_quote_single_close', '&#8217;');
+}
+
+if (!defined('txt_quote_double_open'))
+{
+	define('txt_quote_double_open', '&#8220;');
+}
+
+if (!defined('txt_quote_double_close'))
+{
+	define('txt_quote_double_close', '&#8221;');
+}
+
+if (!defined('txt_apostrophe'))
+{
+	define('txt_apostrophe', '&#8217;');
+}
+
+if (!defined('txt_prime'))
+{
+	define('txt_prime', '&#8242;');
+}
+
+if (!defined('txt_prime_double'))
+{
+	define('txt_prime_double', '&#8243;');
+}
+
+if (!defined('txt_ellipsis'))
+{
+	define('txt_ellipsis', '&#8230;');
+}
+
+if (!defined('txt_emdash'))
+{
+	define('txt_emdash', '&#8212;');
+}
+
+if (!defined('txt_endash'))
+{
+	define('txt_endash', '&#8211;');
+}
+
+if (!defined('txt_dimension'))
+{
+	define('txt_dimension', '&#215;');
+}
+
+if (!defined('txt_trademark'))
+{
+	define('txt_trademark', '&#8482;');
+}
+
+if (!defined('txt_registered'))
+{
+	define('txt_registered', '&#174;');
+}
+
+if (!defined('txt_copyright'))
+{
+	define('txt_copyright', '&#169;');
+}
+
+if (!defined('txt_half'))
+{
+	define('txt_half', '&#189;');
+}
+
+if (!defined('txt_quarter'))
+{
+	define('txt_quarter', '&#188;');
+}
+
+if (!defined('txt_threequarters'))
+{
+	define('txt_threequarters', '&#190;');
+}
+
+if (!defined('txt_degrees'))
+{
+	define('txt_degrees', '&#176;');
+}
+
+if (!defined('txt_plusminus'))
+{
+	define('txt_plusminus', '&#177;');
+}
+
+if (!defined('txt_has_unicode'))
+{
+	define('txt_has_unicode', @preg_match('/\pL/u', 'a')); // Detect if Unicode is compiled into PCRE
+}
+
+if (!defined('txt_fn_ref_pattern'))
+{
+	define('txt_fn_ref_pattern', '<sup{atts}>{marker}</sup>');
+}
+
+if (!defined('txt_fn_foot_pattern'))
+{
+	define('txt_fn_foot_pattern', '<sup{atts}>{marker}</sup>');
+}
+
+if (!defined('txt_nl_ref_pattern'))
+{
+	define('txt_nl_ref_pattern', '<sup{atts}>{marker}</sup>');
+}
 
 class Textile
 {
