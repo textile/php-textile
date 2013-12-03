@@ -2,6 +2,11 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
+h2. "Version 2.4.3 - 2013/12/03":https://github.com/textile/php-textile/releases/tag/v2.4.3
+
+* Use Perl-compatible named sub-patterns.
+* Allow overriding symbol constants as intended.
+
 h2. "Version 2.4.2 - 2013/12/02":https://github.com/textile/php-textile/releases/tag/v2.4.2
 
 * Fix PHP 5.5 compatibility. Resolve E_DEPRECATED messages and drop @e@ regular expression modifier.
