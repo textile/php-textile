@@ -1,12 +1,14 @@
 {
     "name": "netcarver/textile",
-    "description": "A lightweight markup language that takes (almost) plaintext and converts it into well formed HTML.",
+    "description": "Textile markup language parser",
     "license": "BSD-3-Clause",
     "homepage": "https://github.com/textile/php-textile",
+    "keywords": ["textile", "parser", "markup", "language", "html", "lightweight", "plaintext"],
     "support": {
         "irc": "irc://irc.freenode.net/textile",
         "wiki": "https://github.com/textile/php-textile/wiki",
-        "issues": "https://github.com/textile/php-textile/issues"
+        "issues": "https://github.com/textile/php-textile/issues",
+        "source": "https://github.com/textile/php-textile"
     },
     "autoload": {
         "psr-0": { "Netcarver\\Textile": "src/" }
