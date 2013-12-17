@@ -5,5 +5,5 @@ php:
 before_script:
   - composer install
 script:
-  - ./vendor/bin/phpcs --standard=PSR1,PSR2 src test/Netcarver/Textile
+  - ./vendor/bin/phpcs --standard=PSR1,PSR2 src test
   - ./vendor/bin/phpunit
