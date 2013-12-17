@@ -1,8 +1,8 @@
-h1. PHP-Textile - Textile markup language parser for PHP
+h1. PHP-Textile
 
 "Downloads":https://github.com/textile/php-textile/releases | "Textile reference":http://txstyle.org/article/43/a-short-introduction | "Live editor":http://txstyle.org/ | "Packagist":https://packagist.org/packages/netcarver/textile
 
-*Textile is a humane web text generator*. It takes lightweight, readable, plaintext-like markup language and converts it into well formed HTML. This repository contains a Textile parser for PHP.
+PHP-Textile is a modern Textile markup language parser for PHP. Textile is a humane web text generator that takes lightweight, readable, plaintext-like markup language and converts it into well formed HTML.
 
 h2. Branches
 
