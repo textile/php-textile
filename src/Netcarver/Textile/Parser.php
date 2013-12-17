@@ -52,8 +52,7 @@ namespace Netcarver\Textile;
  */
 
 /*
-_________
-U S A G E
+Textile usage examples.
 
 Block modifier syntax:
 
@@ -120,9 +119,7 @@ Phrase modifier syntax:
 
 ABC(Always Be Closing)   ->     <acronym title="Always Be Closing">ABC</acronym>
 
-
 Linked Notes:
-============
 
     Allows the generation of an automated list of notes with links.
 
@@ -130,8 +127,7 @@ Linked Notes:
     _references_ to those definitions and one or more _placeholders_ indicating where
     the consolidated list of notes is to be placed in your document.
 
-    Definitions.
-    -----------
+    Definitions:
 
     Each note definition must occur in its own paragraph and should look like this...
 
@@ -140,18 +136,16 @@ Linked Notes:
     You are free to use whatever label you wish after the # as long as it is made up
     of letters, numbers, colon(:) or dash(-).
 
-    References.
-    ----------
+    References:
 
     Each note reference is marked in your text like this[#mynotelabel] and
     it will be replaced with a superscript reference that links into the list of
     note definitions.
 
-    List Placeholder(s).
-    -------------------
+    List placeholder(s):
 
     The note list can go anywhere in your document. You have to indicate where
-    like this...
+    like this:
 
     notelist.
 
@@ -188,16 +182,17 @@ Linked Notes:
 
         note#other. An unreferenced note.
 
-        note#lavader(myliclass). "Proof":url of a small moon.
+        note#lavader(myliclass). "Proof":http://example.com of a small moon.
 
         notelist(myclass#myid)+.
 
         Would output (the actual IDs used would be randomised)...
 
-        <p>Scientists say<sup><a href="#def_id_1" id="ref_id_1a">1</sup> the moon is small.</p>
+        <p>Scientists say<sup><a href="#note1" id="noteref1">1</sup> the moon is small.</p>
 
         <ol class="myclass" id="myid">
-            <li class="myliclass"><a href="#ref_id_1a"><sup>a</sup></a><span id="def_id_1"> </span><a href="url">Proof</a> of a small moon.</li>
+            <li class="myliclass"><a href="#noteref1"><sup>a</sup></a>
+                <span id="note1"> </span><a href="http://example.com">Proof</a> of a small moon.</li>
             <li>An unreferenced note.</li>
         </ol>
 
@@ -214,9 +209,11 @@ Table syntax:
         |And|Another|table|row|
         |With an||empty|cell|
 
-        |=. My table caption goes here  (NB. Table captions *must* be the first line of the table else treated as a center-aligned cell.)
+        |=. My table caption goes here
         |_. A|_. table|_. header|_.row|
         |A|simple|table|row|
+
+    Note: Table captions *must* be the first line of the table else treated as a center-aligned cell.
 
     Tables with attributes:
 
@@ -308,7 +305,7 @@ Applying Attributes:
         It goes like this, %{color:red}the fourth the fifth%
               -> It goes like this, <span style="color:red">the fourth the fifth</span>
 
-Ordered List Start & Continuation:
+Ordered list start and continuation:
 
     You can control the start attribute of an ordered list like so;
 
@@ -1125,7 +1122,10 @@ class Parser
         $this->url_schemes = $this->unrestricted_url_schemes;
 
         if ($encode) {
-            trigger_error('Use of the $encode argument is discouraged. Use Parser::textileEncode() instead.', E_DEPRECATED);
+            trigger_error(
+                'Use of the $encode argument is discouraged. Use Parser::textileEncode() instead.',
+                E_DEPRECATED
+            );
             return $this->textileEncode($text);
         }
 
@@ -1225,57 +1225,105 @@ class Parser
             $cur = '(?:['.$cur.']\s*)?';
         }
 
-        $this->glyph_search = array(
-            '/([0-9]+[\])]?[\'"]? ?)[xX]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]+)/'.$mod,   // Dimension sign
-            '/('.$wrd.'|\))\'('.$wrd.')/'.$mod,     // I'm an apostrophe
-            '/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod,    // Back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
-            "/([([{])'(?=\S)/".$mod,                // Single open following open bracket
-            '/(\S)\'(?=\s|'.$pnc.'|<|$)/'.$mod,     // Single closing
-            "/'/",                                  // Default single opening
-            '/([([{])"(?=\S)/'.$mod,                // Double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
-            '/(\S)"(?=\s|'.$pnc.'|<|$)/'.$mod,      // Double closing
-            '/"/',                                  // Default double opening
-            '/\b(['.$abr.']['.$acr.']{2,})\b(?:[(]([^)]*)[)])/'.$mod,  // 3+ uppercase acronym
-            '/(?<=\s|^|[>(;-])(['.$abr.']{3,})(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod,  // 3+ uppercase
-            '/([^.]?)\.{3}/',                       // Ellipsis
-            '/--/',                                 // em dash
-            '/ - /',                                // en dash
-            '/(\b ?|\s|^)[([]TM[])]/i'.$mod,        // Trademark
-            '/(\b ?|\s|^)[([]R[])]/i'.$mod,         // Registered
-            '/(\b ?|\s|^)[([]C[])]/i'.$mod,         // Copyright
-            '/[([]1\/4[])]/',                       // 1/4
-            '/[([]1\/2[])]/',                       // 1/2
-            '/[([]3\/4[])]/',                       // 3/4
-            '/[([]o[])]/',                          // Degrees -- that's a small 'oh'
-            '/[([]\+\/-[])]/',                      // Plus minus
-        );
+        $this->glyph_search = array();
+        $this->glyph_replace = array();
 
-        $this->glyph_replace = array(
-            '$1'.$txt_dimension.'$2',               // Dimension sign
-            '$1'.$txt_apostrophe.'$2',              // I'm an apostrophe
-            '$1'.$txt_apostrophe.'$2',              // Back in '88
-            '$1'.$txt_quote_single_open,            // Single open following open bracket
-            '$1'.$txt_quote_single_close,           // Single closing
-            $txt_quote_single_open,                 // Default single opening
-            '$1'.$txt_quote_double_open,            // Double open following open bracket
-            '$1'.$txt_quote_double_close,           // Double closing
-            $txt_quote_double_open,                 // Default double opening
-            (('html5' === $this->doctype) ? '<abbr title="$2">$1</abbr>' : '<acronym title="$2">$1</acronym>'),     // 3+ uppercase acronym
-            '<span class="caps">'.$this->uid.':glyph:$1</span>$2', // 3+ uppercase
-            '$1'.$txt_ellipsis,                     // Ellipsis
-            $txt_emdash,                            // em dash
-            ' '.$txt_endash.' ',                    // en dash
-            '$1'.$txt_trademark,                    // Trademark
-            '$1'.$txt_registered,                   // Registered
-            '$1'.$txt_copyright,                    // Copyright
-            $txt_quarter,                           // 1/4
-            $txt_half,                              // 1/2
-            $txt_threequarters,                     // 3/4
-            $txt_degrees,                           // Degrees
-            $txt_plusminus,                         // Plus minus
-        );
+        // Dimension sign
+        $this->glyph_search[] = '/([0-9]+[\])]?[\'"]? ?)[xX]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]+)/'.$mod;
+        $this->glyph_replace[] = '$1'.$txt_dimension.'$2';
 
-        $this->rebuild_glyphs = false; // No need to rebuild next run unless a symbol is redefined
+        // Apostrophe
+        $this->glyph_search[] = '/('.$wrd.'|\))\'('.$wrd.')/'.$mod;
+        $this->glyph_replace[] = '$1'.$txt_apostrophe.'$2';
+
+        // Back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
+        $this->glyph_search[] = '/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod;
+        $this->glyph_replace[] = '$1'.$txt_apostrophe.'$2';
+
+        // Single open following open bracket
+        $this->glyph_search[] = "/([([{])'(?=\S)/".$mod;
+        $this->glyph_replace[] = '$1'.$txt_quote_single_open;
+
+        // Single closing
+        $this->glyph_search[] = '/(\S)\'(?=\s|'.$pnc.'|<|$)/'.$mod;
+        $this->glyph_replace[] = '$1'.$txt_quote_single_close;
+
+        // Default single opening
+        $this->glyph_search[] = "/'/";
+        $this->glyph_replace[] = $txt_quote_single_open;
+
+        // Double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
+        $this->glyph_search[] = '/([([{])"(?=\S)/'.$mod;
+        $this->glyph_replace[] = '$1'.$txt_quote_double_open;
+
+        // Double closing
+        $this->glyph_search[] = '/(\S)"(?=\s|'.$pnc.'|<|$)/'.$mod;
+        $this->glyph_replace[] = '$1'.$txt_quote_double_close;
+
+        // Default double opening
+        $this->glyph_search[] = '/"/';
+        $this->glyph_replace[] = $txt_quote_double_open;
+
+        // 3+ uppercase acronym
+        $this->glyph_search[] = '/\b(['.$abr.']['.$acr.']{2,})\b(?:[(]([^)]*)[)])/'.$mod;
+
+        if ($this->doctype === 'html5') {
+            $this->glyph_replace[] = '<abbr title="$2">$1</abbr>';
+        } else {
+            $this->glyph_replace[] = '<acronym title="$2">$1</acronym>';
+        }
+
+        // 3+ uppercase
+        $this->glyph_search[] = '/(?<=\s|^|[>(;-])(['.$abr.']{3,})'.
+            '(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod;
+        $this->glyph_replace[] = '<span class="caps">'.$this->uid.':glyph:$1</span>$2';
+
+        // Ellipsis
+        $this->glyph_search[] = '/([^.]?)\.{3}/';
+        $this->glyph_replace[] = '$1'.$txt_ellipsis;
+
+        // em dash
+        $this->glyph_search[] = '/--/';
+        $this->glyph_replace[] = $txt_emdash;
+
+        // en dash
+        $this->glyph_search[] = '/ - /';
+        $this->glyph_replace[] = ' '.$txt_endash.' ';
+
+        // Trademark
+        $this->glyph_search[] = '/(\b ?|\s|^)[([]TM[])]/i'.$mod;
+        $this->glyph_replace[] = '$1'.$txt_trademark;
+
+        // Registered
+        $this->glyph_search[] = '/(\b ?|\s|^)[([]R[])]/i'.$mod;
+        $this->glyph_replace[] = '$1'.$txt_registered;
+
+        // Copyright
+        $this->glyph_search[] = '/(\b ?|\s|^)[([]C[])]/i'.$mod;
+        $this->glyph_replace[] = '$1'.$txt_copyright;
+
+        // 1/4
+        $this->glyph_search[] = '/[([]1\/4[])]/';
+        $this->glyph_replace[] = $txt_quarter;
+
+        // 1/2
+        $this->glyph_search[] = '/[([]1\/2[])]/';
+        $this->glyph_replace[] = $txt_half;
+
+        // 3/4
+        $this->glyph_search[] = '/[([]3\/4[])]/';
+        $this->glyph_replace[] = $txt_threequarters;
+
+        // Degrees -- that's a small 'oh'
+        $this->glyph_search[] = '/[([]o[])]/';
+        $this->glyph_replace[] = $txt_degrees;
+
+        // Plus minus
+        $this->glyph_search[] = '/[([]\+\/-[])]/';
+        $this->glyph_replace[] = $txt_plusminus;
+
+        // No need to rebuild next run unless a symbol is redefined
+        $this->rebuild_glyphs = false;
     }
 
     /**
@@ -1455,7 +1503,8 @@ class Parser
         }
 
         if (preg_match("/\[([^]]+)\]/U", $matched, $lng)) {
-            $matched = str_replace($lng[0], '', $matched);    // Consume entire lang block -- valid or invalid...
+            // Consume entire lang block -- valid or invalid.
+            $matched = str_replace($lng[0], '', $matched);
             if (preg_match("/\[([a-zA-Z]{2}(?:[\-\_][a-zA-Z]{2})?)\]/U", $lng[0], $lng)) {
                 $lang = $lng[1];
             }
@@ -1465,8 +1514,11 @@ class Parser
 
             $class_regex = "/^([-a-zA-Z 0-9_\.]*)$/";
 
-            $matched = str_replace($cls[0], '', $matched);    // Consume entire class block -- valid or invalid...
-            // Only allow a restricted subset of the CSS standard characters for classes/ids. No encoding markers allowed...
+            // Consume entire class block -- valid or invalid.
+            $matched = str_replace($cls[0], '', $matched);
+
+            // Only allow a restricted subset of the CSS standard characters for classes/ids.
+            // No encoding markers allowed.
             if (preg_match("/\(([-a-zA-Z 0-9_\.\:\#]+)\)/U", $cls[0], $cls)) {
                 $hashpos = strpos($cls[1], '#');
                 // If a textile class block attribute was found with a '#' in it
@@ -1590,8 +1642,12 @@ class Parser
 
     protected function hasRawText($text)
     {
-        $r = trim(preg_replace('@<(p|hr|br|img|blockquote|div|form|table|ul|ol|dl|pre|h\d)[^>]*?'.chr(62).'.*</\1[^>]*?>@si', '', trim($text)));
-        $r = trim(preg_replace('@<(br|hr|img)[^>]*?/?>@i', '', $r));
+        $r = preg_replace(
+            '@<(p|hr|br|img|blockquote|div|form|table|ul|ol|dl|pre|h\d)[^>]*?'.chr(62).'.*</\1[^>]*?>@si',
+            '',
+            trim($text)
+        );
+        $r = trim(preg_replace('@<(br|hr|img)[^>]*?/?>@i', '', trim($r)));
         return '' != $r;
     }
 
@@ -1605,7 +1661,11 @@ class Parser
     protected function tables($text)
     {
         $text = $text . "\n\n";
-        return preg_replace_callback("/^(?:table(_?{$this->s}{$this->a}{$this->c})\.(.*)?\n)?^({$this->a}{$this->c}\.? ?\|.*\|)[\s]*\n\n/smU", array(&$this, "fTable"), $text);
+        return preg_replace_callback(
+            "/^(?:table(_?{$this->s}{$this->a}{$this->c})\.(.*)?\n)?^({$this->a}{$this->c}\.? ?\|.*\|)[\s]*\n\n/smU",
+            array(&$this, "fTable"),
+            $text
+        );
     }
 
     /**
@@ -1669,12 +1729,32 @@ class Parser
                 }
             }
 
-            preg_match("/(:?^\|($this->vlgn)($this->s$this->a$this->c)\.\s*$\n)?^(.*)/sm", ltrim($row), $grpmatch);
-
             // Row group
-            $rgrp = isset($grpmatch[2]) ? (($grpmatch[2] == '^') ? 'head' : (($grpmatch[2] == '~') ? 'foot' : (($grpmatch[2] == '-') ? 'body' : ''))) : '';
-            $rgrpatts = isset($grpmatch[3]) ? $this->parseAttribs($grpmatch[3]) : '';
-            $row = $grpmatch[4];
+            $rgrpatts = $rgrp = '';
+
+            if (preg_match(
+                "/(:?^\|($this->vlgn)($this->s$this->a$this->c)\.\s*$\n)?^(.*)/sm",
+                ltrim($row),
+                $grpmatch
+            )) {
+                if (isset($grpmatch[2])) {
+                    if ($grpmatch[2] === '^') {
+                        $rgrp = 'head';
+                    } elseif ($grpmatch[2] === '~') {
+                        $rgrp = 'foot';
+                    } elseif ($grpmatch[2] === '-') {
+                        $rgrp = 'body';
+                    }
+                }
+
+                if (isset($grpmatch[2])) {
+                    $rgrpatts = $this->parseAttribs($grpmatch[3]);
+                }
+
+                if (isset($grpmatch[4])) {
+                    $row = $grpmatch[4];
+                }
+            }
 
             if (preg_match("/^($this->a$this->c\. )(.*)/m", ltrim($row), $rmtch)) {
                 $ratts = $this->parseAttribs($rmtch[1], 'tr');
@@ -1718,13 +1798,29 @@ class Parser
                 $cellctr++;
             }
 
-            $grp = (($rgrp && $last_rgrp) ? "\t</t".$last_rgrp.">\n" : '') . (($rgrp) ? "\t<t".$rgrp.$rgrpatts.">\n" : '');
+            $grp = '';
+
+            if ($rgrp && $last_rgrp) {
+                $grp .= "\t</t".$last_rgrp.">\n";
+            }
+
+            if ($rgrp) {
+                $grp .= "\t<t".$rgrp.$rgrpatts.">\n";
+            }
+
             $last_rgrp = ($rgrp) ? $rgrp : $last_rgrp;
             $rows[] = $grp."\t\t<tr$ratts>\n" . join("\n", $cells) . ($cells ? "\n" : "") . "\t\t</tr>";
             unset($cells, $catts);
         }
 
-        return "<table{$tatts}{$sum}>\n" .$cap. $colgrp. join("\n", $rows) . "\n".(($last_rgrp) ? "\t</t".$last_rgrp.">\n" : '')."</table>\n\n";
+        $rows = join("\n", $rows) . "\n";
+        $close = '';
+
+        if ($last_rgrp) {
+            $close = "\t</t".$last_rgrp.">\n";
+        }
+
+        return "<table{$tatts}{$sum}>\n".$cap.$colgrp.$rows.$close."</table>\n\n";
     }
 
     /**
@@ -1813,7 +1909,11 @@ class Parser
 
     protected function textileLists($text)
     {
-        return preg_replace_callback("/^((?:[*;:]+|[*;:#]*#(?:_|\d+)?)$this->lc[ .].*)$(?![^#*;:])/smU", array(&$this, "fTextileList"), $text);
+        return preg_replace_callback(
+            "/^((?:[*;:]+|[*;:#]*#(?:_|\d+)?)$this->lc[ .].*)$(?![^#*;:])/smU",
+            array(&$this, "fTextileList"),
+            $text
+        );
     }
 
     /**
@@ -1842,7 +1942,7 @@ class Parser
                 $showitem = (strlen($content) > 0);
 
                 if ('o' === $ltype) {
-                    // Handle list continuation/start attribute on ordered lists...
+                    // Handle list continuation/start attribute on ordered lists.
                     if (!isset($this->olstarts[$tl])) {
                         $this->olstarts[$tl] = 1;
                     }
@@ -1850,22 +1950,25 @@ class Parser
                     if (strlen($tl) > strlen($pt)) {
                         // First line of this level of ol -- has a start attribute?
                         if ('' == $st) {
-                            $this->olstarts[$tl] = 1;           // No => reset count to 1.
+                            // No => reset count to 1.
+                            $this->olstarts[$tl] = 1;
                         } elseif ('_' !== $st) {
-                            $this->olstarts[$tl] = (int) $st;   // Yes, and numeric => reset to given.
-                                                                // TRICKY: the '_' continuation marker just means
-                                                                // output the count so don't need to do anything
-                                                                // here.
+                            // Yes, and numeric => reset to given.
+                            // TRICKY: the '_' continuation marker just means
+                            // output the count so don't need to do anything
+                            // here.
+                            $this->olstarts[$tl] = (int) $st;
                         }
                     }
 
                     if ((strlen($tl) > strlen($pt)) && '' !== $st) {
-                        // Output the start attribute if needed...
+                        // Output the start attribute if needed.
                         $st = ' start="' . $this->olstarts[$tl] . '"';
                     }
 
                     if ($showitem) {
-                        // TRICKY: Only increment the count for list items; not when a list definition line is encountered.
+                        // TRICKY: Only increment the count for list items;
+                        // not when a list definition line is encountered.
                         $this->olstarts[$tl] += 1;
                     }
                 }
@@ -1875,7 +1978,8 @@ class Parser
                 }
 
                 if ((strpos($pt, ';') !== false) && (strpos($tl, ':') !== false)) {
-                    $lists[$tl] = 2; // We're already in a <dl> so flag not to start another
+                    // We're already in a <dl> so flag not to start another
+                    $lists[$tl] = 2;
                 }
 
                 $tabs = str_repeat("\t", strlen($tl)-1);
@@ -2000,7 +2104,9 @@ class Parser
 
     protected function blocks($text)
     {
-        $regex = '/^(?P<tag>' . join('|', $this->blocktag_whitelist) . ')(?P<atts>' . $this->a . $this->c . ')\.(?P<ext>\.?)(?::(?P<cite>\S+))? (?P<graf>.*)$/Ss' . $this->regex_snippets['mod'];
+        $regex = '/^(?P<tag>'.join('|', $this->blocktag_whitelist).')'.
+            '(?P<atts>'.$this->a.$this->c.')\.(?P<ext>\.?)(?::(?P<cite>\S+))? (?P<graf>.*)$/Ss'.
+            $this->regex_snippets['mod'];
 
         $textblocks = preg_split('/(\n{2,})/', $text, null, PREG_SPLIT_DELIM_CAPTURE);
 
@@ -2047,7 +2153,15 @@ class Parser
                 }
             } else {
                 if ($ext || !preg_match('/^ /', $block)) {
-                    list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(0, $tag, $atts, $ext, $cite, $block));
+                    list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(
+                        0,
+                        $tag,
+                        $atts,
+                        $ext,
+                        $cite,
+                        $block,
+                    ));
+
                     // Skip $o1/$c1 because this is part of a continuing extended block
                     if ($tag == 'p' && !$this->hasRawText($content)) {
                         $block = $content;
@@ -2142,7 +2256,11 @@ class Parser
                 $supp_id = ' id="fn' . $fnid . '"';
             }
 
-            $sup = (strpos($att, '^') === false) ? $this->formatFootnote($fns[1], $supp_id) : $this->formatFootnote('<a href="#fnrev' . $fnid . '">'.$fns[1] .'</a>', $supp_id);
+            if (strpos($att, '^') === false) {
+                $sup = $this->formatFootnote($fns[1], $supp_id);
+            } else {
+                $sup = $this->formatFootnote('<a href="#fnrev' . $fnid . '">'.$fns[1] .'</a>', $supp_id);
+            }
 
             $content = $sup . ' ' . $content;
         }
@@ -2265,36 +2383,50 @@ class Parser
     {
         // Handle normal paragraph text
         if (!$this->lite) {
-            $text = $this->noTextile($text);       // Notextile blocks and inlines
-            $text = $this->code($text);            // Handle code
+            // Notextile blocks and inlines
+            $text = $this->noTextile($text);
+            // Handle code
+            $text = $this->code($text);
         }
 
-        $text = $this->getHTMLComments($text);     // HTML comments --
-        $text = $this->getRefs($text);             // Consume link aliases
-        $text = $this->glyphQuotedQuote($text);    // Treat quoted quote as a special glyph.
-        $text = $this->links($text);               // Generate links
+        // HTML comments --
+        $text = $this->getHTMLComments($text);
+        // Consume link aliases
+        $text = $this->getRefs($text);
+        // Treat quoted quote as a special glyph.
+        $text = $this->glyphQuotedQuote($text);
+        // Generate links
+        $text = $this->links($text);
 
+        // Handle images (if permitted)
         if (!$this->noimage) {
-            $text = $this->images($text);          // Handle images (if permitted)
+            $text = $this->images($text);
         }
 
         if (!$this->lite) {
-            $text = $this->tables($text);          // Handle tables
-            $text = $this->redclothLists($text);   // Handle redcloth-style definition lists
-            $text = $this->textileLists($text);    // Handle ordered & unordered lists plus txp-style definition lists
+            // Handle tables
+            $text = $this->tables($text);
+            // Handle redcloth-style definition lists
+            $text = $this->redclothLists($text);
+            // Handle ordered & unordered lists plus txp-style definition lists
+            $text = $this->textileLists($text);
         }
 
-        $text = $this->spans($text);               // Inline markup (em, strong, sup, sub, del etc)
+        // Inline markup (em, strong, sup, sub, del etc)
+        $text = $this->spans($text);
 
         if (!$this->lite) {
-            // Turn footnote references into supers or links. As footnote blocks are banned in lite mode there is no point generating links for them
+            // Turn footnote references into supers or links.
+            // As footnote blocks are banned in lite mode there is no point
+            // generating links for them.
             $text = $this->footnoteRefs($text);
 
             // Turn note references into links
             $text = $this->noteRefs($text);
         }
 
-        $text = $this->glyphs($text);              // Glyph level substitutions (mainly typographic -- " & ' => curly quotes, -- => em-dash etc.
+        // Glyph level substitutions (mainly typographic -- " & ' => curly quotes, -- => em-dash etc.
+        $text = $this->glyphs($text);
 
         return rtrim($text, "\n");
     }
@@ -2456,8 +2588,14 @@ class Parser
             $this->notes = $o;
         }
 
-        // Replace list markers...
-        $text = preg_replace_callback("@<p>notelist(?P<atts>{$this->c})(?:\:(?P<startchar>[$wrd|{$this->syms}]))?(?P<links>[\^!]?)(?P<extras>\+?)\.?[\s]*</p>@U$mod", array(&$this, "fNoteLists"), $text);
+        // Replace list markers.
+        $text = preg_replace_callback(
+            "@<p>notelist(?P<atts>{$this->c})".
+            "(?:\:(?P<startchar>[$wrd|{$this->syms}]))?".
+            "(?P<links>[\^!]?)(?P<extras>\+?)\.?[\s]*</p>@U$mod",
+            array(&$this, "fNoteLists"),
+            $text
+        );
 
         return $text;
     }
@@ -2675,14 +2813,11 @@ class Parser
 
     protected function parseURI($uri, &$m)
     {
-        $r = "@^((?P<scheme>[^:/?#]+):)?(//(?P<authority>[^/?#]*))?(?P<path>[^?#]*)(\?(?P<query>[^#]*))?(#(?P<fragment>.*))?@";
-        //      12                      3  4                       5               6  7                 8 9
-        //
-        //    scheme    = $2
-        //    authority = $4
-        //    path      = $5
-        //    query     = $7
-        //    fragment  = $9
+        $r = "@^((?P<scheme>[^:/?#]+):)?".
+            "(//(?P<authority>[^/?#]*))?".
+            "(?P<path>[^?#]*)".
+            "(\?(?P<query>[^#]*))?".
+            "(#(?P<fragment>.*))?@";
 
         $ok = preg_match($r, $uri, $m);
         return $ok;
@@ -2977,8 +3112,9 @@ class Parser
 
         // Split off any trailing text that isn't part of an array assignment.
         // eg. "text":...?q[]=value1&q[]=value2 ... is ok
-        //     "text":...?q[]=value1]following  ... would have "following" popped back out and the remaining square bracket
-        //                                          will later be tested for balance
+        // "text":...?q[]=value1]following  ... would have "following"
+        // popped back out and the remaining square bracket
+        // will later be tested for balance
         if ($counts[']']) {
             if (1 === preg_match('@(?P<url>^.*\])(?!=)(?P<end>.*?)$@' . $this->regex_snippets['mod'], $url, $m)) {
                 $url         = $m['url'];
@@ -2993,15 +3129,17 @@ class Parser
         $len = strlen($url);
         $url_chars = str_split($url);
 
-        // Now we have the array of all the multi-byte chars in the url we will parse the uri backwards and pop off
-        // any chars that don't belong there (like . or , or unmatched brackets of various kinds)...
+        // Now we have the array of all the multi-byte chars in the url we will parse the
+        // uri backwards and pop off
+        // any chars that don't belong there (like . or , or unmatched brackets of various kinds).
         $first = true;
         do {
             $c = array_pop($url_chars);
             $popped = false;
             switch ($c) {
 
-                // Textile URL shouldn't end in these characters, we pop them off the end and push them out the back of the url again.
+                // Textile URL shouldn't end in these characters, we pop
+                // them off the end and push them out the back of the url again.
                 case '!':
                 case '?':
                 case ':':
@@ -3025,8 +3163,8 @@ class Parser
 
                 case ']':
                     // If we find a closing square bracket we are going to see if it is balanced.
-                    // If it is balanced with matching opening bracket then it is part of the URL else we spit it back
-                    // out of the URL.
+                    // If it is balanced with matching opening bracket then it is part of the URL
+                    // else we spit it back out of the URL.
                     if (null === $counts['[']) {
                         $counts['['] = substr_count($url, '[');
                     }
@@ -3062,7 +3200,8 @@ class Parser
                     break;
 
                 default:
-                    // We have an acceptable character for the end of the url so put it back and exit the character popping loop
+                    // We have an acceptable character for the end of the url so put it back and
+                    // exit the character popping loop
                     $url_chars[] = $c;
                     break;
             }
@@ -3109,10 +3248,14 @@ class Parser
 
         $text = $this->spans($text);
         $text = $this->glyphs($text);
-        $url  = $this->shelveURL($this->rebuildURI($uri_parts));
-        $a    = $this->newTag('a', $this->parseAttribsToArray($atts), false)->title($title)->href($url, true)->rel($this->rel);
+        $url = $this->shelveURL($this->rebuildURI($uri_parts));
+        $a = $this->newTag(
+            'a',
+            $this->parseAttribsToArray($atts),
+            false
+        )->title($title)->href($url, true)->rel($this->rel);
         $tags = $this->storeTags((string) $a, '</a>');
-        $out  = $this->shelve($tags['open'].trim($text).$tags['close']);
+        $out = $this->shelve($tags['open'].trim($text).$tags['close']);
 
         return $pre . $out . $pop . $tight;
     }
@@ -3228,8 +3371,10 @@ class Parser
     {
         $parts = @parse_url(urldecode($url));
 
-        if ((empty($parts['scheme']) || $parts['scheme'] == 'http') && empty($parts['host']) && (isset($parts['path']) && preg_match('/^\w/', $parts['path']))) {
-            $url = $this->relativeImagePrefix.$url;
+        if (empty($parts['scheme']) || $parts['scheme'] == 'http') {
+            if (empty($parts['host']) && (isset($parts['path']) && preg_match('/^\w/', $parts['path']))) {
+                $url = $this->relativeImagePrefix.$url;
+            }
         }
 
         if ($this->restricted && !empty($parts['scheme']) && !in_array($parts['scheme'], $this->url_schemes)) {
@@ -3462,7 +3607,11 @@ class Parser
 
     protected function doSpecial($text, $start, $end, $method = 'fSpecial')
     {
-        return preg_replace_callback('/(?P<before>^|\s|[|[({>])'.preg_quote($start, '/').'(?P<content>.*?)'.preg_quote($end, '/').'/ms', array(&$this, $method), $text);
+        return preg_replace_callback(
+            '/(?P<before>^|\s|[|[({>])'.preg_quote($start, '/').'(?P<content>.*?)'.preg_quote($end, '/').'/ms',
+            array(&$this, $method),
+            $text
+        );
     }
 
     /**
@@ -3518,7 +3667,11 @@ class Parser
 
     protected function footnoteRefs($text)
     {
-        return preg_replace_callback('/(?<=\S)\[(?P<id>\d+)(?P<nolink>!?)\]\s?/U'.$this->regex_snippets['mod'], array(&$this, 'footnoteID'), $text);
+        return preg_replace_callback(
+            '/(?<=\S)\[(?P<id>\d+)(?P<nolink>!?)\]\s?/U'.$this->regex_snippets['mod'],
+            array(&$this, 'footnoteID'),
+            $text
+        );
     }
 
     /**
@@ -3553,7 +3706,11 @@ class Parser
 
     protected function glyphQuotedQuote($text)
     {
-        return preg_replace_callback('/ (?P<pre>'.$this->quote_starts.')"(?P<post>.) /'.$this->regex_snippets['mod'], array(&$this, "fGlyphQuotedQuote"), $text);
+        return preg_replace_callback(
+            '/ (?P<pre>'.$this->quote_starts.')"(?P<post>.) /'.$this->regex_snippets['mod'],
+            array(&$this, "fGlyphQuotedQuote"),
+            $text
+        );
     }
 
     /**
@@ -3571,7 +3728,19 @@ class Parser
             return $m[0];
         }
 
-        $glyph = ' ' . strtr($m['pre'], array( '"'=>'&#8220;', "'"=>'&#8216;', ' '=>'&nbsp;' )) . '"' . strtr($m['post'], array( '"'=> '&#8221;', "'"=>'&#8217;', ' '=>'&nbsp;' )) . ' ';
+        $pre = strtr($m['pre'], array(
+            '"' => '&#8220;',
+            "'" => '&#8216;',
+            ' ' => '&nbsp;',
+        ));
+
+        $post = strtr($m['post'], array(
+            '"' => '&#8221;',
+            "'" => '&#8217;',
+            ' ' => '&nbsp;',
+        ));
+
+        $glyph = ' '.$pre.'"'.$post.' ';
         return $this->shelve($glyph);
     }
 
@@ -3675,7 +3844,11 @@ class Parser
 
     protected function encodeHigh($text, $charset = 'UTF-8')
     {
-        return ($this->mb) ? mb_encode_numericentity($text, $this->cmap, $charset) : htmlentities($text, ENT_NOQUOTES, $charset);
+        if ($this->mb) {
+            return mb_encode_numericentity($text, $this->cmap, $charset);
+        }
+
+        return htmlentities($text, ENT_NOQUOTES, $charset);
     }
 
     /**
@@ -3689,7 +3862,12 @@ class Parser
     protected function decodeHigh($text, $charset = 'UTF-8')
     {
         $text = (string) intval($text) === (string) $text ? "&#$text;" : "&$text;";
-        return ($this->mb) ? mb_decode_numericentity($text, $this->cmap, $charset) : html_entity_decode($text, ENT_NOQUOTES, $charset);
+
+        if ($this->mb) {
+            return mb_decode_numericentity($text, $this->cmap, $charset);
+        }
+
+        return html_entity_decode($text, ENT_NOQUOTES, $charset);
     }
 
     /**

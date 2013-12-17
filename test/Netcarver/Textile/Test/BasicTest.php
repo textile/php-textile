@@ -1,6 +1,7 @@
 <?php
 
 namespace Netcarver\Textile\Test;
+
 use Symfony\Component\Yaml\Yaml;
 use Netcarver\Textile\Parser as Textile;
 
@@ -52,13 +53,17 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertEquals($expect, $input, 'In section: '.$name);
-        $this->assertEquals('', implode(', ', array_keys(get_object_vars($textile))), 'Leaking public class properties.');
+        $public = implode(', ', array_keys(get_object_vars($textile)));
+        $this->assertEquals('', $public, 'Leaking public class properties.');
     }
 
     public function testGetVersion()
     {
         $textile = new Textile();
-        $this->assertRegExp('/^[0-9]+\.[0-9]+\.[0-9]+(:?-[A-Za-z0-9.]+)?(?:\+[A-Za-z0-9.]+)?$/', $textile->getVersion());
+        $this->assertRegExp(
+            '/^[0-9]+\.[0-9]+\.[0-9]+(:?-[A-Za-z0-9.]+)?(?:\+[A-Za-z0-9.]+)?$/',
+            $textile->getVersion()
+        );
     }
 
     /**
@@ -81,7 +86,8 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     public function testSetRelativeImagePrefixChaining()
     {
         $textile = new Textile();
-        $this->assertEquals('TestValue', $textile->setRelativeImagePrefix('abc')->setSymbol('test', 'TestValue')->getSymbol('test'));
+        $symbol = $textile->setRelativeImagePrefix('abc')->setSymbol('test', 'TestValue')->getSymbol('test');
+        $this->assertEquals('TestValue', $symbol);
     }
 
     public function testSetGetDimensionlessImage()
@@ -94,7 +100,8 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     public function testEncode()
     {
         $textile = new Textile();
-        $this->assertEquals('&amp; &amp; &#124; &amp;#x0022 &#x0022;', $textile->textileEncode('& &amp; &#124; &#x0022 &#x0022;'));
+        $encoded = $textile->textileEncode('& &amp; &#124; &#x0022 &#x0022;');
+        $this->assertEquals('&amp; &amp; &#124; &amp;#x0022 &#x0022;', $encoded);
     }
 
     public function provider()
