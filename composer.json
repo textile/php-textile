@@ -18,7 +18,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
-        "symfony/yaml": "2.3.*"
+        "symfony/yaml": "2.3.*",
+        "squizlabs/php_codesniffer": "1.5.*"
     },
     "extra": {
         "branch-alias": {
