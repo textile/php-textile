@@ -619,6 +619,10 @@ Pre-formatted content:
     * item 2
 
     * item 3
+
+    p. Paragraph.
+
+    <pre>sdada <a href="link">Link</a> @code@ dadsada</pre>
   expect : |
     <pre>*This* _should_ not be parsed.</pre>
 
@@ -626,6 +630,10 @@ Pre-formatted content:
     * item 2
 
     * item 3</pre>
+
+    <p>Paragraph.</p>
+
+    <pre>sdada &lt;a href=&quot;link&quot;&gt;Link&lt;/a&gt; <code>code</code> dadsada</pre>
 
 Tricky Open Quotes... :
   input :  |
