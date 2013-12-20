@@ -39,9 +39,9 @@ h2. Versioning
 
 Keep backwards compatibility in mind when you do changes to the Textile language, its processing or to the application interface.
 
-h2. Testing
+h2. Testing and code coverage
 
-The project uses "PHPunit":http://phpunit.de for running its unit tests:
+The project uses "PHPunit":http://phpunit.de for running its unit tests. As much of the codebase should be covered with tests as possible. When adding new features, also add tests for them. If you find a bug, create a test that can replicate the said bug and, if possible, fix it so that the tests pass. To run tests, simply run:
 
 bc. $ ./vendor/bin/phpunit
 
