@@ -157,4 +157,20 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     {
         new Textile('InvalidDocumentType');
     }
+
+    public function testInstanceSharingAndFootnoteIndex()
+    {
+        $parser = new Textile();
+        $previous = array('', '<p><strong>strong</strong></p>');
+
+        for ($i = 1; $i <= 100; $i++) {
+            $content = "Note[1]\n\nfn1. Footnote";
+            $parsed[0] = $parser->textileThis($content);
+            $parsed[1] = $parser->textileThis('*strong*');
+            $this->assertTrue($parsed[0] !== $previous[0]);
+            $this->assertEquals($previous[1], $parsed[1]);
+            $previous[0] = $parsed[0];
+            $previous[1] = $parsed[1];
+        }
+    }
 }
