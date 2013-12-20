@@ -3350,7 +3350,7 @@ class Parser
     protected function retrieveURL($m)
     {
         if (!isset($this->refCache[$m['token']])) {
-            return $m['token'];
+            return '';
         }
 
         $url = $this->refCache[$m['token']];
