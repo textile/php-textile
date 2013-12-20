@@ -2769,6 +2769,26 @@ Malformed notelist :
     	<li>An unreferenced note.</li>
     </ol>
 
+Empty notelist :
+  input : |
+    There should be nothing below.
+
+    notelist.
+  expect : |
+    <p>There should be nothing below.</p>
+
+Undefined note :
+  input : |
+    Paragraph with a note[#note] and more, but no definition.
+
+    notelist.
+  expect : |
+    <p>Paragraph with a note<sup><a><span>1</span></a></sup> and more, but no definition.</p>
+
+    <ol>
+    	<li><sup><a>a</a></sup> Undefined Note [#1].</li>
+    </ol>
+
 Issue 72 - spans around foreign chars :
   input  : |
     *W skład zestawu wchodzą*:
