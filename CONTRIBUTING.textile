@@ -1,0 +1,48 @@
+h1. Contributing
+
+h2. License
+
+"BSD 3-Clause":https://raw.github.com/textile/php-textile/blob/master/LICENSE).
+
+h2. Configure Git
+
+For convenience your committer, git user, should be linked to your GitHub account:
+
+bc. $ git config --global user.name "John Doe"
+$ git config --global user.email john.doe@example.com
+
+Make sure to use an email address that is linked to your GitHub account. It can be a throwaway address or you can use GitHub's email protection features. We don't want your emails, but this is to make sure we know who did what. All commits nicely link to their author, instead of them coming from foobar@invalid.tld.
+
+h2. Dependencies
+
+Dependencies are managed using "Composer":http://getcomposer.org. After you have cloned the repository, run composer install:
+
+bc. $ composer install
+
+And update before testing and committing:
+
+bc. $ composer update
+
+h2. Coding standard
+
+The project follows the "PSR-0":https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md and "PSR-2":https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide-meta.md standards. You can use PHP_CodeSniffer to make sure your additions follow them too:
+
+bc. $ ./vendor/bin/phpcs --standard=PSR1,PSR2 src tests
+
+h2. Versioning
+
+"Semantic Versioning":http://semver.org/ and major.minor.path format:
+
+* Only major versions can make incompatible API changes.
+* Minor versions can add backwards-compatible features and changes.
+* Patch versions should only contain fixes.
+
+Keep backwards compatibility in mind when you do changes to the Textile language, its processing or to the application interface.
+
+h2. Testing
+
+The project uses "PHPunit":http://phpunit.de for running its unit tests:
+
+bc. $ ./vendor/bin/phpunit
+
+Tests should pass before the changes can be merged to the codebase. If you create a pull requests that does not pass tests, CI will complain in the pull request thread. To get your changes merged, you should rework the code or tests until everything works smoothly.
