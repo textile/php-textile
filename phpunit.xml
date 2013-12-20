@@ -5,4 +5,12 @@
             <directory>./test/</directory>
         </testsuite>
     </testsuites>
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
+    <filter>
+        <whitelist>
+            <file>classTextile.php</file>
+        </whitelist>
+    </filter>
 </phpunit>
