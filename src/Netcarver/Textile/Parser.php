@@ -2175,7 +2175,7 @@ class Parser
             }
 
             $block = $this->doPBr($block);
-            $block = $whitespace . preg_replace('/<br>/', '<br />', $block);
+            $block = $whitespace. str_replace('<br>', '<br />', $block);
 
             if ($ext && $anonymous_block) {
                 $out[count($out)-1] .= $block;
