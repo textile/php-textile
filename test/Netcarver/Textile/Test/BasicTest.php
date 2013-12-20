@@ -144,6 +144,8 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     public function testDeprecatedEncodingArgument()
     {
         $parser = new Textile();
+        $this->assertEquals('content', @$parser->textileThis('content', false, true));
+        $this->assertEquals('content', $parser->textileEncode('content'));
         $parser->textileThis('content', false, true);
     }
 
