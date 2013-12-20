@@ -586,6 +586,13 @@ Notextile :
 
     But "this(tm)" should be whilst, yet again, >==this(tm)==< should _not_!
 
+    notextile. * item 1
+    * item 2
+
+    notextile.. *long*
+
+    *block*
+
   expect : |
     <p>*no* <b>textile</b></p>
 
@@ -596,6 +603,29 @@ Notextile :
     </p>
 
     <p>But &#8220;this&#8482;&#8221; should be whilst, yet again, &gt;this(tm)&lt; should <em>not</em>!</p>
+
+    * item 1
+    * item 2
+
+    *long*
+
+    *block*
+
+Pre-formatted content:
+  input  : |
+    pre. *This* _should_ not be parsed.
+
+    pre.. * item 1
+    * item 2
+
+    * item 3
+  expect : |
+    <pre>*This* _should_ not be parsed.</pre>
+
+    <pre>* item 1
+    * item 2
+
+    * item 3</pre>
 
 Tricky Open Quotes... :
   input :  |
@@ -3308,6 +3338,8 @@ Restricted mode security filtering mode with default options :
 
     "test":link1
     [link1]http://example.com/<script>window.alert("HelloWorld!");</script>
+
+    <!-- <a href="#">HTTML comment</a> -->
   expect : |
     <p>!10&#215;10.gif!</p>
 
@@ -3322,6 +3354,8 @@ Restricted mode security filtering mode with default options :
     <p>!http://example.com/&lt;script&gt;window.alert(&#8220;Hello World!&#8221;);&lt;/script&gt;.png!</p>
 
     <p><a href="http://example.com/%26lt%3Bscript%26gt%3Bwindow.alert%28%22HelloWorld%21%22%29%3B%26lt%3B/script%26gt%3B" rel="nofollow">test</a></p>
+
+    <p>&lt;!&#8212; &lt;a href=&#8221;#&#8221;&gt;<span class="caps">HTTML</span> comment&lt;/a&gt; &#8212;&gt;</p>
 
 Token references :
   input : |

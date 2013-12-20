@@ -4,6 +4,7 @@ namespace Netcarver\Textile\Test;
 
 use Symfony\Component\Yaml\Yaml;
 use Netcarver\Textile\Parser as Textile;
+use Netcarver\Textile\Tag;
 
 class BasicTest extends \PHPUnit_Framework_TestCase
 {
@@ -128,5 +129,21 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         }
 
         return $out;
+    }
+
+    public function testTagAttributesGenerator()
+    {
+        $attributes = new Tag(null, array('name' => 'value'));
+        $this->assertEquals(' name="value"', (string) $attributes);
+    }
+
+    /**
+     * @expectedException PHPUnit_Framework_Error
+     */
+
+    public function testDeprecatedEncodingArgument()
+    {
+        $parser = new Textile();
+        $parser->textileThis('content', false, true);
     }
 }
