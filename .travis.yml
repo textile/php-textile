@@ -7,3 +7,5 @@ before_script:
 script:
   - ./vendor/bin/phpcs --standard=PSR1,PSR2 src test
   - ./vendor/bin/phpunit
+after_script:
+  - ./vendor/bin/coveralls -v
