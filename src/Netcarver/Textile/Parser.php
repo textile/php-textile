@@ -3449,9 +3449,11 @@ class Parser
         list(, $align, $atts, $url, $title, $href) = array_pad($m, 6, null);
 
         $alignments = array(
-            '<' => 'left',
-            '=' => 'center',
-            '>' => 'right',
+            '<'    => 'left',
+            '='    => 'center',
+            '>'    => 'right',
+            '&lt;' => 'left',
+            '&gt;' => 'right',
         );
 
         if (isset($alignments[$align])) {

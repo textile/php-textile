@@ -4,6 +4,7 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 3.5.5 - upcoming
 
+* Fix rendering of left and right image alignment in non-lite restricted mode (closes "#132":https://github.com/textile/php-textile/issues/132).
 * Fix wrong triggered error type when using the deprecated $encode option of Parser::textileThis().
 * Throws an exception if Parser::__construct() is given invalid document type, instead of eating it silently and returning document using the default content-type you weren't wishing for. Prevents issues where you want HTML5, but silently got XHTML due to typo or an issue in application design.
 

@@ -1,0 +1,48 @@
+adaptor: textile
+options:
+  showfailures: true
+  showpasses: true
+  showdiffs: true
+  debug: false
+  format: html
+  adaptor_options:
+    restricted: false
+
+Alignment is accepted in restricted mode when doctype is set to HTML5 :
+  method : textileRestricted
+  doctype : html5
+  arguments :
+    - lite: false
+    - noimage: false
+  input  : |
+    !=10x10.gif!
+
+    !>10x10.gif!
+
+    !<10x10.gif!
+
+  expect : |
+    <p><img alt="" class="align-center" height="10" src="10x10.gif" width="10" /></p>
+
+    <p><img alt="" class="align-right" height="10" src="10x10.gif" width="10" /></p>
+
+    <p><img alt="" class="align-left" height="10" src="10x10.gif" width="10" /></p>
+
+In XHTML same generates align attribute :
+  method : textileRestricted
+  arguments :
+    - lite: false
+    - noimage: false
+  input  : |
+    !=10x10.gif!
+
+    !>10x10.gif!
+
+    !<10x10.gif!
+
+  expect : |
+    <p><img align="center" alt="" height="10" src="10x10.gif" width="10" /></p>
+
+    <p><img align="right" alt="" height="10" src="10x10.gif" width="10" /></p>
+
+    <p><img align="left" alt="" height="10" src="10x10.gif" width="10" /></p>
