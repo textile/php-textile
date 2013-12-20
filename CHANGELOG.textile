@@ -5,6 +5,7 @@ Here's a summary of changes in each release. The list doesn't include some small
 h2. Version 3.5.5 - upcoming
 
 * Fix wrong triggered error type when using the deprecated $encode option of Parser::textileThis().
+* Throws an exception if Parser::__construct() is given invalid document type, instead of eating it silently and returning document using the default content-type you weren't wishing for. Prevents issues where you want HTML5, but silently got XHTML due to typo or an issue in application design.
 
 h2. "Version 3.5.4 - 2013/11/06":https://github.com/textile/php-textile/releases/tag/v3.5.4
 

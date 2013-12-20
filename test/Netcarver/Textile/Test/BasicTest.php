@@ -146,4 +146,13 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         $parser = new Textile();
         $parser->textileThis('content', false, true);
     }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+
+    public function testInvalidDocumentType()
+    {
+        new Textile('InvalidDocumentType');
+    }
 }

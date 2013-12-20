@@ -868,19 +868,20 @@ class Parser
      * echo $parser->textileThis('HTML(HyperText Markup Language)");
      * </code>
      *
-     * @param string $doctype The output document type, either 'xhtml' or 'html5'
+     * @param  string $doctype The output document type, either 'xhtml' or 'html5'
+     * @throws \InvalidArgumentException
      * @api
      */
 
     public function __construct($doctype = 'xhtml')
     {
-        $doctype_whitelist = array(
+        $doctypes = array(
             'xhtml',
             'html5',
         );
-        $doctype = strtolower($doctype);
-        if (!in_array($doctype, $doctype_whitelist)) {
-            $this->doctype = 'xhtml';
+
+        if (!in_array($doctype, $doctypes, true)) {
+            throw new \InvalidArgumentException('Invalid doctype given.');
         } else {
             $this->doctype = $doctype;
         }
