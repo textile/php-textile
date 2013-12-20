@@ -1081,6 +1081,8 @@ Links :
 
     "link text(with title)":http://example.com/
 
+    "(this is not a title)":http://example.com/
+
     Here is "a link":0, and "another link":0 to a site.
     [0]http://thresholdstate.com/
 
@@ -1149,6 +1151,8 @@ Links :
     <p><a href="/example">link text</a></p>
 
     <p><a href="http://example.com/" title="with title">link text</a></p>
+
+    <p><a href="http://example.com/">(this is not a title)</a></p>
 
     <p>Here is <a href="http://thresholdstate.com/">a link</a>, and <a href="http://thresholdstate.com/">another link</a> to a site.</p>
 
