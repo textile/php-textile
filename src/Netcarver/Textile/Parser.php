@@ -2153,7 +2153,7 @@ class Parser
                     $block .= $c1;
                 }
             } else {
-                if ($ext || !preg_match('/^ /', $block)) {
+                if ($ext || strpos($block, ' ') !== 0) {
                     list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(
                         0,
                         $tag,
