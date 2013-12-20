@@ -1,18 +1,18 @@
-h1. Textile for PHP
+h1. PHP-Textile
 
 "Downloads":https://github.com/textile/php-textile/releases | "Textile reference":http://txstyle.org/article/43/a-short-introduction | "Live editor":http://txstyle.org/ | "Packagist":https://packagist.org/packages/netcarver/textile
 
 !https://travis-ci.org/textile/php-textile.png?branch=2.5!:https://travis-ci.org/textile/php-textile
 
-*Textile is a humane web text generator*. It takes lightweight, readable, plaintext-like markup language and converts it into well formed HTML. This repository contains a Textile parser for PHP.
+PHP-Textile is a modern Textile markup language parser for PHP. Textile is a humane web text generator that takes lightweight, readable, plaintext-like markup language and converts it into well formed HTML.
 
-This 2.5 branch holds a feature-frozen single-file version of Textile representing the v2.5.x releases. It is not PSR-0 compliant, but attempts to follow PSR-1 and PSR-2 in other respects. If you want the latest features use the master branch and 3.x releases, as this branch was feature frozen on 2013-11-06 and only receives security updates.
+This 2.5 branch holds a feature-frozen single-file version of PHP-Textile representing the v2.5.x releases. It is not PSR-0 compliant, but attempts to follow PSR-1 and PSR-2 in other respects. If you want the latest features use the master branch and 3.x releases, as this branch was feature frozen on 2013-11-06 and only receives security updates.
 
 h2. Installing
 
 h3. Using Composer
 
-The recommended way to install Textile is via "Composer":https://getcomposer.org/ package manager. Navigate to your project directory, and run the command:
+The recommended way to install PHP-Textile is via "Composer":https://getcomposer.org/ package manager. Navigate to your project directory, and run the command:
 
 bc. $ composer require "netcarver/textile 2.5.*"
 
@@ -22,20 +22,20 @@ bc. require './vendor/autoload.php';
 
 h3. Manually
 
-The only file that is necessary for the correct operation of Textile 2.* is @classTextile.php@ from the root directory. "Grab a copy of the latest Textile v2.5.x release":https://github.com/textile/php-textile/releases, extract the archive and include the @classTextile.php@ file in your application:
+The only file that is necessary for the correct operation of PHP-Textile 2.x is @classTextile.php@ from the root directory. "Grab a copy of the latest Textile v2.5.x release":https://github.com/textile/php-textile/releases, extract the archive and include the @classTextile.php@ file in your application:
 
 bc. include "classTextile.php";
 
 h2. Usage
 
-Textile parser can be accessed through the @Textile@ class. The class is highly configurable, and actual parsing happens with the @textileThis@ and @textileRestricted@ methods:
+PHP-Textile parser can be accessed through the @Textile@ class. The class is highly configurable, and actual parsing happens with the @textileThis@ and @textileRestricted@ methods:
 
 bc. $parser = new Textile();
 echo $parser->textileThis('h1. Hello World!');
 
 h3. Parsing untrusted input
 
-If you are using Textile to format user-supplied input, blog comments for instance, use the @textileRestricted()@ method:
+If you are using PHP-Textile to format user-supplied input, blog comments for instance, use the @textileRestricted()@ method:
 
 bc. $parser = new Textile();
 echo $parser->textileRestricted('!bad/image/not/allowed.svg!');
@@ -44,7 +44,7 @@ This method doesn't allow the more powerful formatting options such as inline st
 
 h3. Doctypes
 
-Currently, PHP Textile can target either XHTML or HTML5 output with XHTML being the default for backward compatibility. The targeted doctype can be changed through the constructor:
+Currently, PHP-Textile can target either XHTML or HTML5 output with XHTML being the default for backward compatibility. The targeted doctype can be changed through the constructor:
 
 bc. $parser = new Textile('html5');
 echo $parser->textileThis('HTML(HyperText Markup Language)");
@@ -54,8 +54,6 @@ In HTML5 mode, you'll get @abbr@ instead of @acronym@ and if you use alignment m
 h3. Setting alternate glyphs
 
 Textile's typographic substitutions can be overridden with the @setSymbol@ method. If you need to setup Textile to do non-standard substitutions, call @setSymbol@ before you parse the input with @textileThis@ or @textileRestricted@.
-
-If you wanted to override the symbol output for the one-half typographic substitution from the standard @&#189;@ to something using the fraction-slash you could do it like this...
 
 bc. $parser = new Textile();
 $parser->setSymbol('half', '1&#8260;2');
