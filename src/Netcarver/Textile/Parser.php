@@ -1124,7 +1124,7 @@ class Parser
         if ($encode) {
             trigger_error(
                 'Use of the $encode argument is discouraged. Use Parser::textileEncode() instead.',
-                E_DEPRECATED
+                E_USER_DEPRECATED
             );
             return $this->textileEncode($text);
         }
