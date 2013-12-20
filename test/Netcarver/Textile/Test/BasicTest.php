@@ -173,4 +173,10 @@ class BasicTest extends \PHPUnit_Framework_TestCase
             $previous[1] = $parsed[1];
         }
     }
+
+    public function testLineSpaceEscaping()
+    {
+        $parser = new Textile();
+        $this->assertEquals(' <strong>line</strong>', $parser->textileThis(' *line*'));
+    }
 }
