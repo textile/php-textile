@@ -2,18 +2,11 @@ h1. Textile for PHP
 
 "Downloads":https://github.com/textile/php-textile/releases | "Textile reference":http://txstyle.org/article/43/a-short-introduction | "Live editor":http://txstyle.org/ | "Packagist":https://packagist.org/packages/netcarver/textile
 
+!https://travis-ci.org/textile/php-textile.png?branch=2.5!:https://travis-ci.org/textile/php-textile
+
 *Textile is a humane web text generator*. It takes lightweight, readable, plaintext-like markup language and converts it into well formed HTML. This repository contains a Textile parser for PHP.
 
-h2. Branches
-
-|^=. "master":https://github.com/textile/php-textile/tree/master | Has a multi-file, namespaced, "PSR-0/1/2":https://github.com/php-fig/fig-standards/tree/master/accepted compliant version of Textile. Releases from master are tagged v3.5.x !https://travis-ci.org/textile/php-textile.png?branch=master!:https://travis-ci.org/textile/php-textile |^=. _Requires PHP5.3+_ |
-|^=. "2.5":https://github.com/textile/php-textile/tree/2.5       | Holds a feature-frozen single-file version of Textile representing the v2.5.x releases. It is *not* PSR-0 compliant but attempts to follow PSR-1 and PSR-2 in other respects.               !https://travis-ci.org/textile/php-textile.png?branch=2.5!:https://travis-ci.org/textile/php-textile    |^=. _Requires PHP5.0+_ |
-
-*This is the README for the 2.5 branch.*
-
-If you want the latest features use the master branch as this branch was feature frozen on 2013-11-06 and only receives security updates.
-
-From time to time other branches may be present in the repository. These represent transient development or hotfix branches and should not be used for live sites/projects.
+This 2.5 branch holds a feature-frozen single-file version of Textile representing the v2.5.x releases. It is not PSR-0 compliant, but attempts to follow PSR-1 and PSR-2 in other respects. If you want the latest features use the master branch and 3.x releases, as this branch was feature frozen on 2013-11-06 and only receives security updates.
 
 h2. Installing
 
