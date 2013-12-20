@@ -72,15 +72,6 @@ bc. $parser = new \Netcarver\Textile\Parser();
 $parser->setRelativeImagePrefix('user/uploads');
 $parser->textileThis('Hello World!');
 
-h2. Running tests
-
-Included unit tests can be run with PHPunit:
-
-bc. $ composer install --dev
-$ ./vendor/bin/phpunit
-
-Running tests requires PHP 5.3.3 and PCRE with PCRE_UTF8.
-
 h2. Getting in contact
 
 The PHP-Textile project welcomes constructive input and bug reports from users. You can contact us in several ways:
