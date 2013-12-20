@@ -6,15 +6,6 @@ h1. PHP-Textile
 
 PHP-Textile is a modern Textile markup language parser for PHP. Textile is a humane web text generator that takes lightweight, readable, plaintext-like markup language and converts it into well formed HTML.
 
-h2. Branches
-
-|^=. "master":https://github.com/textile/php-textile/tree/master | Has a multi-file, namespaced, "PSR-0/1/2":https://github.com/php-fig/fig-standards/tree/master/accepted compliant version of PHP-Textile. Releases from master are tagged v3.5.x  |^=. _Requires PHP5.3+_ |
-|^=. "2.5":https://github.com/textile/php-textile/tree/2.5 | Holds a feature-frozen single-file version of PHP-Textile representing the v2.5.x releases. It is *not* PSR-0 compliant but attempts to follow PSR-1 and PSR-2 in other respects. |^=. _Requires PHP5.0+_ |
-
-This branch is the active development branch and should be used whenever possible as the 2.5 branch was feature frozen at v2.5.4 and only receives critical security updates.
-
-From time to time other branches may be present in the repository. These represent transient development or hotfix branches and should not be used in production.
-
 h2. Installing
 
 h3. Using Composer
