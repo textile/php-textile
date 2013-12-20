@@ -20,9 +20,11 @@ class BasicTest extends \PHPUnit_Framework_TestCase
             $textile = new Textile();
         }
 
-        if (isset($test['setup'][0])) {
-            foreach ($test['setup'][0] as $method => $value) {
-                $textile->$method($value);
+        if (isset($test['setup'])) {
+            foreach ($test['setup'] as $setup) {
+                foreach ($setup as $method => $value) {
+                    $textile->$method($value);
+                }
             }
         }
 
@@ -32,10 +34,14 @@ class BasicTest extends \PHPUnit_Framework_TestCase
             $method = 'textileThis';
         }
 
-        if (isset($test['arguments'][0])) {
-            $args = array_values($test['arguments'][0]);
-        } else {
-            $args = array();
+        $args = array();
+
+        if (isset($test['arguments'])) {
+            foreach ($test['arguments'] as $argument) {
+                foreach ($argument as $value) {
+                    $args[] = $value;
+                }
+            }
         }
 
         $expect = rtrim($test['expect']);
