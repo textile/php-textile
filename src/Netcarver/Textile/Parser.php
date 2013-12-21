@@ -3236,13 +3236,6 @@ class Parser
         $text = trim($text);
         $title = $this->encodeHTML($title);
 
-        // If the text was in parenthesis and there was no title, then the regex
-        // will have an empty $text and a non-empty $title.
-        if (empty($text) && !empty($title)) {
-            $text  = "($title)";
-            $title = '';
-        }
-
         if (!$this->noimage) {
             $text = $this->images($text);
         }
