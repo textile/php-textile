@@ -900,6 +900,33 @@ HTML Comments :
 
     <pre><code>&lt;!-- Here is a comment block in a code block. --&gt;</code></pre>
 
+HTML Comments (restricted):
+  method : textileRestricted
+  input:  |
+    Here is some text with a <!-- Commented out[1] --> block.
+
+    <!-- Here is a single <span>line</span> comment block -->
+
+    <!-- Here is a whole
+    multiline
+    <span>HTML</span>
+    Comment
+    -->
+
+    bc. <!-- Here is a comment block in a code block. -->
+  expect: |
+    <p>Here is some text with a &lt;!&#8212; Commented out[1] &#8212;&gt; block.</p>
+
+    <p>&lt;!&#8212; Here is a single &lt;span&gt;line&lt;/span&gt; comment block &#8212;&gt;</p>
+
+    <p>&lt;!&#8212; Here is a whole<br />
+    multiline<br />
+    &lt;span&gt;<span class="caps">HTML</span>&lt;/span&gt;<br />
+    Comment<br />
+    &#8212;&gt;</p>
+
+    <p>bc. &lt;!&#8212; Here is a comment block in a code block. &#8212;&gt;</p>
+
 URLs as non-links :
   notes  : Straight URL text sequences should not be converted to a hyperlink.
   input  : |
