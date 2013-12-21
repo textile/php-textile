@@ -1249,7 +1249,7 @@ More Restricted links:
 
     <p>Link to &#8220;sqrl&#8221;:sqrl://testit.php?testfilename=textile/basic.</p>
 
-Unicode Links :
+Unicode Links (restricted) :
   method : textileRestricted
   input  : |
     "Übermensch":https://de.wikipedia.org/wiki/Übermensch
