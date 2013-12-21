@@ -1084,3 +1084,220 @@ Complex links :
 
     <p>Here is <sup><a href="url" lang="de" title="title">&#8220;A def[inition]&#8221;</a></sup> if you can believe it!</p>
 
+Restricted Links :
+  method : textileRestricted
+  input  : |
+    "link text":http://example.com
+
+    "link text":http://example.com.
+
+    "link text":http://example.com,
+
+    "link text":http://example.com?
+
+    "link text":http://example.com:
+
+    "link text":http://example.com:80
+
+    "link text":http://example.com;
+
+    "link text":http://example.com|
+
+    "link text":http://example.com*
+
+    "link text":http://example.com/
+
+    "link text":http://example.com/.
+
+    "link text":http://example.com/,
+
+    "link text":http://example.com/?
+
+    "link text":http://example.com/:
+
+    "link text":http://example.com/:80
+
+    "link text":http://example.com/;
+
+    "link text":http://example.com/|
+
+    "link text":http://example.com/*
+
+    ("link text":http://example.com)
+
+    ("link text":http://example.com/)
+
+    (Try "this link":http://example.com/)
+
+    ("link text":http://example.com/ go go go!)
+
+    "link text":/example
+
+    "link text(with title)":http://example.com/
+
+    "(this is not a title)":http://example.com/
+
+    Here is "a link":0, and "another link":0 to a site.
+    [0]http://thresholdstate.com/
+
+    Here is "a link":ts, and "another link":ts to the same site.
+    [ts]http://thresholdstate.com/
+
+    "link text(with title)":https://example.com/
+
+    "link text(with title)":ftp://example.com/
+
+    "link text(with title)":mailto:contact@example.com
+
+    "(class#id)[de-de]$(title)":http://textpattern.com
+
+    "(class#id)[en-gb]{text-transform:uppercase}Try this link(Link title)":http://textile.sitemonks.com
+
+    "(linkclass#linkid)[de-de]!(imgclass#imgid)imgurl(img/link text)!(Link Title)":linkurl
+
+    "(myclass) (just in case you were wondering)":http://slashdot.org/
+
+  expect : |
+    <p><a href="http://example.com" rel="nofollow">link text</a></p>
+
+    <p><a href="http://example.com" rel="nofollow">link text</a>.</p>
+
+    <p><a href="http://example.com" rel="nofollow">link text</a>,</p>
+
+    <p><a href="http://example.com" rel="nofollow">link text</a>?</p>
+
+    <p><a href="http://example.com" rel="nofollow">link text</a>:</p>
+
+    <p><a href="http://example.com:80" rel="nofollow">link text</a></p>
+
+    <p><a href="http://example.com" rel="nofollow">link text</a>;</p>
+
+    <p><a href="http://example.com" rel="nofollow">link text</a>|</p>
+
+    <p><a href="http://example.com" rel="nofollow">link text</a>*</p>
+
+    <p><a href="http://example.com/" rel="nofollow">link text</a></p>
+
+    <p><a href="http://example.com/" rel="nofollow">link text</a>.</p>
+
+    <p><a href="http://example.com/" rel="nofollow">link text</a>,</p>
+
+    <p><a href="http://example.com/" rel="nofollow">link text</a>?</p>
+
+    <p><a href="http://example.com/" rel="nofollow">link text</a>:</p>
+
+    <p><a href="http://example.com/%3A80" rel="nofollow">link text</a></p>
+
+    <p><a href="http://example.com/" rel="nofollow">link text</a>;</p>
+
+    <p><a href="http://example.com/" rel="nofollow">link text</a>|</p>
+
+    <p><a href="http://example.com/" rel="nofollow">link text</a>*</p>
+
+    <p>(<a href="http://example.com" rel="nofollow">link text</a>)</p>
+
+    <p>(<a href="http://example.com/" rel="nofollow">link text</a>)</p>
+
+    <p>(Try <a href="http://example.com/" rel="nofollow">this link</a>)</p>
+
+    <p>(<a href="http://example.com/" rel="nofollow">link text</a> go go go!)</p>
+
+    <p><a href="/example" rel="nofollow">link text</a></p>
+
+    <p><a href="http://example.com/" rel="nofollow" title="with title">link text</a></p>
+
+    <p><a href="http://example.com/" rel="nofollow">(this is not a title)</a></p>
+
+    <p>Here is <a href="http://thresholdstate.com/" rel="nofollow">a link</a>, and <a href="http://thresholdstate.com/" rel="nofollow">another link</a> to a site.</p>
+
+    <p>Here is <a href="http://thresholdstate.com/" rel="nofollow">a link</a>, and <a href="http://thresholdstate.com/" rel="nofollow">another link</a> to the same site.</p>
+
+    <p><a href="https://example.com/" rel="nofollow" title="with title">link text</a></p>
+
+    <p><a href="ftp://example.com/" rel="nofollow" title="with title">link text</a></p>
+
+    <p><a href="mailto:contact@example.com" rel="nofollow" title="with title">link text</a></p>
+
+    <p><a href="http://textpattern.com" lang="de-de" rel="nofollow" title="title">textpattern.com</a></p>
+
+    <p><a href="http://textile.sitemonks.com" lang="en-gb" rel="nofollow" title="Link title">Try this link</a></p>
+
+    <p><a href="linkurl" lang="de-de" rel="nofollow" title="Link Title">!(imgclass#imgid)imgurl(img/link text)!</a></p>
+
+    <p><a href="http://slashdot.org/" rel="nofollow">(just in case you were wondering)</a></p>
+
+More Restricted links:
+  method : textileRestricted
+  input  : |
+    Relative link to "$":testit.php?testfilename=textile/basic.
+
+    Relative link to "$":/testit.php?testfilename=textile/basic.
+
+    Relative link to "$":http://testit.php?testfilename=textile/basic.
+
+    Relative link to "$":sqrl://testit.php?testfilename=textile/basic.
+
+    Link to "sqrl":sqrl://testit.php?testfilename=textile/basic.
+  expect : |
+    <p>Relative link to <a href="testit.php?testfilename=textile/basic" rel="nofollow">testit.php?testfilename=textile/basic</a>.</p>
+
+    <p>Relative link to <a href="/testit.php?testfilename=textile/basic" rel="nofollow">/testit.php?testfilename=textile/basic</a>.</p>
+
+    <p>Relative link to <a href="http://testit.php?testfilename=textile/basic" rel="nofollow">testit.php?testfilename=textile/basic</a>.</p>
+
+    <p>Relative link to &#8220;$&#8221;:sqrl://testit.php?testfilename=textile/basic.</p>
+
+    <p>Link to &#8220;sqrl&#8221;:sqrl://testit.php?testfilename=textile/basic.</p>
+
+Unicode Links :
+  method : textileRestricted
+  input  : |
+    "Übermensch":https://de.wikipedia.org/wiki/Übermensch
+
+    "$":https://de.wikipedia.org/wiki/Übermensch
+
+    "福島駅":link5 this is a test -- no trailing slash.
+
+    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash":link3
+
+    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash":https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ
+
+    "福島駅":link6 this is a test -- with a trailing slash.
+
+    "福島駅":http://ja.wikipedia.org/wiki/福島駅_(大阪府), what do you think?
+
+    "福島駅":http://ja.wikipedia.org/wiki/福島駅_(大阪府)/?q[]=x.
+
+    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash":link4
+
+    "äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash":https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ/
+
+    "Google":link1 or "secure google":link2
+    [link1]http://google.com
+    [link2]https://google.com
+    [link3]https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ
+    [link4]https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ/
+    [link5]http://ja.wikipedia.org/wiki/福島駅_(大阪府)
+    [link6]http://ja.wikipedia.org/wiki/福島駅_(大阪府)/
+  expect : |
+    <p><a href="https://de.wikipedia.org/wiki/%C3%9Cbermensch" rel="nofollow">Übermensch</a></p>
+
+    <p><a href="https://de.wikipedia.org/wiki/%C3%9Cbermensch" rel="nofollow">de.wikipedia.org/wiki/Übermensch</a></p>
+
+    <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_%28%E5%A4%A7%E9%98%AA%E5%BA%9C%29" rel="nofollow">福島駅</a> this is a test &#8212; no trailing slash.</p>
+
+    <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F" rel="nofollow">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash</a></p>
+
+    <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F" rel="nofollow">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ without trailing slash</a></p>
+
+    <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_%28%E5%A4%A7%E9%98%AA%E5%BA%9C%29/" rel="nofollow">福島駅</a> this is a test &#8212; with a trailing slash.</p>
+
+    <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_%28%E5%A4%A7%E9%98%AA%E5%BA%9C%29" rel="nofollow">福島駅</a>, what do you think?</p>
+
+    <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_%28%E5%A4%A7%E9%98%AA%E5%BA%9C%29/?q[]=x" rel="nofollow">福島駅</a>.</p>
+
+    <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F/" rel="nofollow">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash</a></p>
+
+    <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F/" rel="nofollow">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash</a></p>
+
+    <p><a href="http://google.com" rel="nofollow">Google</a> or <a href="https://google.com" rel="nofollow">secure google</a></p>
