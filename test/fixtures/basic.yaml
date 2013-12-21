@@ -2993,6 +2993,54 @@ Classes/ids/langs on phrase modifiers :
 
     <p><code>(c#id)[Whatever]My text</code></p>
 
+Classes/ids/langs on phrase modifiers (restricted) :
+  doctype : html5
+  method : textileRestricted
+  input:  |
+    ~(c#id)[en]My text~
+
+    %(c#id)[En]My text%
+
+    ^(c#id)[EN]My text^
+
+    ??(c#id)[en-gb]My text??
+
+    *(c#id)[en-GB]My text*
+
+    **(c#id)[en-Gb]My text**
+
+    -(c#id)[ENG]My text-
+
+    +(c#id)[eng]My text+
+
+    _(c#id)[kjwwef89]My text_
+
+    __(c#id)[12]My text__
+
+    @(c#id)[Whatever]My text@
+  expect: |
+    <p><sub lang="en">My text</sub></p>
+
+    <p><span lang="En">My text</span></p>
+
+    <p><sup lang="EN">My text</sup></p>
+
+    <p><cite lang="en-gb">My text</cite></p>
+
+    <p><strong lang="en-GB">My text</strong></p>
+
+    <p><b lang="en-Gb">My text</b></p>
+
+    <p><del>My text</del></p>
+
+    <p><ins>My text</ins></p>
+
+    <p><em>My text</em></p>
+
+    <p><i>My text</i></p>
+
+    <p>@(c#id)[Whatever]My text@</p>
+
 Github Issue 50 (en-dash & strike) :
   input:  |
     fjfhfjhf
