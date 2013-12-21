@@ -3604,29 +3604,13 @@ class Parser
      * @return string Processed input
      */
 
-    protected function doSpecial($text, $start, $end, $method = 'fSpecial')
+    protected function doSpecial($text, $start, $end, $method)
     {
         return preg_replace_callback(
             '/(?P<before>^|\s|[|[({>])'.preg_quote($start, '/').'(?P<content>.*?)'.preg_quote($end, '/').'/ms',
             array(&$this, $method),
             $text
         );
-    }
-
-    /**
-     * Formats blocks that should display HTML as text.
-     *
-     * Convert special characters to HTML entities. This
-     * is the default formatted used by doSpecial method.
-     *
-     * @param  array $m Options
-     * @return string Formatted input
-     * @see    Parser::doSpecial()
-     */
-
-    protected function fSpecial($m)
-    {
-        return $m['before'].$this->shelve($this->encodeHTML($m['content']));
     }
 
     /**
