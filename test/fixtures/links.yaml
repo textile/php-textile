@@ -427,6 +427,8 @@ Links :
 
 Quoted double-quote in links:
   input  : |
+    The use of the character ""' in textile.
+
     "The use of the character " in textile":help.html..!
 
     ""The use of the character " in textile"":help.html..!
@@ -471,6 +473,8 @@ Quoted double-quote in links:
 
     "'The use of the character " in textile'":help.html..!
   expect : |
+    <p>The use of the character &#8220;&#8221;&#8217; in textile.</p>
+
     <p><a href="help.html">The use of the character &#8220; in textile</a>..!</p>
 
     <p><a href="help.html">&#8220;The use of the character &#8220; in textile&#8221;</a>..!</p>
