@@ -3378,10 +3378,6 @@ class Parser
             }
         }
 
-        if ($this->restricted && !empty($parts['scheme']) && !in_array($parts['scheme'], $this->url_schemes)) {
-            return '#';
-        }
-
         return $url;
     }
 
