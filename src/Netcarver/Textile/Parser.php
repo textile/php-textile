@@ -436,7 +436,7 @@ class Parser
     protected $s;
 
     /**
-     * Pattern that matches a class, style, language and horisontal alignment attributes.
+     * Pattern that matches a class, style, language and horizontal alignment attributes.
      *
      * @var string
      */
