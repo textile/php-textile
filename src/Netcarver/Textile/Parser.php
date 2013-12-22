@@ -2915,11 +2915,11 @@ class Parser
 
     protected function markStartOfLinks($text)
     {
-        // Slice text on '":' boundaries. These always occur in inline
+        // Slice text on '":<not space>' boundaries. These always occur in inline
         // links between the link text and the url part and are much more
         // infrequent than '"' characters so we have less possible links
         // to process.
-        $slices = preg_split('/":/', $text);
+        $slices = preg_split('/":(?=\S)/', $text);
 
         try {
             if (count($slices) > 1) {
@@ -3054,11 +3054,6 @@ class Parser
         $inner = $m['inner'];
         $url   = $m['urlx'];
         $m = array();
-
-        // Reject invalid urls such as "linktext": which has no url part.
-        if ('' === $url) {
-            return str_replace($this->uid.'linkStartMarker:', '', $in);
-        }
 
         // Split inner into $atts, $text and $title..
         preg_match(
