@@ -1,0 +1,82 @@
+adaptor: textile
+options:
+  showfailures: true
+  showpasses: true
+  showdiffs: true
+  debug: false
+  format: html
+  adaptor_options:
+    restricted: false
+
+Urlencoded styles:
+  doctype : html5
+  input  : |
+    p{color: red}. 0.1
+
+    p{color: red;}. 0.2
+
+    p{color: red;;;;;;;;;;;;;;; : ;;;;;;;;;;;;;;;;;;;;;; ;;;;;;;;;; ;;  }. 0.3
+
+    p{color: red;background-color:yellow}. 0.4
+
+    p{%63%6F%6C%6F%72%3A%20%72%65%64}. 1.0
+
+    p{%63%6F%6C%6F%72%3A%20%72%65%64;background-color:yellow;;;}. 1.1
+
+    p{%2563%256F%256C%256F%2572%253A%2520%2572%2565%2564}. 2
+
+    p{%252563%25256F%25256C%25256F%252572%25253A%252520%252572%252565%252564}. 3
+
+    p{%25252563%2525256F%2525256C%2525256F%25252572%2525253A%25252520%25252572%25252565%25252564}. 4
+
+    p{%2525252563%252525256F%252525256C%252525256F%2525252572%252525253A%2525252520%2525252572%2525252565%2525252564}. 5
+
+  expect : |
+    <p style="color: red;">0.1</p>
+
+    <p style="color: red;">0.2</p>
+
+    <p style="color: red;">0.3</p>
+
+    <p style="background-color:yellow;color: red;">0.4</p>
+
+    <p style="color: red;">1.0</p>
+
+    <p style="background-color:yellow;color: red;">1.1</p>
+
+    <p>2</p>
+
+    <p>3</p>
+
+    <p>4</p>
+
+    <p>5</p>
+
+Urlencoded styles (restricted):
+  method : textileRestricted
+  doctype : html5
+  input  : |
+    p{color: red}. 0
+
+    p{%63%6F%6C%6F%72%3A%20%72%65%64}. 1
+
+    p{%2563%256F%256C%256F%2572%253A%2520%2572%2565%2564}. 2
+
+    p{%252563%25256F%25256C%25256F%252572%25253A%252520%252572%252565%252564}. 3
+
+    p{%25252563%2525256F%2525256C%2525256F%25252572%2525253A%25252520%25252572%25252565%25252564}. 4
+
+    p{%2525252563%252525256F%252525256C%252525256F%2525252572%252525253A%2525252520%2525252572%2525252565%2525252564}. 5
+
+  expect : |
+    <p>0</p>
+
+    <p>1</p>
+
+    <p>2</p>
+
+    <p>3</p>
+
+    <p>4</p>
+
+    <p>5</p>

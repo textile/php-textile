@@ -1499,7 +1499,9 @@ class Parser
         }
 
         if (preg_match("/\{([^}]*)\}/", $matched, $sty)) {
-            $style[] = rtrim($sty[1], ';');
+            if ($sty[1] = $this->cleanAttribs($sty[1])) {
+                $style[] = rtrim($sty[1], ';');
+            }
             $matched = str_replace($sty[0], '', $matched);
         }
 
@@ -1578,25 +1580,6 @@ class Parser
             $class = trim($class . ' ' . $autoclass);
         }
 
-        $o = '';
-        if ($style) {
-            $tmps = array();
-            foreach ($style as $s) {
-                $parts = explode(';', $s);
-                foreach ($parts as $p) {
-                    $tmps[] = $p;
-                }
-            }
-
-            sort($tmps);
-            foreach ($tmps as $p) {
-                if (!empty($p)) {
-                    $o .= $p.';';
-                }
-            }
-            $style = trim(str_replace(array("\n", ';;'), array('', ';'), $o));
-        }
-
         $o = array();
         if ($class) {
             $o['class'] = $this->cleanAttribs($class);
@@ -1623,7 +1606,26 @@ class Parser
         }
 
         if ($style) {
-            $o['style'] = $this->cleanAttribs($style);
+            $so = '';
+            $tmps = array();
+            foreach ($style as $s) {
+                $parts = explode(';', $s);
+                foreach ($parts as $p) {
+                    if ($p = trim(trim($p), ":")) {
+                        $tmps[] = $p;
+                    }
+                }
+            }
+
+            sort($tmps);
+            foreach ($tmps as $p) {
+                if (!empty($p)) {
+                    $so .= $p.';';
+                }
+            }
+            $style = trim(str_replace(array("\n", ';;'), array('', ';'), $so));
+
+            $o['style'] = $style;
         }
 
         if ($width) {
