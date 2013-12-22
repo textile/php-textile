@@ -2368,10 +2368,6 @@ class Parser
 
     protected function fParseHTMLComments($m)
     {
-        if ($this->restricted) {
-            $m['content'] = $this->rEncodeHTML($m['content']);
-        }
-
         return '<!--'.$this->shelve($m['content']).'-->';
     }
 
