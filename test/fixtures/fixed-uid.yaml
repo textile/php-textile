@@ -1,6 +1,10 @@
-Basic content should still work:
+Don't fail on unknown tokens:
   class: \Netcarver\Textile\Test\Parser\FixedUID
   input: |
     Try looking up textileRef:0000:84712874324.
+
+    Try looking up textileRef:0000:84712874324:url.
   expect: |
-    <p>Try looking up 84712874324.</p>
+    <p>Try looking up textileRef:0000:84712874324.</p>
+
+    <p>Try looking up .</p>
