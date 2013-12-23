@@ -1341,6 +1341,17 @@ class Parser
     }
 
     /**
+     * Sets the maximum allowd link index.
+     *
+     * @return int
+     */
+
+    protected function getMaxLinkIndex()
+    {
+        return 1000000;
+    }
+
+    /**
      * Prepares the parser for parsing.
      *
      * This method prepares the transient internal state of
@@ -1353,7 +1364,7 @@ class Parser
 
     protected function prepare($lite, $noimage, $rel)
     {
-        if ($this->linkIndex >= 1000000) {
+        if ($this->linkIndex >= $this->getMaxLinkIndex()) {
             $this->linkPrefix .= '-';
             $this->linkIndex = 1;
         }
