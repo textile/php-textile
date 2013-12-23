@@ -42,6 +42,10 @@ Code:
 
     @(class)@
 
+    @(android#id)@
+
+    @(android#id)(android#id)@
+
     blah blah blah @(class). int result = [someObject someMethod]; // Objective C code statement 2@ blah.
 
     blah blah blah @(class)int result = [someObject someMethod]; // Objective C code statement 2@ blah.
@@ -75,6 +79,10 @@ Code:
     <p><code class="c">. (r)</code></p>
 
     <p><code>(class)</code></p>
+
+    <p><code>(android#id)</code></p>
+
+    <p><code class="android" id="id">(android#id)</code></p>
    
     <p>blah blah blah <code class="class">. int result = [someObject someMethod]; // Objective C code statement 2</code> blah.</p>
 
