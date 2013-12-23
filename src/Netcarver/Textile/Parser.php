@@ -894,9 +894,7 @@ class Parser
         $this->c = "(?:$this->clas|$this->styl|$this->lnge|$this->hlgn)*";
         $this->lc = "(?:$this->clas|$this->styl|$this->lnge)*";
 
-        $this->mb = is_callable('mb_strlen');
-
-        if (@preg_match('/\pL/u', 'a')) {
+        if ($this->isUnicodePcreSupported()) {
             $this->regex_snippets = array(
                 'acr'   => '\p{Lu}\p{Nd}',
                 'abr'   => '\p{Lu}',
@@ -3854,7 +3852,7 @@ class Parser
 
     protected function encodeHigh($text, $charset = 'UTF-8')
     {
-        if ($this->mb) {
+        if ($this->isMultiByteStringSupported()) {
             return mb_encode_numericentity($text, $this->cmap, $charset);
         }
 
@@ -3873,7 +3871,7 @@ class Parser
     {
         $text = (string) intval($text) === (string) $text ? "&#$text;" : "&$text;";
 
-        if ($this->mb) {
+        if ($this->isMultiByteStringSupported()) {
             return mb_decode_numericentity($text, $this->cmap, $charset);
         }
 
@@ -3932,5 +3930,33 @@ class Parser
         }
 
         return $this->encodeHTML($str, $quotes);
+    }
+
+    /**
+     * Whether multiple mbstring extensions is loaded.
+     *
+     * @return bool
+     * @since  3.5.5
+     */
+
+    protected function isMultiByteStringSupported()
+    {
+        if ($this->mb === null) {
+            $this->mb = is_callable('mb_strlen');
+        }
+
+        return $this->mb;
+    }
+
+    /**
+     * Whether PCRE supports UTF-8.
+     *
+     * @return bool
+     * @since  3.5.5
+     */
+
+    protected function isUnicodePcreSupported()
+    {
+        return (bool) @preg_match('/\pL/u', 'a');
     }
 }
