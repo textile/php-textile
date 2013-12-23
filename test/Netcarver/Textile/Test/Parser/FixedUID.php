@@ -55,4 +55,13 @@ class FixedUID extends Parser
         parent::__construct($doctype);
         $this->uid = 'textileRef:0000:';
     }
+
+    /**
+     * {@inheritdoc}
+     */
+
+    protected function cleanUIDTokens($text)
+    {
+        return $text;
+    }
 }
