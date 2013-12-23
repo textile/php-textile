@@ -1188,7 +1188,7 @@ class Parser
     protected function textileCommon($text, $lite)
     {
         $text = $this->cleanWhiteSpace($text);
-        $text = str_replace($this->uid, '', $text);
+        $text = $this->cleanUIDTokens($text);
 
         if ($lite) {
             $this->blocktag_whitelist = array('bq', 'p');
@@ -3616,6 +3616,18 @@ class Parser
         // Removes leading and ending blank lines.
         $out = trim($out, "\n");
         return $out;
+    }
+
+    /**
+     * Removes any matching uid strings from the input.
+     *
+     * @param string $text The input to clean
+     * @return string cleaned input
+     */
+
+    protected function cleanUIDTokens($text)
+    {
+        return str_replace($this->uid, '', $text);
     }
 
     /**
