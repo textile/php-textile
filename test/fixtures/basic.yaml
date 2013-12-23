@@ -3475,8 +3475,12 @@ Restricted mode security filtering mode with default options :
 Token references :
   input : |
     Hello textileopentag0000000001z World!
+
+    Try looking up textileRef:0000:84712874324.
   expect : |
     <p>Hello textileopentag0000000001z World!</p>
+
+    <p>Try looking up textileRef:0000:84712874324.</p>
 
 Link and image encoding :
   input : |
