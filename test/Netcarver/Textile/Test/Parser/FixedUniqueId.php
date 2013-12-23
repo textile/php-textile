@@ -44,7 +44,7 @@ use Netcarver\Textile\Parser;
  * Test parser with unicode support forced off.
  */
 
-class FixedUID extends Parser
+class FixedUniqueId extends Parser
 {
     /**
      * {@inheritdoc}
@@ -60,7 +60,7 @@ class FixedUID extends Parser
      * {@inheritdoc}
      */
 
-    protected function cleanUIDTokens($text)
+    protected function cleanUniqueTokens($text)
     {
         return $text;
     }

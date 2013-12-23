@@ -1,5 +1,5 @@
 Don't fail on unknown tokens:
-  class: \Netcarver\Textile\Test\Parser\FixedUID
+  class: \Netcarver\Textile\Test\Parser\FixedUniqueId
   input: |
     Try looking up textileRef:0000:84712874324.
 
