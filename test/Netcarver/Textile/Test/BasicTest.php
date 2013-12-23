@@ -14,10 +14,16 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 
     public function testAdd($name, $test)
     {
-        if (isset($test['doctype'])) {
-            $textile = new Textile($test['doctype']);
+        if (isset($test['class'])) {
+            $class = $test['class'];
         } else {
-            $textile = new Textile();
+            $class = '\Netcarver\Textile\Parser';
+        }
+
+        if (isset($test['doctype'])) {
+            $textile = new $class($test['doctype']);
+        } else {
+            $textile = new $class;
         }
 
         if (isset($test['setup'])) {
