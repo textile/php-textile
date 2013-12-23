@@ -1227,7 +1227,7 @@ class Parser
         $pnc = '[[:punct:]]';
 
         if ($cur) {
-            $cur = '(?:['.$cur.']\s*)?';
+            $cur = '(?:['.$cur.']'.$space.'*)?';
         }
 
         $this->glyph_search = array();
@@ -1242,7 +1242,7 @@ class Parser
         $this->glyph_replace[] = '$1'.$txt_apostrophe.'$2';
 
         // Back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
-        $this->glyph_search[] = '/(\s)\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod;
+        $this->glyph_search[] = '/('.$space.')\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod;
         $this->glyph_replace[] = '$1'.$txt_apostrophe.'$2';
 
         // Single open following open bracket
@@ -1250,7 +1250,7 @@ class Parser
         $this->glyph_replace[] = '$1'.$txt_quote_single_open;
 
         // Single closing
-        $this->glyph_search[] = '/(\S)\'(?=\s|'.$pnc.'|<|$)/'.$mod;
+        $this->glyph_search[] = '/(\S)\'(?='.$space.'|'.$pnc.'|<|$)/'.$mod;
         $this->glyph_replace[] = '$1'.$txt_quote_single_close;
 
         // Default single opening
@@ -1262,7 +1262,7 @@ class Parser
         $this->glyph_replace[] = '$1'.$txt_quote_double_open;
 
         // Double closing
-        $this->glyph_search[] = '/(\S)"(?=\s|'.$pnc.'|<|$)/'.$mod;
+        $this->glyph_search[] = '/(\S)"(?='.$space.'|'.$pnc.'|<|$)/'.$mod;
         $this->glyph_replace[] = '$1'.$txt_quote_double_close;
 
         // Default double opening
@@ -1279,8 +1279,8 @@ class Parser
         }
 
         // 3+ uppercase
-        $this->glyph_search[] = '/(?<=\s|^|[>(;-])(['.$abr.']{3,})'.
-            '(['.$nab.']*)(?=\s|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod;
+        $this->glyph_search[] = '/(?<='.$space.'|^|[>(;-])(['.$abr.']{3,})'.
+            '(['.$nab.']*)(?='.$space.'|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod;
         $this->glyph_replace[] = '<span class="caps">'.$this->uid.':glyph:$1</span>$2';
 
         // Ellipsis
@@ -1296,15 +1296,15 @@ class Parser
         $this->glyph_replace[] = ' '.$txt_endash.' ';
 
         // Trademark
-        $this->glyph_search[] = '/(\b ?|\s|^)[([]TM[])]/i'.$mod;
+        $this->glyph_search[] = '/(\b ?|'.$space.'|^)[([]TM[])]/i'.$mod;
         $this->glyph_replace[] = '$1'.$txt_trademark;
 
         // Registered
-        $this->glyph_search[] = '/(\b ?|\s|^)[([]R[])]/i'.$mod;
+        $this->glyph_search[] = '/(\b ?|'.$space.'|^)[([]R[])]/i'.$mod;
         $this->glyph_replace[] = '$1'.$txt_registered;
 
         // Copyright
-        $this->glyph_search[] = '/(\b ?|\s|^)[([]C[])]/i'.$mod;
+        $this->glyph_search[] = '/(\b ?|'.$space.'|^)[([]C[])]/i'.$mod;
         $this->glyph_replace[] = '$1'.$txt_copyright;
 
         // 1/4
@@ -1561,7 +1561,7 @@ class Parser
         }
 
         if ($element == 'col') {
-            if (preg_match("/(?:\\\\(\d+))?\s*(\d+)?/", $matched, $csp)) {
+            if (preg_match("/(?:\\\\([0-9]+))?{$this->regex_snippets['space']}*([0-9]+)?/", $matched, $csp)) {
                 $span = isset($csp[1]) ? $csp[1] : '';
                 $width = isset($csp[2]) ? $csp[2] : '';
             }
@@ -1669,7 +1669,8 @@ class Parser
     {
         $text = $text . "\n\n";
         return preg_replace_callback(
-            "/^(?:table(_?{$this->s}{$this->a}{$this->c})\.(.*)?\n)?^({$this->a}{$this->c}\.? ?\|.*\|)[\s]*\n\n/smU",
+            "/^(?:table(_?{$this->s}{$this->a}{$this->c})\.".
+            "(.*)?\n)?^({$this->a}{$this->c}\.? ?\|.*\|){$this->regex_snippets['space']}*\n\n/smU",
             array(&$this, "fTable"),
             $text
         );
@@ -1696,7 +1697,7 @@ class Parser
         $last_rgrp = '';
         $c_row = 1;
 
-        foreach (preg_split("/\|\s*?$/m", $matches[3], -1, PREG_SPLIT_NO_EMPTY) as $row) {
+        foreach (preg_split("/\|{$this->regex_snippets['space']}*?$/m", $matches[3], -1, PREG_SPLIT_NO_EMPTY) as $row) {
 
             $row = ltrim($row);
 
@@ -1740,7 +1741,7 @@ class Parser
             $rgrpatts = $rgrp = '';
 
             if (preg_match(
-                "/(:?^\|($this->vlgn)($this->s$this->a$this->c)\.\s*$\n)?^(.*)/sm",
+                "/(:?^\|($this->vlgn)($this->s$this->a$this->c)\.{$this->regex_snippets['space']}*$\n)?^(.*)/sm",
                 ltrim($row),
                 $grpmatch
             )) {
@@ -1776,7 +1777,7 @@ class Parser
             foreach (explode("|", $row) as $cell) {
                 $ctyp = "d";
 
-                if (preg_match("/^_(?=[\s[:punct:]])/", $cell)) {
+                if (preg_match("/^_(?=[{$this->regex_snippets['space']}[:punct:]])/", $cell)) {
                     $ctyp = "h";
                 }
 
@@ -1790,7 +1791,7 @@ class Parser
                 if (!$this->lite) {
                     $a = array();
 
-                    if (preg_match('/(\s*)(.*)/s', $cell, $a)) {
+                    if (preg_match('/('.$this->regex_snippets['space'].'*)(.*)/s', $cell, $a)) {
                         $cell = $this->redclothLists($a[2]);
                         $cell = $this->textileLists($cell);
                         $cell = $a[1] . $cell;
@@ -1865,7 +1866,13 @@ class Parser
                 $content = trim($content);
                 $atts = $this->parseAttribs($atts);
 
-                if (!preg_match("/^(.*?)[\s]*:=(.*?)[\s]*(=:|:=)?[\s]*$/s", $content, $xm)) {
+                if (!preg_match(
+                    "/^(.*?){$this->regex_snippets['space']}*:=(.*?)".
+                    "{$this->regex_snippets['space']}*(=:|:=)?".
+                    "{$this->regex_snippets['space']}*$/s",
+                    $content,
+                    $xm
+                )) {
                     $xm = array( $content, $content, '' );
                 }
 
@@ -2080,7 +2087,11 @@ class Parser
     {
         // Replaces <br/>\n instances that are not followed by white-space,
         // or at end, with single LF.
-        $content = preg_replace("~<br\s*/?>\s*\n(?![\s|])~i", "\n", $m[3]);
+        $content = preg_replace(
+            "~<br[ ]*/?>{$this->regex_snippets['space']}*\n(?![{$this->regex_snippets['space']}|])~i",
+            "\n",
+            $m[3]
+        );
         // Replaces those LFs that aren't followed by white-space, or at end, with <br />.
         $content = preg_replace("/\n(?![\s|])/", '<br />', $content);
         return '<'.$m[1].$m[2].'>'.$content.$m[4];
@@ -2230,11 +2241,11 @@ class Parser
             $notedef = preg_replace_callback(
                 "/
                     ^note\#               #  start of note def marker
-                    ([^%<*!@#^([{ \s.]+)  # !label
+                    ([^%<*!@#^([{ {$this->regex_snippets['space']}.]+)  # !label
                     ([*!^]?)              # !link
                     ({$this->c})          # !att
                     \.?                   #  optional period.
-                    [\s]+                 #  whitespace ends def marker
+                    {$this->regex_snippets['space']}+  #  whitespace ends def marker
                     (.*)$                 # !content
                 /x".$this->regex_snippets['mod'],
                 array(&$this, "fParseNoteDefs"),
@@ -2452,12 +2463,12 @@ class Parser
                 $tag = preg_quote($tag);
                 $text = preg_replace_callback(
                     "/
-                    (?P<pre>^|(?<=[\s>$pnct\(])|[{[])
+                    (?P<pre>^|(?<=[{$this->regex_snippets['space']}>$pnct\(])|[{[])
                     (?P<tag>$tag)(?!$tag)
                     (?P<atts>{$this->lc})
                     (?!$tag)
-                    (?::(?P<cite>\S+[^$tag]\s))?
-                    (?P<content>[^\s$tag]+|\S.*?[^\s$tag\n])
+                    (?::(?P<cite>\S+[^$tag]{$this->regex_snippets['space']}))?
+                    (?P<content>[^{$this->regex_snippets['space']}$tag]+|\S.*?[^\s$tag\n])
                     (?P<end>[$pnct]*)
                     $tag
                     (?P<tail>$|[\[\]}<]|(?=[$pnct]{1,2}[^0-9]|\s|\)))
@@ -2595,7 +2606,7 @@ class Parser
         $text = preg_replace_callback(
             "@<p>notelist(?P<atts>{$this->c})".
             "(?:\:(?P<startchar>[$wrd|{$this->syms}]))?".
-            "(?P<links>[\^!]?)(?P<extras>\+?)\.?[\s]*</p>@U$mod",
+            "(?P<links>[\^!]?)(?P<extras>\+?)\.?$space*</p>@U$mod",
             array(&$this, "fNoteLists"),
             $text
         );
@@ -3272,7 +3283,11 @@ class Parser
             $pattern[] = preg_quote($scheme.':', '/');
         }
 
-        $pattern = '/^\[(?P<alias>.+)\](?P<url>(?:'.join('|', $pattern).'|\/)\S+)(?=\s|$)/Um';
+        $pattern =
+            '/^\[(?P<alias>.+)\]'.
+            '(?P<url>(?:'.join('|', $pattern).'|\/)\S+)'.
+            '(?='.$this->regex_snippets['space'].'|$)/Um';
+
         return preg_replace_callback($pattern.$this->regex_snippets['mod'], array(&$this, "refs"), $text);
     }
 
@@ -3641,7 +3656,7 @@ class Parser
     protected function footnoteRefs($text)
     {
         return preg_replace_callback(
-            '/(?<=\S)\[(?P<id>\d+)(?P<nolink>!?)\]\s?/U'.$this->regex_snippets['mod'],
+            '/(?<=\S)\[(?P<id>\d+)(?P<nolink>!?)\]'.$this->regex_snippets['space'].'?/U'.$this->regex_snippets['mod'],
             array(&$this, 'footnoteID'),
             $text
         );
