@@ -3623,6 +3623,7 @@ class Parser
      *
      * @param  string $text The input to clean
      * @return string Cleaned input
+     * @since  3.5.5
      */
 
     protected function cleanUniqueTokens($text)
