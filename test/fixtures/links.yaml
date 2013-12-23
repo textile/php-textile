@@ -1305,3 +1305,157 @@ Unicode Links (restricted) :
     <p><a href="https://en.wikipedia.com/%C3%A4/%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F%C3%A7/%C3%A9%C3%A1%C3%B3%C3%BA%C3%A8/%C3%A0%C3%B2%C3%B9%C3%89%C3%81%C3%93%C3%9A/%C3%88%C3%80%C3%92%C3%99%C3%AA%C3%8A%C3%B4%C3%94%C3%A2%C3%82%C3%BB/%C3%9B%C3%A5%C3%85%C5%93%C5%92%C3%A6%C3%86%C3%B8%C3%98%C3%AB%C3%8B%C3%AF%C3%8F/" rel="nofollow">äöüÄÖÜßçéáóúèàòùÉÁÓÚÈÀÒÙêÊôÔâÂûÛåÅœŒæÆøØëËïÏ with trailing slash</a></p>
 
     <p><a href="http://google.com" rel="nofollow">Google</a> or <a href="https://google.com" rel="nofollow">secure google</a></p>
+
+Max Link Index Test :
+  class:  \Netcarver\Textile\Test\Parser\MaxLinkIndex
+  input  : |
+    "link text":http://example.com
+
+    "link text":http://example.com.
+
+    "link text":http://example.com,
+
+    "link text":http://example.com?
+
+    "link text":http://example.com:
+
+    "link text":http://example.com:80
+
+    "link text":http://example.com;
+
+    "link text":http://example.com|
+
+    "link text":http://example.com*
+
+    "textile":/..!
+
+    "link text":http://example.com/
+
+    "link text":http://example.com/.
+
+    "link text":http://example.com/,
+
+    "link text":http://example.com/?
+
+    "link text":http://example.com/:
+
+    "link text":http://example.com/:80
+
+    "link text":http://example.com/;
+
+    "link text":http://example.com/|
+
+    "link text":http://example.com/*
+
+    ("link text":http://example.com)
+
+    ("link text":http://example.com/)
+
+    (Try "this link":http://example.com/)
+
+    ("link text":http://example.com/ go go go!)
+
+    "link text":/example
+
+    "link text(with title)":http://example.com/
+
+    Here is "a link":0, and "another link":0 to a site.
+    [0]http://thresholdstate.com/
+
+    Here is "a link":1, and "another link":1 to a site.
+    [1]http://thresholdstate.com/?q[]=true
+
+    Here is "a link":ts, and "another link":ts, to the same site.
+    [ts]http://thresholdstate.com/?q[]=true
+
+    "link text(with title)":https://example.com/
+
+    "link text(with title)":ftp://example.com/
+
+    "link text(with title)":mailto:contact@example.com
+
+    "(class#id)[de-de]$(title)":http://textpattern.com
+
+    "(class#id)[en-gb]{text-transform:uppercase}Try this link(Link title)":http://textile.sitemonks.com
+
+    "(linkclass#linkid)[de-de]!(imgclass#imgid)imgurl(img/link text)!(Link Title)":linkurl
+
+    "Tcl":../html/tcltk.html
+
+    "(myclass) (just in case you were wondering)":http://slashdot.org/
+
+    "Participar (para) poder":http://www.unicef.org/argentina/spanish/cartilla_3(1).pdf
+  expect : |
+    <p><a href="http://example.com">link text</a></p>
+
+    <p><a href="http://example.com">link text</a>.</p>
+
+    <p><a href="http://example.com">link text</a>,</p>
+
+    <p><a href="http://example.com">link text</a>?</p>
+
+    <p><a href="http://example.com">link text</a>:</p>
+
+    <p><a href="http://example.com:80">link text</a></p>
+
+    <p><a href="http://example.com">link text</a>;</p>
+
+    <p><a href="http://example.com">link text</a>|</p>
+
+    <p><a href="http://example.com">link text</a>*</p>
+
+    <p><a href="/">textile</a>..!</p>
+
+    <p><a href="http://example.com/">link text</a></p>
+
+    <p><a href="http://example.com/">link text</a>.</p>
+
+    <p><a href="http://example.com/">link text</a>,</p>
+
+    <p><a href="http://example.com/">link text</a>?</p>
+
+    <p><a href="http://example.com/">link text</a>:</p>
+
+    <p><a href="http://example.com/%3A80">link text</a></p>
+
+    <p><a href="http://example.com/">link text</a>;</p>
+
+    <p><a href="http://example.com/">link text</a>|</p>
+
+    <p><a href="http://example.com/">link text</a>*</p>
+
+    <p>(<a href="http://example.com">link text</a>)</p>
+
+    <p>(<a href="http://example.com/">link text</a>)</p>
+
+    <p>(Try <a href="http://example.com/">this link</a>)</p>
+
+    <p>(<a href="http://example.com/">link text</a> go go go!)</p>
+
+    <p><a href="/example">link text</a></p>
+
+    <p><a href="http://example.com/" title="with title">link text</a></p>
+
+    <p>Here is <a href="http://thresholdstate.com/">a link</a>, and <a href="http://thresholdstate.com/">another link</a> to a site.</p>
+
+    <p>Here is <a href="http://thresholdstate.com/?q[]=true">a link</a>, and <a href="http://thresholdstate.com/?q[]=true">another link</a> to a site.</p>
+
+    <p>Here is <a href="http://thresholdstate.com/?q[]=true">a link</a>, and <a href="http://thresholdstate.com/?q[]=true">another link</a>, to the same site.</p>
+
+    <p><a href="https://example.com/" title="with title">link text</a></p>
+
+    <p><a href="ftp://example.com/" title="with title">link text</a></p>
+
+    <p><a href="mailto:contact@example.com" title="with title">link text</a></p>
+
+    <p><a class="class" href="http://textpattern.com" id="id" lang="de-de" title="title">textpattern.com</a></p>
+
+    <p><a class="class" href="http://textile.sitemonks.com" id="id" lang="en-gb" style="text-transform:uppercase;" title="Link title">Try this link</a></p>
+
+    <p><a class="linkclass" href="linkurl" id="linkid" lang="de-de" title="Link Title"><img alt="img/link text" class="imgclass" id="imgid" src="imgurl" title="img/link text" /></a></p>
+
+    <p><a href="../html/tcltk.html">Tcl</a></p>
+
+    <p><a class="myclass" href="http://slashdot.org/">(just in case you were wondering)</a></p>
+
+    <p><a href="http://www.unicef.org/argentina/spanish/cartilla_3%281%29.pdf">Participar (para) poder</a></p>
