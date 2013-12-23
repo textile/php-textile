@@ -906,6 +906,7 @@ class Parser
                 'cur'   => '\p{Sc}',
                 'digit' => '\p{Nd}',
                 'space' => '(?:\p{Zs}|\h|\v)',
+                'char'  => '(?:[^\p{Zs}\h\v])',
             );
         } else {
             $this->regex_snippets = array(
@@ -917,6 +918,7 @@ class Parser
                 'cur'   => '',
                 'digit' => '\d',
                 'space' => '(?:\s|\h|\v)',
+                'char'  => '\S',
             );
         }
         extract($this->regex_snippets);
@@ -2934,7 +2936,7 @@ class Parser
         // links between the link text and the url part and are much more
         // infrequent than '"' characters so we have less possible links
         // to process.
-        $slices = preg_split('/":(?=\S)/'.$this->regex_snippets['mod'], $text);
+        $slices = preg_split('/":(?='.$this->regex_snippets['char'].')/'.$this->regex_snippets['mod'], $text);
 
         try {
             if (count($slices) > 1) {
