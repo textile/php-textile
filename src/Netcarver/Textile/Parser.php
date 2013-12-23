@@ -2919,7 +2919,7 @@ class Parser
         // links between the link text and the url part and are much more
         // infrequent than '"' characters so we have less possible links
         // to process.
-        $slices = preg_split('/":(?=\S)/', $text);
+        $slices = preg_split('/":(?=\S)/'.$this->regex_snippets['mod'], $text);
 
         try {
             if (count($slices) > 1) {
