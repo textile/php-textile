@@ -41,7 +41,7 @@ namespace Netcarver\Textile\Test\Parser;
 use Netcarver\Textile\Parser;
 
 /**
- * Test parser with unicode support forced off.
+ * Test parser with fixed unique token.
  */
 
 class FixedUniqueId extends Parser
