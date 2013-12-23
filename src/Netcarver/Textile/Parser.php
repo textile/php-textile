@@ -409,7 +409,7 @@ class Parser
      * @var string
      */
 
-    protected $cspn = "(?:\\\\\d+)";
+    protected $cspn = "(?:\\\\[0-9]+)";
 
     /**
      * Regular expression for row spans in tables.
@@ -417,7 +417,7 @@ class Parser
      * @var string
      */
 
-    protected $rspn = "(?:\/\d+)";
+    protected $rspn = "(?:\/[0-9]+)";
 
     /**
      * Regular expression for horizontal or vertical alignment.
@@ -904,7 +904,7 @@ class Parser
                 'wrd'   => '(?:\p{L}|\p{M}|\p{N}|\p{Pc})',
                 'mod'   => 'u', // Make sure to mark the unicode patterns as such, Some servers seem to need this.
                 'cur'   => '\p{Sc}',
-                'digit' => '\p{Nd}',
+                'digit' => '\p{N}',
                 'space' => '(?:\p{Zs}|\h|\v)',
                 'char'  => '(?:[^\p{Zs}\h\v])',
             );
@@ -1196,7 +1196,16 @@ class Parser
             $this->blocktag_whitelist = array('bq', 'p');
             $text = $this->blocks($text."\n\n");
         } else {
-            $this->blocktag_whitelist = array('bq', 'p', 'bc', 'notextile', 'pre', 'h[1-6]', 'fn\d+', '###');
+            $this->blocktag_whitelist = array(
+                'bq',
+                'p',
+                'bc',
+                'notextile',
+                'pre',
+                'h[1-6]',
+                'fn'.$this->regex_snippets['digit'].'+',
+                '###',
+            );
             $text = $this->blocks($text);
             $text = $this->placeNoteLists($text);
         }
@@ -1489,11 +1498,11 @@ class Parser
 
         $matched = $in;
         if ($element == 'td') {
-            if (preg_match("/\\\\(\d+)/", $matched, $csp)) {
+            if (preg_match("/\\\\([0-9]+)/", $matched, $csp)) {
                 $colspan = $csp[1];
             }
 
-            if (preg_match("/\/(\d+)/", $matched, $rsp)) {
+            if (preg_match("/\/([0-9]+)/", $matched, $rsp)) {
                 $rowspan = $rsp[1];
             }
         }
@@ -1652,7 +1661,7 @@ class Parser
     protected function hasRawText($text)
     {
         $r = preg_replace(
-            '@<(p|hr|br|img|blockquote|div|form|table|ul|ol|dl|pre|h\d)[^>]*?'.chr(62).'.*</\1[^>]*?>@si',
+            '@<(p|hr|br|img|blockquote|div|form|table|ul|ol|dl|pre|h[1-6])[^>]*?'.chr(62).'.*</\1[^>]*?>@si',
             '',
             trim($text)
         );
@@ -2260,7 +2269,7 @@ class Parser
             }
         }
 
-        if (preg_match("/fn(\d+)/", $tag, $fns)) {
+        if (preg_match("/fn({$this->regex_snippets['digit']}+)/".$this->regex_snippets['mod'], $tag, $fns)) {
             $tag = 'p';
             $fnid = empty($this->fn[$fns[1]]) ? $this->linkPrefix . ($this->linkIndex++) : $this->fn[$fns[1]];
 
@@ -2552,8 +2561,18 @@ class Parser
 
     protected function retrieveTags($text)
     {
-        $text = preg_replace_callback('/'.$this->uid.'(?P<token>\d+):ospan /', array(&$this, 'fRetrieveTags'), $text);
-        $text = preg_replace_callback('/ '.$this->uid.'(?P<token>\d+):cspan/', array(&$this, 'fRetrieveTags'), $text);
+        $text = preg_replace_callback(
+            '/'.$this->uid.'(?P<token>[0-9]+):ospan /',
+            array(&$this, 'fRetrieveTags'),
+            $text
+        );
+
+        $text = preg_replace_callback(
+            '/ '.$this->uid.'(?P<token>[0-9]+):cspan/',
+            array(&$this, 'fRetrieveTags'),
+            $text
+        );
+
         return $text;
     }
 
@@ -3344,7 +3363,7 @@ class Parser
 
     protected function retrieveURLs($text)
     {
-        return preg_replace_callback('/'.$this->uid.'(?P<token>\d+):url/', array(&$this, 'retrieveURL'), $text);
+        return preg_replace_callback('/'.$this->uid.'(?P<token>[0-9]+):url/', array(&$this, 'retrieveURL'), $text);
     }
 
     /**
@@ -3658,7 +3677,8 @@ class Parser
     protected function footnoteRefs($text)
     {
         return preg_replace_callback(
-            '/(?<=\S)\[(?P<id>\d+)(?P<nolink>!?)\]'.$this->regex_snippets['space'].'?/U'.$this->regex_snippets['mod'],
+            '/(?<=\S)\[(?P<id>'.$this->regex_snippets['digit'].'+)'.
+            '(?P<nolink>!?)\]'.$this->regex_snippets['space'].'?/U'.$this->regex_snippets['mod'],
             array(&$this, 'footnoteID'),
             $text
         );
