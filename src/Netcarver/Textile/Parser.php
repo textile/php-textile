@@ -3522,7 +3522,8 @@ class Parser
     {
         $atts = ($m['atts']) ? $this->parseAttribs($m['atts']): '';
 
-        return $m['before'] . $this->shelve("<code$atts>".$this->rEncodeHTML($m['content']).'</code>') . $m['end'] . $m['tail'];
+        return $m['before'] . $this->shelve("<code$atts>".$this->rEncodeHTML($m['content']).'</code>') .
+            $m['end'] . $m['tail'];
     }
 
     /**
