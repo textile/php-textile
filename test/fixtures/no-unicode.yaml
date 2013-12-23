@@ -1,0 +1,14 @@
+Basic content should still work:
+  class: \Netcarver\Textile\Test\Parser\NoUnicode
+  input: |
+    ...*but you can not actually use UTF-8*
+
+    Since this _test_ can be simulated, these tests can not contain anything
+    complicated as the tests will return different results based on the locale,
+    compilation locale and the configuration PCRE was compiled with.
+  expect: |
+    <p>&#8230;<strong>but you can not actually use <span class="caps">UTF</span>-8</strong></p>
+
+    <p>Since this <em>test</em> can be simulated, these tests can not contain anything<br />
+    complicated as the tests will return different results based on the locale,<br />
+    compilation locale and the configuration <span class="caps">PCRE</span> was compiled with.</p>
