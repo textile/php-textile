@@ -1547,7 +1547,7 @@ Code blocks, pre and exclusions :
   expect : |
     <pre class="input"><code>You can&#39;t _*touch*_ *_this_*... Hammer time.</code></pre>
 
-    <p>And keep your <code>(expect)mitts _*off*_ *_me_*</code> as well. About the <code>&lt;hr /&gt;</code> tag.</p>
+    <p>And keep your <code class="expect">mitts _*off*_ *_me_*</code> as well. About the <code>&lt;hr /&gt;</code> tag.</p>
 
     <pre class="block"><code>As for the stuff in my *bold*, _emphasised_ &amp; __italic__ codeblock, I think you&#39;ll find these tags entertaining:
     &lt;txp:linklist /&gt;
@@ -3018,7 +3018,7 @@ Classes/ids/langs on phrase modifiers :
 
     <p><i class="c" id="id">My text</i></p>
 
-    <p><code>(c#id)[Whatever]My text</code></p>
+    <p><code class="c" id="id">[Whatever]My text</code></p>
 
 Classes/ids/langs on phrase modifiers (restricted) :
   doctype : html5
@@ -3352,7 +3352,7 @@ Empty things... :
 
     <p>==</p>
 
-    <p><code></code></p>
+    <p>@@</p>
 
     <p>##</p>
 
@@ -3414,7 +3414,7 @@ Empty things... :
 
     <p>= =</p>
 
-    <p><code> </code></p>
+    <p>@ @</p>
 
     <ol>
     	<li>#</li>

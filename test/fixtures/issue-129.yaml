@@ -1,0 +1,91 @@
+adaptor: textile
+options:
+  showfailures: true
+  showpasses: true
+  showdiffs: true
+  debug: false
+  format: html
+  adaptor_options:
+    restricted: false
+
+Oh my:
+  method: textileRestricted
+  input:  |
+    "<space>AT".
+
+  expect: |
+    <p>&#8220;&lt;space&gt;AT&#8221;.</p>
+
+Code:
+  input  : |
+    For strength *use * characters*.
+
+    For code @use @ characters@.
+
+    For code @(c)use @ characters@.
+
+    @@
+
+    @ @
+
+    @    @
+
+    @(c)@
+
+    @(c).@
+
+    @(c). @ Code spans can't end with "(space)AT". They have to end "(nonspace)AT".
+    
+    @(c). @ Code spans can't end with "(space)AT". They have to end "(nonspace)@AT".
+
+    @(c). (r)@
+
+    @(class)@
+
+    blah blah blah @(class). int result = [someObject someMethod]; // Objective C code statement 2@ blah.
+
+    blah blah blah @(class)int result = [someObject someMethod]; // Objective C code statement 2@ blah.
+
+    # Next, use @someMethod@ to do something:
+    [%(android)@someObject.someMethod(); // Java@%][%(ios)@[someObject someMethod]; // Objective C@%]
+
+    # Next, use @someMethod@ to do something:
+    @(android)someObject.someMethod(); // Java@ @(ios)[someObject someMethod]; // Objective C@
+  expect : |
+    <p>For strength <strong>use * characters</strong>.</p>
+
+    <p>For code <code>use @ characters</code>.</p>
+
+    <p>For code <code class="c">use @ characters</code>.</p>
+
+    <p>@@</p>
+
+    <p>@ @</p>
+
+    <p>@    @</p>
+
+    <p><code>(c)</code></p>
+
+    <p><code class="c">.</code></p>
+
+    <p>@(c). @ Code spans can&#8217;t end with &#8220;(space)AT&#8221;. They have to end &#8220;(nonspace)AT&#8221;.</p>
+
+    <p>@(c). @ Code spans can&#8217;t end with &#8220;(space)AT&#8221;. They have to end &#8220;(nonspace)@AT&#8221;.</p>
+
+    <p><code class="c">. (r)</code></p>
+
+    <p><code>(class)</code></p>
+   
+    <p>blah blah blah <code class="class">. int result = [someObject someMethod]; // Objective C code statement 2</code> blah.</p>
+
+    <p>blah blah blah <code class="class">int result = [someObject someMethod]; // Objective C code statement 2</code> blah.</p>
+
+    <ol>
+    	<li>Next, use <code>someMethod</code> to do something:<br />
+    <span class="android"><code>someObject.someMethod(); // Java</code></span><span class="ios"><code>[someObject someMethod]; // Objective C</code></span></li>
+    </ol>
+
+    <ol>
+    	<li>Next, use <code>someMethod</code> to do something:<br />
+    <code class="android">someObject.someMethod(); // Java</code> <code class="ios">[someObject someMethod]; // Objective C</code></li>
+    </ol>

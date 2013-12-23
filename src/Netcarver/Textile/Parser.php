@@ -3490,9 +3490,39 @@ class Parser
     protected function code($text)
     {
         $text = $this->doSpecial($text, '<code>', '</code>', 'fCode');
-        $text = $this->doSpecial($text, '@', '@', 'fCode');
+
+        $pnct = ".,\"'?!;:‹›«»„“”‚‘’";
+        $tag = '@';
+        $text = preg_replace_callback(
+            "/
+            (?P<before>^|(?<=[\s>$pnct\(\)\|])|[{[])
+            (?P<tag>$tag)
+            (?P<atts>(?:{$this->clas})?)
+            (?P<content>\S[^\r\n]*?)
+            (?<!\s)$tag
+            (?P<end>[$pnct]*)
+            (?P<tail>$|[\[\]}<%]|(?=[$pnct]{1,2}[^0-9]|\||\s|\)))
+            /x".$this->regex_snippets['mod'],
+            array(&$this, "fAtCode"),
+            $text
+        );
+
         $text = $this->doSpecial($text, '<pre>', '</pre>', 'fPre');
         return $text;
+    }
+
+    /**
+     * Formats inline at (@) code tags.
+     *
+     * @param  array  $m
+     * @return string
+     */
+
+    protected function fAtCode($m)
+    {
+        $atts = ($m['atts']) ? $this->parseAttribs($m['atts']): '';
+
+        return $m['before'] . $this->shelve("<code$atts>".$this->rEncodeHTML($m['content']).'</code>') . $m['end'] . $m['tail'];
     }
 
     /**
