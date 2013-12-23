@@ -898,21 +898,25 @@ class Parser
 
         if (@preg_match('/\pL/u', 'a')) {
             $this->regex_snippets = array(
-                'acr' => '\p{Lu}\p{Nd}',
-                'abr' => '\p{Lu}',
-                'nab' => '\p{Ll}',
-                'wrd' => '(?:\p{L}|\p{M}|\p{N}|\p{Pc})',
-                'mod' => 'u', // Make sure to mark the unicode patterns as such, Some servers seem to need this.
-                'cur' => '\p{Sc}',
+                'acr'   => '\p{Lu}\p{Nd}',
+                'abr'   => '\p{Lu}',
+                'nab'   => '\p{Ll}',
+                'wrd'   => '(?:\p{L}|\p{M}|\p{N}|\p{Pc})',
+                'mod'   => 'u', // Make sure to mark the unicode patterns as such, Some servers seem to need this.
+                'cur'   => '\p{Sc}',
+                'digit' => '\p{Nd}',
+                'space' => '(?:\p{Zs}|\h|\v)',
             );
         } else {
             $this->regex_snippets = array(
-                'acr' => 'A-Z0-9',
-                'abr' => 'A-Z',
-                'nab' => 'a-z',
-                'wrd' => '\w',
-                'mod' => '',
-                'cur' => '',
+                'acr'   => 'A-Z0-9',
+                'abr'   => 'A-Z',
+                'nab'   => 'a-z',
+                'wrd'   => '\w',
+                'mod'   => '',
+                'cur'   => '',
+                'digit' => '\d',
+                'space' => '(?:\s|\h|\v)',
             );
         }
         extract($this->regex_snippets);
