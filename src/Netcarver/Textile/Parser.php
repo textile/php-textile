@@ -1279,9 +1279,9 @@ class Parser
         }
 
         // 3+ uppercase
-        $this->glyph_search[] = '/(?<='.$space.'|^|[>(;-])(['.$abr.']{3,})'.
+        $this->glyph_search[] = '/('.$space.'|^|[>(;-])(['.$abr.']{3,})'.
             '(['.$nab.']*)(?='.$space.'|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod;
-        $this->glyph_replace[] = '<span class="caps">'.$this->uid.':glyph:$1</span>$2';
+        $this->glyph_replace[] = '$1<span class="caps">'.$this->uid.':glyph:$2</span>$3';
 
         // Ellipsis
         $this->glyph_search[] = '/([^.]?)\.{3}/';
@@ -2463,7 +2463,7 @@ class Parser
                 $tag = preg_quote($tag);
                 $text = preg_replace_callback(
                     "/
-                    (?P<pre>^|(?<=[{$this->regex_snippets['space']}>$pnct\(])|[{[])
+                    (?P<pre>^|(?<=[\s>$pnct\(])|[{[])
                     (?P<tag>$tag)(?!$tag)
                     (?P<atts>{$this->lc})
                     (?!$tag)
