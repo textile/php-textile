@@ -1344,6 +1344,7 @@ class Parser
      * Sets the maximum allowd link index.
      *
      * @return int
+     * @since 3.5.5
      */
 
     protected function getMaxLinkIndex()
