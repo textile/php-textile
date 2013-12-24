@@ -41,21 +41,11 @@ namespace Netcarver\Textile\Test\Parser;
 use Netcarver\Textile\Parser;
 
 /**
- * Test parser with fixed unique token.
+ * Test parser with a low max link index limit.
  */
 
 class MaxLinkIndex extends Parser
 {
-    /**
-     * {@inheritdoc}
-     */
-
-    public function __construct($doctype = 'xhtml')
-    {
-        parent::__construct($doctype);
-        $this->uid = 'textileRef:0000:';
-    }
-
     /**
      * {@inheritdoc}
      */
