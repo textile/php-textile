@@ -446,10 +446,12 @@ class Parser
     /**
      * Pattern that matches class, style and language attributes.
      *
+     * Will allows all 16 possible permutations of class, style and language attributes.
+     * <no attribute>, c, cl, cs, cls, csl, l, lc, ls, lcs, lsc, s, sc, sl, scl or slc
+     *
      * @var string
      */
-
-    protected $lc;
+    protected $cls;
 
     /**
      * Whitelisted block tags.
@@ -892,7 +894,18 @@ class Parser
         $this->a = "(?:$this->hlgn|$this->vlgn)*";
         $this->s = "(?:$this->cspn|$this->rspn)*";
         $this->c = "(?:$this->clas|$this->styl|$this->lnge|$this->hlgn)*";
-        $this->lc = "(?:$this->clas|$this->styl|$this->lnge)*";
+
+        $this->cls = '(?:'.
+            "$this->clas(?:".
+                "$this->lnge(?:$this->styl)?|$this->styl(?:$this->lnge)?".
+                ')?|'.
+            "$this->lnge(?:".
+                "$this->clas(?:$this->styl)?|$this->styl(?:$this->clas)?".
+                ')?|'.
+            "$this->styl(?:".
+                "$this->clas(?:$this->lnge)?|$this->lnge(?:$this->clas)?".
+                ')?'.
+            ')?';
 
         if ($this->isUnicodePcreSupported()) {
             $this->regex_snippets = array(
@@ -1861,7 +1874,7 @@ class Parser
 
     protected function redclothLists($text)
     {
-        return preg_replace_callback("/^([-]+$this->lc[ .].*:=.*)$(?![^-])/smU", array(&$this, "fRedclothList"), $text);
+        return preg_replace_callback("/^([-]+$this->cls[ .].*:=.*)$(?![^-])/smU", array(&$this, "fRedclothList"), $text);
     }
 
     /**
@@ -1882,7 +1895,7 @@ class Parser
         $text = preg_split('/\n(?=[-])/m', $in);
         foreach ($text as $nr => $line) {
             $m = array();
-            if (preg_match("/^[-]+($this->lc)\.? (.*)$/s", $line, $m)) {
+            if (preg_match("/^[-]+($this->cls)\.? (.*)$/s", $line, $m)) {
                 list(, $atts, $content) = $m;
                 $content = trim($content);
                 $atts = $this->parseAttribs($atts);
@@ -1945,7 +1958,7 @@ class Parser
     protected function textileLists($text)
     {
         return preg_replace_callback(
-            "/^((?:[*;:]+|[*;:#]*#(?:_|\d+)?)$this->lc[ .].*)$(?![^#*;:])/smU",
+            "/^((?:[*;:]+|[*;:#]*#(?:_|\d+)?)$this->cls[ .].*)$(?![^#*;:])/smU",
             array(&$this, "fTextileList"),
             $text
         );
@@ -1968,7 +1981,7 @@ class Parser
         $pt = '';
         foreach ($text as $nr => $line) {
             $nextline = isset($text[$nr+1]) ? $text[$nr+1] : false;
-            if (preg_match("/^([#*;:]+)(_|\d+)?($this->lc)[ .](.*)$/s", $line, $m)) {
+            if (preg_match("/^([#*;:]+)(_|\d+)?($this->cls)[ .](.*)$/s", $line, $m)) {
                 list(, $tl, $st, $atts, $content) = $m;
                 $content = trim($content);
                 $nl = '';
@@ -2008,7 +2021,7 @@ class Parser
                     }
                 }
 
-                if (preg_match("/^([#*;:]+)(_|[\d]+)?($this->lc)[ .].*/", $nextline, $nm)) {
+                if (preg_match("/^([#*;:]+)(_|[\d]+)?($this->cls)[ .].*/", $nextline, $nm)) {
                     $nl = $nm[1];
                 }
 
@@ -2486,7 +2499,7 @@ class Parser
                     "/
                     (?P<pre>^|(?<=[\s>$pnct\(])|[{[])
                     (?P<tag>$tag)(?!$tag)
-                    (?P<atts>{$this->lc})
+                    (?P<atts>{$this->cls})
                     (?!$tag)
                     (?::(?P<cite>\S+[^$tag]{$this->regex_snippets['space']}))?
                     (?P<content>[^{$this->regex_snippets['space']}$tag]+|\S.*?[^\s$tag\n])
@@ -3452,7 +3465,7 @@ class Parser
             (?:[[{])?                  # pre
             \!                         # opening !
             (\<|\=|\>|&lt;|&gt;)?      # optional alignment              $algn
-            ('.$this->lc.')            # optional style,class atts       $atts
+            ('.$this->cls.')            # optional style,class atts       $atts
             (?:\.\s)?                  # optional dot-space
             ([^\s(!]+)                 # presume this is the src         $url
             \s?                        # optional space
