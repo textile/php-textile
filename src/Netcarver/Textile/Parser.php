@@ -3118,7 +3118,8 @@ class Parser
         preg_match(
             '/
             ^
-            (?P<atts>' . $this->c . ')   # $atts (if any)
+            (?P<atts>' . $this->cls . ')  # $atts (if any)
+            ' . $this->regex_snippets['space'] . '* # any optional spaces
             (?P<text>                    # $text is...
             (!.+!)                       #     an image
             |                            #   else...
