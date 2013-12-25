@@ -1703,8 +1703,8 @@ class Parser
     {
         $text = $text . "\n\n";
         return preg_replace_callback(
-            "/^(?:table(_?{$this->s}{$this->a}{$this->c})\.".
-            "(.*)?\n)?^({$this->a}{$this->c}\.? ?\|.*\|){$this->regex_snippets['space']}*\n\n/smU",
+            "/^(?:table(_?{$this->s}{$this->a}{$this->cls})\.".
+            "(.*)?\n)?^({$this->a}{$this->cls}\.? ?\|.*\|){$this->regex_snippets['space']}*\n\n/smU",
             array(&$this, "fTable"),
             $text
         );
@@ -1737,7 +1737,9 @@ class Parser
 
             // Caption -- can only occur on row 1, otherwise treat '|=. foo |...'
             // as a normal center-aligned cell.
-            if (($c_row <= 1) && preg_match("/^\|\=($this->s$this->a$this->c)\. ([^\n]*)(.*)/s", ltrim($row), $cmtch)) {
+            if (($c_row <= 1) &&
+                preg_match("/^\|\=($this->s$this->a$this->cls)\. ([^\n]*)(.*)/s", ltrim($row), $cmtch)
+                ) {
                 $capts = $this->parseAttribs($cmtch[1]);
                 $cap = "\t<caption".$capts.">".trim($cmtch[2])."</caption>\n";
                 $row = ltrim($cmtch[3]);
@@ -1749,7 +1751,7 @@ class Parser
             $c_row += 1;
 
             // Colgroup
-            if (preg_match("/^\|:($this->s$this->a$this->c\. .*)/m", ltrim($row), $gmtch)) {
+            if (preg_match("/^\|:($this->s$this->a$this->cls\. .*)/m", ltrim($row), $gmtch)) {
                 // Is this colgroup def missing a closing pipe? If so, there
                 // will be a newline in the middle of $row somewhere.
                 $nl = strpos($row, "\n");
@@ -1775,7 +1777,7 @@ class Parser
             $rgrpatts = $rgrp = '';
 
             if (preg_match(
-                "/(:?^\|($this->vlgn)($this->s$this->a$this->c)\.{$this->regex_snippets['space']}*$\n)?^(.*)/sm",
+                "/(:?^\|($this->vlgn)($this->s$this->a$this->cls)\.{$this->regex_snippets['space']}*$\n)?^(.*)/sm",
                 ltrim($row),
                 $grpmatch
             )) {
@@ -1798,7 +1800,7 @@ class Parser
                 }
             }
 
-            if (preg_match("/^($this->a$this->c\. )(.*)/m", ltrim($row), $rmtch)) {
+            if (preg_match("/^($this->a$this->cls\. )(.*)/m", ltrim($row), $rmtch)) {
                 $ratts = $this->parseAttribs($rmtch[1], 'tr');
                 $row = $rmtch[2];
             } else {
@@ -1815,7 +1817,7 @@ class Parser
                     $ctyp = "h";
                 }
 
-                if (preg_match("/^(_?$this->s$this->a$this->c\. )(.*)/", $cell, $cmtch)) {
+                if (preg_match("/^(_?$this->s$this->a$this->cls\. )(.*)/", $cell, $cmtch)) {
                     $catts = $this->parseAttribs($cmtch[1], 'td');
                     $cell = $cmtch[2];
                 } else {
@@ -2161,7 +2163,7 @@ class Parser
     protected function blocks($text)
     {
         $regex = '/^(?P<tag>'.join('|', $this->blocktag_whitelist).')'.
-            '(?P<atts>'.$this->a.$this->c.')\.(?P<ext>\.?)(?::(?P<cite>\S+))? (?P<graf>.*)$/Ss'.
+            '(?P<atts>'.$this->a.$this->cls.')\.(?P<ext>\.?)(?::(?P<cite>\S+))? (?P<graf>.*)$/Ss'.
             $this->regex_snippets['mod'];
 
         $textblocks = preg_split('/(\n{2,})/', $text, null, PREG_SPLIT_DELIM_CAPTURE);
