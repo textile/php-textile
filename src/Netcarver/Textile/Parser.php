@@ -1874,7 +1874,11 @@ class Parser
 
     protected function redclothLists($text)
     {
-        return preg_replace_callback("/^([-]+$this->cls[ .].*:=.*)$(?![^-])/smU", array(&$this, "fRedclothList"), $text);
+        return preg_replace_callback(
+            "/^([-]+$this->cls[ .].*:=.*)$(?![^-])/smU",
+            array(&$this, "fRedclothList"),
+            $text
+        );
     }
 
     /**
