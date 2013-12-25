@@ -2280,13 +2280,13 @@ class Parser
             // Is this an anonymous block with a note definition?
             $notedef = preg_replace_callback(
                 "/
-                    ^note\#               #  start of note def marker
+                    ^note\#                                             #  start of note def marker
                     ([^%<*!@#^([{ {$this->regex_snippets['space']}.]+)  # !label
-                    ([*!^]?)              # !link
-                    ({$this->c})          # !att
-                    \.?                   #  optional period.
-                    {$this->regex_snippets['space']}+  #  whitespace ends def marker
-                    (.*)$                 # !content
+                    ([*!^]?)                                            # !link
+                    ({$this->c})                                        # !att
+                    \.?                                                 #  optional period.
+                    {$this->regex_snippets['space']}+                   #  whitespace ends def marker
+                    (.*)$                                               # !content
                 /x".$this->regex_snippets['mod'],
                 array(&$this, "fParseNoteDefs"),
                 $content
@@ -3092,12 +3092,12 @@ class Parser
 
         return preg_replace_callback(
             '/
-            (?P<pre>\[)?                  # Optionally open with a square bracket eg. Look ["here":url]
+            (?P<pre>\[)?                    # Optionally open with a square bracket eg. Look ["here":url]
             '.$this->uid.'linkStartMarker:" # marks start of the link
-            (?P<inner>.+?)                # capture the content of the inner "..." part of the link, can be anything but
-                                          # do not worry about matching class, id, lang or title yet
-            ":                            # literal ": marks end of atts + text + title block
-            (?P<urlx>[^'.$stopchars.']*)  # url upto a stopchar
+            (?P<inner>.+?)                  # capture the content of the inner "..." part of the link and
+                                            # do not worry about matching class, id, lang or title yet
+            ":                              # literal ": marks end of atts + text + title block
+            (?P<urlx>[^'.$stopchars.']*)    # url upto a stopchar
             /x'.$this->regex_snippets['mod'],
             array(&$this, "fLink"),
             $text
@@ -3124,14 +3124,14 @@ class Parser
         preg_match(
             '/
             ^
-            (?P<atts>' . $this->cls . ')  # $atts (if any)
+            (?P<atts>' . $this->cls . ')            # $atts (if any)
             ' . $this->regex_snippets['space'] . '* # any optional spaces
-            (?P<text>                    # $text is...
-            (!.+!)                       #     an image
-            |                            #   else...
-            \(?[^(]+?                    #     link text
-            )                            # end of $text
-            (?:\((?P<title>[^)]+?)\))?   # $title (if any)
+            (?P<text>                               # $text is...
+            (!.+!)                                  #     an image
+            |                                       #   else...
+            \(?[^(]+?                               #     link text
+            )                                       # end of $text
+            (?:\((?P<title>[^)]+?)\))?              # $title (if any)
             $
             /x'.$this->regex_snippets['mod'],
             $inner,
@@ -3472,7 +3472,7 @@ class Parser
             (?:[[{])?                  # pre
             \!                         # opening !
             (\<|\=|\>|&lt;|&gt;)?      # optional alignment              $algn
-            ('.$this->cls.')            # optional style,class atts       $atts
+            ('.$this->cls.')           # optional style,class atts       $atts
             (?:\.\s)?                  # optional dot-space
             ([^\s(!]+)                 # presume this is the src         $url
             \s?                        # optional space
