@@ -3757,10 +3757,10 @@ class Parser
      * @return string
      */
 
-    protected function glyphQuotedQuote($text)
+    protected function glyphQuotedQuote($text, $find = '"?|"[^"]+"')
     {
         return preg_replace_callback(
-            '/ (?P<pre>'.$this->quote_starts.')"(?P<post>.) /'.$this->regex_snippets['mod'],
+            "/ (?P<pre>{$this->quote_starts})(?P<quoted>$find)(?P<post>.) /".$this->regex_snippets['mod'],
             array(&$this, "fGlyphQuotedQuote"),
             $text
         );
@@ -3793,7 +3793,14 @@ class Parser
             ' ' => '&nbsp;',
         ));
 
-        $glyph = ' '.$pre.'"'.$post.' ';
+        $found = $m['quoted'];
+        if (strlen($found) > 1) {
+            $found = rtrim($this->glyphs($m['quoted']));
+        } elseif ('"' === $found) {
+            $found = "&quot;";
+        }
+
+        $glyph = ' '.$pre.$found.$post.' ';
         return $this->shelve($glyph);
     }
 
