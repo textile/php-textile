@@ -3136,9 +3136,9 @@ class Parser
             (?P<atts>' . $this->cls . ')            # $atts (if any)
             ' . $this->regex_snippets['space'] . '* # any optional spaces
             (?P<text>                               # $text is...
-            (!.+!)                                  #     an image
+                (!.+!)                              #     an image
             |                                       #   else...
-            \(?[^(]+?                               #     link text
+                .+?                                 #     link text
             )                                       # end of $text
             (?:\((?P<title>[^)]+?)\))?              # $title (if any)
             $
