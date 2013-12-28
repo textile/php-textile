@@ -2,6 +2,14 @@ Test styles, classes and lang attributes in all permutations:
   input:  |
     "t":example.com
 
+    Empty class "()t":example.com
+
+    Empty language "[]t":example.com
+
+    Empty style "{}t":example.com
+
+    Empty attributes "()[]{}t":example.com
+
     "(c)t":example.com
 
     "(c){color:red}t":example.com
@@ -39,6 +47,14 @@ Test styles, classes and lang attributes in all permutations:
     "{color:red}[en](c)t":example.com
   expect: |
     <p><a href="example.com">t</a></p>
+
+    <p>Empty class <a href="example.com">()t</a></p>
+
+    <p>Empty language <a href="example.com">[]t</a></p>
+
+    <p>Empty style <a href="example.com">{}t</a></p>
+
+    <p>Empty attributes <a href="example.com">()[]{}t</a></p>
 
     <p><a class="c" href="example.com">t</a></p>
 
