@@ -3129,6 +3129,11 @@ class Parser
         $url   = $m['urlx'];
         $m = array();
 
+        // Treat empty inner part as an invalid link.
+        if (empty(trim($inner))) {
+            return $pre.'"'.$inner.'":'.$url;
+        }
+
         // Split inner into $atts, $text and $title..
         preg_match(
             '/
