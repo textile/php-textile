@@ -3151,13 +3151,6 @@ class Parser
         $title = isset($m['title']) ? $m['title'] : '';
         $m = array();
 
-        // In cases like; "(myclass) (just in case you were wondering)":http://slashdot.org/
-        // Where the middle text field is empty but there is a valid title field, we use that for the text.
-        if (!$text && $title) {
-            $text  = "($title)";
-            $title = '';
-        }
-
         $pop = $tight = '';
         $url_chars = array();
         $counts = array(
