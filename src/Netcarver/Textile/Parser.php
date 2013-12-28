@@ -3298,8 +3298,6 @@ class Parser
 
                 $text = $url;
             }
-        } elseif ('' === $text) {
-            $text = $url;
         }
 
         $text = trim($text);
