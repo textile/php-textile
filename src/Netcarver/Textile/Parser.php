@@ -2975,7 +2975,6 @@ class Parser
      * @param  string $text String to search for link starting positions
      * @return string Text with links marked
      * @see    Parser::links()
-     * @throws \Exception
      */
 
     protected function markStartOfLinks($text)
@@ -2984,96 +2983,106 @@ class Parser
         // links between the link text and the url part and are much more
         // infrequent than '"' characters so we have less possible links
         // to process.
-        $slices = preg_split('/":(?='.$this->regex_snippets['char'].')/'.$this->regex_snippets['mod'], $text);
+        $mod = $this->regex_snippets['mod'];
+        $slices = preg_split('/":(?='.$this->regex_snippets['char'].')/'.$mod, $text);
 
-        try {
-            if (count($slices) > 1) {
+        if (count($slices) > 1) {
 
-                // There are never any start of links in the last slice, so pop it
-                // off (we'll glue it back later).
-                $last_slice = array_pop($slices);
+            // There are never any start of links in the last slice, so pop it
+            // off (we'll glue it back later).
+            $last_slice = array_pop($slices);
 
-                foreach ($slices as &$slice) {
+            foreach ($slices as &$slice) {
 
-                    // If there is no possible start quote then this slice is not a link
-                    if (false === strpos($slice, '"')) {
-                        continue;
-                    }
+                // If there is no possible start quote then this slice is not a link
+                if (false === strpos($slice, '"')) {
+                    continue;
+                }
 
-                    // Cut this slice into possible starting points wherever we
-                    // find a '"' character. Any of these parts could represent
-                    // the start of the link text - we have to find which one.
-                    $possible_start_quotes = explode('"', $slice);
+                // Cut this slice into possible starting points wherever we
+                // find a '"' character. Any of these parts could represent
+                // the start of the link text - we have to find which one.
+                $possible_start_quotes = explode('"', $slice);
 
-                    // Start our search for the start of the link with the closest prior
-                    // quote mark.
-                    $possibility = rtrim(array_pop($possible_start_quotes));
+                // Start our search for the start of the link with the closest prior
+                // quote mark.
+                $possibility = rtrim(array_pop($possible_start_quotes));
 
-                    // Init the balanced count. If this is still zero at the end
-                    // of our do loop we'll mark the " that caused it to balance
-                    // and move on to the next link.
-                    $balanced = 0;
-                    $linkparts = array();
-                    $iter = 0;
+                // Init the balanced count. If this is still zero at the end
+                // of our do loop we'll mark the " that caused it to balance
+                // as the start of the link and move on to the next slice.
+                $balanced = 0;
+                $linkparts = array();
+                $iter = 0;
 
-                    while (1) {
-                        // Starting at the end, pop off the previous part of the
-                        // slice's fragments.
+                while (null !== $possibility) {
+                    // Starting at the end, pop off the previous part of the
+                    // slice's fragments.
 
-                        if (null === $possibility) {
-                            throw new \Exception("Malformed link found.");
+                    // Add this part to those parts that make up the link text.
+                    $linkparts[] = $possibility;
+                    $len = strlen($possibility) > 0;
+
+                    if ($len) {
+                        // did this part inc or dec the balanced count?
+                        if (preg_match('/^\S|=$/'.$mod, $possibility)) {
+                            $balanced--;
                         }
 
-                        // Add this part to those parts that make up the link text.
-                        $linkparts[] = $possibility;
-                        $len = strlen($possibility) > 0;
-
-                        if ($len) {
-                            // did this part inc or dec the balanced count?
-                            if (preg_match('/^\S|=$/'.$this->regex_snippets['mod'], $possibility)) {
-                                $balanced--;
-                            }
-
-                            if (preg_match('/\S$/'.$this->regex_snippets['mod'], $possibility)) {
-                                $balanced++;
-                            }
-                        } else {
-                            // If quotes occur next to each other, we get zero length strings.
-                            // eg. ...""Open the door, HAL!"":url...
-                            // In this case we count a zero length in the last position as a
-                            // closing quote and others as opening quotes.
-                            $balanced = (!$iter++) ? $balanced+1 : $balanced-1;
-                        }
-
-                        if ($balanced <= 0) {
-                            break;
+                        if (preg_match('/\S$/'.$mod, $possibility)) {
+                            $balanced++;
                         }
 
                         $possibility = array_pop($possible_start_quotes);
+                    } else {
+                        // If quotes occur next to each other, we get zero length strings.
+                        // eg. ...""Open the door, HAL!"":url...
+                        // In this case we count a zero length in the last position as a
+                        // closing quote and others as opening quotes.
+                        $balanced = (!$iter++) ? $balanced+1 : $balanced-1;
+
+                        $possibility = array_pop($possible_start_quotes);
+
+                        // If out of possible starting segments we back the last one
+                        // from the linkparts array
+                        if (null === $possibility) {
+                            array_pop($linkparts);
+                            break;
+                        }
+
+                        // If the next possibility is empty or ends in a space we have a
+                        // closing ".
+                        if (0 === strlen($possibility) ||
+                            preg_match("~{$this->regex_snippets['space']}$~".$mod, $possibility)) {
+                            $balanced = 0; // force search exit
+                        }
                     }
 
-                    // Rebuild the link's text by reversing the parts and sticking them back
-                    // together with quotes.
-                    $link_start = implode('"', array_reverse($linkparts));
+                    if ($balanced <= 0) {
+                        array_push($possible_start_quotes, $possibility);
+                        break;
+                    }
 
-                    // Rebuild the remaining stuff that goes before the link but that's
-                    // already in order.
-                    $pre_link = implode('"', $possible_start_quotes);
-
-                    // Re-assemble the link starts with a specific marker for the next regex.
-                    $slice = $pre_link . $this->uid.'linkStartMarker:"' . $link_start;
                 }
 
-                // Add the last part back
-                $slices[] = $last_slice;
+                // Rebuild the link's text by reversing the parts and sticking them back
+                // together with quotes.
+                $link_content = implode('"', array_reverse($linkparts));
+
+                // Rebuild the remaining stuff that goes before the link but that's
+                // already in order.
+                $pre_link = implode('"', $possible_start_quotes);
+
+                // Re-assemble the link starts with a specific marker for the next regex.
+                $slice = $pre_link . $this->uid.'linkStartMarker:"' . $link_content;
             }
 
-            // Re-assemble the full text with the start and end markers
-            $text = implode('":', $slices);
-
-        } catch (\Exception $e) {
-            // If we got an exception marking the links then let the replace regex try sorting it out...
+            // Add the last part back
+            $slices[] = $last_slice;
         }
+
+        // Re-assemble the full text with the start and end markers
+        $text = implode('":', $slices);
 
         return $text;
     }
