@@ -24,6 +24,8 @@ Test styles, classes and lang attributes in all permutations:
 
     "(c1)(c2)t":example.com
 
+    "(c1)(title)":example.com
+
     "(c)[en]{color:red}t":example.com
 
     "(c){color:red}[en]t":example.com
@@ -59,6 +61,8 @@ Test styles, classes and lang attributes in all permutations:
     <p><a class="c" href="example.com" lang="en">t</a></p>
 
     <p><a class="c1" href="example.com">(c2)t</a></p>
+
+    <p><a class="c1" href="example.com">(title)</a></p>
 
     <p><a class="c" href="example.com" lang="en" style="color:red;">t</a></p>
 
