@@ -1882,10 +1882,9 @@ class Parser
         $text = preg_split('/\n(?=[-])/m', $in);
         foreach ($text as $nr => $line) {
             $m = array();
-            if (preg_match("/^[-]+($this->lc)\.? (.*)$/s", $line, $m)) {
-                list(, $atts, $content) = $m;
-                $content = trim($content);
-                $atts = $this->parseAttribs($atts);
+            if (preg_match("/^[-]+(?P<atts>$this->lc)\.? (?P<content>.*)$/s", $line, $m)) {
+                $content = trim($m['content']);
+                $atts = $this->parseAttribs($m['atts']);
 
                 if (!preg_match(
                     "/^(.*?){$this->regex_snippets['space']}*:=(.*?)".
