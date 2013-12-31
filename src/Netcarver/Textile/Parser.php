@@ -2040,8 +2040,6 @@ class Parser
                     }
                 }
                 $pt = $tl; // Remember the current Textile tag
-            } else {
-                $line .= "\n";
             }
 
             $out[] = $line;
