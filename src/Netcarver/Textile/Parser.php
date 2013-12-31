@@ -1967,9 +1967,11 @@ class Parser
         $pt = '';
         foreach ($text as $nr => $line) {
             $nextline = isset($text[$nr+1]) ? $text[$nr+1] : false;
-            if (preg_match("/^([#*;:]+)(_|\d+)?($this->lc)[ .](.*)$/s", $line, $m)) {
-                list(, $tl, $st, $atts, $content) = $m;
-                $content = trim($content);
+            if (preg_match("/^(?P<tl>[#*;:]+)(?P<st>_|\d+)?(?P<atts>$this->lc)[ .](?P<content>.*)$/s", $line, $m)) {
+                $tl = $m['tl'];
+                $st = $m['st'];
+                $atts = $m['atts'];
+                $content = trim($m['content']);
                 $nl = '';
                 $ltype = $this->liType($tl);
                 $litem = (strpos($tl, ';') !== false) ? 'dt' : ((strpos($tl, ':') !== false) ? 'dd' : 'li');
@@ -2007,8 +2009,8 @@ class Parser
                     }
                 }
 
-                if (preg_match("/^([#*;:]+)(_|[\d]+)?($this->lc)[ .].*/", $nextline, $nm)) {
-                    $nl = $nm[1];
+                if (preg_match("/^(?P<nextlistitem>[#*;:]+)(_|[\d]+)?($this->lc)[ .].*/", $nextline, $nm)) {
+                    $nl = $nm['nextlistitem'];
                 }
 
                 if ((strpos($pt, ';') !== false) && (strpos($tl, ':') !== false)) {
@@ -2059,8 +2061,8 @@ class Parser
     {
         $m = array();
         $type = 'd';
-        if (preg_match('/^([#*]+)/', $in, $m)) {
-            $type = ('#' === substr($m[1], -1)) ? 'o' : 'u';
+        if (preg_match('/^(?P<type>[#*]+)/', $in, $m)) {
+            $type = ('#' === substr($m['type'], -1)) ? 'o' : 'u';
         }
         return $type;
     }
