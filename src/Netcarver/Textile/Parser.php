@@ -3467,17 +3467,17 @@ class Parser
     {
         return preg_replace_callback(
             '/
-            (?:[[{])?                  # pre
-            \!                         # opening !
-            (\<|\=|\>|&lt;|&gt;)?      # optional alignment              $algn
-            ('.$this->lc.')            # optional style,class atts       $atts
-            (?:\.\s)?                  # optional dot-space
-            ([^\s(!]+)                 # presume this is the src         $url
-            \s?                        # optional space
-            (?:\(([^\)]+)\))?          # optional title                  $title
-            \!                         # closing
-            (?::(\S+)(?<![\]).,]))?    # optional href sans final punct. $href
-            (?:[\]}]|(?=[.,\s)|]|$))   # lookahead: space , . ) | or end of string ... "|" needed if image in table cell
+            (?:[[{])?                       # pre
+            \!                              # opening !
+            (?P<align>\<|\=|\>|&lt;|&gt;)?  # optional alignment              $algn
+            (?P<atts>'.$this->lc.')         # optional style,class atts       $atts
+            (?:\.\s)?                       # optional dot-space
+            (?P<url>[^\s(!]+)               # presume this is the src         $url
+            \s?                             # optional space
+            (?:\((?P<title>[^\)]+)\))?      # optional title                  $title
+            \!                              # closing
+            (?::(?P<href>\S+)(?<![\]).,]))? # optional href sans final punct. $href
+            (?:[\]}]|(?=[.,\s)|]|$))        # lookahead: space,.)| or end of string ("|" needed if image in table cell)
             /x'.$this->regex_snippets['mod'],
             array(&$this, "fImage"),
             $text
@@ -3496,7 +3496,11 @@ class Parser
     {
         $extras = '';
 
-        list(, $align, $atts, $url, $title, $href) = array_pad($m, 6, null);
+        $align = (isset($m['align'])) ? $m['align'] : '';
+        $atts  = $m['atts'];
+        $url   = $m['url'];
+        $title = (isset($m['title'])) ? $m['title'] : '';
+        $href  = (isset($m['href'])) ? $m['href'] : '';
 
         $alignments = array(
             '<'    => 'left',
