@@ -446,10 +446,12 @@ class Parser
     /**
      * Pattern that matches class, style and language attributes.
      *
+     * Will allows all 16 possible permutations of class, style and language attributes.
+     * <no attribute>, c, cl, cs, cls, csl, l, lc, ls, lcs, lsc, s, sc, sl, scl or slc
+     *
      * @var string
      */
-
-    protected $lc;
+    protected $cls;
 
     /**
      * Whitelisted block tags.
@@ -892,7 +894,18 @@ class Parser
         $this->a = "(?:$this->hlgn|$this->vlgn)*";
         $this->s = "(?:$this->cspn|$this->rspn)*";
         $this->c = "(?:$this->clas|$this->styl|$this->lnge|$this->hlgn)*";
-        $this->lc = "(?:$this->clas|$this->styl|$this->lnge)*";
+
+        $this->cls = '(?:'.
+            "$this->clas(?:".
+                "$this->lnge(?:$this->styl)?|$this->styl(?:$this->lnge)?".
+                ')?|'.
+            "$this->lnge(?:".
+                "$this->clas(?:$this->styl)?|$this->styl(?:$this->clas)?".
+                ')?|'.
+            "$this->styl(?:".
+                "$this->clas(?:$this->lnge)?|$this->lnge(?:$this->clas)?".
+                ')?'.
+            ')?';
 
         if ($this->isUnicodePcreSupported()) {
             $this->regex_snippets = array(
@@ -1690,8 +1703,8 @@ class Parser
     {
         $text = $text . "\n\n";
         return preg_replace_callback(
-            "/^(?:table(?P<tatts>_?{$this->s}{$this->a}{$this->c})\.".
-            "(?P<summary>.*)?\n)?^(?P<rows>{$this->a}{$this->c}\.? ?\|.*\|){$this->regex_snippets['space']}*\n\n/smU",
+            "/^(?:table(?P<tatts>_?{$this->s}{$this->a}{$this->cls})\.".
+            "(?P<summary>.*)?\n)?^(?P<rows>{$this->a}{$this->cls}\.? ?\|.*\|){$this->regex_snippets['space']}*\n\n/smU",
             array(&$this, "fTable"),
             $text
         );
@@ -1728,7 +1741,7 @@ class Parser
             // Caption -- can only occur on row 1, otherwise treat '|=. foo |...'
             // as a normal center-aligned cell.
             if (($c_row <= 1) && preg_match(
-                "/^\|\=(?P<capts>$this->s$this->a$this->c)\. (?P<cap>[^\n]*)(?P<row>.*)/s",
+                "/^\|\=(?P<capts>$this->s$this->a$this->cls)\. (?P<cap>[^\n]*)(?P<row>.*)/s",
                 ltrim($row),
                 $cmtch
             )) {
@@ -1743,7 +1756,7 @@ class Parser
             $c_row += 1;
 
             // Colgroup
-            if (preg_match("/^\|:(?P<cols>$this->s$this->a$this->c\. .*)/m", ltrim($row), $gmtch)) {
+            if (preg_match("/^\|:(?P<cols>$this->s$this->a$this->cls\. .*)/m", ltrim($row), $gmtch)) {
                 // Is this colgroup def missing a closing pipe? If so, there
                 // will be a newline in the middle of $row somewhere.
                 $nl = strpos($row, "\n");
@@ -1769,7 +1782,7 @@ class Parser
             $rgrpatts = $rgrp = '';
 
             if (preg_match(
-                "/(:?^\|(?P<part>$this->vlgn)(?P<rgrpatts>$this->s$this->a$this->c)\.{$space}*$\n)?^(?P<row>.*)/sm",
+                "/(:?^\|(?P<part>$this->vlgn)(?P<rgrpatts>$this->s$this->a$this->cls)\.{$space}*$\n)?^(?P<row>.*)/sm",
                 ltrim($row),
                 $grpmatch
             )) {
@@ -1792,7 +1805,7 @@ class Parser
                 }
             }
 
-            if (preg_match("/^(?P<ratts>$this->a$this->c\. )(?P<row>.*)/m", ltrim($row), $rmtch)) {
+            if (preg_match("/^(?P<ratts>$this->a$this->cls\. )(?P<row>.*)/m", ltrim($row), $rmtch)) {
                 $ratts = $this->parseAttribs($rmtch['ratts'], 'tr');
                 $row = $rmtch['row'];
             } else {
@@ -1809,7 +1822,7 @@ class Parser
                     $ctyp = "h";
                 }
 
-                if (preg_match("/^(?P<catts>_?$this->s$this->a$this->c\. )(?P<cell>.*)/", $cell, $cmtch)) {
+                if (preg_match("/^(?P<catts>_?$this->s$this->a$this->cls\. )(?P<cell>.*)/", $cell, $cmtch)) {
                     $catts = $this->parseAttribs($cmtch['catts'], 'td');
                     $cell = $cmtch['cell'];
                 } else {
@@ -1868,7 +1881,11 @@ class Parser
 
     protected function redclothLists($text)
     {
-        return preg_replace_callback("/^([-]+$this->lc[ .].*:=.*)$(?![^-])/smU", array(&$this, "fRedclothList"), $text);
+        return preg_replace_callback(
+            "/^([-]+$this->cls[ .].*:=.*)$(?![^-])/smU",
+            array(&$this, "fRedclothList"),
+            $text
+        );
     }
 
     /**
@@ -1889,7 +1906,7 @@ class Parser
         $text = preg_split('/\n(?=[-])/m', $in);
         foreach ($text as $nr => $line) {
             $m = array();
-            if (preg_match("/^[-]+(?P<atts>$this->lc)\.? (?P<content>.*)$/s", $line, $m)) {
+            if (preg_match("/^[-]+(?P<atts>$this->cls)\.? (?P<content>.*)$/s", $line, $m)) {
                 $content = trim($m['content']);
                 $atts = $this->parseAttribs($m['atts']);
 
@@ -1951,7 +1968,7 @@ class Parser
     protected function textileLists($text)
     {
         return preg_replace_callback(
-            "/^((?:[*;:]+|[*;:#]*#(?:_|\d+)?)$this->lc[ .].*)$(?![^#*;:])/smU",
+            "/^((?:[*;:]+|[*;:#]*#(?:_|\d+)?)$this->cls[ .].*)$(?![^#*;:])/smU",
             array(&$this, "fTextileList"),
             $text
         );
@@ -1974,7 +1991,7 @@ class Parser
         $pt = '';
         foreach ($text as $nr => $line) {
             $nextline = isset($text[$nr+1]) ? $text[$nr+1] : false;
-            if (preg_match("/^(?P<tl>[#*;:]+)(?P<st>_|\d+)?(?P<atts>$this->lc)[ .](?P<content>.*)$/s", $line, $m)) {
+            if (preg_match("/^(?P<tl>[#*;:]+)(?P<st>_|\d+)?(?P<atts>$this->cls)[ .](?P<content>.*)$/s", $line, $m)) {
                 $tl = $m['tl'];
                 $st = $m['st'];
                 $atts = $m['atts'];
@@ -2016,7 +2033,7 @@ class Parser
                     }
                 }
 
-                if (preg_match("/^(?P<nextlistitem>[#*;:]+)(_|[\d]+)?($this->lc)[ .].*/", $nextline, $nm)) {
+                if (preg_match("/^(?P<nextlistitem>[#*;:]+)(_|[\d]+)?($this->cls)[ .].*/", $nextline, $nm)) {
                     $nl = $nm['nextlistitem'];
                 }
 
@@ -2158,7 +2175,7 @@ class Parser
     protected function blocks($text)
     {
         $regex = '/^(?P<tag>'.join('|', $this->blocktag_whitelist).')'.
-            '(?P<atts>'.$this->a.$this->c.')\.(?P<ext>\.?)(?::(?P<cite>\S+))? (?P<graf>.*)$/Ss'.
+            '(?P<atts>'.$this->a.$this->cls.')\.(?P<ext>\.?)(?::(?P<cite>\S+))? (?P<graf>.*)$/Ss'.
             $this->regex_snippets['mod'];
 
         $textblocks = preg_split('/(\n{2,})/', $text, null, PREG_SPLIT_DELIM_CAPTURE);
@@ -2279,7 +2296,7 @@ class Parser
                     ^note\#                              # start of note def marker
                     (?P<label>[^%<*!@#^([{ {$space}.]+)  # label
                     (?P<link>[*!^]?)                     # link
-                    (?P<att>{$this->c})                  # att
+                    (?P<att>{$this->cls})                # att
                     \.?                                  # optional period.
                     {$space}+                            # whitespace ends def marker
                     (?P<content>.*)$                     # content
@@ -2501,7 +2518,7 @@ class Parser
                     "/
                     (?P<pre>^|(?<=[\s>$pnct\(])|[{[])
                     (?P<tag>$tag)(?!$tag)
-                    (?P<atts>{$this->lc})
+                    (?P<atts>{$this->cls})
                     (?!$tag)
                     (?::(?P<cite>\S+[^$tag]{$this->regex_snippets['space']}))?
                     (?P<content>[^{$this->regex_snippets['space']}$tag]+|\S.*?[^\s$tag\n])
@@ -2974,7 +2991,6 @@ class Parser
      * @param  string $text String to search for link starting positions
      * @return string Text with links marked
      * @see    Parser::links()
-     * @throws \Exception
      */
 
     protected function markStartOfLinks($text)
@@ -2983,96 +2999,106 @@ class Parser
         // links between the link text and the url part and are much more
         // infrequent than '"' characters so we have less possible links
         // to process.
-        $slices = preg_split('/":(?='.$this->regex_snippets['char'].')/'.$this->regex_snippets['mod'], $text);
+        $mod = $this->regex_snippets['mod'];
+        $slices = preg_split('/":(?='.$this->regex_snippets['char'].')/'.$mod, $text);
 
-        try {
-            if (count($slices) > 1) {
+        if (count($slices) > 1) {
 
-                // There are never any start of links in the last slice, so pop it
-                // off (we'll glue it back later).
-                $last_slice = array_pop($slices);
+            // There are never any start of links in the last slice, so pop it
+            // off (we'll glue it back later).
+            $last_slice = array_pop($slices);
 
-                foreach ($slices as &$slice) {
+            foreach ($slices as &$slice) {
 
-                    // If there is no possible start quote then this slice is not a link
-                    if (false === strpos($slice, '"')) {
-                        continue;
-                    }
+                // If there is no possible start quote then this slice is not a link
+                if (false === strpos($slice, '"')) {
+                    continue;
+                }
 
-                    // Cut this slice into possible starting points wherever we
-                    // find a '"' character. Any of these parts could represent
-                    // the start of the link text - we have to find which one.
-                    $possible_start_quotes = explode('"', $slice);
+                // Cut this slice into possible starting points wherever we
+                // find a '"' character. Any of these parts could represent
+                // the start of the link text - we have to find which one.
+                $possible_start_quotes = explode('"', $slice);
 
-                    // Start our search for the start of the link with the closest prior
-                    // quote mark.
-                    $possibility = rtrim(array_pop($possible_start_quotes));
+                // Start our search for the start of the link with the closest prior
+                // quote mark.
+                $possibility = rtrim(array_pop($possible_start_quotes));
 
-                    // Init the balanced count. If this is still zero at the end
-                    // of our do loop we'll mark the " that caused it to balance
-                    // and move on to the next link.
-                    $balanced = 0;
-                    $linkparts = array();
-                    $iter = 0;
+                // Init the balanced count. If this is still zero at the end
+                // of our do loop we'll mark the " that caused it to balance
+                // as the start of the link and move on to the next slice.
+                $balanced = 0;
+                $linkparts = array();
+                $iter = 0;
 
-                    while (1) {
-                        // Starting at the end, pop off the previous part of the
-                        // slice's fragments.
+                while (null !== $possibility) {
+                    // Starting at the end, pop off the previous part of the
+                    // slice's fragments.
 
-                        if (null === $possibility) {
-                            throw new \Exception("Malformed link found.");
+                    // Add this part to those parts that make up the link text.
+                    $linkparts[] = $possibility;
+                    $len = strlen($possibility) > 0;
+
+                    if ($len) {
+                        // did this part inc or dec the balanced count?
+                        if (preg_match('/^\S|=$/'.$mod, $possibility)) {
+                            $balanced--;
                         }
 
-                        // Add this part to those parts that make up the link text.
-                        $linkparts[] = $possibility;
-                        $len = strlen($possibility) > 0;
-
-                        if ($len) {
-                            // did this part inc or dec the balanced count?
-                            if (preg_match('/^\S|=$/'.$this->regex_snippets['mod'], $possibility)) {
-                                $balanced--;
-                            }
-
-                            if (preg_match('/\S$/'.$this->regex_snippets['mod'], $possibility)) {
-                                $balanced++;
-                            }
-                        } else {
-                            // If quotes occur next to each other, we get zero length strings.
-                            // eg. ...""Open the door, HAL!"":url...
-                            // In this case we count a zero length in the last position as a
-                            // closing quote and others as opening quotes.
-                            $balanced = (!$iter++) ? $balanced+1 : $balanced-1;
-                        }
-
-                        if ($balanced <= 0) {
-                            break;
+                        if (preg_match('/\S$/'.$mod, $possibility)) {
+                            $balanced++;
                         }
 
                         $possibility = array_pop($possible_start_quotes);
+                    } else {
+                        // If quotes occur next to each other, we get zero length strings.
+                        // eg. ...""Open the door, HAL!"":url...
+                        // In this case we count a zero length in the last position as a
+                        // closing quote and others as opening quotes.
+                        $balanced = (!$iter++) ? $balanced+1 : $balanced-1;
+
+                        $possibility = array_pop($possible_start_quotes);
+
+                        // If out of possible starting segments we back the last one
+                        // from the linkparts array
+                        if (null === $possibility) {
+                            array_pop($linkparts);
+                            break;
+                        }
+
+                        // If the next possibility is empty or ends in a space we have a
+                        // closing ".
+                        if (0 === strlen($possibility) ||
+                            preg_match("~{$this->regex_snippets['space']}$~".$mod, $possibility)) {
+                            $balanced = 0; // force search exit
+                        }
                     }
 
-                    // Rebuild the link's text by reversing the parts and sticking them back
-                    // together with quotes.
-                    $link_start = implode('"', array_reverse($linkparts));
+                    if ($balanced <= 0) {
+                        array_push($possible_start_quotes, $possibility);
+                        break;
+                    }
 
-                    // Rebuild the remaining stuff that goes before the link but that's
-                    // already in order.
-                    $pre_link = implode('"', $possible_start_quotes);
-
-                    // Re-assemble the link starts with a specific marker for the next regex.
-                    $slice = $pre_link . $this->uid.'linkStartMarker:"' . $link_start;
                 }
 
-                // Add the last part back
-                $slices[] = $last_slice;
+                // Rebuild the link's text by reversing the parts and sticking them back
+                // together with quotes.
+                $link_content = implode('"', array_reverse($linkparts));
+
+                // Rebuild the remaining stuff that goes before the link but that's
+                // already in order.
+                $pre_link = implode('"', $possible_start_quotes);
+
+                // Re-assemble the link starts with a specific marker for the next regex.
+                $slice = $pre_link . $this->uid.'linkStartMarker:"' . $link_content;
             }
 
-            // Re-assemble the full text with the start and end markers
-            $text = implode('":', $slices);
-
-        } catch (\Exception $e) {
-            // If we got an exception marking the links then let the replace regex try sorting it out...
+            // Add the last part back
+            $slices[] = $last_slice;
         }
+
+        // Re-assemble the full text with the start and end markers
+        $text = implode('":', $slices);
 
         return $text;
     }
@@ -3093,7 +3119,7 @@ class Parser
             '/
             (?P<pre>\[)?                    # Optionally open with a square bracket eg. Look ["here":url]
             '.$this->uid.'linkStartMarker:" # marks start of the link
-            (?P<inner>.+?)                  # grab the content of the inner "..." part of the link, can be anything but
+            (?P<inner>.*?)                  # grab the content of the inner "..." part of the link, can be anything but
                                             # do not worry about matching class, id, lang or title yet
             ":                              # literal ": marks end of atts + text + title block
             (?P<urlx>[^'.$stopchars.']*)    # url upto a stopchar
@@ -3119,17 +3145,24 @@ class Parser
         $url   = $m['urlx'];
         $m = array();
 
+        // Treat empty inner part as an invalid link.
+        $trimmed = trim($inner);
+        if (empty($trimmed)) {
+            return $pre.'"'.$inner.'":'.$url;
+        }
+
         // Split inner into $atts, $text and $title..
         preg_match(
             '/
             ^
-            (?P<atts>' . $this->c . ')   # $atts (if any)
-            (?P<text>                    # $text is...
-            (!.+!)                       #     an image
-            |                            #   else...
-            \(?[^(]+?                    #     link text
-            )                            # end of $text
-            (?:\((?P<title>[^)]+?)\))?   # $title (if any)
+            (?P<atts>' . $this->cls . ')            # $atts (if any)
+            ' . $this->regex_snippets['space'] . '* # any optional spaces
+            (?P<text>                               # $text is...
+                (!.+!)                              #     an image
+            |                                       #   else...
+                .+?                                 #     link text
+            )                                       # end of $text
+            (?:\((?P<title>[^)]+?)\))?              # $title (if any)
             $
             /x'.$this->regex_snippets['mod'],
             $inner,
@@ -3139,13 +3172,6 @@ class Parser
         $text  = isset($m['text'])  ? trim($m['text'])  : $inner;
         $title = isset($m['title']) ? $m['title'] : '';
         $m = array();
-
-        // In cases like; "(myclass) (just in case you were wondering)":http://slashdot.org/
-        // Where the middle text field is empty but there is a valid title field, we use that for the text.
-        if (!$text && $title) {
-            $text  = "($title)";
-            $title = '';
-        }
 
         $pop = $tight = '';
         $url_chars = array();
@@ -3470,7 +3496,7 @@ class Parser
             (?:[[{])?                       # pre
             \!                              # opening !
             (?P<align>\<|\=|\>|&lt;|&gt;)?  # optional alignment              $algn
-            (?P<atts>'.$this->lc.')         # optional style,class atts       $atts
+            (?P<atts>'.$this->cls.')        # optional style,class atts       $atts
             (?:\.\s)?                       # optional dot-space
             (?P<url>[^\s(!]+)               # presume this is the src         $url
             \s?                             # optional space
@@ -3759,10 +3785,10 @@ class Parser
      * @return string
      */
 
-    protected function glyphQuotedQuote($text)
+    protected function glyphQuotedQuote($text, $find = '"?|"[^"]+"')
     {
         return preg_replace_callback(
-            '/ (?P<pre>'.$this->quote_starts.')"(?P<post>.) /'.$this->regex_snippets['mod'],
+            "/ (?P<pre>{$this->quote_starts})(?P<quoted>$find)(?P<post>.) /".$this->regex_snippets['mod'],
             array(&$this, "fGlyphQuotedQuote"),
             $text
         );
@@ -3795,7 +3821,14 @@ class Parser
             ' ' => '&nbsp;',
         ));
 
-        $glyph = ' '.$pre.'"'.$post.' ';
+        $found = $m['quoted'];
+        if (strlen($found) > 1) {
+            $found = rtrim($this->glyphs($m['quoted']));
+        } elseif ('"' === $found) {
+            $found = "&quot;";
+        }
+
+        $glyph = ' '.$pre.$found.$post.' ';
         return $this->shelve($glyph);
     }
 

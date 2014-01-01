@@ -1,0 +1,241 @@
+One:
+  input:  |
+    "": 
+
+    "":- 
+
+    " ":- 
+
+    "A": 
+
+    "B":- 
+
+    "C":/ 
+
+    "Text(title)":/
+
+    " (title)":/
+
+    Call "fx()(title)":/.
+    
+  expect: |
+    <p>&#8220;&#8221;: </p>
+
+    <p>&#8220;&#8221;:- </p>
+
+    <p>&#8220;&#8221;:- </p>
+
+    <p>&#8220;A&#8221;: </p>
+
+    <p><a href="-">B</a> </p>
+    
+    <p><a href="/">C</a> </p>
+
+    <p><a href="/" title="title">Text</a></p>
+
+    <p><a href="/">(title)</a></p>
+
+    <p>Call <a href="/" title="title">fx()</a>.</p>
+
+Two:
+  input:  |
+    ":https://github.com
+  expect: |
+    <p>&#8220;:https://github.com</p>
+
+Three:
+  input:  |
+    "":https://github.com
+  expect: |
+    <p>&#8220;&#8221;:https://github.com</p>
+
+Four:
+  input:  |
+    A "link" -- so called? "":https://github.com
+  expect: |
+    <p>A &#8220;link&#8221; &#8212; so called? &#8220;&#8221;:https://github.com</p>
+
+Five:
+  input:  |
+    A "link -- so called? "":https://github.com
+  expect: |
+    <p>A &#8220;link &#8212; so called? &#8220;&#8221;:https://github.com</p>
+
+Six:
+  input:  |
+    "The use of the character " in textile":help.html..!
+  expect: |
+    <p><a href="help.html">The use of the character &#8220; in textile</a>..!</p>
+
+Six-one:
+  input:  |
+    "The use of the character ! in textile":help.html..!
+  expect: |
+    <p><a href="help.html">The use of the character ! in textile</a>..!</p>
+
+Seven:
+  input:  |
+    "The use of the assignment $="2" in textile":help.html..!
+  expect: |
+    <p><a href="help.html">The use of the assignment $=&#8220;2&#8221; in textile</a>..!</p>
+
+Eight:
+  input:  |
+    "The use of the character '"' in textile":help.html..!
+  expect: |
+    <p><a href="help.html">The use of the character &#8216;&quot;&#8217; in textile</a>..!</p>
+
+Nine:
+  input:  |
+    "The use of the character "!" in textile":help.html..!
+  expect: |
+    <p><a href="help.html">The use of the character &#8220;!&#8221; in textile</a>..!</p>
+
+Nine-One:
+  input:  |
+    "The use of the character ("!") in textile":help.html..!
+  expect: |
+    <p><a href="help.html">The use of the character (&#8220;!&#8221;) in textile</a>..!</p>
+
+Nine-Two:
+  input:  |
+    "The use of the character ("!") in textile":help.html.
+  expect: |
+    <p><a href="help.html">The use of the character (&#8220;!&#8221;) in textile</a>.</p>
+
+Nine-Three:
+  input:  |
+    ("The use of the character "!" in textile":help.html)..!
+  expect: |
+    <p>(<a href="help.html">The use of the character &#8220;!&#8221; in textile</a>)..!</p>
+
+Nine-Four:
+  input:  |
+    "The use of the characters () in textile":help.html.
+  expect: |
+    <p><a href="help.html">The use of the characters () in textile</a>.</p>
+
+Ten:
+  input:  |
+    "The use of the characters "" in textile":help.html..!
+  expect: |
+    <p><a href="help.html">The use of the characters &#8220;&#8221; in textile</a>..!</p>
+
+Ten-One:
+  input:  |
+    "The use of the characters '' in textile":help.html..!
+  expect: |
+    <p><a href="help.html">The use of the characters &#8216;&#8217; in textile</a>..!</p>
+
+Ten-Two:
+  input:  |
+    "The use of the character " in textile":help.html..!
+  expect: |
+    <p><a href="help.html">The use of the character &#8220; in textile</a>..!</p>
+
+Eleven:
+  input:  |
+    A "link":/ and "another":/ and "yet another":/.
+  expect: |
+    <p>A <a href="/">link</a> and <a href="/">another</a> and <a href="/">yet another</a>.</p>
+
+Twelve:
+  input:  |
+    A ("link":/) and ("another":/ and "yet another":/).
+  expect: |
+    <p>A (<a href="/">link</a>) and (<a href="/">another</a> and <a href="/">yet another</a>).</p>
+
+Quotes in code:
+  input:  |
+    @Use of the '"' char@ and @use of the "'" char@.
+  expect: |
+    <p><code>Use of the &#39;&quot;&#39; char</code> and <code>use of the &quot;&#39;&quot; char</code>.</p>
+
+Combinations of valid and invalid links:
+  input:  |
+    Here is a valid link "github":https://github.com and an invalid one ":https://github.com.
+
+    Here is an invalid link github":https://github.com and a valid one "github":https://github.com.
+
+    Some "valid":/ and invalid":/ and "valid":/ links.
+
+    Some "valid":/ and "valid":/ and invalid":/ links.
+
+    Some invalid":/ and "valid":/ and "valid":/ links.
+
+  expect: |
+    <p>Here is a valid link <a href="https://github.com">github</a> and an invalid one &#8220;:https://github.com.</p>
+
+    <p>Here is an invalid link github&#8221;:https://github.com and a valid one <a href="https://github.com">github</a>.</p>
+
+    <p>Some <a href="/">valid</a> and invalid&#8221;:/ and <a href="/">valid</a> links.</p>
+
+    <p>Some <a href="/">valid</a> and <a href="/">valid</a> and invalid&#8221;:/ links.</p>
+
+    <p>Some invalid&#8221;:/ and <a href="/">valid</a> and <a href="/">valid</a> links.</p>
+
+Weird cases:
+  input:  |
+    "(class)(text)(title)":http://example.com/
+
+    "(class) (text)(title)":http://example.com/
+
+    "(class)(text) (title)":http://example.com/
+
+    "(class) (text) (title)":http://example.com/
+
+    1 " a": b
+
+    " a" b
+
+    ": a": b
+
+    " a": b
+
+    1 "a": b
+
+    "a": First letter of the alphabet
+
+    "$":https://github.com
+
+    "(c)":https://github.com
+
+    "(class)$":https://github.com
+
+    "(class)":https://github.com
+
+    "(c) (title)":https://github.com
+
+    "(c)Text(title)":https://github.com
+  expect: |
+    <p><a class="class" href="http://example.com/" title="title">(text)</a></p>
+
+    <p><a class="class" href="http://example.com/" title="title">(text)</a></p>
+
+    <p><a class="class" href="http://example.com/" title="title">(text)</a></p>
+
+    <p><a class="class" href="http://example.com/" title="title">(text)</a></p>
+
+    <p>1 &#8220; a&#8221;: b</p>
+
+    <p>&#8220; a&#8221; b</p>
+
+    <p>&#8220;: a&#8221;: b</p>
+
+    <p>&#8220; a&#8221;: b</p>
+
+    <p>1 &#8220;a&#8221;: b</p>
+
+    <p>&#8220;a&#8221;: First letter of the alphabet</p>
+
+    <p><a href="https://github.com">github.com</a></p>
+
+    <p><a href="https://github.com">&#169;</a></p>
+
+    <p><a class="class" href="https://github.com">github.com</a></p>
+
+    <p><a href="https://github.com">(class)</a></p>
+
+    <p><a class="c" href="https://github.com">(title)</a></p>
+
+    <p><a class="c" href="https://github.com" title="title">Text</a></p>

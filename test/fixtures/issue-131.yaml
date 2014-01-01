@@ -1,0 +1,93 @@
+Test styles, classes and lang attributes in all permutations:
+  input:  |
+    "t":example.com
+
+    Empty class "()t":example.com
+
+    Empty language "[]t":example.com
+
+    Empty style "{}t":example.com
+
+    Empty attributes "()[]{}t":example.com
+
+    "(c)t":example.com
+
+    "(c){color:red}t":example.com
+
+    "{color:red}(c)t":example.com
+
+    "[en]{color:red}t":example.com
+
+    "{color:red}[en]t":example.com
+
+    "(c1 c2)t":example.com
+
+    "[en]t":example.com
+
+    "{color:red}t":example.com
+
+    "(c)[en]t":example.com
+
+    "[en](c)t":example.com
+
+    "(c1)(c2)t":example.com
+
+    "(c1)(title)":example.com
+
+    "(c)[en]{color:red}t":example.com
+
+    "(c){color:red}[en]t":example.com
+
+    "[en](c){color:red}t":example.com
+
+    "[en]{color:red}(c)t":example.com
+
+    "{color:red}(c)[en]t":example.com
+
+    "{color:red}[en](c)t":example.com
+  expect: |
+    <p><a href="example.com">t</a></p>
+
+    <p>Empty class <a href="example.com">()t</a></p>
+
+    <p>Empty language <a href="example.com">[]t</a></p>
+
+    <p>Empty style <a href="example.com">{}t</a></p>
+
+    <p>Empty attributes <a href="example.com">()[]{}t</a></p>
+
+    <p><a class="c" href="example.com">t</a></p>
+
+    <p><a class="c" href="example.com" style="color:red;">t</a></p>
+
+    <p><a class="c" href="example.com" style="color:red;">t</a></p>
+
+    <p><a href="example.com" lang="en" style="color:red;">t</a></p>
+
+    <p><a href="example.com" lang="en" style="color:red;">t</a></p>
+
+    <p><a class="c1 c2" href="example.com">t</a></p>
+
+    <p><a href="example.com" lang="en">t</a></p>
+
+    <p><a href="example.com" style="color:red;">t</a></p>
+
+    <p><a class="c" href="example.com" lang="en">t</a></p>
+
+    <p><a class="c" href="example.com" lang="en">t</a></p>
+
+    <p><a class="c1" href="example.com">(c2)t</a></p>
+
+    <p><a class="c1" href="example.com">(title)</a></p>
+
+    <p><a class="c" href="example.com" lang="en" style="color:red;">t</a></p>
+
+    <p><a class="c" href="example.com" lang="en" style="color:red;">t</a></p>
+
+    <p><a class="c" href="example.com" lang="en" style="color:red;">t</a></p>
+
+    <p><a class="c" href="example.com" lang="en" style="color:red;">t</a></p>
+
+    <p><a class="c" href="example.com" lang="en" style="color:red;">t</a></p>
+
+    <p><a class="c" href="example.com" lang="en" style="color:red;">t</a></p>
