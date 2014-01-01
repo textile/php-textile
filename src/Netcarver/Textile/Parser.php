@@ -1690,8 +1690,8 @@ class Parser
     {
         $text = $text . "\n\n";
         return preg_replace_callback(
-            "/^(?:table(_?{$this->s}{$this->a}{$this->c})\.".
-            "(.*)?\n)?^({$this->a}{$this->c}\.? ?\|.*\|){$this->regex_snippets['space']}*\n\n/smU",
+            "/^(?:table(?P<tatts>_?{$this->s}{$this->a}{$this->c})\.".
+            "(?P<summary>.*)?\n)?^(?P<rows>{$this->a}{$this->c}\.? ?\|.*\|){$this->regex_snippets['space']}*\n\n/smU",
             array(&$this, "fTable"),
             $text
         );
@@ -1710,24 +1710,24 @@ class Parser
 
     protected function fTable($matches)
     {
-        $tatts = $this->parseAttribs($matches[1], 'table');
+        $tatts = $this->parseAttribs($matches['tatts'], 'table');
 
-        $sum = trim($matches[2]) ? ' summary="'.htmlspecialchars(trim($matches[2]), ENT_QUOTES, 'UTF-8').'"' : '';
+        $sum = trim($matches['summary']) ? ' summary="'.htmlspecialchars(trim($matches['summary']), ENT_QUOTES, 'UTF-8').'"' : '';
         $cap = '';
         $colgrp = '';
         $last_rgrp = '';
         $c_row = 1;
 
-        foreach (preg_split("/\|{$this->regex_snippets['space']}*?$/m", $matches[3], -1, PREG_SPLIT_NO_EMPTY) as $row) {
+        foreach (preg_split("/\|{$this->regex_snippets['space']}*?$/m", $matches['rows'], -1, PREG_SPLIT_NO_EMPTY) as $row) {
 
             $row = ltrim($row);
 
             // Caption -- can only occur on row 1, otherwise treat '|=. foo |...'
             // as a normal center-aligned cell.
-            if (($c_row <= 1) && preg_match("/^\|\=($this->s$this->a$this->c)\. ([^\n]*)(.*)/s", ltrim($row), $cmtch)) {
-                $capts = $this->parseAttribs($cmtch[1]);
-                $cap = "\t<caption".$capts.">".trim($cmtch[2])."</caption>\n";
-                $row = ltrim($cmtch[3]);
+            if (($c_row <= 1) && preg_match("/^\|\=(?P<capts>$this->s$this->a$this->c)\. (?P<cap>[^\n]*)(?P<row>.*)/s", ltrim($row), $cmtch)) {
+                $capts = $this->parseAttribs($cmtch['capts']);
+                $cap = "\t<caption".$capts.">".trim($cmtch['cap'])."</caption>\n";
+                $row = ltrim($cmtch['row']);
                 if (empty($row)) {
                     continue;
                 }
@@ -1736,13 +1736,13 @@ class Parser
             $c_row += 1;
 
             // Colgroup
-            if (preg_match("/^\|:($this->s$this->a$this->c\. .*)/m", ltrim($row), $gmtch)) {
+            if (preg_match("/^\|:(?P<cols>$this->s$this->a$this->c\. .*)/m", ltrim($row), $gmtch)) {
                 // Is this colgroup def missing a closing pipe? If so, there
                 // will be a newline in the middle of $row somewhere.
                 $nl = strpos($row, "\n");
                 $idx = 0;
 
-                foreach (explode('|', str_replace('.', '', $gmtch[1])) as $col) {
+                foreach (explode('|', str_replace('.', '', $gmtch['cols'])) as $col) {
                     $gatts = $this->parseAttribs(trim($col), 'col');
                     $colgrp .= "\t<col".(($idx==0) ? "group".$gatts.">" : $gatts." />")."\n";
                     $idx++;
@@ -1762,32 +1762,32 @@ class Parser
             $rgrpatts = $rgrp = '';
 
             if (preg_match(
-                "/(:?^\|($this->vlgn)($this->s$this->a$this->c)\.{$this->regex_snippets['space']}*$\n)?^(.*)/sm",
+                "/(:?^\|(?P<part>$this->vlgn)(?P<rgrpatts>$this->s$this->a$this->c)\.{$this->regex_snippets['space']}*$\n)?^(?P<row>.*)/sm",
                 ltrim($row),
                 $grpmatch
             )) {
-                if (isset($grpmatch[2])) {
-                    if ($grpmatch[2] === '^') {
+                if (isset($grpmatch['part'])) {
+                    if ($grpmatch['part'] === '^') {
                         $rgrp = 'head';
-                    } elseif ($grpmatch[2] === '~') {
+                    } elseif ($grpmatch['part'] === '~') {
                         $rgrp = 'foot';
-                    } elseif ($grpmatch[2] === '-') {
+                    } elseif ($grpmatch['part'] === '-') {
                         $rgrp = 'body';
                     }
                 }
 
-                if (isset($grpmatch[2])) {
-                    $rgrpatts = $this->parseAttribs($grpmatch[3]);
+                if (isset($grpmatch['part'])) {
+                    $rgrpatts = $this->parseAttribs($grpmatch['rgrpatts']);
                 }
 
-                if (isset($grpmatch[4])) {
-                    $row = $grpmatch[4];
+                if (isset($grpmatch['row'])) {
+                    $row = $grpmatch['row'];
                 }
             }
 
-            if (preg_match("/^($this->a$this->c\. )(.*)/m", ltrim($row), $rmtch)) {
-                $ratts = $this->parseAttribs($rmtch[1], 'tr');
-                $row = $rmtch[2];
+            if (preg_match("/^(?P<ratts>$this->a$this->c\. )(?P<row>.*)/m", ltrim($row), $rmtch)) {
+                $ratts = $this->parseAttribs($rmtch['ratts'], 'tr');
+                $row = $rmtch['row'];
             } else {
                 $ratts = '';
             }
@@ -1802,9 +1802,9 @@ class Parser
                     $ctyp = "h";
                 }
 
-                if (preg_match("/^(_?$this->s$this->a$this->c\. )(.*)/", $cell, $cmtch)) {
-                    $catts = $this->parseAttribs($cmtch[1], 'td');
-                    $cell = $cmtch[2];
+                if (preg_match("/^(?P<catts>_?$this->s$this->a$this->c\. )(?P<cell>.*)/", $cell, $cmtch)) {
+                    $catts = $this->parseAttribs($cmtch['catts'], 'td');
+                    $cell = $cmtch['cell'];
                 } else {
                     $catts = '';
                 }
@@ -1812,10 +1812,10 @@ class Parser
                 if (!$this->lite) {
                     $a = array();
 
-                    if (preg_match('/('.$this->regex_snippets['space'].'*)(.*)/s', $cell, $a)) {
-                        $cell = $this->redclothLists($a[2]);
+                    if (preg_match('/(?<space>'.$this->regex_snippets['space'].'*)(?P<cell>.*)/s', $cell, $a)) {
+                        $cell = $this->redclothLists($a['cell']);
                         $cell = $this->textileLists($cell);
-                        $cell = $a[1] . $cell;
+                        $cell = $a['space'] . $cell;
                     }
                 }
 
