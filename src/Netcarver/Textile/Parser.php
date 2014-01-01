@@ -2294,9 +2294,9 @@ class Parser
             }
         }
 
-        if (preg_match("/fn({$this->regex_snippets['digit']}+)/".$this->regex_snippets['mod'], $tag, $fns)) {
+        if (preg_match("/fn(?P<fnid>{$this->regex_snippets['digit']}+)/".$this->regex_snippets['mod'], $tag, $fns)) {
             $tag = 'p';
-            $fnid = empty($this->fn[$fns[1]]) ? $this->linkPrefix . ($this->linkIndex++) : $this->fn[$fns[1]];
+            $fnid = empty($this->fn[$fns['fnid']]) ? $this->linkPrefix . ($this->linkIndex++) : $this->fn[$fns['fnid']];
 
             // If there is an author-specified ID goes on the wrapper & the auto-id gets pushed to the <sup>
             $supp_id = '';
@@ -2311,9 +2311,9 @@ class Parser
             }
 
             if (strpos($att, '^') === false) {
-                $sup = $this->formatFootnote($fns[1], $supp_id);
+                $sup = $this->formatFootnote($fns['fnid'], $supp_id);
             } else {
-                $sup = $this->formatFootnote('<a href="#fnrev' . $fnid . '">'.$fns[1] .'</a>', $supp_id);
+                $sup = $this->formatFootnote('<a href="#fnrev' . $fnid . '">'.$fns['fnid'] .'</a>', $supp_id);
             }
 
             $content = $sup . ' ' . $content;
