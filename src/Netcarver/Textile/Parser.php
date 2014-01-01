@@ -1711,20 +1711,27 @@ class Parser
     protected function fTable($matches)
     {
         $tatts = $this->parseAttribs($matches['tatts'], 'table');
+        $space = $this->regex_snippets['space'];
 
-        $sum = trim($matches['summary']) ? ' summary="'.htmlspecialchars(trim($matches['summary']), ENT_QUOTES, 'UTF-8').'"' : '';
+        $sum = trim($matches['summary'])
+            ? ' summary="'.htmlspecialchars(trim($matches['summary']), ENT_QUOTES, 'UTF-8').'"'
+            : '';
         $cap = '';
         $colgrp = '';
         $last_rgrp = '';
         $c_row = 1;
 
-        foreach (preg_split("/\|{$this->regex_snippets['space']}*?$/m", $matches['rows'], -1, PREG_SPLIT_NO_EMPTY) as $row) {
+        foreach (preg_split("/\|{$space}*?$/m", $matches['rows'], -1, PREG_SPLIT_NO_EMPTY) as $row) {
 
             $row = ltrim($row);
 
             // Caption -- can only occur on row 1, otherwise treat '|=. foo |...'
             // as a normal center-aligned cell.
-            if (($c_row <= 1) && preg_match("/^\|\=(?P<capts>$this->s$this->a$this->c)\. (?P<cap>[^\n]*)(?P<row>.*)/s", ltrim($row), $cmtch)) {
+            if (($c_row <= 1) && preg_match(
+                "/^\|\=(?P<capts>$this->s$this->a$this->c)\. (?P<cap>[^\n]*)(?P<row>.*)/s",
+                ltrim($row),
+                $cmtch
+            )) {
                 $capts = $this->parseAttribs($cmtch['capts']);
                 $cap = "\t<caption".$capts.">".trim($cmtch['cap'])."</caption>\n";
                 $row = ltrim($cmtch['row']);
@@ -1762,7 +1769,7 @@ class Parser
             $rgrpatts = $rgrp = '';
 
             if (preg_match(
-                "/(:?^\|(?P<part>$this->vlgn)(?P<rgrpatts>$this->s$this->a$this->c)\.{$this->regex_snippets['space']}*$\n)?^(?P<row>.*)/sm",
+                "/(:?^\|(?P<part>$this->vlgn)(?P<rgrpatts>$this->s$this->a$this->c)\.{$space}*$\n)?^(?P<row>.*)/sm",
                 ltrim($row),
                 $grpmatch
             )) {
