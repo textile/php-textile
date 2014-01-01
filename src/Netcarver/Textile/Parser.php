@@ -1822,7 +1822,7 @@ class Parser
                     $ctyp = "h";
                 }
 
-                if (preg_match("/^(?P<catts>_?$this->s$this->a$this->cls\. )(?P<cell>.*)/", $cell, $cmtch)) {
+                if (preg_match("/^(?P<catts>_?$this->s$this->a$this->cls\. )(?P<cell>.*)/s", $cell, $cmtch)) {
                     $catts = $this->parseAttribs($cmtch['catts'], 'td');
                     $cell = $cmtch['cell'];
                 } else {
