@@ -1,0 +1,56 @@
+one:
+  input:  |
+    |A list...
+    * one
+    * two|
+  expect: |
+    <table>
+    		<tr>
+    			<td>A list&#8230;<br />
+    <ul>
+    	<li>one</li>
+    	<li>two</li>
+    </ul></td>
+    		</tr>
+    </table>
+two:
+  input:  |
+    |Col 1|Col 2|
+    |A list...
+    * one
+    * two||
+  expect: |
+    <table>
+    		<tr>
+    			<td>Col 1</td>
+    			<td>Col 2</td>
+    		</tr>
+    		<tr>
+    			<td>A list&#8230;<br />
+    <ul>
+    	<li>one</li>
+    	<li>two</li>
+    </ul></td>
+    			<td></td>
+    		</tr>
+    </table>
+three:
+  input:  |
+    |Col 1|Col 2|
+    |\2. A list...
+    * one
+    * two|
+  expect: |
+    <table>
+    		<tr>
+    			<td>Col 1</td>
+    			<td>Col 2</td>
+    		</tr>
+    		<tr>
+    			<td colspan="2">A list&#8230;<br />
+    <ul>
+    	<li>one</li>
+    	<li>two</li>
+    </ul></td>
+    		</tr>
+    </table>
