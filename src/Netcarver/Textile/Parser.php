@@ -2100,7 +2100,11 @@ class Parser
 
     protected function doPBr($in)
     {
-        return preg_replace_callback('@<(p|h[1-6])([^>]*?)>(.*)(</\1>)@s', array(&$this, 'fPBr'), $in);
+        return preg_replace_callback(
+            '@<(?P<tag>p|h[1-6])(?P<atts>[^>]*?)>(?P<content>.*)(?P<closetag></\1>)@s',
+            array(&$this, 'fPBr'),
+            $in
+        );
     }
 
     /**
@@ -2121,11 +2125,11 @@ class Parser
         $content = preg_replace(
             "~<br[ ]*/?>{$this->regex_snippets['space']}*\n(?![{$this->regex_snippets['space']}|])~i",
             "\n",
-            $m[3]
+            $m['content']
         );
         // Replaces those LFs that aren't followed by white-space, or at end, with <br />.
         $content = preg_replace("/\n(?![\s|])/", '<br />', $content);
-        return '<'.$m[1].$m[2].'>'.$content.$m[4];
+        return '<'.$m['tag'].$m['atts'].'>'.$content.$m['closetag'];
     }
 
     /**
