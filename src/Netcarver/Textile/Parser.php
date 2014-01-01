@@ -2264,6 +2264,7 @@ class Parser
     {
         list(, $tag, $att, $ext, $cite, $content) = $m;
         $atts = $this->parseAttribs($att);
+        $space = $this->regex_snippets['space'];
 
         $o1  = '';
         $o2  = '';
@@ -2275,13 +2276,13 @@ class Parser
             // Is this an anonymous block with a note definition?
             $notedef = preg_replace_callback(
                 "/
-                    ^note\#               #  start of note def marker
-                    ([^%<*!@#^([{ {$this->regex_snippets['space']}.]+)  # !label
-                    ([*!^]?)              # !link
-                    ({$this->c})          # !att
-                    \.?                   #  optional period.
-                    {$this->regex_snippets['space']}+  #  whitespace ends def marker
-                    (.*)$                 # !content
+                    ^note\#                              # start of note def marker
+                    (?P<label>[^%<*!@#^([{ {$space}.]+)  # label
+                    (?P<link>[*!^]?)                     # link
+                    (?P<att>{$this->c})                  # att
+                    \.?                                  # optional period.
+                    {$space}+                            # whitespace ends def marker
+                    (?P<content>.*)$                     # content
                 /x".$this->regex_snippets['mod'],
                 array(&$this, "fParseNoteDefs"),
                 $content
@@ -2772,7 +2773,10 @@ class Parser
 
     protected function fParseNoteDefs($m)
     {
-        list(, $label, $link, $att, $content) = $m;
+        $label = $m['label'];
+        $link  = $m['link'];
+        $att   = $m['att'];
+        $content = $m['content'];
 
         // Assign an id if the note reference parse hasn't found the label yet.
         if (empty($this->notes[$label]['id'])) {
