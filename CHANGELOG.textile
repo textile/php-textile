@@ -12,7 +12,7 @@ h2. Version 3.5.5 - upcoming
 * Remove unused internal method @Parser::fSpecial()@.
 * Test code coverage, coding style and run unit tests against "HHVM":http://hhvm.com.
 * Footnote reference numbers support unicode characters.
-* Use named sub-patterns in regular expressions.
+* Use named sub-patterns in regular expressions (closes "#121":https://github.com/textile/php-textile/issues/121).
 
 h2. "Version 3.5.4 - 2013/11/06":https://github.com/textile/php-textile/releases/tag/v3.5.4
 
