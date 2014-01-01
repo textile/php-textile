@@ -2084,7 +2084,11 @@ class Parser
 
     protected function doTagBr($tag, $in)
     {
-        return preg_replace_callback('@<(?P<tag>'.preg_quote($tag).')(?P<atts>[^>]*?)>(?P<content>.*)(?P<closetag></\1>)@s', array(&$this, 'fBr'), $in);
+        return preg_replace_callback(
+            '@<(?P<tag>'.preg_quote($tag).')(?P<atts>[^>]*?)>(?P<content>.*)(?P<closetag></\1>)@s',
+            array(&$this, 'fBr'),
+            $in
+        );
     }
 
     /**
