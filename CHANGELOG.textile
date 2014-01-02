@@ -7,6 +7,7 @@ h2. Version 3.5.5 - upcoming
 * Fix rendering of left and right image alignment in non-lite restricted mode (closes "#132":https://github.com/textile/php-textile/issues/132).
 * Fix wrong triggered error type when using the deprecated @$encode@ option of @Parser::textileThis()@.
 * Fix attribute regular expression to stop it matching multiple times (closes "#131":https://github.com/textile/php-textile/issues/131).
+* Fix rendering of lists in table cells with span attributes set (closes "#135":https://github.com/textile/php-textile/issues/135).
 * Throws an exception if @Parser::__construct()@ is given invalid document type, instead of eating it silently and returning document using the default content-type you weren't wishing for. Prevents issues where you want HTML5, but silently got XHTML due to typo or an issue in application design.
 * Clean user-supplied styles prior to sorting and re-formatting.
 * Remove dead code and duplicated procedures as outlined by code coverage reports.
