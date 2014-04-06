@@ -1,0 +1,29 @@
+adaptor: textile
+options:
+  showfailures: true
+  showpasses: true
+  showdiffs: true
+  debug: false
+  format: html
+  adaptor_options:
+    restricted: false
+
+HTM5 image alignment:
+  doctype : html5
+  method: textileField
+  input  : |
+    Hello pw world!
+
+    Hello pw *world!*
+
+    Hello pw "world!"
+
+    Hello %(c)pw% world!
+  expect : |
+    Hello pw world!
+
+    Hello pw <strong>world!</strong>
+
+    Hello pw &#8220;world!&#8221;
+
+    Hello <span class="c">pw</span> world!
