@@ -45,6 +45,14 @@ echo $parser->textileRestricted('!bad/image/not/allowed.svg!');
 
 The method doesn't allow more powerful formatting options such as inline style, and removes any raw HTML.
 
+h3. Parsing Single-Line Fields.
+
+If you use Textile as a field-level formatter then you can have it parse for just spans and glyphs using the
+@textileField()@ method:
+
+bc. $parser = new \Netcarving\Textile\Parser();
+echo $parser->textileFIeld('Hello *pw* world!'); // Outputs: Hello <strong>pw</strong> world!
+
 h3. Doctypes
 
 Currently, PHP-Textile can target either XHTML or HTML5 output with XHTML being the default for backward compatibility. The targeted doctype can be changed through the constructor:
