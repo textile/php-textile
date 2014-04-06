@@ -1192,7 +1192,12 @@ class Parser
 
 
     /**
+     * Parses a line in textile syntax.
      *
+     * This method performs a limited parse for spans and glyphs.
+     *
+     * @param string $text. The input to parse.
+     * @return string Parsed input.
      */
     public function textileField($text)
     {
@@ -1212,7 +1217,7 @@ class Parser
      *
      * This method performs common parse actions.
      *
-     * @param  string $text The input to parses
+     * @param  string $text The input to parse.
      * @param  bool   $lite Controls lite mode
      * @return string Parsed input
      */
