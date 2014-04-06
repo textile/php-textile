@@ -1198,7 +1198,7 @@ class Parser
     {
         $this->prepare(true, true, 'nofollow');
         $this->url_schemes = $this->restricted_url_schemes;
-        $this->restricted = true;
+        $this->restricted = false;
 
         // Escape any raw html
         $text = $this->encodeHTML($text, 0);
