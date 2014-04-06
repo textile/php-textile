@@ -1195,6 +1195,8 @@ class Parser
      * Parses a line in textile syntax.
      *
      * This method performs a limited parse for spans and glyphs.
+     * It is designed to operate on a single line of text, rather than blocks of text and does not wrap the output
+     * in <p> tags.
      *
      * @param string $text. The input to parse.
      * @return string Parsed input.
