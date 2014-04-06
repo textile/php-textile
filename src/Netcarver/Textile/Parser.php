@@ -1147,7 +1147,8 @@ class Parser
             return $this->textileEncode($text);
         }
 
-        return $this->textileCommon($text, $lite);
+        $mode = ($lite) ? 'block-lite' : 'block-full';
+        return $this->textileCommon($text, $mode);
     }
 
     /**
@@ -1185,7 +1186,25 @@ class Parser
         // Escape any raw html
         $text = $this->encodeHTML($text, 0);
 
-        return $this->textileCommon($text, $lite);
+        $mode = ($lite) ? 'block-lite' : 'block-full';
+        return $this->textileCommon($text, $mode);
+    }
+
+
+    /**
+     *
+     */
+    public function textileField($text)
+    {
+        $this->prepare(true, true, 'nofollow');
+        $this->url_schemes = $this->restricted_url_schemes;
+        $this->restricted = true;
+
+        // Escape any raw html
+        $text = $this->encodeHTML($text, 0);
+
+        $mode = ($this->lite) ? 'field-lite' : 'field-full';
+        return $this->textileCommon($text, $mode);
     }
 
     /**
@@ -1198,27 +1217,47 @@ class Parser
      * @return string Parsed input
      */
 
-    protected function textileCommon($text, $lite)
+    protected function textileCommon($text, $mode)
     {
         $text = $this->cleanWhiteSpace($text);
         $text = $this->cleanUniqueTokens($text);
 
-        if ($lite) {
-            $this->blocktag_whitelist = array('bq', 'p');
-            $text = $this->blocks($text."\n\n");
-        } else {
-            $this->blocktag_whitelist = array(
-                'bq',
-                'p',
-                'bc',
-                'notextile',
-                'pre',
-                'h[1-6]',
-                'fn'.$this->regex_snippets['digit'].'+',
-                '###',
-            );
-            $text = $this->blocks($text);
-            $text = $this->placeNoteLists($text);
+
+        switch ($mode) {
+            case 'block-lite':
+                $this->blocktag_whitelist = array('bq', 'p');
+                $text = $this->blocks($text."\n\n");
+                break;
+
+            case 'block-full':
+                $this->blocktag_whitelist = array(
+                    'bq',
+                    'p',
+                    'bc',
+                    'notextile',
+                    'pre',
+                    'h[1-6]',
+                    'fn'.$this->regex_snippets['digit'].'+',
+                    '###',
+                );
+                $text = $this->blocks($text);
+                $text = $this->placeNoteLists($text);
+                break;
+
+            case 'field-lite':
+            case 'field-full':
+                // Treat quoted quote as a special glyph.
+                $text = $this->glyphQuotedQuote($text);
+
+                // Inline markup (em, strong, sup, sub, del etc)
+                $text = $this->spans($text);
+
+                // Glyph level substitutions (mainly typographic -- " & ' => curly quotes, -- => em-dash etc.
+                $text = $this->glyphs($text);
+                break;
+
+            default:
+                break;
         }
 
         $text = $this->retrieve($text);
