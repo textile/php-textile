@@ -1172,7 +1172,7 @@ class Parser
      * @param  bool   $lite    Controls lite mode, allowing extra formatting
      * @param  bool   $noimage Allow images
      * @param  string $rel     Relationship attribute applied to generated links
-     * @return string Parsed $text
+     * @return string Parsed input
      * @see    Parser::textileThis()
      * @api
      */
@@ -1192,15 +1192,30 @@ class Parser
 
 
     /**
-     * Parses a line in textile syntax.
+     * Parses a line of given Textile input.
      *
-     * This method performs a limited parse for spans and glyphs.
-     * It is designed to operate on a single line of text, rather than blocks of text and does not wrap the output
-     * in <p> tags.
+     * This method performs a limited parse for spans and glyphs. It is designed
+     * to operate on a single line of text, rather than blocks of text and does
+     * not wrap the output in paragraph tags.
      *
-     * @param string $text. The input to parse.
-     * @return string Parsed input.
+     * The following:
+     *
+     * <code>
+     * $parser = new \Netcarver\Textile\Parser();
+     * echo $parser->textileField('h1. Hello *Powerful* World!');
+     * </code>
+     *
+     * Will return:
+     *
+     * <code>
+     * h1. Hello <strong>Powerful</strong> World!
+     * </code>
+     *
+     * @param  string $text The Textile input to parse
+     * @return string Parsed input
+     * @api
      */
+
     public function textileField($text)
     {
         $this->prepare(true, true, 'nofollow');
@@ -1219,8 +1234,8 @@ class Parser
      *
      * This method performs common parse actions.
      *
-     * @param  string $text The input to parse.
-     * @param  bool   $lite Controls lite mode
+     * @param  string $text The input to parse
+     * @param  string $mode Parsing of either 'block-lite', 'block-full', 'field-lite', 'field-full'
      * @return string Parsed input
      */
 
