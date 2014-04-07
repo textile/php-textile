@@ -41,7 +41,7 @@ namespace Netcarver\Textile;
 /**
  * Simple data storage.
  *
- * This class to allows storing assignments in an internal
+ * This class allows storing assignments in an internal
  * data array.
  *
  * <code>
