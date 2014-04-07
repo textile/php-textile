@@ -1245,6 +1245,11 @@ class Parser
         $text = $this->cleanUniqueTokens($text);
 
         if (is_bool($mode)) {
+            trigger_error(
+                'Use of booleans in $mode argument is deprecated. Use strings instead.',
+                E_USER_DEPRECATED
+            );
+
             $mode = $mode ? 'block-lite' : 'block-full';
         }
 
