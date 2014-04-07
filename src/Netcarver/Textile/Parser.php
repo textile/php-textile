@@ -3843,6 +3843,7 @@ class Parser
      * Parses and shelves quoted quotes in the given input.
      *
      * @param  string $text The text to search for quoted quotes
+     * @param  string $find Pattern to search
      * @return string
      */
 
