@@ -1213,6 +1213,7 @@ class Parser
      *
      * @param  string $text The Textile input to parse
      * @return string Parsed input
+     * @since  3.5.6
      * @api
      */
 
@@ -3845,6 +3846,7 @@ class Parser
      * @param  string $text The text to search for quoted quotes
      * @param  string $find Pattern to search
      * @return string
+     * @since  3.5.4
      */
 
     protected function glyphQuotedQuote($text, $find = '"?|"[^"]+"')
