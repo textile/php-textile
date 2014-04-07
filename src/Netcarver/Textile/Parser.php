@@ -1235,7 +1235,7 @@ class Parser
      * This method performs common parse actions.
      *
      * @param  string $text The input to parse
-     * @param  string $mode Parsing of either 'block-lite', 'block-full', 'field-lite', 'field-full'
+     * @param  string $mode Parsing mode of either 'block-lite', 'block-full', 'field-lite' or 'field-full'
      * @return string Parsed input
      * @throws \InvalidArgumentException
      */
