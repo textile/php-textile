@@ -1210,6 +1210,14 @@ class Parser
      * h1. Hello <strong>Powerful</strong> World!
      * </code>
      *
+     * This method allows users to mix raw HTML and Textile.
+     * If you want to parse untrusted input, see the
+     * textileRestricted method instead. Using this less
+     * restrictive method on untrusted input, like comments
+     * and forum posts, will lead to XSS issues, as users
+     * will be able to use any HTML code, JavaScript links
+     * and Textile attributes in their input.
+     *
      * @param  string $text The Textile input to parse
      * @return string Parsed input
      * @since  3.5.6
@@ -1220,11 +1228,6 @@ class Parser
     {
         $this->prepare(true, true, 'nofollow');
         $this->url_schemes = $this->restricted_url_schemes;
-        $this->restricted = false;
-
-        // Escape any raw HTML.
-        $text = $this->encodeHTML($text, 0);
-
         $mode = ($this->lite) ? 'field-lite' : 'field-full';
         return $this->textileCommon($text, $mode);
     }
