@@ -1425,10 +1425,10 @@ class Parser
     }
 
     /**
-     * Sets the maximum allowd link index.
+     * Gets the maximum allowed link index.
      *
-     * @return int
-     * @since 3.5.5
+     * @return int Maximum link index
+     * @since  3.5.5
      */
 
     protected function getMaxLinkIndex()
