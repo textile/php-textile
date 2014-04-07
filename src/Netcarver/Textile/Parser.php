@@ -1245,7 +1245,6 @@ class Parser
         $text = $this->cleanWhiteSpace($text);
         $text = $this->cleanUniqueTokens($text);
 
-
         switch ($mode) {
             case 'block-lite':
                 $this->blocktag_whitelist = array('bq', 'p');
