@@ -1228,7 +1228,7 @@ class Parser
     {
         $this->prepare(true, true, 'nofollow');
         $this->url_schemes = $this->restricted_url_schemes;
-        $mode = ($this->lite) ? 'field-lite' : 'field-full';
+        $mode = 'field-lite';
         return $this->textileCommon($text, $mode);
     }
 
