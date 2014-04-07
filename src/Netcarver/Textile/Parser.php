@@ -1183,7 +1183,7 @@ class Parser
         $this->url_schemes = $this->restricted_url_schemes;
         $this->restricted = true;
 
-        // Escape any raw html
+        // Escape any raw HTML.
         $text = $this->encodeHTML($text, 0);
 
         $mode = ($lite) ? 'block-lite' : 'block-full';
@@ -1223,7 +1223,7 @@ class Parser
         $this->url_schemes = $this->restricted_url_schemes;
         $this->restricted = false;
 
-        // Escape any raw html
+        // Escape any raw HTML.
         $text = $this->encodeHTML($text, 0);
 
         $mode = ($this->lite) ? 'field-lite' : 'field-full';
@@ -1271,7 +1271,7 @@ class Parser
                 // Treat quoted quote as a special glyph.
                 $text = $this->glyphQuotedQuote($text);
 
-                // Inline markup (em, strong, sup, sub, del etc)
+                // Inline markup (em, strong, sup, sub, del etc).
                 $text = $this->spans($text);
 
                 // Glyph level substitutions (mainly typographic -- " & ' => curly quotes, -- => em-dash etc.
