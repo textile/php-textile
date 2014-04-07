@@ -1237,6 +1237,7 @@ class Parser
      * @param  string $text The input to parse
      * @param  string $mode Parsing of either 'block-lite', 'block-full', 'field-lite', 'field-full'
      * @return string Parsed input
+     * @throws \InvalidArgumentException
      */
 
     protected function textileCommon($text, $mode)
@@ -1287,6 +1288,7 @@ class Parser
                 break;
 
             default:
+                throw new \InvalidArgumentException('Invalid mode given.');
                 break;
         }
 
