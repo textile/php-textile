@@ -1032,12 +1032,22 @@ class Parser
     }
 
     /**
-     * Sets lite mode.
+     * Enables lite mode.
+     *
+     * If enabled, allowed tags are limited. Parser will
+     * prevent the use extra Textile formatting,
+     * accepting only paragraphs and blockquotes as valid block
+     * tags.
+     *
+     * This doesn't prevent unsafe input values. If you wish to
+     * parse user-defined Textile input, also enable the
+     * restricted parser mode with Parser::setRestricted().
      *
      * @param  bool $lite TRUE to enable
      * @return Parser
      * @since  3.6.0
      * @see    Parser::getLite()
+     * @see    Parser::setRestricted()
      * @api
      */
 
@@ -1125,7 +1135,32 @@ class Parser
     }
 
     /**
-     * Enables and disables restricted parser mode.
+     * Enables restricted parser mode.
+     *
+     * This option should be enabled when parsing untrusted user input,
+     * including comments or forum posts. When enabled, the parser escapes any
+     * raw HTML input, ignores unsafe attributes and links only whitelisted URL
+     * schemes.
+     *
+     * For instance the following malicious input:
+     *
+     * <code>
+     * $parser = new \Netcarver\Textile\Parser();
+     * echo $parser
+     *     ->setRestricted(true)
+     *     ->parse('Innocent _looking_ "link":javacript:window.alert().');
+     * </code>
+     *
+     * Returns safe, sanitized HTML with valid Textile input still parsed:
+     *
+     * <code>
+     * <p>Innocent <em>looking</em> &#8220;link&#8221;:javacript:window.alert().</p>
+     * </code>
+     *
+     * If left disabled, the parser allows users to mix raw HTML and Textile.
+     * Using the parser in non-restricted on untrusted input, like comments
+     * and forum posts, will lead to XSS issues, as users will be able to use any HTML code,
+     * JavaScript links and Textile attributes in their input.
      *
      * @param  bool   $enabled TRUE to enable, FALSE to disable
      * @return Parser
@@ -1349,10 +1384,36 @@ class Parser
     /**
      * Parses the given Textile input according to the previously set options.
      *
+     * The parser's features can be changed by using the various
+     * public setter methods this class has. The most basic use case is:
+     *
      * <code>
      * $parser = new \Netcarver\Textile\Parser();
      * echo $parser->parse('h1. Hello World!');
      * </code>
+     *
+     * The above parses trusted input in full-feature mode, generating:
+     *
+     * <code>
+     * <h1>Hello World!</h1>
+     * </code>
+     *
+     * Additinally the parser can be run in safe, restricted mode using the
+     * Parser::setRetricted() method.
+     *
+     * <code>
+     * $parser = new \Netcarver\Textile\Parser();
+     * echo $parser
+     *     ->setRestricted(true)
+     *     ->parse('h1. Hello World!');
+     * </code>
+     *
+     * This enables restricted mode and allows safe parsing of untrusted input.
+     * PHP-Textile will disable unsafe attributes, links and escapes any raw
+     * HTML input. This option should be enabled when parsing untrusted user input.
+     *
+     * If restricted mode is disabled, the parser allows users to mix raw HTML
+     * and Textile.
      *
      * @param  string $text The Textile input to parse
      * @return string Parsed Textile input
@@ -1409,21 +1470,23 @@ class Parser
     /**
      * Parses the given Textile input in un-restricted mode.
      *
-     * This method should be used to parse any trusted Textile
-     * input, such as articles created by well-known
-     * authorised users.
-     *
-     * This method allows users to mix raw HTML and Textile.
-     * If you want to parse untrusted input, see the
-     * textileRestricted method instead. Using this less
-     * restrictive method on untrusted input, like comments
-     * and forum posts, will lead to XSS issues, as users
-     * will be able to use any HTML code, JavaScript links
-     * and Textile attributes in their input.
+     * This method is deprecated, use Parser::parse() method instead.
+     * This method is equilavent of:
      *
      * <code>
      * $parser = new \Netcarver\Textile\Parser();
-     * echo $parser->textileThis('h1. Hello World!');
+     * echo $parser->parse('h1. Hello World!');
+     * </code>
+     *
+     * Additinal arguments can be bassed with the setter methods:
+     *
+     * <code>
+     * $parser = new \Netcarver\Textile\Parser();
+     * echo $parser
+     *     ->setLite(true)
+     *     ->setImages(true)
+     *     ->setLinkRelationShip('nofollow')
+     *     ->parse('h1. Hello World!');
      * </code>
      *
      * @param  string $text    The Textile input to parse
