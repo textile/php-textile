@@ -462,6 +462,15 @@ class Parser
     protected $blocktag_whitelist = array();
 
     /**
+     * Whether block tags are enabled.
+     * 
+     * @var   bool
+     * @since 3.6.0
+     */
+
+    protected $allowBlockTags = true;
+
+    /**
      * Pattern for punctation.
      *
      * @var string
@@ -1154,6 +1163,39 @@ class Parser
     }
 
     /**
+     * Enables and disables block-level tags and formatting features.
+     *
+     * When disabled, block-level tags aren't rendered and paragraphs
+     * are not wrapped in paragraph tags.
+     *
+     * @param  bool   $enabled TRUE to enable, FALSE to disable
+     * @return Parser
+     * @since  3.6.0
+     * @see    Parser::getBlockTags()
+     * @api
+     */
+
+    public function setBlockTags($enabled)
+    {
+        $this->allowBlockTags = (bool) $enabled;
+        return $this;
+    }
+
+    /**
+     * Whether block tags are enabled.
+     *
+     * @return bool TRUE if enabled, FALSE otherwise
+     * @since  3.6.0
+     * @see    Parser::setBlockTags()
+     * @api
+     */
+
+    public function getBlockTags()
+    {
+        return (bool) $this->allowBlockTags;
+    }
+
+    /**
      * Defines a substitution symbol.
      *
      * Call this you need to redefine a substitution symbol to
@@ -1340,6 +1382,7 @@ class Parser
         $this
             ->setRestricted(false)
             ->setLite($lite)
+            ->setBlockTags(true)
             ->setImages(!$noimage)
             ->setLinkRelationShip($rel)
             ->prepare();
@@ -1352,8 +1395,7 @@ class Parser
             return $this->textileEncode($text);
         }
 
-        $mode = ($lite) ? 'block-lite' : 'block-full';
-        return $this->textileCommon($text, $mode);
+        return $this->textileCommon($text);
     }
 
     /**
@@ -1387,15 +1429,14 @@ class Parser
         $this
             ->setRestricted(true)
             ->setLite($lite)
+            ->setBlockTags(true)
             ->setImages(!$noimage)
             ->setLinkRelationShip($rel)
             ->prepare();
 
         // Escape any raw HTML.
         $text = $this->encodeHTML($text, 0);
-
-        $mode = ($lite) ? 'block-lite' : 'block-full';
-        return $this->textileCommon($text, $mode);
+        return $this->textileCommon($text);
     }
 
     /**
@@ -1438,11 +1479,11 @@ class Parser
             ->setRestricted(false)
             ->setImages(false)
             ->setLite(true)
+            ->setBlockTags(false)
             ->setLinkRelationShip('nofollow')
             ->prepare();
 
-        $mode = 'field-lite';
-        return $this->textileCommon($text, $mode);
+        return $this->textileCommon($text);
     }
 
     /**
@@ -1450,33 +1491,31 @@ class Parser
      *
      * This method performs common parse actions.
      *
-     * @param  string $text The input to parse
-     * @param  string $mode Parsing mode of either 'block-lite', 'block-full', 'field-lite' or 'field-full'
-     * @return string Parsed input
+     * @param  string      $text The input to parse
+     * @param  string|null $lite Enables lite mode
+     * @return string      Parsed input
      * @throws \InvalidArgumentException
      */
 
-    protected function textileCommon($text, $mode)
+    protected function textileCommon($text, $lite = null)
     {
         $text = $this->cleanWhiteSpace($text);
         $text = $this->cleanUniqueTokens($text);
 
-        if (is_bool($mode)) {
+        if ($lite !== null) {
             trigger_error(
-                'Use of booleans in $mode argument is deprecated. Use strings instead.',
+                '$lite argument is deprecated. Use Parser::setLite() instead.',
                 E_USER_DEPRECATED
             );
 
-            $mode = $mode ? 'block-lite' : 'block-full';
+            $this->setLite($lite);
         }
 
-        switch ($mode) {
-            case 'block-lite':
+        if ($this->getBlockTags() === true) {
+            if ($this->getLite() === true) {
                 $this->blocktag_whitelist = array('bq', 'p');
                 $text = $this->blocks($text."\n\n");
-                break;
-
-            case 'block-full':
+            } else {
                 $this->blocktag_whitelist = array(
                     'bq',
                     'p',
@@ -1489,23 +1528,16 @@ class Parser
                 );
                 $text = $this->blocks($text);
                 $text = $this->placeNoteLists($text);
-                break;
+            }
+        } else {
+            // Treat quoted quote as a special glyph.
+            $text = $this->glyphQuotedQuote($text);
 
-            case 'field-lite':
-            case 'field-full':
-                // Treat quoted quote as a special glyph.
-                $text = $this->glyphQuotedQuote($text);
+            // Inline markup (em, strong, sup, sub, del etc).
+            $text = $this->spans($text);
 
-                // Inline markup (em, strong, sup, sub, del etc).
-                $text = $this->spans($text);
-
-                // Glyph level substitutions (mainly typographic -- " & ' => curly quotes, -- => em-dash etc.
-                $text = $this->glyphs($text);
-                break;
-
-            default:
-                throw new \InvalidArgumentException('Invalid mode given.');
-                break;
+            // Glyph level substitutions (mainly typographic -- " & ' => curly quotes, -- => em-dash etc.
+            $text = $this->glyphs($text);
         }
 
         $text = $this->retrieve($text);
