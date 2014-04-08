@@ -1363,7 +1363,47 @@ class Parser
     public function parse($text)
     {
         $this->prepare();
-        return $this->textileCommon($text);
+
+        $text = $this->cleanWhiteSpace($text);
+        $text = $this->cleanUniqueTokens($text);
+
+        if ($this->isBlockTagAllowed() === true) {
+            if ($this->isLiteModeEnabled() === true) {
+                $this->blocktag_whitelist = array('bq', 'p');
+                $text = $this->blocks($text."\n\n");
+            } else {
+                $this->blocktag_whitelist = array(
+                    'bq',
+                    'p',
+                    'bc',
+                    'notextile',
+                    'pre',
+                    'h[1-6]',
+                    'fn'.$this->regex_snippets['digit'].'+',
+                    '###',
+                );
+                $text = $this->blocks($text);
+                $text = $this->placeNoteLists($text);
+            }
+        } else {
+            // Treat quoted quote as a special glyph.
+            $text = $this->glyphQuotedQuote($text);
+
+            // Inline markup (em, strong, sup, sub, del etc).
+            $text = $this->spans($text);
+
+            // Glyph level substitutions (mainly typographic -- " & ' => curly quotes, -- => em-dash etc.
+            $text = $this->glyphs($text);
+        }
+
+        $text = $this->retrieve($text);
+        $text = $this->replaceGlyphs($text);
+        $text = $this->retrieveTags($text);
+        $text = $this->retrieveURLs($text);
+
+        $text = str_replace("<br />", "<br />\n", $text);
+
+        return $text;
     }
 
     /**
@@ -1416,7 +1456,7 @@ class Parser
             return $this->textileEncode($text);
         }
 
-        return $this->textileCommon($text);
+        return $this->parse($text);
     }
 
     /**
@@ -1458,7 +1498,7 @@ class Parser
 
         // Escape any raw HTML.
         $text = $this->encodeHTML($text, 0);
-        return $this->textileCommon($text);
+        return $this->parse($text);
     }
 
     /**
@@ -1466,63 +1506,16 @@ class Parser
      *
      * This method performs common parse actions.
      *
-     * @param  string      $text The input to parse
-     * @param  string|null $lite Enables lite mode
-     * @return string      Parsed input
+     * @param  string $text The input to parse
+     * @param  bool   $lite Enables lite mode
+     * @return string Parsed input
      * @throws \InvalidArgumentException
+     * @deprecated in 3.6.0
      */
 
-    protected function textileCommon($text, $lite = null)
+    protected function textileCommon($text, $lite)
     {
-        $text = $this->cleanWhiteSpace($text);
-        $text = $this->cleanUniqueTokens($text);
-
-        if ($lite !== null) {
-            trigger_error(
-                '$lite argument is deprecated. Use Parser::setLite() instead.',
-                E_USER_DEPRECATED
-            );
-
-            $this->setLite($lite);
-        }
-
-        if ($this->isBlockTagAllowed() === true) {
-            if ($this->isLiteModeEnabled() === true) {
-                $this->blocktag_whitelist = array('bq', 'p');
-                $text = $this->blocks($text."\n\n");
-            } else {
-                $this->blocktag_whitelist = array(
-                    'bq',
-                    'p',
-                    'bc',
-                    'notextile',
-                    'pre',
-                    'h[1-6]',
-                    'fn'.$this->regex_snippets['digit'].'+',
-                    '###',
-                );
-                $text = $this->blocks($text);
-                $text = $this->placeNoteLists($text);
-            }
-        } else {
-            // Treat quoted quote as a special glyph.
-            $text = $this->glyphQuotedQuote($text);
-
-            // Inline markup (em, strong, sup, sub, del etc).
-            $text = $this->spans($text);
-
-            // Glyph level substitutions (mainly typographic -- " & ' => curly quotes, -- => em-dash etc.
-            $text = $this->glyphs($text);
-        }
-
-        $text = $this->retrieve($text);
-        $text = $this->replaceGlyphs($text);
-        $text = $this->retrieveTags($text);
-        $text = $this->retrieveURLs($text);
-
-        $text = str_replace("<br />", "<br />\n", $text);
-
-        return $text;
+        return $this->setLite($lite)->parse($text);
     }
 
     /**
