@@ -1631,7 +1631,6 @@ class Parser
         $this->refIndex   = 1;
         $this->refCache   = array();
         $this->note_index = 1;
-        $this->rel        = $rel;
 
         if ($lite !== null) {
             trigger_error(
