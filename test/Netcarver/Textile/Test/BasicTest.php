@@ -191,4 +191,31 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         $parser = new Textile();
         $this->assertEquals(' <strong>line</strong>', $parser->textileThis(' *line*'));
     }
+
+    public function testDocumentRoot()
+    {
+        $parser = new Textile();
+        $parser->setDocumentRootDirectory(__DIR__);
+        $this->assertEquals(__DIR__, rtrim($parser->getDocumentRootDirectory(), '\\/'));
+    }
+
+    public function testDisallowImages()
+    {
+        $parser = new Textile();
+        $this->assertFalse($parser->setImages(false)->isImageTagAllowed());
+        $this->assertTrue($parser->setImages(true)->isImageTagAllowed());
+    }
+
+    public function testLinkRelationShip()
+    {
+        $parser = new Textile();
+        $this->assertEquals('test', $parser->setLinkRelationShip('test')->getLinkRelationShip());
+    }
+
+    public function testEnableRestrictedMode()
+    {
+        $parser = new Textile();
+        $this->assertTrue($parser->setRestricted(true)->isRestrictedModeEnabled());
+        $this->assertFalse($parser->setRestricted(false)->isRestrictedModeEnabled());
+    }
 }
