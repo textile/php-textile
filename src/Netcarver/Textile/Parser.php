@@ -1517,14 +1517,13 @@ class Parser
             return $this->textileEncode($text);
         }
 
-        $this
+        return $this
             ->setRestricted(false)
             ->setLite($lite)
             ->setBlockTags(true)
             ->setImages(!$noimage)
-            ->setLinkRelationShip($rel);
-
-        return $this->parse($text);
+            ->setLinkRelationShip($rel)
+            ->parse($text);
     }
 
     /**
