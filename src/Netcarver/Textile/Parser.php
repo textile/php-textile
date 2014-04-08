@@ -1219,7 +1219,7 @@ class Parser
      *
      * @param  string $text The Textile input to parse
      * @return string Parsed input
-     * @since  3.5.6
+     * @since  3.6.0
      * @api
      */
 
