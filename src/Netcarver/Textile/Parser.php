@@ -1140,7 +1140,7 @@ class Parser
     }
 
     /**
-     * Enables and disables restricted parser mode.
+     * Whether restricted parser mode is enabled.
      *
      * @return bool   TRUE if enabled, FALSE otherwise
      * @since  3.6.0
