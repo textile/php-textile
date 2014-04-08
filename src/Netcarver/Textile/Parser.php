@@ -887,7 +887,7 @@ class Parser
      *
      * <code>
      * $parser = new \Netcarver\Textile\Parser('html5');
-     * echo $parser->textileThis('HTML(HyperText Markup Language)");
+     * echo $parser->parse('HTML(HyperText Markup Language)");
      * </code>
      *
      * @param  string $doctype The output document type, either 'xhtml' or 'html5'
