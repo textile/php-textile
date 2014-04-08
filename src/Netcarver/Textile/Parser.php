@@ -1483,7 +1483,7 @@ class Parser
      * echo $parser->parse('h1. Hello World!');
      * </code>
      *
-     * Additinal arguments can be bassed with the setter methods:
+     * Additinal arguments can be passed with setter methods:
      *
      * <code>
      * $parser = new \Netcarver\Textile\Parser();
@@ -1529,19 +1529,24 @@ class Parser
     /**
      * Parses the given Textile input in restricted mode.
      *
-     * This method should be used for any untrusted user input,
-     * including comments or forum posts.
+     * This method is deprecated, use Parser::parse() method with
+     * Parser::setRestricted() and Parser::setLite() enabled, and
+     * Parser::setImages() disabled.
      *
-     * This method escapes any raw HTML input, ignores unsafe
-     * attributes, links only whitelisted URL schemes
-     * and by default also prevents the use of images and
-     * extra Textile formatting, accepting only paragraphs
-     * and blockquotes as valid block tags.
+     * This method's defaults are identical to:
      *
      * <code>
      * $parser = new \Netcarver\Textile\Parser();
-     * echo $parser->textileRestricted('h1. Hello World!');
+     * echo $parser
+     *     ->setRestricted(true)
+     *     ->setLite(true)
+     *     ->setImages(false)
+     *     ->setLinkRelationShip('nofollow')
+     *     ->parse('h1. Hello World!');
      * </code>
+     *
+     * As in the above, restricted mode should be used when parsing any
+     * untrusted user input, including comments or forum posts.
      *
      * @param  string $text    The Textile input to parse
      * @param  bool   $lite    Controls lite mode, allowing extra formatting
