@@ -334,12 +334,11 @@ Ordered list start and continuation:
  *
  * <code>
  * $parser = new \Netcarver\Textile\Parser();
- * echo $parser->textileThis('h1. Hello World!');
+ * echo $parser->parse('h1. Hello World!');
  * </code>
  *
  * @see Parser::__construct()
- * @see Parser::textileThis()
- * @see Parser::textileRestricted()
+ * @see Parser::parse()
  */
 
 class Parser
@@ -1165,8 +1164,9 @@ class Parser
     /**
      * Enables and disables block-level tags and formatting features.
      *
-     * When disabled, block-level tags aren't rendered and paragraphs
-     * are not wrapped in paragraph tags.
+     * When disabled, block-level tags aren't rendered. This allows PHP-Textile to
+     * operate on a single line of text, rather than blocks of text and does
+     * not wrap the output in paragraph tags.
      *
      * @param  bool   $enabled TRUE to enable, FALSE to disable
      * @return Parser
@@ -1347,6 +1347,26 @@ class Parser
     }
 
     /**
+     * Parses the given Textile input according to the previously set options.
+     *
+     * <code>
+     * $parser = new \Netcarver\Textile\Parser();
+     * echo $parser->parse('h1. Hello World!');
+     * </code>
+     *
+     * @param  string $text The Textile input to parse
+     * @return string Parsed Textile input
+     * @since  3.6.0
+     * @api
+     */
+
+    public function parse($text)
+    {
+        $this->prepare();
+        return $this->textileCommon($text);
+    }
+
+    /**
      * Parses the given Textile input in un-restricted mode.
      *
      * This method should be used to parse any trusted Textile
@@ -1436,53 +1456,6 @@ class Parser
 
         // Escape any raw HTML.
         $text = $this->encodeHTML($text, 0);
-        return $this->textileCommon($text);
-    }
-
-    /**
-     * Parses a line of given Textile input.
-     *
-     * This method performs a limited parse for spans and glyphs. It is designed
-     * to operate on a single line of text, rather than blocks of text and does
-     * not wrap the output in paragraph tags.
-     *
-     * The following:
-     *
-     * <code>
-     * $parser = new \Netcarver\Textile\Parser();
-     * echo $parser->textileField('h1. Hello *Powerful* World!');
-     * </code>
-     *
-     * Will return:
-     *
-     * <code>
-     * h1. Hello <strong>Powerful</strong> World!
-     * </code>
-     *
-     * This method allows users to mix raw HTML and Textile.
-     * If you want to parse untrusted input, see the
-     * textileRestricted method instead. Using this less
-     * restrictive method on untrusted input, like comments
-     * and forum posts, will lead to XSS issues, as users
-     * will be able to use any HTML code, JavaScript links
-     * and Textile attributes in their input.
-     *
-     * @param  string $text The Textile input to parse
-     * @return string Parsed input
-     * @since  3.6.0
-     * @api
-     */
-
-    public function textileField($text)
-    {
-        $this
-            ->setRestricted(false)
-            ->setImages(false)
-            ->setLite(true)
-            ->setBlockTags(false)
-            ->setLinkRelationShip('nofollow')
-            ->prepare();
-
         return $this->textileCommon($text);
     }
 

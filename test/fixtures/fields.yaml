@@ -10,7 +10,9 @@ options:
 
 HTM5 image alignment:
   doctype : html5
-  method: textileField
+  method: parse
+  setup:
+    - setBlockTags: false
   input  : |
     Hello pw world!
 

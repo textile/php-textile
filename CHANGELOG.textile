@@ -4,7 +4,7 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 3.6.0 - upcoming
 
-* Add single-line textileField() method. (closes "#138":https://github.com/textile/php-textile/issues/138).
+* Add Parser::parse() method. (closes "#138":https://github.com/textile/php-textile/issues/138).
 
 h2. "Version 3.5.5 - 2014/01/02":https://github.com/textile/php-textile/releases/tag/v3.5.5
 
