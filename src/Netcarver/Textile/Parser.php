@@ -1189,7 +1189,6 @@ class Parser
         return $this->textileCommon($text, $mode);
     }
 
-
     /**
      * Parses a line of given Textile input.
      *
