@@ -1056,7 +1056,7 @@ class Parser
      * @api
      */
 
-    public function getLite()
+    public function isLiteModeEnabled()
     {
         return (bool) $this->lite;
     }
@@ -1078,15 +1078,15 @@ class Parser
     }
 
     /**
-     * Gets image status.
+     * Whether images are allowed.
      *
-     * @return bool TRUE if enabled, FALSE otherwise
+     * @return bool TRUE if allowed, FALSE otherwise
      * @since  3.6.0
      * @see    Parser::setImages()
      * @api
      */
 
-    public function getImages()
+    public function isImageTagAllowed()
     {
         return !$this->noimage;
     }
@@ -1156,7 +1156,7 @@ class Parser
      * @api
      */
 
-    public function getRestricted()
+    public function isRestrictedModeEnabled()
     {
         return (bool) $this->restricted;
     }
@@ -1182,7 +1182,7 @@ class Parser
     }
 
     /**
-     * Whether block tags are enabled.
+     * Whether block tags are allowed.
      *
      * @return bool TRUE if enabled, FALSE otherwise
      * @since  3.6.0
@@ -1190,7 +1190,7 @@ class Parser
      * @api
      */
 
-    public function getBlockTags()
+    public function isBlockTagAllowed()
     {
         return (bool) $this->allowBlockTags;
     }
@@ -1484,8 +1484,8 @@ class Parser
             $this->setLite($lite);
         }
 
-        if ($this->getBlockTags() === true) {
-            if ($this->getLite() === true) {
+        if ($this->isBlockTagAllowed() === true) {
+            if ($this->isLiteModeEnabled() === true) {
                 $this->blocktag_whitelist = array('bq', 'p');
                 $text = $this->blocks($text."\n\n");
             } else {
