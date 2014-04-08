@@ -51,6 +51,8 @@ namespace Netcarver\Textile;
  * $img = new Tag('img');
  * echo (string) $img->class('big blue')->src('images/elephant.jpg');
  * </code>
+ *
+ * @internal
  */
 
 class Tag extends DataBag

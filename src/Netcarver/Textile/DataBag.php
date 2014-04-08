@@ -49,6 +49,8 @@ namespace Netcarver\Textile;
  * $plant = new DataBag(array('key' => 'value'));
  * $plant->flower('rose')->color('red');
  * </code>
+ *
+ * @internal
  */
 
 class DataBag
