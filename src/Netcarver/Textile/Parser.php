@@ -965,7 +965,7 @@ class Parser
 
     public function setSymbol($name, $value)
     {
-        $this->symbols[$name] = $value;
+        $this->symbols[(string) $name] = (string) $value;
         $this->rebuild_glyphs = true;
         return $this;
     }
