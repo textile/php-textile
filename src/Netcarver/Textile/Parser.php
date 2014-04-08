@@ -1030,6 +1030,7 @@ class Parser
      * @return Parser
      * @since  3.6.0
      * @see    Parser::getLite()
+     * @api
      */
 
     public function setLite($lite)
@@ -1044,11 +1045,42 @@ class Parser
      * @return bool TRUE if enabled, FALSE otherwise
      * @since  3.6.0
      * @see    Parser::setLite()
+     * @api
      */
 
     public function getLite()
     {
         return (bool) $this->lite;
+    }
+
+    /**
+     * Disables and enables images.
+     *
+     * @param  bool  $enabled TRUE to enable, FALSE to disable
+     * @return Parser
+     * @since  3.6.0
+     * @see    Parser::getImages()
+     * @api
+     */
+
+    public function setImages($enabled)
+    {
+        $this->noimage = !$enabled;
+        return $this;
+    }
+
+    /**
+     * Gets image status.
+     *
+     * @return bool TRUE if enabled, FALSE otherwise
+     * @since  3.6.0
+     * @see    Parser::setImages()
+     * @api
+     */
+
+    public function getImages()
+    {
+        return !$this->noimage;
     }
 
     /**
@@ -1235,7 +1267,10 @@ class Parser
 
     public function textileThis($text, $lite = false, $encode = false, $noimage = false, $strict = false, $rel = '')
     {
-        $this->setLite($lite)->prepare(null, $noimage, $rel);
+        $this
+            ->setLite($lite)
+            ->setImages(!$noimage)
+            ->prepare(null, null, $rel);
         $this->url_schemes = $this->unrestricted_url_schemes;
 
         if ($encode) {
@@ -1278,7 +1313,11 @@ class Parser
 
     public function textileRestricted($text, $lite = true, $noimage = true, $rel = 'nofollow')
     {
-        $this->setLite($lite)->prepare(null, $noimage, $rel);
+        $this
+            ->setLite($lite)
+            ->setImages(!$noimage)
+            ->prepare(null, null, $rel);
+
         $this->url_schemes = $this->restricted_url_schemes;
         $this->restricted = true;
 
@@ -1325,7 +1364,7 @@ class Parser
 
     public function textileField($text)
     {
-        $this->setLite(true)->prepare(null, true, 'nofollow');
+        $this->setImages(false)->setLite(true)->prepare(null, null, 'nofollow');
         $this->url_schemes = $this->restricted_url_schemes;
         $mode = 'field-lite';
         return $this->textileCommon($text, $mode);
@@ -1545,11 +1584,11 @@ class Parser
      * Textile parser in preparation for parsing a new document.
      *
      * @param  bool|null $lite    Controls lite mode
-     * @param  bool      $noimage Disallow images
+     * @param  bool|null $noimage Disallow images
      * @param  string    $rel     A relationship attribute applied to links
      */
 
-    protected function prepare($lite = null, $noimage, $rel)
+    protected function prepare($lite = null, $noimage = null, $rel)
     {
         if ($this->linkIndex >= $this->getMaxLinkIndex()) {
             $this->linkPrefix .= '-';
@@ -1577,7 +1616,15 @@ class Parser
             $this->setLite($lite);
         }
 
-        $this->noimage    = $noimage;
+        if ($noimage !== null) {
+            trigger_error(
+                '$lite argument is deprecated. Use Parser::setLite() instead.',
+                E_USER_DEPRECATED
+            );
+
+            $this->setImages(!$noimage);
+        }
+
         $this->prepGlyphs();
     }
 
