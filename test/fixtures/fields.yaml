@@ -10,7 +10,6 @@ options:
 
 HTM5 image alignment:
   doctype : html5
-  method: parse
   setup:
     - setBlockTags: false
   input  : |

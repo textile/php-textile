@@ -901,7 +901,11 @@ HTML Comments :
     <pre><code>&lt;!-- Here is a comment block in a code block. --&gt;</code></pre>
 
 HTML Comments (restricted):
-  method : textileRestricted
+  setup:
+    - setRestricted: true
+    - setLite: true
+    - setImages: false
+    - setLinkRelationShip: nofollow
   input:  |
     Here is some text with a <!-- Commented out[1] --> block.
 
@@ -3068,7 +3072,11 @@ Classes/ids/langs on phrase modifiers :
 
 Classes/ids/langs on phrase modifiers (restricted) :
   doctype : html5
-  method : textileRestricted
+  setup:
+    - setRestricted: true
+    - setLite: true
+    - setImages: false
+    - setLinkRelationShip: nofollow
   input:  |
     ~(c#id)[en]My text~
 
@@ -3483,7 +3491,11 @@ Empty things... :
     <p>, ,</p>
 
 Restricted mode security filtering mode with default options :
-  method : textileRestricted
+  setup:
+    - setRestricted: true
+    - setLite: true
+    - setImages: false
+    - setLinkRelationShip: nofollow
   input  : |
     !10x10.gif!
 

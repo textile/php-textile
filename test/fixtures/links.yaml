@@ -1089,7 +1089,11 @@ Complex links :
     <p>Here is <sup><a href="url" lang="de" title="title">&#8220;A def[inition]&#8221;</a></sup> if you can believe it!</p>
 
 Restricted Links :
-  method : textileRestricted
+  setup:
+    - setRestricted: true
+    - setLite: true
+    - setImages: false
+    - setLinkRelationShip: nofollow
   input  : |
     "link text":http://example.com
 
@@ -1231,7 +1235,11 @@ Restricted Links :
     <p><a href="http://slashdot.org/" rel="nofollow">(just in case you were wondering)</a></p>
 
 More Restricted links:
-  method : textileRestricted
+  setup:
+    - setRestricted: true
+    - setLite: true
+    - setImages: false
+    - setLinkRelationShip: nofollow
   input  : |
     Relative link to "$":testit.php?testfilename=textile/basic.
 
@@ -1254,7 +1262,11 @@ More Restricted links:
     <p>Link to &#8220;sqrl&#8221;:sqrl://testit.php?testfilename=textile/basic.</p>
 
 Unicode Links (restricted) :
-  method : textileRestricted
+  setup:
+    - setRestricted: true
+    - setLite: true
+    - setImages: false
+    - setLinkRelationShip: nofollow
   input  : |
     "Übermensch":https://de.wikipedia.org/wiki/Übermensch
 
