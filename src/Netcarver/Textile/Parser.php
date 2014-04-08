@@ -499,7 +499,7 @@ class Parser
      * @var string
      */
 
-    protected $rel;
+    protected $rel = '';
 
     /**
      * Array of footnotes
@@ -897,7 +897,7 @@ class Parser
 
     public function __construct($doctype = 'xhtml')
     {
-        $this->setDocumentType($doctype);
+        $this->setDocumentType($doctype)->setRestricted(false);
         $uid = uniqid(rand());
         $this->uid = 'textileRef:'.$uid.':';
         $this->linkPrefix = $uid.'-';
