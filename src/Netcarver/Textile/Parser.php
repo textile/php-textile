@@ -17,10 +17,10 @@
  *
  * Additions and fixes Copyright (c) 2006    Alex Shiels       https://twitter.com/tellyworth
  * Additions and fixes Copyright (c) 2010    Stef Dawson       http://stefdawson.com/
- * Additions and fixes Copyright (c) 2010-13 Netcarver         https://github.com/netcarver
+ * Additions and fixes Copyright (c) 2010-14 Netcarver         https://github.com/netcarver
  * Additions and fixes Copyright (c) 2011    Jeff Soo          http://ipsedixit.net/
  * Additions and fixes Copyright (c) 2012    Robert Wetzlmayr  http://wetzlmayr.com/
- * Additions and fixes Copyright (c) 2012-13 Jukka Svahn       http://rahforum.biz/
+ * Additions and fixes Copyright (c) 2012-14 Jukka Svahn       http://rahforum.biz/
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
