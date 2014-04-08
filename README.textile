@@ -32,8 +32,7 @@ h2. Usage
 
 Textile parser can be accessed through the @Netcarver\Textile\Parser@ class. The class is highly configurable, and actual parsing happens with the @textileThis@ and @textileRestricted@ methods:
 
-bc. use Netcarver\Textile\Parser as Textile;
-$parser = new Textile();
+bc. $parser = new \Netcarver\Textile\Parser();
 echo $parser->textileThis('h1. Hello World!');
 
 h3. Parsing untrusted input
