@@ -1024,6 +1024,34 @@ class Parser
     }
 
     /**
+     * Sets lite mode.
+     *
+     * @param  bool $lite TRUE to enable
+     * @return Parser
+     * @since  3.6.0
+     * @see    Parser::getLite()
+     */
+
+    public function setLite($lite)
+    {
+        $this->lite = (bool) $lite;
+        return $this;
+    }
+
+    /**
+     * Gets the lite mode status.
+     *
+     * @return bool TRUE if enabled, FALSE otherwise
+     * @since  3.6.0
+     * @see    Parser::setLite()
+     */
+
+    public function getLite()
+    {
+        return (bool) $this->lite;
+    }
+
+    /**
      * Defines a substitution symbol.
      *
      * Call this you need to redefine a substitution symbol to
@@ -1207,7 +1235,7 @@ class Parser
 
     public function textileThis($text, $lite = false, $encode = false, $noimage = false, $strict = false, $rel = '')
     {
-        $this->prepare($lite, $noimage, $rel);
+        $this->setLite($lite)->prepare(null, $noimage, $rel);
         $this->url_schemes = $this->unrestricted_url_schemes;
 
         if ($encode) {
@@ -1250,7 +1278,7 @@ class Parser
 
     public function textileRestricted($text, $lite = true, $noimage = true, $rel = 'nofollow')
     {
-        $this->prepare($lite, $noimage, $rel);
+        $this->setLite($lite)->prepare(null, $noimage, $rel);
         $this->url_schemes = $this->restricted_url_schemes;
         $this->restricted = true;
 
@@ -1297,7 +1325,7 @@ class Parser
 
     public function textileField($text)
     {
-        $this->prepare(true, true, 'nofollow');
+        $this->setLite(true)->prepare(null, true, 'nofollow');
         $this->url_schemes = $this->restricted_url_schemes;
         $mode = 'field-lite';
         return $this->textileCommon($text, $mode);
@@ -1516,12 +1544,12 @@ class Parser
      * This method prepares the transient internal state of
      * Textile parser in preparation for parsing a new document.
      *
-     * @param  bool   $lite    Controls lite mode
-     * @param  bool   $noimage Disallow images
-     * @param  string $rel     A relationship attribute applied to links
+     * @param  bool|null $lite    Controls lite mode
+     * @param  bool      $noimage Disallow images
+     * @param  string    $rel     A relationship attribute applied to links
      */
 
-    protected function prepare($lite, $noimage, $rel)
+    protected function prepare($lite = null, $noimage, $rel)
     {
         if ($this->linkIndex >= $this->getMaxLinkIndex()) {
             $this->linkPrefix .= '-';
@@ -1539,7 +1567,16 @@ class Parser
         $this->refCache   = array();
         $this->note_index = 1;
         $this->rel        = $rel;
-        $this->lite       = $lite;
+
+        if ($lite !== null) {
+            trigger_error(
+                '$lite argument is deprecated. Use Parser::setLite() instead.',
+                E_USER_DEPRECATED
+            );
+
+            $this->setLite($lite);
+        }
+
         $this->noimage    = $noimage;
         $this->prepGlyphs();
     }
