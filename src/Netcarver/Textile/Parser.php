@@ -1394,6 +1394,7 @@ class Parser
      * @param  string $rel     Relationship attribute applied to generated links
      * @return string Parsed $text
      * @see    Parser::textileRestricted()
+     * @deprecated in 3.6.0
      * @api
      */
 
@@ -1441,6 +1442,7 @@ class Parser
      * @param  string $rel     Relationship attribute applied to generated links
      * @return string Parsed input
      * @see    Parser::textileThis()
+     * @deprecated in 3.6.0
      * @api
      */
 
