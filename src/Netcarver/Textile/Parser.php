@@ -1649,7 +1649,7 @@ class Parser
         // 3+ uppercase acronym
         $this->glyph_search[] = '/\b(['.$abr.']['.$acr.']{2,})\b(?:[(]([^)]*)[)])/'.$mod;
 
-        if ($this->doctype === 'html5') {
+        if ($this->getDocumentType() === 'html5') {
             $this->glyph_replace[] = '<abbr title="$2">$1</abbr>';
         } else {
             $this->glyph_replace[] = '<acronym title="$2">$1</acronym>';
@@ -1981,7 +1981,7 @@ class Parser
             }
         }
 
-        if ($this->restricted) {
+        if ($this->isRestrictedModeEnabled()) {
             $o = array();
             $class = trim($autoclass);
             if ($class) {
@@ -2209,7 +2209,7 @@ class Parser
                     $catts = '';
                 }
 
-                if (!$this->lite) {
+                if (!$this->isLiteModeEnabled()) {
                     $a = array();
 
                     if (preg_match('/(?<space>'.$this->regex_snippets['space'].'*)(?P<cell>.*)/s', $cell, $a)) {
@@ -2829,7 +2829,7 @@ class Parser
     protected function graf($text)
     {
         // Handle normal paragraph text
-        if (!$this->lite) {
+        if (!$this->isLiteModeEnabled()) {
             // Notextile blocks and inlines
             $text = $this->noTextile($text);
             // Handle code
@@ -2846,11 +2846,11 @@ class Parser
         $text = $this->links($text);
 
         // Handle images (if permitted)
-        if (!$this->noimage) {
+        if ($this->isImageTagAllowed()) {
             $text = $this->images($text);
         }
 
-        if (!$this->lite) {
+        if (!$this->isLiteModeEnabled()) {
             // Handle tables
             $text = $this->tables($text);
             // Handle redcloth-style definition lists
@@ -2862,7 +2862,7 @@ class Parser
         // Inline markup (em, strong, sup, sub, del etc)
         $text = $this->spans($text);
 
-        if (!$this->lite) {
+        if (!$this->isLiteModeEnabled()) {
             // Turn footnote references into supers or links.
             // As footnote blocks are banned in lite mode there is no point
             // generating links for them.
@@ -3699,7 +3699,7 @@ class Parser
         $text = trim($text);
         $title = $this->encodeHTML($title);
 
-        if (!$this->noimage) {
+        if ($this->isImageTagAllowed()) {
             $text = $this->images($text);
         }
 
@@ -3917,7 +3917,7 @@ class Parser
         );
 
         if (isset($alignments[$align])) {
-            if ('html5' === $this->doctype) {
+            if ($this->getDocumentType() === 'html5') {
                 $extras = 'align-'.$alignments[$align];
                 $align = '';
             } else {
@@ -3938,7 +3938,7 @@ class Parser
             ->title($title);
 
         if (!$this->dimensionless_images && $this->isRelUrl($url)) {
-            $real_location = realpath($this->doc_root.ltrim($url, $this->ds));
+            $real_location = realpath($this->getDocumentRootDirectory().ltrim($url, $this->ds));
 
             if ($real_location) {
                 if ($size = getimagesize($real_location)) {
@@ -4236,7 +4236,7 @@ class Parser
             // Text tag text tag text ...
             if (++$i % 2) {
                 // Raw < > & chars are already entity encoded in restricted mode
-                if (!$this->restricted) {
+                if (!$this->isRestrictedModeEnabled()) {
                     $line = preg_replace('/&(?!#?[a-z0-9]+;)/i', '&amp;', $line);
                     $line = str_replace(array('<', '>'), array('&lt;', '&gt;'), $line);
                 }
@@ -4387,7 +4387,7 @@ class Parser
     protected function rEncodeHTML($str, $quotes = true)
     {
         // In restricted mode, all input but quotes has already been escaped
-        if ($this->restricted) {
+        if ($this->isRestrictedModeEnabled()) {
             return str_replace('"', '&quot;', $str);
         }
 
