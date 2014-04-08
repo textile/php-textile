@@ -328,13 +328,18 @@ namespace Netcarver\Textile;
  * public interface for you to use.
  *
  * The most basic use case would involve initialising
- * a instance of the class and calling the textileThis
- * method, parsing the given Textile input in unrestricted
- * mode.
+ * a instance of the class and calling the Parser::parse()
+ * method:
  *
  * <code>
  * $parser = new \Netcarver\Textile\Parser();
  * echo $parser->parse('h1. Hello World!');
+ * </code>
+ *
+ * Generates:
+ *
+ * <code>
+ * <h1>Hello World!</h1>
  * </code>
  *
  * @see Parser::__construct()
@@ -631,7 +636,7 @@ class Parser
     /**
      * Indicates whether glyph substitution is required.
      *
-     * Dirty flag, set by setSymbol(), indicating the parser needs to
+     * Dirty flag, set by Parser::setSymbol(), indicating the parser needs to
      * rebuild the glyph substitutions before the next parse.
      *
      * @var bool
@@ -688,10 +693,11 @@ class Parser
      * Substitution symbols.
      *
      * Basic symbols used in textile glyph replacements. To override these, call
-     * setSymbol method before calling textileThis or textileRestricted.
+     * setSymbol method before calling Parser::parse().
      *
      * @var array
      * @see Parser::setSymbol()
+     * @see Parser::parse()
      */
 
     protected $symbols = array(
@@ -992,6 +998,11 @@ class Parser
 
     /**
      * Gets the current output document type.
+     *
+     * <code>
+     * $parser = new \Netcarver\Textile\Parser();
+     * echo $parser->getDocumentType();
+     * </code>
      *
      * @return string The document type
      * @since  3.6.0
