@@ -1142,14 +1142,13 @@ class Parser
     /**
      * Enables and disables restricted parser mode.
      *
-     * @param  bool   $enabled 
      * @return bool   TRUE if enabled, FALSE otherwise
      * @since  3.6.0
      * @see    Parser::setRestricted()
      * @api
      */
 
-    public function getRestricted($enabled)
+    public function getRestricted()
     {
         return (bool) $this->restricted;
     }
