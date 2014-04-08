@@ -957,8 +957,8 @@ class Parser
      * Call this you need to redefine a substitution symbol to
      * be used when parsing a Textile document.
      *
-     * @param  string $name  Name of the symbol to assign a new value to.
-     * @param  string $value New value for the symbol.
+     * @param  string $name  Name of the symbol to assign a new value to
+     * @param  string $value New value for the symbol
      * @return Parser
      * @api
      */
