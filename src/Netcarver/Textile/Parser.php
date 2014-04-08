@@ -1130,7 +1130,7 @@ class Parser
      * @param  bool   $enabled TRUE to enable, FALSE to disable
      * @return Parser
      * @since  3.6.0
-     * @see    Parser::getRestricted()
+     * @see    Parser::isRestrictedModeEnabled()
      * @api
      */
 
@@ -1171,7 +1171,7 @@ class Parser
      * @param  bool   $enabled TRUE to enable, FALSE to disable
      * @return Parser
      * @since  3.6.0
-     * @see    Parser::getBlockTags()
+     * @see    Parser::isBlockTagAllowed()
      * @api
      */
 
