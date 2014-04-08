@@ -37,7 +37,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         if (isset($test['method'])) {
             $method = trim($test['method']);
         } else {
-            $method = 'textileThis';
+            $method = 'parse';
         }
 
         $args = array();
