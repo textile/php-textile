@@ -1425,6 +1425,11 @@ class Parser
     {
         $this->prepare();
 
+        if ($this->isRestrictedModeEnabled()) {
+            // Escape any raw HTML.
+            $text = $this->encodeHTML($text, 0);
+        }
+
         $text = $this->cleanWhiteSpace($text);
         $text = $this->cleanUniqueTokens($text);
 
@@ -1517,8 +1522,7 @@ class Parser
             ->setLite($lite)
             ->setBlockTags(true)
             ->setImages(!$noimage)
-            ->setLinkRelationShip($rel)
-            ->prepare();
+            ->setLinkRelationShip($rel);
 
         return $this->parse($text);
     }
@@ -1552,17 +1556,13 @@ class Parser
 
     public function textileRestricted($text, $lite = true, $noimage = true, $rel = 'nofollow')
     {
-        $this
+        return $this
             ->setRestricted(true)
             ->setLite($lite)
             ->setBlockTags(true)
             ->setImages(!$noimage)
             ->setLinkRelationShip($rel)
-            ->prepare();
-
-        // Escape any raw HTML.
-        $text = $this->encodeHTML($text, 0);
-        return $this->parse($text);
+            ->parse($text);
     }
 
     /**
