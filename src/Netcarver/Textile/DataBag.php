@@ -6,8 +6,6 @@
  * @link https://github.com/textile/php-textile
  */
 
-namespace Netcarver\Textile;
-
 /*
  * Copyright (c) 2013, Netcarver https://github.com/netcarver
  *
@@ -37,6 +35,8 @@ namespace Netcarver\Textile;
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+
+namespace Netcarver\Textile;
 
 /**
  * Simple data storage.

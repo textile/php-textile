@@ -6,8 +6,6 @@
  * @link https://github.com/textile/php-textile
  */
 
-namespace Netcarver\Textile;
-
 /*
  * Textile - A Humane Web Text Generator
  *
@@ -317,6 +315,8 @@ Ordered list start and continuation:
         #_ Item 7
         # Item 8
 */
+
+namespace Netcarver\Textile;
 
 /**
  * Textile parser.
