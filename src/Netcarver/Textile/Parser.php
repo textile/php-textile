@@ -1117,6 +1117,44 @@ class Parser
     }
 
     /**
+     * Enables and disables restricted parser mode.
+     *
+     * @param  bool   $enabled TRUE to enable, FALSE to disable
+     * @return Parser
+     * @since  3.6.0
+     * @see    Parser::getRestricted()
+     * @api
+     */
+
+    public function setRestricted($enabled)
+    {
+        if ($enabled) {
+            $this->url_schemes = $this->restricted_url_schemes;
+            $this->restricted = true;
+        } else {
+            $this->url_schemes = $this->unrestricted_url_schemes;
+            $this->restricted = false;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Enables and disables restricted parser mode.
+     *
+     * @param  bool   $enabled 
+     * @return bool   TRUE if enabled, FALSE otherwise
+     * @since  3.6.0
+     * @see    Parser::setRestricted()
+     * @api
+     */
+
+    public function getRestricted($enabled)
+    {
+        return (bool) $this->restricted;
+    }
+
+    /**
      * Defines a substitution symbol.
      *
      * Call this you need to redefine a substitution symbol to
@@ -1300,8 +1338,12 @@ class Parser
 
     public function textileThis($text, $lite = false, $encode = false, $noimage = false, $strict = false, $rel = '')
     {
-        $this->setLite($lite)->setImages(!$noimage)->setLinkRelationShip($rel)->prepare();
-        $this->url_schemes = $this->unrestricted_url_schemes;
+        $this
+            ->setRestricted(false)
+            ->setLite($lite)
+            ->setImages(!$noimage)
+            ->setLinkRelationShip($rel)
+            ->prepare();
 
         if ($encode) {
             trigger_error(
@@ -1343,9 +1385,12 @@ class Parser
 
     public function textileRestricted($text, $lite = true, $noimage = true, $rel = 'nofollow')
     {
-        $this->setLite($lite)->setImages(!$noimage)->setLinkRelationShip($rel)->prepare();
-        $this->url_schemes = $this->restricted_url_schemes;
-        $this->restricted = true;
+        $this
+            ->setRestricted(true)
+            ->setLite($lite)
+            ->setImages(!$noimage)
+            ->setLinkRelationShip($rel)
+            ->prepare();
 
         // Escape any raw HTML.
         $text = $this->encodeHTML($text, 0);
@@ -1390,8 +1435,13 @@ class Parser
 
     public function textileField($text)
     {
-        $this->setImages(false)->setLite(true)->setLinkRelationShip('nofollow')->prepare();
-        $this->url_schemes = $this->restricted_url_schemes;
+        $this
+            ->setRestricted(false)
+            ->setImages(false)
+            ->setLite(true)
+            ->setLinkRelationShip('nofollow')
+            ->prepare();
+
         $mode = 'field-lite';
         return $this->textileCommon($text, $mode);
     }
