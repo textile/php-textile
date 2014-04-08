@@ -943,14 +943,12 @@ class Parser
         }
 
         if (php_sapi_name() === 'cli') {
-            $this->doc_root = getcwd();
+            $this->setDocumentRootDirectory(getcwd());
         } elseif (!empty($_SERVER['DOCUMENT_ROOT'])) {
-            $this->doc_root = $_SERVER['DOCUMENT_ROOT'];
+            $this->setDocumentRootDirectory($_SERVER['DOCUMENT_ROOT']);
         } elseif (!empty($_SERVER['PATH_TRANSLATED'])) {
-            $this->doc_root = $_SERVER['PATH_TRANSLATED'];
+            $this->setDocumentRootDirectory($_SERVER['PATH_TRANSLATED']);
         }
-
-        $this->doc_root = rtrim($this->doc_root, $this->ds).$this->ds;
     }
 
     /**
@@ -989,6 +987,40 @@ class Parser
     public function getDocumentType()
     {
         return $this->doctype;
+    }
+
+    /**
+     * Sets the document root directory path.
+     *
+     * This method sets the path that is used to resolve relative
+     * file paths within local filesystem. This is used to fetch
+     * image dimensions, for instance.
+     *
+     * @param  string $path The root path
+     * @return Parser
+     * @since  3.6.0
+     * @see    Parser::getDocumentRootDirectory()
+     * @api
+     */
+
+    public function setDocumentRootDirectory($path)
+    {
+        $this->doc_root = rtrim($path, $this->ds).$this->ds;
+        return $this;
+    }
+
+    /**
+     * Gets the current document root directory path.
+     *
+     * @return string Path to the document root directory
+     * @since  3.6.0
+     * @see    Parser::setDocumentRootDirectory()
+     * @api
+     */
+
+    public function getDocumentRootDirectory()
+    {
+        return $this->doc_root;
     }
 
     /**
