@@ -21,10 +21,5 @@
         "symfony/yaml": "2.3.*",
         "squizlabs/php_codesniffer": "1.5.*",
         "satooshi/php-coveralls": "0.6.*"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "3.5-dev"
-        }
     }
 }
