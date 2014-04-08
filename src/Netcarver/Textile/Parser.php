@@ -665,6 +665,18 @@ class Parser
     protected $doctype;
 
     /**
+     * An array of supported doctypes.
+     *
+     * @var   array
+     * @since 3.6.0
+     */
+
+    protected $doctypes = array(
+        'xhtml',
+        'html5',
+    );
+
+    /**
      * Substitution symbols.
      *
      * Basic symbols used in textile glyph replacements. To override these, call
@@ -877,17 +889,7 @@ class Parser
 
     public function __construct($doctype = 'xhtml')
     {
-        $doctypes = array(
-            'xhtml',
-            'html5',
-        );
-
-        if (!in_array($doctype, $doctypes, true)) {
-            throw new \InvalidArgumentException('Invalid doctype given.');
-        } else {
-            $this->doctype = $doctype;
-        }
-
+        $this->setDocumentType($doctype);
         $uid = uniqid(rand());
         $this->uid = 'textileRef:'.$uid.':';
         $this->linkPrefix = $uid.'-';
@@ -949,6 +951,44 @@ class Parser
         }
 
         $this->doc_root = rtrim($this->doc_root, $this->ds).$this->ds;
+    }
+
+    /**
+     * Sets the output document type.
+     *
+     * @param  string $doctype Either 'xhtml' or 'html5'
+     * @return Parser
+     * @since  3.6.0
+     * @see    Parser::getDocumentType()
+     * @api
+     */
+
+    public function setDocumentType($doctype)
+    {
+        if (in_array($doctype, $this->doctypes, true)) {
+            if ($this->getDocumentType() !== $doctype) {
+                $this->doctype = $doctype;
+                $this->rebuild_glyphs = true;
+            }
+
+            return $this;
+        }
+
+        throw new \InvalidArgumentException('Invalid doctype given.');
+    }
+
+    /**
+     * Gets the current output document type.
+     *
+     * @return string The document type
+     * @since  3.6.0
+     * @see    Parser::setDocumentType()
+     * @api
+     */
+
+    public function getDocumentType()
+    {
+        return $this->doctype;
     }
 
     /**
