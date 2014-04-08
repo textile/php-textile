@@ -1440,6 +1440,15 @@ class Parser
 
     public function textileThis($text, $lite = false, $encode = false, $noimage = false, $strict = false, $rel = '')
     {
+        if ($encode) {
+            trigger_error(
+                'Use of the $encode argument is discouraged. Use Parser::textileEncode() instead.',
+                E_USER_DEPRECATED
+            );
+
+            return $this->textileEncode($text);
+        }
+
         $this
             ->setRestricted(false)
             ->setLite($lite)
@@ -1447,14 +1456,6 @@ class Parser
             ->setImages(!$noimage)
             ->setLinkRelationShip($rel)
             ->prepare();
-
-        if ($encode) {
-            trigger_error(
-                'Use of the $encode argument is discouraged. Use Parser::textileEncode() instead.',
-                E_USER_DEPRECATED
-            );
-            return $this->textileEncode($text);
-        }
 
         return $this->parse($text);
     }
