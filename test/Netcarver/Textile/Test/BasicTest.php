@@ -16,10 +16,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     {
         if (isset($test['class'])) {
             $class = $test['class'];
-
-            if (version_compare(PHP_VERSION, '5.4.0') < 0) {
-                print_r($test);
-            }
         } else {
             $class = '\Netcarver\Textile\Parser';
         }
