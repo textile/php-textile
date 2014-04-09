@@ -20,10 +20,10 @@ class BasicTest extends \PHPUnit_Framework_TestCase
             $class = '\Netcarver\Textile\Parser';
         }
 
+        $textile = new $class;
+
         if (isset($test['doctype'])) {
-            $textile = new $class($test['doctype']);
-        } else {
-            $textile = new $class;
+            $textile->setDocumentType($test['doctype']);
         }
 
         if (isset($test['setup'])) {
