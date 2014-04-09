@@ -1733,12 +1733,12 @@ class Parser
      * @param  string $text The input to parse
      * @param  bool   $lite Enables lite mode
      * @return string Parsed input
-     * @throws \InvalidArgumentException
      * @deprecated in 3.6.0
      */
 
     protected function textileCommon($text, $lite)
     {
+        trigger_error('Parser::textileCommon() is deprecated.', E_USER_DEPRECATED);
         return $this->setLite($lite)->parse($text);
     }
 
