@@ -1041,7 +1041,7 @@ class Parser
 
     public function setDocumentRootDirectory($path)
     {
-        $this->doc_root = rtrim($path, $this->ds).$this->ds;
+        $this->doc_root = rtrim($path, '\\/').$this->ds;
         return $this;
     }
 
@@ -4093,7 +4093,7 @@ class Parser
             ->title($title);
 
         if (!$this->dimensionless_images && $this->isRelUrl($url)) {
-            $real_location = realpath($this->getDocumentRootDirectory().ltrim($url, $this->ds));
+            $real_location = realpath($this->getDocumentRootDirectory().ltrim($url, '\\/'));
 
             if ($real_location) {
                 if ($size = getimagesize($real_location)) {
