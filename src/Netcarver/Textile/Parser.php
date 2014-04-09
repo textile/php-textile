@@ -1895,14 +1895,14 @@ class Parser
         }
 
         $this->unreferencedNotes = array();
-        $this->notelist_cache    = array();
-        $this->notes      = array();
-        $this->urlrefs    = array();
-        $this->shelf      = array();
-        $this->fn         = array();
+        $this->notelist_cache = array();
+        $this->notes = array();
+        $this->urlrefs = array();
+        $this->shelf = array();
+        $this->fn = array();
         $this->span_depth = 0;
-        $this->refIndex   = 1;
-        $this->refCache   = array();
+        $this->refIndex = 1;
+        $this->refCache = array();
         $this->note_index = 1;
 
         if ($lite !== null) {
@@ -1953,16 +1953,16 @@ class Parser
 
     protected function cleanAttribs($in)
     {
-        $tmp    = $in;
+        $tmp = $in;
         $before = -1;
-        $after  =  0;
-        $max    =  3;
-        $i      =  0;
+        $after = 0;
+        $max = 3;
+        $i = 0;
 
         while (($after != $before) && ($i < $max)) {
             $before = strlen($tmp);
-            $tmp    = rawurldecode($tmp);
-            $after  = strlen($tmp);
+            $tmp = rawurldecode($tmp);
+            $after = strlen($tmp);
             $i++;
         }
 
@@ -2145,7 +2145,7 @@ class Parser
             }
 
             if ($lang) {
-                $o['lang']  = $this->cleanAttribs($lang);
+                $o['lang'] = $this->cleanAttribs($lang);
             }
 
             ksort($o);
@@ -2458,10 +2458,10 @@ class Parser
 
                 list(, $term, $def,) = $xm;
                 $term = trim($term);
-                $def  = trim($def, ' ');
+                $def = trim($def, ' ');
 
                 if (empty($out)) {
-                    if (''==$def) {
+                    if ('' == $def) {
                         $out[] = "<dl$atts>";
                     } else {
                         $out[] = '<dl>';
@@ -2472,12 +2472,12 @@ class Parser
                     $pos = strpos($def, "\n");
                     $def = str_replace("\n", "<br />", trim($def));
                     if (0 === $pos) {
-                        $def  = '<p>' . $def . '</p>';
+                        $def = '<p>' . $def . '</p>';
                     }
                     $term = str_replace("\n", "<br />", $term);
 
                     $term = $this->graf($term);
-                    $def  = $this->graf($def);
+                    $def = $this->graf($def);
 
                     $out[] = "\t<dt$atts>$term</dt>";
 
@@ -2732,11 +2732,11 @@ class Parser
             }
 
             if (!$ext) {
-                $tag   = 'p';
-                $atts  = '';
-                $cite  = '';
-                $graf  = '';
-                $eat   = false;
+                $tag = 'p';
+                $atts = '';
+                $cite = '';
+                $graf = '';
+                $eat = false;
             }
 
             $eatWhitespace = false;
@@ -2819,10 +2819,10 @@ class Parser
         $atts = $this->parseAttribs($att);
         $space = $this->regex_snippets['space'];
 
-        $o1  = '';
-        $o2  = '';
-        $c2  = '';
-        $c1  = '';
+        $o1 = '';
+        $o2 = '';
+        $c2 = '';
+        $c1 = '';
         $eat = false;
 
         if ($tag === 'p') {
@@ -3280,10 +3280,10 @@ class Parser
 
     protected function makeBackrefLink(&$info, $g_links, $i)
     {
-        $link    = '';
-        $atts    = '';
+        $link = '';
+        $atts = '';
         $content = '';
-        $id      = '';
+        $id = '';
 
         if (!empty($info['def'])) {
             extract($info['def']);
@@ -3327,8 +3327,8 @@ class Parser
     protected function fParseNoteDefs($m)
     {
         $label = $m['label'];
-        $link  = $m['link'];
-        $att   = $m['att'];
+        $link = $m['link'];
+        $att = $m['att'];
         $content = $m['content'];
 
         // Assign an id if the note reference parse hasn't found the label yet.
@@ -3466,7 +3466,7 @@ class Parser
     protected function rebuildURI($parts, $mask = 'scheme,authority,path,query,fragment', $encode = true)
     {
         $mask = explode(',', $mask);
-        $out  = '';
+        $out = '';
 
         if ($this->addPart($mask, 'scheme', $parts)) {
             $out .= $parts['scheme'] . ':';
@@ -3675,10 +3675,10 @@ class Parser
 
     protected function fLink($m)
     {
-        $in    = $m[0];
-        $pre   = $m['pre'];
+        $in = $m[0];
+        $pre = $m['pre'];
         $inner = $m['inner'];
-        $url   = $m['urlx'];
+        $url = $m['urlx'];
         $m = array();
 
         // Treat empty inner part as an invalid link.
@@ -3704,18 +3704,18 @@ class Parser
             $inner,
             $m
         );
-        $atts  = isset($m['atts'])  ? $m['atts']  : '';
-        $text  = isset($m['text'])  ? trim($m['text'])  : $inner;
+        $atts = isset($m['atts']) ? $m['atts'] : '';
+        $text = isset($m['text']) ? trim($m['text']) : $inner;
         $title = isset($m['title']) ? $m['title'] : '';
         $m = array();
 
         $pop = $tight = '';
         $url_chars = array();
         $counts = array(
-            '['  => null,
-            ']'  => substr_count($url, ']'), # We need to know how many closing square brackets we have
-            '('  => null,
-            ')'  => null,
+            '[' => null,
+            ']' => substr_count($url, ']'), # We need to know how many closing square brackets we have
+            '(' => null,
+            ')' => null,
         );
 
         // Look for footnotes or other square-bracket delimieted stuff at the end of the url...
@@ -3724,8 +3724,8 @@ class Parser
         //                               will later be tested for balance
         if ($counts[']']) {
             if (1 === preg_match('@(?P<url>^.*\])(?P<tight>\[.*?)$@' . $this->regex_snippets['mod'], $url, $m)) {
-                $url         = $m['url'];
-                $tight       = $m['tight'];
+                $url = $m['url'];
+                $tight = $m['tight'];
                 $m = array();
             }
         }
@@ -3737,8 +3737,8 @@ class Parser
         // will later be tested for balance
         if ($counts[']']) {
             if (1 === preg_match('@(?P<url>^.*\])(?!=)(?P<end>.*?)$@' . $this->regex_snippets['mod'], $url, $m)) {
-                $url         = $m['url'];
-                $tight       = $m['end'] . $tight;
+                $url = $m['url'];
+                $tight = $m['end'] . $tight;
                 $m = array();
             }
         }
@@ -3832,9 +3832,9 @@ class Parser
         $uri_parts = array();
         $this->parseURI($url, $uri_parts);
 
-        $scheme         = $uri_parts['scheme'];
+        $scheme = $uri_parts['scheme'];
         $scheme_in_list = in_array($scheme, $this->url_schemes);
-        $scheme_ok      = ('' === $scheme) || $scheme_in_list;
+        $scheme_ok = ('' === $scheme) || $scheme_in_list;
 
         if (!$scheme_ok) {
             return str_replace($this->uid.'linkStartMarker:', '', $in);
@@ -4059,10 +4059,10 @@ class Parser
         $extras = '';
 
         $align = (isset($m['align'])) ? $m['align'] : '';
-        $atts  = $m['atts'];
-        $url   = $m['url'];
+        $atts = $m['atts'];
+        $url = $m['url'];
         $title = (isset($m['title'])) ? $m['title'] : '';
-        $href  = (isset($m['href'])) ? $m['href'] : '';
+        $href = (isset($m['href'])) ? $m['href'] : '';
 
         $alignments = array(
             '<'    => 'left',
