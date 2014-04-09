@@ -1027,6 +1027,11 @@ class Parser
      * $parser->setDocumentRootDirectory('/path/to/document/root/dir');
      * </code>
      *
+     * If not set, document root defaults to the current working
+     * directory if PHP-Textile is used via CLI. On server
+     * environment, DOCUMENT_ROOT or PATH_TRANSLATED server
+     * variable is used based on which ever is available.
+     *
      * @param  string $path The root path
      * @return Parser
      * @since  3.6.0
