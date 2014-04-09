@@ -14,7 +14,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 
     public function testAdd($name, $test)
     {
-        if (isset($test['class'])) {
+        if (isset($test['class']) && is_string($test['class'])) {
             $class = $test['class'];
         } else {
             $class = '\Netcarver\Textile\Parser';
