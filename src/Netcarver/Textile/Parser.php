@@ -507,10 +507,11 @@ class Parser
     protected $rel = '';
 
     /**
-     * Array of footnotes
+     * Array of footnotes.
      *
      * @var array
      */
+
     protected $fn;
 
     /**
