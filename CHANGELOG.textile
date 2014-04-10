@@ -4,7 +4,15 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 3.6.0 - upcoming
 
-* Add Parser::parse() method. (closes "#138":https://github.com/textile/php-textile/issues/138).
+* Add more versatile parsing method, @Parser::parse()@.
+* Add @Parser::setRestricted()@ and @Parser::isRestrictedModeEnabled()@.
+* Add @Parser::setLite()@ and @Parser::isLiteModeEnabled()@.
+* Add @Parser::setDocumentType()@ and @Parser::getDocumentType()@.
+* Add @Parser::setDocumentRootDirectory()@ and @Parser::getDocumentRootDirectory()@.
+* Add @Parser::setImages()@ and @Parser::isImageTagAllowed()@.
+* Add @Parser::setBlockTags()@ and @Parser::isBlockTagAllowed()@ (closes "#138":https://github.com/textile/php-textile/issues/138).
+* Add @Parser::setLinkRelationShip()@ and @Parser::getLinkRelationShip()@.
+* Deprecate @Parser::textileThis()@, @Parser::textileRestricted()@ and @Parser::textileCommon()@ in favour of the more versatile @Parser::parse()@.
 
 h2. "Version 3.5.5 - 2014/01/02":https://github.com/textile/php-textile/releases/tag/v3.5.5
 
