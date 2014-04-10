@@ -127,7 +127,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
                 $yaml = Yaml::parse($file);
 
                 foreach ($yaml as $name => $test) {
-                    if (!isset($test['input']) || !isset($test['expect'])) {
+                    if (!is_array($test) || !isset($test['input']) || !isset($test['expect'])) {
                         continue;
                     }
 
