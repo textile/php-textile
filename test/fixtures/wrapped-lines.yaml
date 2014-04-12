@@ -1,0 +1,37 @@
+Lines are wrapped and line breaks should not be formatted:
+  setup:
+    - setLineWrap: false
+
+  input:  |
+    This line
+    wraps to multiple
+    lines in the input document, but when
+    generated, it *appears*
+    as one.
+
+    Paragraphs and *other* formatting options _still_ work regardless, even lists:
+
+    * Item 1
+    * Item 2
+
+    And code blocks:
+
+    bc.. Code
+
+    code
+
+  expect: |
+    <p>This line wraps to multiple lines in the input document, but when generated, it <strong>appears</strong> as one.</p>
+
+    <p>Paragraphs and <strong>other</strong> formatting options <em>still</em> work regardless, even lists:</p>
+
+    <ul>
+    	<li>Item 1</li>
+    	<li>Item 2</li>
+    </ul>
+
+    <p>And code blocks:</p>
+
+    <pre><code>Code
+
+    code</code></pre>

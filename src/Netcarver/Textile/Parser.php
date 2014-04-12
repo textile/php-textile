@@ -475,6 +475,15 @@ class Parser
     protected $allowBlockTags = true;
 
     /**
+     * Whether lines are wrapped.
+     *
+     * @var   bool
+     * @since 3.6.0
+     */
+
+    protected $allowLineWrap = true;
+
+    /**
      * Pattern for punctation.
      *
      * @var string
@@ -1356,6 +1365,43 @@ class Parser
     public function isBlockTagAllowed()
     {
         return (bool) $this->allowBlockTags;
+    }
+
+    /**
+     * Enables and disables line-break formatting.
+     *
+     * If enabled, line-breaks are replaced by target
+     * document's break tag. If disabled, input document's
+     * line-breaks are ignored. This setting can be
+     * used if the the input document's lines are pre-wrapped.
+     * For instance, in case the input is from CLI content, or
+     * source code documentation.
+     *
+     * @param  bool TRUE to enable, FALSE to disable
+     * @return Parser
+     * @since  3.6.0
+     * @see    Parser::isLineWrapAllowed()
+     * @api
+     */
+
+    public function setLineWrap($enabled)
+    {
+        $this->allowLineWrap = (bool) $enabled;
+        return $this;
+    }
+
+    /**
+     * Whether line-breaks are formatted.
+     *
+     * @return bool TRUE if enabled, FALSE otherwise
+     * @see    Parser::setLineWrap()
+     * @since  3.6.0
+     * @api
+     */
+
+    public function isLineWrapAllowed()
+    {
+        return (bool) $this->allowLineWrap;
     }
 
     /**
@@ -2470,11 +2516,19 @@ class Parser
 
                 if ('' != $term) {
                     $pos = strpos($def, "\n");
-                    $def = str_replace("\n", "<br />", trim($def));
+                    $def = trim($def);
+
+                    if ($this->isLineWrapAllowed()) {
+                        $def = str_replace("\n", "<br />", $def);
+                    }
+
                     if (0 === $pos) {
                         $def = '<p>' . $def . '</p>';
                     }
-                    $term = str_replace("\n", "<br />", $term);
+
+                    if ($this->isLineWrapAllowed()) {
+                        $term = str_replace("\n", "<br />", $term);
+                    }
 
                     $term = $this->graf($term);
                     $def = $this->graf($def);
@@ -2673,16 +2727,24 @@ class Parser
 
     protected function fPBr($m)
     {
-        // Replaces <br/>\n instances that are not followed by white-space,
-        // or at end, with single LF.
-        $content = preg_replace(
-            "~<br[ ]*/?>{$this->regex_snippets['space']}*\n(?![{$this->regex_snippets['space']}|])~i",
-            "\n",
+        if ($this->isLineWrapAllowed()) {
+            // Replaces <br/>\n instances that are not followed by white-space,
+            // or at end, with single LF.
+            $m['content'] = preg_replace(
+                "~<br[ ]*/?>{$this->regex_snippets['space']}*\n(?![{$this->regex_snippets['space']}|])~i",
+                "\n",
+                $m['content']
+            );
+        }
+
+        // Replaces those LFs that aren't followed by white-space, or at end, with <br /> or a space.
+        $m['content'] = preg_replace(
+            "/\n(?![\s|])/",
+            $this->isLineWrapAllowed() ? '<br />' : ' ',
             $m['content']
         );
-        // Replaces those LFs that aren't followed by white-space, or at end, with <br />.
-        $content = preg_replace("/\n(?![\s|])/", '<br />', $content);
-        return '<'.$m['tag'].$m['atts'].'>'.$content.$m['closetag'];
+
+        return '<'.$m['tag'].$m['atts'].'>'.$m['content'].$m['closetag'];
     }
 
     /**
@@ -2694,7 +2756,12 @@ class Parser
 
     protected function fBr($m)
     {
-        $content = preg_replace("@(.+)(?<!<br>|<br />|</li>|</dd>|</dt>)\n(?![#*;:\s|])@", '$1<br />', $m['content']);
+        $content = preg_replace(
+            "@(.+)(?<!<br>|<br />|</li>|</dd>|</dt>)\n(?![#*;:\s|])@",
+            $this->isLineWrapAllowed() ? '$1<br />' : '$1 ',
+            $m['content']
+        );
+
         return '<'.$m['tag'].$m['atts'].'>'.$content.$m['closetag'];
     }
 
