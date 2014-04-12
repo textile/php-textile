@@ -46,11 +46,9 @@ namespace Netcarver\Textile;
  * used to construct tags with nice object oriented
  * syntax.
  *
- * <code>
- * use Netcarver\Textile\Tag;
+ * bc. use Netcarver\Textile\Tag;
  * $img = new Tag('img');
  * echo (string) $img->class('big blue')->src('images/elephant.jpg');
- * </code>
  *
  * @internal
  */
@@ -91,11 +89,9 @@ class Tag extends DataBag
     /**
      * Returns the tag as HTML.
      *
-     * <code>
-     * $img = new Tag('img');
+     * bc. $img = new Tag('img');
      * $img->src('images/example.jpg')->alt('Example image');
      * echo (string) $img;
-     * </code>
      *
      * @return string A HTML element
      */
