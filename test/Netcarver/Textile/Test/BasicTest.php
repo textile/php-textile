@@ -202,8 +202,8 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     public function testDisallowImages()
     {
         $parser = new Textile();
-        $this->assertFalse($parser->setImages(false)->isImageTagAllowed());
-        $this->assertTrue($parser->setImages(true)->isImageTagAllowed());
+        $this->assertFalse($parser->setImages(false)->isImageTagEnabled());
+        $this->assertTrue($parser->setImages(true)->isImageTagEnabled());
     }
 
     public function testLinkRelationShip()

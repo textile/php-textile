@@ -472,7 +472,7 @@ class Parser
      * @since 3.6.0
      */
 
-    protected $allowBlockTags = true;
+    protected $blockTagsEnabled = true;
 
     /**
      * Whether lines are wrapped.
@@ -481,7 +481,7 @@ class Parser
      * @since 3.6.0
      */
 
-    protected $allowLineWrap = true;
+    protected $lineWrapEnabled = true;
 
     /**
      * Pattern for punctation.
@@ -1176,15 +1176,15 @@ class Parser
     }
 
     /**
-     * Whether images are allowed.
+     * Whether images are enabled.
      *
-     * @return bool TRUE if allowed, FALSE otherwise
+     * @return bool TRUE if enabled, FALSE otherwise
      * @since  3.6.0
      * @see    Parser::setImages()
      * @api
      */
 
-    public function isImageTagAllowed()
+    public function isImageTagEnabled()
     {
         return !$this->noimage;
     }
@@ -1342,12 +1342,12 @@ class Parser
 
     public function setBlockTags($enabled)
     {
-        $this->allowBlockTags = (bool) $enabled;
+        $this->blockTagsEnabled = (bool) $enabled;
         return $this;
     }
 
     /**
-     * Whether block tags are allowed and parsed.
+     * Whether block-level tags are enabled and parsed.
      *
      * <code>
      * $parser = new \Netcarving\Textile\Parser();
@@ -1362,13 +1362,13 @@ class Parser
      * @api
      */
 
-    public function isBlockTagAllowed()
+    public function isBlockTagEnabled()
     {
-        return (bool) $this->allowBlockTags;
+        return (bool) $this->blockTagsEnabled;
     }
 
     /**
-     * Enables and disables line-break formatting.
+     * Enables and disables line-wrapping.
      *
      * If enabled, line-breaks are replaced by target
      * document's break tag. If disabled, input document's
@@ -1386,12 +1386,12 @@ class Parser
 
     public function setLineWrap($enabled)
     {
-        $this->allowLineWrap = (bool) $enabled;
+        $this->lineWrapEnabled = (bool) $enabled;
         return $this;
     }
 
     /**
-     * Whether line-breaks are formatted.
+     * Whether line-wrapping is enabled.
      *
      * @return bool TRUE if enabled, FALSE otherwise
      * @see    Parser::setLineWrap()
@@ -1399,9 +1399,9 @@ class Parser
      * @api
      */
 
-    public function isLineWrapAllowed()
+    public function isLineWrapEnabled()
     {
-        return (bool) $this->allowLineWrap;
+        return (bool) $this->lineWrapEnabled;
     }
 
     /**
@@ -1635,8 +1635,8 @@ class Parser
         $text = $this->cleanWhiteSpace($text);
         $text = $this->cleanUniqueTokens($text);
 
-        if ($this->isBlockTagAllowed() === true) {
-            if ($this->isLiteModeEnabled() === true) {
+        if ($this->isBlockTagEnabled()) {
+            if ($this->isLiteModeEnabled()) {
                 $this->blocktag_whitelist = array('bq', 'p');
                 $text = $this->blocks($text."\n\n");
             } else {
@@ -2518,7 +2518,7 @@ class Parser
                     $pos = strpos($def, "\n");
                     $def = trim($def);
 
-                    if ($this->isLineWrapAllowed()) {
+                    if ($this->isLineWrapEnabled()) {
                         $def = str_replace("\n", "<br />", $def);
                     }
 
@@ -2526,7 +2526,7 @@ class Parser
                         $def = '<p>' . $def . '</p>';
                     }
 
-                    if ($this->isLineWrapAllowed()) {
+                    if ($this->isLineWrapEnabled()) {
                         $term = str_replace("\n", "<br />", $term);
                     }
 
@@ -2727,7 +2727,7 @@ class Parser
 
     protected function fPBr($m)
     {
-        if ($this->isLineWrapAllowed()) {
+        if ($this->isLineWrapEnabled()) {
             // Replaces <br/>\n instances that are not followed by white-space,
             // or at end, with single LF.
             $m['content'] = preg_replace(
@@ -2740,7 +2740,7 @@ class Parser
         // Replaces those LFs that aren't followed by white-space, or at end, with <br /> or a space.
         $m['content'] = preg_replace(
             "/\n(?![\s|])/",
-            $this->isLineWrapAllowed() ? '<br />' : ' ',
+            $this->isLineWrapEnabled() ? '<br />' : ' ',
             $m['content']
         );
 
@@ -2758,7 +2758,7 @@ class Parser
     {
         $content = preg_replace(
             "@(.+)(?<!<br>|<br />|</li>|</dd>|</dt>)\n(?![#*;:\s|])@",
-            $this->isLineWrapAllowed() ? '$1<br />' : '$1 ',
+            $this->isLineWrapEnabled() ? '$1<br />' : '$1 ',
             $m['content']
         );
 
@@ -3069,7 +3069,7 @@ class Parser
         $text = $this->links($text);
 
         // Handle images (if permitted)
-        if ($this->isImageTagAllowed()) {
+        if ($this->isImageTagEnabled()) {
             $text = $this->images($text);
         }
 
@@ -3922,7 +3922,7 @@ class Parser
         $text = trim($text);
         $title = $this->encodeHTML($title);
 
-        if ($this->isImageTagAllowed()) {
+        if ($this->isImageTagEnabled()) {
             $text = $this->images($text);
         }
 
