@@ -1110,7 +1110,7 @@ class Parser
      * @param  bool $lite TRUE to enable
      * @return Parser
      * @since  3.6.0
-     * @see    Parser::getLite()
+     * @see    Parser::isLiteModeEnabled()
      * @see    Parser::setRestricted()
      * @api
      */
@@ -1165,7 +1165,7 @@ class Parser
      * @param  bool  $enabled TRUE to enable, FALSE to disable
      * @return Parser
      * @since  3.6.0
-     * @see    Parser::getImages()
+     * @see    Parser::isImageTagEnabled()
      * @api
      */
 
@@ -1336,7 +1336,7 @@ class Parser
      * @param  bool   $enabled TRUE to enable, FALSE to disable
      * @return Parser
      * @since  3.6.0
-     * @see    Parser::isBlockTagAllowed()
+     * @see    Parser::isBlockTagEnabled()
      * @api
      */
 
@@ -1380,7 +1380,7 @@ class Parser
      * @param  bool TRUE to enable, FALSE to disable
      * @return Parser
      * @since  3.6.0
-     * @see    Parser::isLineWrapAllowed()
+     * @see    Parser::isLineWrapEnabled()
      * @api
      */
 
