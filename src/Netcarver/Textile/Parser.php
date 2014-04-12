@@ -2296,7 +2296,7 @@ class Parser
         return preg_replace_callback(
             "/^(?:table(?P<tatts>_?{$this->s}{$this->a}{$this->cls})\.".
             "(?P<summary>.*)?\n)?^(?P<rows>{$this->a}{$this->cls}\.? ?\|.*\|){$this->regex_snippets['space']}*\n\n/smU",
-            array(&$this, "fTable"),
+            array($this, "fTable"),
             $text
         );
     }
@@ -2474,7 +2474,7 @@ class Parser
     {
         return preg_replace_callback(
             "/^([-]+$this->cls[ .].*:=.*)$(?![^-])/smU",
-            array(&$this, "fRedclothList"),
+            array($this, "fRedclothList"),
             $text
         );
     }
@@ -2568,7 +2568,7 @@ class Parser
     {
         return preg_replace_callback(
             "/^((?:[*;:]+|[*;:#]*#(?:_|\d+)?)$this->cls[ .].*)$(?![^#*;:])/smU",
-            array(&$this, "fTextileList"),
+            array($this, "fTextileList"),
             $text
         );
     }
@@ -2702,7 +2702,7 @@ class Parser
     {
         return preg_replace_callback(
             '@<(?P<tag>'.preg_quote($tag).')(?P<atts>[^>]*?)>(?P<content>.*)(?P<closetag></\1>)@s',
-            array(&$this, 'fBr'),
+            array($this, 'fBr'),
             $in
         );
     }
@@ -2718,7 +2718,7 @@ class Parser
     {
         return preg_replace_callback(
             '@<(?P<tag>p|h[1-6])(?P<atts>[^>]*?)>(?P<content>.*)(?P<closetag></\1>)@s',
-            array(&$this, 'fPBr'),
+            array($this, 'fPBr'),
             $in
         );
     }
@@ -2913,7 +2913,7 @@ class Parser
                     {$space}+                            # whitespace ends def marker
                     (?P<content>.*)$                     # content
                 /x".$this->regex_snippets['mod'],
-                array(&$this, "fParseNoteDefs"),
+                array($this, "fParseNoteDefs"),
                 $content
             );
 
@@ -3030,7 +3030,7 @@ class Parser
     {
         $text = preg_replace_callback(
             "/\<!--(?P<content>.*?)-->/sx",
-            array(&$this, "fParseHTMLComments"),
+            array($this, "fParseHTMLComments"),
             $text
         );
         return $text;
@@ -3138,7 +3138,7 @@ class Parser
                     $tag
                     (?P<tail>$|[\[\]}<]|(?=[$pnct]{1,2}[^0-9]|\s|\)))
                     /x".$this->regex_snippets['mod'],
-                    array(&$this, "fSpan"),
+                    array($this, "fSpan"),
                     $text
                 );
             }
@@ -3217,13 +3217,13 @@ class Parser
     {
         $text = preg_replace_callback(
             '/'.$this->uid.'(?P<token>[0-9]+):ospan /',
-            array(&$this, 'fRetrieveTags'),
+            array($this, 'fRetrieveTags'),
             $text
         );
 
         $text = preg_replace_callback(
             '/ '.$this->uid.'(?P<token>[0-9]+):cspan/',
-            array(&$this, 'fRetrieveTags'),
+            array($this, 'fRetrieveTags'),
             $text
         );
 
@@ -3281,7 +3281,7 @@ class Parser
             '(?:\:(?P<startchar>['.$this->regex_snippets['wrd'].'|'.$this->syms.']))?'.
             '(?P<links>[\^!]?)(?P<extras>\+?)\.?'.$this->regex_snippets['space'].'*</p>@U'.
             $this->regex_snippets['mod'],
-            array(&$this, "fNoteLists"),
+            array($this, "fNoteLists"),
             $text
         );
 
@@ -3352,7 +3352,7 @@ class Parser
      * @return string Processed input
      */
 
-    protected function makeBackrefLink(&$info, $g_links, $i)
+    protected function makeBackrefLink($info, $g_links, $i)
     {
         $id = '';
 
@@ -3428,7 +3428,7 @@ class Parser
     {
         $text = preg_replace_callback(
             "/\[(?P<atts>{$this->c})\#(?P<label>[^\]!]+?)(?P<nolink>[!]?)\]/Ux",
-            array(&$this, "fParseNoteRefs"),
+            array($this, "fParseNoteRefs"),
             $text
         );
         return $text;
@@ -3515,7 +3515,7 @@ class Parser
      * @return bool   TRUE if the component can be added
      */
 
-    protected function addPart(&$mask, $name, &$parts)
+    protected function addPart($mask, $name, $parts)
     {
         return (in_array($name, $mask) && isset($parts[$name]) && '' !== $parts[$name]);
     }
@@ -3727,7 +3727,7 @@ class Parser
             ":                              # literal ": marks end of atts + text + title block
             (?P<urlx>[^'.$stopchars.']*)    # url upto a stopchar
             /x'.$this->regex_snippets['mod'],
-            array(&$this, "fLink"),
+            array($this, "fLink"),
             $text
         );
     }
@@ -3966,7 +3966,7 @@ class Parser
             '(?P<url>(?:'.join('|', $pattern).'|\/)\S+)'.
             '(?='.$this->regex_snippets['space'].'|$)/Um';
 
-        return preg_replace_callback($pattern.$this->regex_snippets['mod'], array(&$this, "refs"), $text);
+        return preg_replace_callback($pattern.$this->regex_snippets['mod'], array($this, "refs"), $text);
     }
 
     /**
@@ -4020,7 +4020,7 @@ class Parser
 
     protected function retrieveURLs($text)
     {
-        return preg_replace_callback('/'.$this->uid.'(?P<token>[0-9]+):url/', array(&$this, 'retrieveURL'), $text);
+        return preg_replace_callback('/'.$this->uid.'(?P<token>[0-9]+):url/', array($this, 'retrieveURL'), $text);
     }
 
     /**
@@ -4108,7 +4108,7 @@ class Parser
             (?::(?P<href>\S+)(?<![\]).,]))? # optional href sans final punct. $href
             (?:[\]}]|(?=[.,\s)|]|$))        # lookahead: space,.)| or end of string ("|" needed if image in table cell)
             /x'.$this->regex_snippets['mod'],
-            array(&$this, "fImage"),
+            array($this, "fImage"),
             $text
         );
     }
@@ -4308,7 +4308,7 @@ class Parser
     {
         return preg_replace_callback(
             '/(?P<before>^|\s|[|[({>])'.preg_quote($start, '/').'(?P<content>.*?)'.preg_quote($end, '/').'/ms',
-            array(&$this, $method),
+            array($this, $method),
             $text
         );
     }
@@ -4353,7 +4353,7 @@ class Parser
         return preg_replace_callback(
             '/(?<=\S)\[(?P<id>'.$this->regex_snippets['digit'].'+)'.
             '(?P<nolink>!?)\]'.$this->regex_snippets['space'].'?/U'.$this->regex_snippets['mod'],
-            array(&$this, 'footnoteID'),
+            array($this, 'footnoteID'),
             $text
         );
     }
@@ -4394,7 +4394,7 @@ class Parser
     {
         return preg_replace_callback(
             "/ (?P<pre>{$this->quote_starts})(?P<quoted>$find)(?P<post>.) /".$this->regex_snippets['mod'],
-            array(&$this, "fGlyphQuotedQuote"),
+            array($this, "fGlyphQuotedQuote"),
             $text
         );
     }
