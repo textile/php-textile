@@ -959,8 +959,8 @@ class Parser
                 'char'  => '\S',
             );
         }
-        extract($this->regex_snippets);
-        $this->urlch = '['.$wrd.'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
+
+        $this->urlch = '['.$this->regex_snippets['wrd'].'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
         $this->quote_starts = implode('|', array_map('preg_quote', array_keys($this->quotes)));
 
         if (defined('DIRECTORY_SEPARATOR')) {
@@ -1802,55 +1802,61 @@ class Parser
             return;
         }
 
-        extract($this->symbols, EXTR_PREFIX_ALL, 'txt');
-        extract($this->regex_snippets);
         $pnc = '[[:punct:]]';
+        $cur = '';
 
-        if ($cur) {
-            $cur = '(?:['.$cur.']'.$space.'*)?';
+        if ($this->regex_snippets['cur']) {
+            $cur = '(?:['.$this->regex_snippets['cur'].']'.$this->regex_snippets['space'].'*)?';
         }
 
         $this->glyph_search = array();
         $this->glyph_replace = array();
 
         // Dimension sign
-        $this->glyph_search[] = '/([0-9]+[\])]?[\'"]? ?)[xX]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]+)/'.$mod;
-        $this->glyph_replace[] = '$1'.$txt_dimension.'$2';
+        $this->glyph_search[] = '/([0-9]+[\])]?[\'"]? ?)[xX]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]+)/'.
+            $this->regex_snippets['mod'];
+        $this->glyph_replace[] = '$1'.$this->symbols['dimension'].'$2';
 
         // Apostrophe
-        $this->glyph_search[] = '/('.$wrd.'|\))\'('.$wrd.')/'.$mod;
-        $this->glyph_replace[] = '$1'.$txt_apostrophe.'$2';
+        $this->glyph_search[] = '/('.$this->regex_snippets['wrd'].'|\))\''.
+            '('.$this->regex_snippets['wrd'].')/'.$this->regex_snippets['mod'];
+        $this->glyph_replace[] = '$1'.$this->symbols['apostrophe'].'$2';
 
         // Back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
-        $this->glyph_search[] = '/('.$space.')\'(\d+'.$wrd.'?)\b(?![.]?['.$wrd.']*?\')/'.$mod;
-        $this->glyph_replace[] = '$1'.$txt_apostrophe.'$2';
+        $this->glyph_search[] = '/('.$this->regex_snippets['space'].')\''.
+            '(\d+'.$this->regex_snippets['wrd'].'?)\b(?![.]?['.$this->regex_snippets['wrd'].']*?\')/'.
+            $this->regex_snippets['mod'];
+        $this->glyph_replace[] = '$1'.$this->symbols['apostrophe'].'$2';
 
         // Single open following open bracket
-        $this->glyph_search[] = "/([([{])'(?=\S)/".$mod;
-        $this->glyph_replace[] = '$1'.$txt_quote_single_open;
+        $this->glyph_search[] = "/([([{])'(?=\S)/".$this->regex_snippets['mod'];
+        $this->glyph_replace[] = '$1'.$this->symbols['quote_single_open'];
 
         // Single closing
-        $this->glyph_search[] = '/(\S)\'(?='.$space.'|'.$pnc.'|<|$)/'.$mod;
-        $this->glyph_replace[] = '$1'.$txt_quote_single_close;
+        $this->glyph_search[] = '/(\S)\'(?='.$this->regex_snippets['space'].'|'.$pnc.'|<|$)/'.
+            $this->regex_snippets['mod'];
+        $this->glyph_replace[] = '$1'.$this->symbols['quote_single_close'];
 
         // Default single opening
         $this->glyph_search[] = "/'/";
-        $this->glyph_replace[] = $txt_quote_single_open;
+        $this->glyph_replace[] = $this->symbols['quote_single_open'];
 
         // Double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
-        $this->glyph_search[] = '/([([{])"(?=\S)/'.$mod;
-        $this->glyph_replace[] = '$1'.$txt_quote_double_open;
+        $this->glyph_search[] = '/([([{])"(?=\S)/'.$this->regex_snippets['mod'];
+        $this->glyph_replace[] = '$1'.$this->symbols['quote_double_open'];
 
         // Double closing
-        $this->glyph_search[] = '/(\S)"(?='.$space.'|'.$pnc.'|<|$)/'.$mod;
-        $this->glyph_replace[] = '$1'.$txt_quote_double_close;
+        $this->glyph_search[] = '/(\S)"(?='.$this->regex_snippets['space'].'|'.$pnc.'|<|$)/'.
+            $this->regex_snippets['mod'];
+        $this->glyph_replace[] = '$1'.$this->symbols['quote_double_close'];
 
         // Default double opening
         $this->glyph_search[] = '/"/';
-        $this->glyph_replace[] = $txt_quote_double_open;
+        $this->glyph_replace[] = $this->symbols['quote_double_open'];
 
         // 3+ uppercase acronym
-        $this->glyph_search[] = '/\b(['.$abr.']['.$acr.']{2,})\b(?:[(]([^)]*)[)])/'.$mod;
+        $this->glyph_search[] = '/\b(['.$this->regex_snippets['abr'].']['.
+            $this->regex_snippets['acr'].']{2,})\b(?:[(]([^)]*)[)])/'.$this->regex_snippets['mod'];
 
         if ($this->getDocumentType() === 'html5') {
             $this->glyph_replace[] = '<abbr title="$2">$1</abbr>';
@@ -1859,53 +1865,55 @@ class Parser
         }
 
         // 3+ uppercase
-        $this->glyph_search[] = '/('.$space.'|^|[>(;-])(['.$abr.']{3,})'.
-            '(['.$nab.']*)(?='.$space.'|'.$pnc.'|<|$)(?=[^">]*?(<|$))/'.$mod;
+        $this->glyph_search[] = '/('.$this->regex_snippets['space'].'|^|[>(;-])'.
+            '(['.$this->regex_snippets['abr'].']{3,})'.
+            '(['.$this->regex_snippets['nab'].']*)(?='.$this->regex_snippets['space'].'|'.$pnc.'|<|$)'.
+            '(?=[^">]*?(<|$))/'.$this->regex_snippets['mod'];
         $this->glyph_replace[] = '$1<span class="caps">'.$this->uid.':glyph:$2</span>$3';
 
         // Ellipsis
         $this->glyph_search[] = '/([^.]?)\.{3}/';
-        $this->glyph_replace[] = '$1'.$txt_ellipsis;
+        $this->glyph_replace[] = '$1'.$this->symbols['ellipsis'];
 
         // em dash
         $this->glyph_search[] = '/--/';
-        $this->glyph_replace[] = $txt_emdash;
+        $this->glyph_replace[] = $this->symbols['emdash'];
 
         // en dash
         $this->glyph_search[] = '/ - /';
-        $this->glyph_replace[] = ' '.$txt_endash.' ';
+        $this->glyph_replace[] = ' '.$this->symbols['endash'].' ';
 
         // Trademark
-        $this->glyph_search[] = '/(\b ?|'.$space.'|^)[([]TM[])]/i'.$mod;
-        $this->glyph_replace[] = '$1'.$txt_trademark;
+        $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]TM[])]/i'.$this->regex_snippets['mod'];
+        $this->glyph_replace[] = '$1'.$this->symbols['trademark'];
 
         // Registered
-        $this->glyph_search[] = '/(\b ?|'.$space.'|^)[([]R[])]/i'.$mod;
-        $this->glyph_replace[] = '$1'.$txt_registered;
+        $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]R[])]/i'.$this->regex_snippets['mod'];
+        $this->glyph_replace[] = '$1'.$this->symbols['registered'];
 
         // Copyright
-        $this->glyph_search[] = '/(\b ?|'.$space.'|^)[([]C[])]/i'.$mod;
-        $this->glyph_replace[] = '$1'.$txt_copyright;
+        $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]C[])]/i'.$this->regex_snippets['mod'];
+        $this->glyph_replace[] = '$1'.$this->symbols['copyright'];
 
         // 1/4
         $this->glyph_search[] = '/[([]1\/4[])]/';
-        $this->glyph_replace[] = $txt_quarter;
+        $this->glyph_replace[] = $this->symbols['quarter'];
 
         // 1/2
         $this->glyph_search[] = '/[([]1\/2[])]/';
-        $this->glyph_replace[] = $txt_half;
+        $this->glyph_replace[] = $this->symbols['half'];
 
         // 3/4
         $this->glyph_search[] = '/[([]3\/4[])]/';
-        $this->glyph_replace[] = $txt_threequarters;
+        $this->glyph_replace[] = $this->symbols['threequarters'];
 
         // Degrees -- that's a small 'oh'
         $this->glyph_search[] = '/[([]o[])]/';
-        $this->glyph_replace[] = $txt_degrees;
+        $this->glyph_replace[] = $this->symbols['degrees'];
 
         // Plus minus
         $this->glyph_search[] = '/[([]\+\/-[])]/';
-        $this->glyph_replace[] = $txt_plusminus;
+        $this->glyph_replace[] = $this->symbols['plusminus'];
 
         // No need to rebuild next run unless a symbol is redefined
         $this->rebuild_glyphs = false;
@@ -3248,9 +3256,7 @@ class Parser
 
     protected function placeNoteLists($text)
     {
-        extract($this->regex_snippets);
-
-        // Sequence all referenced definitions...
+        // Sequence all referenced definitions.
         if (!empty($this->notes)) {
             $o = array();
             foreach ($this->notes as $label => $info) {
@@ -3271,9 +3277,10 @@ class Parser
 
         // Replace list markers.
         $text = preg_replace_callback(
-            "@<p>notelist(?P<atts>{$this->c})".
-            "(?:\:(?P<startchar>[$wrd|{$this->syms}]))?".
-            "(?P<links>[\^!]?)(?P<extras>\+?)\.?$space*</p>@U$mod",
+            '@<p>notelist(?P<atts>'.$this->c.')'.
+            '(?:\:(?P<startchar>['.$this->regex_snippets['wrd'].'|'.$this->syms.']))?'.
+            '(?P<links>[\^!]?)(?P<extras>\+?)\.?'.$this->regex_snippets['space'].'*</p>@U'.
+            $this->regex_snippets['mod'],
             array(&$this, "fNoteLists"),
             $text
         );
@@ -3304,21 +3311,20 @@ class Parser
                 foreach ($this->notes as $seq => $info) {
                     $links = $this->makeBackrefLink($info, $m['links'], $m['startchar']);
                     $atts = '';
+
                     if (!empty($info['def'])) {
-                        $id = $info['id'];
-                        extract($info['def']);
-                        $out[] = "\t".'<li'.$atts.'>'.$links.'<span id="note'.$id.'"> </span>'.$content.'</li>';
+                        $out[] = "\t".'<li'.$info['def']['atts'].'>'.$links.
+                            '<span id="note'.$info['id'].'"> </span>'.$info['def']['content'].'</li>';
                     } else {
-                        $out[] = "\t".'<li'.$atts.'>'.$links.' Undefined Note [#'.$info['seq'].'].</li>';
+                        $out[] = "\t".'<li>'.$links.' Undefined Note [#'.$info['seq'].'].</li>';
                     }
                 }
             }
 
             if ('+' == $m['extras'] && !empty($this->unreferencedNotes)) {
-                foreach ($this->unreferencedNotes as $seq => $info) {
+                foreach ($this->unreferencedNotes as $info) {
                     if (!empty($info['def'])) {
-                        extract($info['def']);
-                        $out[] = "\t".'<li'.$atts.'>'.$content.'</li>';
+                        $out[] = "\t".'<li'.$info['def']['atts'].'>'.$info['def']['content'].'</li>';
                     }
                 }
             }
@@ -3348,16 +3354,9 @@ class Parser
 
     protected function makeBackrefLink(&$info, $g_links, $i)
     {
-        $link = '';
-        $atts = '';
-        $content = '';
         $id = '';
 
-        if (!empty($info['def'])) {
-            extract($info['def']);
-        }
-
-        $backlink_type = ($link) ? $link : $g_links;
+        $backlink_type = !empty($info['def']) && $info['def']['link'] ? $info['def']['link'] : $g_links;
         $allow_inc = (false === strpos($this->syms, $i));
 
         $i_ = str_replace(array('&', ';', '#'), '', $this->encodeHigh($i));
