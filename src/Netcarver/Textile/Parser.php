@@ -450,11 +450,12 @@ class Parser
     /**
      * Pattern that matches class, style and language attributes.
      *
-     * Will allows all 16 possible permutations of class, style and language attributes.
-     * <no attribute>, c, cl, cs, cls, csl, l, lc, ls, lcs, lsc, s, sc, sl, scl or slc
+     * Allows all 16 possible permutations of class, style and language attributes.
+     * <no attribute>, c, cl, cs, cls, csl, l, lc, ls, lcs, lsc, s, sc, sl, scl or slc.
      *
      * @var string
      */
+
     protected $cls;
 
     /**
