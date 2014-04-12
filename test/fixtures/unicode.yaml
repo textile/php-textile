@@ -1,14 +1,3 @@
-adaptor: textile
-options:
-  showfailures: true
-  showpasses: true
-  showdiffs: true
-  debug: false
-  format: html
-  doctype: xhtml
-  adaptor_options:
-    restricted: false
-
 Just unicode:
   input : |
     福島駅

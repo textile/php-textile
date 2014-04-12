@@ -1,15 +1,4 @@
-adaptor: textile
-options:
-  showfailures: true
-  showpasses: true
-  showdiffs: true
-  debug: false
-  format: html
-  adaptor_options:
-    restricted: false
-
-HTM5 image alignment:
-  doctype : html5
+Block tags are disabled:
   setup:
     - setBlockTags: false
   input  : |

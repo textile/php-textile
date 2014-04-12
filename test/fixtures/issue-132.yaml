@@ -1,13 +1,3 @@
-adaptor: textile
-options:
-  showfailures: true
-  showpasses: true
-  showdiffs: true
-  debug: false
-  format: html
-  adaptor_options:
-    restricted: false
-
 Alignment is accepted in restricted mode when doctype is set to HTML5 :
   setup:
     - setRestricted: true
