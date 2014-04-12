@@ -29,7 +29,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         if (isset($test['setup'])) {
             foreach ($test['setup'] as $setup) {
                 foreach ($setup as $method => $value) {
-                    $textile->$method($value);
+                    $textile = $textile->$method($value);
                 }
             }
         }
