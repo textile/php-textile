@@ -3994,7 +3994,11 @@ class Parser
      * Completes and formats a relative URL.
      *
      * This method adds $this->relativeImagePrefix to the
-     * URL.
+     * URL if its relative.
+     *
+     * The URI is kept as is if it starts with a '/', './', '../',
+     * or the URL starts with one of $this->url_schemes. Otherwise
+     * the URL is prefixed.
      *
      * @param  string $url The URL
      * @return string Absolute URL
@@ -4002,12 +4006,19 @@ class Parser
 
     protected function relURL($url)
     {
-        $parts = @parse_url(urldecode($url));
+        if ($this->relativeImagePrefix) {
 
-        if (empty($parts['scheme']) || $parts['scheme'] == 'http') {
-            if (empty($parts['host']) && (isset($parts['path']) && preg_match('/^\w/', $parts['path']))) {
-                $url = $this->relativeImagePrefix.$url;
+            if (strpos($url, '/') === 0 || strpos($url, './') === 0 || strpos($url, '../') === 0) {
+                return $url;
             }
+
+            foreach ($this->url_schemes as $scheme) {
+                if (strpos($url, $scheme . '://') === 0) {
+                    return $url;
+                }
+            }
+
+            return $this->relativeImagePrefix.$url;
         }
 
         return $url;

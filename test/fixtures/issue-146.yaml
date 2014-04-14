@@ -1,0 +1,31 @@
+Relative links and images:
+  setup:
+    - setRelativeImagePrefix: http://example.com/
+  input: |
+    "Text":link
+
+    "Text":./link
+
+    "Text":/link
+
+    "Text":http://example.com/
+
+    !10x10.gif!
+
+    !./10x10.gif!
+
+    !/10x10.gif!
+  expect: |
+    <p><a href="http://example.com/link">Text</a></p>
+
+    <p><a href="./link">Text</a></p>
+
+    <p><a href="/link">Text</a></p>
+
+    <p><a href="http://example.com/">Text</a></p>
+
+    <p><img alt="" height="10" src="http://example.com/10x10.gif" width="10" /></p>
+
+    <p><img alt="" height="10" src="./10x10.gif" width="10" /></p>
+
+    <p><img alt="" height="10" src="/10x10.gif" width="10" /></p>
