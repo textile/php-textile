@@ -3678,8 +3678,7 @@ class Parser
         $m = array();
 
         // Treat empty inner part as an invalid link.
-        $trimmed = trim($inner);
-        if (!$trimmed) {
+        if ((string) trim($inner) === '') {
             return $pre.'"'.$inner.'":'.$url;
         }
 
