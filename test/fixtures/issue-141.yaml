@@ -1,0 +1,9 @@
+Empty-like links and text:
+  input : |
+    "Text":0
+
+    "0":http://example.com/
+  expect: |
+    <p><a href="0">Text</a></p>
+
+    <p><a href="http://example.com/">0</a></p>
