@@ -2520,8 +2520,10 @@ class Parser
     {
         $text = preg_split('/\n(?=[*#;:])/m', $m[0]);
         $pt = '';
+
         foreach ($text as $nr => $line) {
             $nextline = isset($text[$nr+1]) ? $text[$nr+1] : false;
+
             if (preg_match("/^(?P<tl>[#*;:]+)(?P<st>_|\d+)?(?P<atts>$this->cls)[ .](?P<content>.*)$/s", $line, $m)) {
                 $tl = $m['tl'];
                 $st = $m['st'];
@@ -2575,6 +2577,7 @@ class Parser
 
                 $tabs = str_repeat("\t", strlen($tl)-1);
                 $atts = $this->parseAttribs($atts);
+
                 if (!isset($lists[$tl])) {
                     $lists[$tl] = 1;
                     $line = "$tabs<" . $ltype . "l$atts$st>" . (($showitem) ? "\n$tabs\t<$litem>" . $content : '');
@@ -2595,6 +2598,7 @@ class Parser
                         unset($lists[$k]);
                     }
                 }
+
                 $pt = $tl; // Remember the current Textile tag
             }
 
