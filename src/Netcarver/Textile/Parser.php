@@ -4072,8 +4072,13 @@ class Parser
 
     protected function fImage($m)
     {
-        $extras = '';
+        $this->parseURI($m['url'], $parts);
 
+        if ($parts['scheme'] !== '' && !in_array($parts['scheme'], $this->url_schemes, true)) {
+            return $m[0];
+        }
+
+        $extras = '';
         $align = (isset($m['align'])) ? $m['align'] : '';
         $atts = $m['atts'];
         $url = $m['url'];

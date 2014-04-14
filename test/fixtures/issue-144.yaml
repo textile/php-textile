@@ -1,0 +1,5 @@
+Protocol restrictions affect images:
+  input:  |
+    !app://bad/protocol.jpg!
+  expect: |
+    <p>!app://bad/protocol.jpg!</p>

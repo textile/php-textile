@@ -8,6 +8,7 @@ h2. Version 3.6.0 - upcoming
 * Fix empty-like RedCloth definitions (closes "#142":https://github.com/textile/php-textile/issues/142).
 * Fix empty-like table summaries (closes "#143":https://github.com/textile/php-textile/issues/143).
 * Fix image dimension generation on Windows when doc_root can not be resolved (closes "#140":https://github.com/textile/php-textile/issues/140).
+* Fix HTTP protocol restrictions not affecting images (closes "#144":https://github.com/textile/php-textile/issues/144).
 * Add more versatile parsing method, @Parser::parse()@.
 * Add @Parser::setRestricted()@ and @Parser::isRestrictedModeEnabled()@.
 * Add @Parser::setLite()@ and @Parser::isLiteModeEnabled()@.
