@@ -3562,7 +3562,7 @@ class Parser
             foreach ($slices as &$slice) {
 
                 // If there is no possible start quote then this slice is not a link
-                if (false === strpos($slice, '"')) {
+                if (strpos($slice, '"') === false) {
                     continue;
                 }
 
@@ -3582,7 +3582,7 @@ class Parser
                 $linkparts = array();
                 $iter = 0;
 
-                while (null !== $possibility) {
+                while ($possibility !== null) {
                     // Starting at the end, pop off the previous part of the
                     // slice's fragments.
 
@@ -3611,14 +3611,14 @@ class Parser
 
                         // If out of possible starting segments we back the last one
                         // from the linkparts array
-                        if (null === $possibility) {
+                        if ($possibility === null) {
                             array_pop($linkparts);
                             break;
                         }
 
                         // If the next possibility is empty or ends in a space we have a
                         // closing ".
-                        if (0 === strlen($possibility) ||
+                        if (strlen($possibility) === 0 ||
                             preg_match("~{$this->regex_snippets['space']}$~".$mod, $possibility)) {
                             $balanced = 0; // force search exit
                         }
@@ -3628,7 +3628,6 @@ class Parser
                         array_push($possible_start_quotes, $possibility);
                         break;
                     }
-
                 }
 
                 // Rebuild the link's text by reversing the parts and sticking them back
