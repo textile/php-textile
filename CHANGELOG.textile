@@ -14,6 +14,9 @@ h2. Version 3.6.0 - upcoming
 * Add @Parser::setLinkRelationShip()@ and @Parser::getLinkRelationShip()@.
 * Add @Parser::setLineWrap()@ and @Parser::isLineWrapEnabled()@ (closes "#139":https://github.com/textile/php-textile/issues/139).
 * Deprecate @Parser::textileThis()@, @Parser::textileRestricted()@ and @Parser::textileCommon()@ in favour of the more versatile @Parser::parse()@.
+* Fix empty-like link texts (closes "#141":https://github.com/textile/php-textile/issues/141).
+* Fix empty-like RedCloth definitions (closes "#142":https://github.com/textile/php-textile/issues/142).
+* Fix empty-like table summaries (closes "#143":https://github.com/textile/php-textile/issues/143).
 
 h2. "Version 3.5.5 - 2014/01/02":https://github.com/textile/php-textile/releases/tag/v3.5.5
 
