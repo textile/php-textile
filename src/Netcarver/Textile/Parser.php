@@ -2177,7 +2177,7 @@ class Parser
 
             sort($tmps);
             foreach ($tmps as $p) {
-                if (!empty($p)) {
+                if ($p) {
                     $so .= $p.';';
                 }
             }
@@ -2268,7 +2268,7 @@ class Parser
                 $capts = $this->parseAttribs($cmtch['capts']);
                 $cap = "\t<caption".$capts.">".trim($cmtch['cap'])."</caption>\n";
                 $row = ltrim($cmtch['row']);
-                if (empty($row)) {
+                if (!$row) {
                     continue;
                 }
             }
@@ -2444,7 +2444,7 @@ class Parser
                 $term = trim($term);
                 $def = trim($def, ' ');
 
-                if (empty($out)) {
+                if (!$out) {
                     if ('' == $def) {
                         $out[] = "<dl$atts>";
                     } else {
@@ -2937,7 +2937,7 @@ class Parser
 
     protected function replaceMarkers($text, $replacements)
     {
-        if (!empty($replacements)) {
+        if ($replacements) {
             foreach ($replacements as $k => $r) {
                 $text = str_replace('{'.$k.'}', $r, $text);
             }
@@ -3186,7 +3186,7 @@ class Parser
     protected function placeNoteLists($text)
     {
         // Sequence all referenced definitions.
-        if (!empty($this->notes)) {
+        if ($this->notes) {
             $o = array();
             foreach ($this->notes as $label => $info) {
                 if (!empty($info['seq'])) {
@@ -3197,7 +3197,7 @@ class Parser
                 }
             }
 
-            if (!empty($o)) {
+            if ($o) {
                 ksort($o);
             }
 
@@ -3236,7 +3236,7 @@ class Parser
             // If not in cache, build the entry...
             $out = array();
 
-            if (!empty($this->notes)) {
+            if ($this->notes) {
                 foreach ($this->notes as $seq => $info) {
                     $links = $this->makeBackrefLink($info, $m['links'], $m['startchar']);
                     $atts = '';
@@ -3250,7 +3250,7 @@ class Parser
                 }
             }
 
-            if ('+' == $m['extras'] && !empty($this->unreferencedNotes)) {
+            if ('+' == $m['extras'] && $this->unreferencedNotes) {
                 foreach ($this->unreferencedNotes as $info) {
                     if (!empty($info['def'])) {
                         $out[] = "\t".'<li'.$info['def']['atts'].'>'.$info['def']['content'].'</li>';
@@ -3679,7 +3679,7 @@ class Parser
 
         // Treat empty inner part as an invalid link.
         $trimmed = trim($inner);
-        if (empty($trimmed)) {
+        if (!$trimmed) {
             return $pre.'"'.$inner.'":'.$url;
         }
 
