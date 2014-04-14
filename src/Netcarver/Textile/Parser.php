@@ -1562,6 +1562,7 @@ class Parser
     public function parse($text)
     {
         $this->prepare();
+        $text = (string) $text;
 
         if ($this->isRestrictedModeEnabled()) {
             // Escape any raw HTML.
