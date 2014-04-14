@@ -2424,8 +2424,10 @@ class Parser
         $in = $m[0];
         $out = array();
         $text = preg_split('/\n(?=[-])/m', $in);
-        foreach ($text as $nr => $line) {
+
+        foreach ($text as $line) {
             $m = array();
+
             if (preg_match("/^[-]+(?P<atts>$this->cls)\.? (?P<content>.*)$/s", $line, $m)) {
                 $content = trim($m['content']);
                 $atts = $this->parseAttribs($m['atts']);
@@ -2479,6 +2481,7 @@ class Parser
                 }
             }
         }
+
         $out[] = '</dl>';
         return implode("\n", $out);
     }
