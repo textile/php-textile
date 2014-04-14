@@ -2473,7 +2473,7 @@ class Parser
 
                     $out[] = "\t<dt$atts>$term</dt>";
 
-                    if ($def) {
+                    if ($def !== '') {
                         $out[] = "\t<dd>$def</dd>";
                     }
                 }

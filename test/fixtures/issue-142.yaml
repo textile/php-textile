@@ -1,0 +1,15 @@
+Empty-like Redcloth definition list terms and definitions:
+  input:  |
+    - 0 := 0
+    - 0 := 1
+    - 1 := 0
+
+  expect: |
+    <dl>
+    	<dt>0</dt>
+    	<dd>0</dd>
+    	<dt>0</dt>
+    	<dd>1</dd>
+    	<dt>1</dt>
+    	<dd>0</dd>
+    </dl>
