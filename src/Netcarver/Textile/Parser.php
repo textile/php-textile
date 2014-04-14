@@ -2038,8 +2038,8 @@ class Parser
         $id = '';
         $atts = '';
         $align = '';
-
         $matched = $in;
+
         if ($element == 'td') {
             if (preg_match("/\\\\([0-9]+)/", $matched, $csp)) {
                 $colspan = $csp[1];
@@ -2060,6 +2060,7 @@ class Parser
             if ($sty[1] = $this->cleanAttribs($sty[1])) {
                 $style[] = rtrim($sty[1], ';');
             }
+
             $matched = str_replace($sty[0], '', $matched);
         }
 
@@ -2124,6 +2125,7 @@ class Parser
         if ($this->isRestrictedModeEnabled()) {
             $o = array();
             $class = trim($autoclass);
+
             if ($class) {
                 $o['class'] = $this->cleanAttribs($class);
             }
@@ -2139,6 +2141,7 @@ class Parser
         }
 
         $o = array();
+
         if ($class) {
             $o['class'] = $this->cleanAttribs($class);
         }
@@ -2166,8 +2169,10 @@ class Parser
         if ($style) {
             $so = '';
             $tmps = array();
+
             foreach ($style as $s) {
                 $parts = explode(';', $s);
+
                 foreach ($parts as $p) {
                     if ($p = trim(trim($p), ":")) {
                         $tmps[] = $p;
@@ -2176,13 +2181,14 @@ class Parser
             }
 
             sort($tmps);
+
             foreach ($tmps as $p) {
                 if ($p) {
                     $so .= $p.';';
                 }
             }
-            $style = trim(str_replace(array("\n", ';;'), array('', ';'), $so));
 
+            $style = trim(str_replace(array("\n", ';;'), array('', ';'), $so));
             $o['style'] = $style;
         }
 
