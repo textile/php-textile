@@ -4373,14 +4373,14 @@ class Parser
         ));
 
         $found = $m['quoted'];
+
         if (strlen($found) > 1) {
             $found = rtrim($this->glyphs($m['quoted']));
         } elseif ('"' === $found) {
             $found = "&quot;";
         }
 
-        $glyph = ' '.$pre.$found.$post.' ';
-        return $this->shelve($glyph);
+        return $this->shelve(' '.$pre.$found.$post.' ');
     }
 
     /**
@@ -4398,9 +4398,9 @@ class Parser
     {
         // Fix: hackish -- adds a space if final char of text is a double quote.
         $text = preg_replace('/"\z/', "\" ", $text);
-
         $text = preg_split("@(<[\w/!?].*>)@Us".$this->regex_snippets['mod'], $text, -1, PREG_SPLIT_DELIM_CAPTURE);
         $i = 0;
+
         foreach ($text as $line) {
             // Text tag text tag text ...
             if (++$i % 2) {
@@ -4409,10 +4409,13 @@ class Parser
                     $line = preg_replace('/&(?!#?[a-z0-9]+;)/i', '&amp;', $line);
                     $line = str_replace(array('<', '>'), array('&lt;', '&gt;'), $line);
                 }
+
                 $line = preg_replace($this->glyph_search, $this->glyph_replace, $line);
             }
+
             $glyph_out[] = $line;
         }
+
         return join('', $glyph_out);
     }
 
