@@ -2592,9 +2592,11 @@ class Parser
                 foreach (array_reverse($lists) as $k => $v) {
                     if (strlen($k) > strlen($nl)) {
                         $line .= ($v==2) ? '' : "\n$tabs</" . $this->liType($k) . "l>";
+
                         if ((strlen($k) > 1) && ($v != 2)) {
                             $line .= "</".$litem.">";
                         }
+
                         unset($lists[$k]);
                     }
                 }
