@@ -3618,7 +3618,7 @@ class Parser
 
                         // If the next possibility is empty or ends in a space we have a
                         // closing ".
-                        if (strlen($possibility) === 0 ||
+                        if ($possibility === '' ||
                             preg_match("~{$this->regex_snippets['space']}$~".$mod, $possibility)) {
                             $balanced = 0; // force search exit
                         }
