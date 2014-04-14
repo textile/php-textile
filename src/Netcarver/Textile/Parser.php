@@ -3991,10 +3991,13 @@ class Parser
     }
 
     /**
-     * Completes and formats a URL.
+     * Completes and formats a relative URL.
+     *
+     * This method adds $this->relativeImagePrefix to the
+     * URL.
      *
      * @param  string $url The URL
-     * @return string
+     * @return string Absolute URL
      */
 
     protected function relURL($url)
