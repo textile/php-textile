@@ -3588,9 +3588,8 @@ class Parser
 
                     // Add this part to those parts that make up the link text.
                     $linkparts[] = $possibility;
-                    $len = strlen($possibility) > 0;
 
-                    if ($len) {
+                    if ($possibility !== '') {
                         // did this part inc or dec the balanced count?
                         if (preg_match('/^\S|=$/'.$mod, $possibility)) {
                             $balanced--;
