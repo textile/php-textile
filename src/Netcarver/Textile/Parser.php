@@ -959,7 +959,7 @@ class Parser
         $this->quote_starts = implode('|', array_map('preg_quote', array_keys($this->quotes)));
 
         if (defined('DIRECTORY_SEPARATOR')) {
-            $this->ds = constant('DIRECTORY_SEPARATOR');
+            $this->ds = DIRECTORY_SEPARATOR;
         }
 
         if (php_sapi_name() === 'cli') {
