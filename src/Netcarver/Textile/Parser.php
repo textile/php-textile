@@ -2252,13 +2252,17 @@ class Parser
         $tatts = $this->parseAttribs($matches['tatts'], 'table');
         $space = $this->regex_snippets['space'];
 
-        $sum = trim($matches['summary'])
-            ? ' summary="'.htmlspecialchars(trim($matches['summary']), ENT_QUOTES, 'UTF-8').'"'
-            : '';
         $cap = '';
         $colgrp = '';
         $last_rgrp = '';
         $c_row = 1;
+        $sum = '';
+
+        $summary = trim($matches['summary']);
+
+        if ($summary !== '') {
+            $sum = ' summary="'.htmlspecialchars($summary, ENT_QUOTES, 'UTF-8').'"';
+        }
 
         foreach (preg_split("/\|{$space}*?$/m", $matches['rows'], -1, PREG_SPLIT_NO_EMPTY) as $row) {
 

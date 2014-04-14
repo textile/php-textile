@@ -1,0 +1,36 @@
+Empty-like tables:
+  input:  |
+    table. 0
+    |=. 0
+    |^.
+    |_. 0 |_. 0|
+    |-.
+    |0|0|
+    | 0 | 0 |
+    |~.
+    |\2. 0 |
+  expect: |
+    <table summary="0">
+    	<caption>0</caption>
+    	<thead>
+    		<tr>
+    			<th>0 </th>
+    			<th>0</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<tr>
+    			<td>0</td>
+    			<td>0</td>
+    		</tr>
+    		<tr>
+    			<td> 0 </td>
+    			<td> 0 </td>
+    		</tr>
+    	</tbody>
+    	<tfoot>
+    		<tr>
+    			<td colspan="2">0 </td>
+    		</tr>
+    	</tfoot>
+    </table>
