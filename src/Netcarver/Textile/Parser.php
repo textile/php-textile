@@ -2445,14 +2445,14 @@ class Parser
                 $def = trim($def, ' ');
 
                 if (!$out) {
-                    if ('' == $def) {
+                    if ($def === '') {
                         $out[] = "<dl$atts>";
                     } else {
                         $out[] = '<dl>';
                     }
                 }
 
-                if ('' != $term) {
+                if ($term !== '') {
                     $pos = strpos($def, "\n");
                     $def = trim($def);
 
@@ -2460,7 +2460,7 @@ class Parser
                         $def = str_replace("\n", "<br />", $def);
                     }
 
-                    if (0 === $pos) {
+                    if ($pos === 0) {
                         $def = '<p>' . $def . '</p>';
                     }
 
