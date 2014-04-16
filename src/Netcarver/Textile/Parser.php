@@ -3845,13 +3845,12 @@ class Parser
         $uri_parts = array();
         $this->parseURI($url, $uri_parts);
 
-        $scheme = $uri_parts['scheme'];
-        $scheme_in_list = in_array($scheme, $this->url_schemes);
-        $scheme_ok = ('' === $scheme) || $scheme_in_list;
-
-        if (!$scheme_ok) {
+        if (!$this->isValidUrl($url)) {
             return str_replace($this->uid.'linkStartMarker:', '', $in);
         }
+
+        $scheme = $uri_parts['scheme'];
+        $scheme_in_list = in_array($scheme, $this->url_schemes);
 
         if ('$' === $text) {
             if ($scheme_in_list) {
@@ -3991,6 +3990,33 @@ class Parser
     }
 
     /**
+     * Whether the URL is valid.
+     *
+     * Checks are done according the used preferences to
+     * determinate whether the URL should be accepted and
+     * essentially whether its safe.
+     *
+     * @param  string $url The URL is check
+     * @return bool   TRUE if valid, FALSE otherwise
+     * @since  3.6.0
+     */
+
+    protected function isValidUrl($url)
+    {
+        if ($this->parseURI($url, $component)) {
+            if (!isset($component['scheme']) || $component['scheme'] === ''){
+                return true;
+            }
+
+            if (in_array($component['scheme'], $this->url_schemes, true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Completes and formats a relative URL.
      *
      * This method adds $this->relativeImagePrefix to the
@@ -4027,8 +4053,9 @@ class Parser
     /**
      * Checks if an URL is relative.
      *
-     * The given URL is considered relative if it doesn't
-     * contain scheme and hostname.
+     * The given URL is considered relative if it
+     * start anything other than with '//' or a
+     * valid scheme.
      *
      * @param  string $url The URL
      * @return bool   TRUE if relative, FALSE otherwise
@@ -4036,8 +4063,17 @@ class Parser
 
     protected function isRelURL($url)
     {
-        $parts = @parse_url($url);
-        return (empty($parts['scheme']) && empty($parts['host']));
+        if (strpos($url, '//') === 0) {
+            return false;
+        }
+
+        foreach ($this->url_schemes as $scheme) {
+            if (strpos($url, $scheme . '://') === 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -4083,9 +4119,7 @@ class Parser
 
     protected function fImage($m)
     {
-        $this->parseURI($m['url'], $parts);
-
-        if ($parts['scheme'] !== '' && !in_array($parts['scheme'], $this->url_schemes, true)) {
+        if (!$this->isValidUrl($m['url'])) {
             return $m[0];
         }
 
