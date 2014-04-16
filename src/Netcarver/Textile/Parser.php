@@ -3996,7 +3996,7 @@ class Parser
      * determinate whether the URL should be accepted and
      * essentially whether its safe.
      *
-     * @param  string $url The URL is check
+     * @param  string $url The URL to check
      * @return bool   TRUE if valid, FALSE otherwise
      * @since  3.6.0
      */
