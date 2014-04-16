@@ -4004,7 +4004,7 @@ class Parser
     protected function isValidUrl($url)
     {
         if ($this->parseURI($url, $component)) {
-            if (!isset($component['scheme']) || $component['scheme'] === ''){
+            if (!isset($component['scheme']) || $component['scheme'] === '') {
                 return true;
             }
 
