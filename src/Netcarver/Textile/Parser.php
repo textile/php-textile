@@ -3669,7 +3669,7 @@ class Parser
             '/
             (?P<pre>\[)?                    # Optionally open with a square bracket eg. Look ["here":url]
             '.$this->uid.'linkStartMarker:" # marks start of the link
-            (?P<inner>(?:.|\n)*?)                  # grab the content of the inner "..." part of the link, can be anything but
+            (?P<inner>(?:.|\n)*?)           # grab the content of the inner "..." part of the link, can be anything but
                                             # do not worry about matching class, id, lang or title yet
             ":                              # literal ": marks end of atts + text + title block
             (?P<urlx>[^'.$stopchars.']*)    # url upto a stopchar
