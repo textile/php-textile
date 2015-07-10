@@ -2258,6 +2258,7 @@ class Parser
         $last_rgrp = '';
         $c_row = 1;
         $sum = '';
+        $rows = array();
 
         $summary = trim($matches['summary']);
 
