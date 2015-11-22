@@ -194,7 +194,7 @@ URI-Schemes :
     "link with callto alias":uri-alias5
 
     "$":callto:textileit.com
-    [uri-alias1]tel:+123-(0)-123123123-123
+    [uri-alias1]tel:+123-0-123123123-123
     [uri-alias2]file:///c:/folder/file.ext
     [uri-alias3]sftp://foo@bar.net
     [uri-alias4]ftp://foo@bar.net
@@ -233,7 +233,7 @@ URI-Schemes :
 
     <p><a href="tel:123123123123123123-123">123123123123123123-123</a></p>
 
-    <p><a href="tel:%2B123-%280%29-123123123-123">int tel</a></p>
+    <p><a href="tel:+123-0-123123123-123">int tel</a></p>
 
     <p><a href="mailto:contact%2Balt@textileit.com">link with mailto</a></p>
 

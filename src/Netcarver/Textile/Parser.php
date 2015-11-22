@@ -3500,7 +3500,7 @@ class Parser
                 $pp = explode('/', $parts['path']);
                 foreach ($pp as &$p) {
                     $p = str_replace(array('%25', '%40'), array('%', '@'), rawurlencode($p));
-                    if (!in_array($parts['scheme'], array('tel','mailto'))) {
+                    if (!in_array($parts['scheme'], array('mailto'))) {
                         $p = str_replace('%2B', '+', $p);
                     }
                 }
