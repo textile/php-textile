@@ -15,6 +15,8 @@ Relative links and images:
     !./10x10.gif!
 
     !/10x10.gif!
+
+    "$":tel:0118-999-881-999-119-725-3
   expect: |
     <p><a href="http://example.com/link">Text</a></p>
 
@@ -29,3 +31,5 @@ Relative links and images:
     <p><img alt="" height="10" src="./10x10.gif" width="10" /></p>
 
     <p><img alt="" height="10" src="/10x10.gif" width="10" /></p>
+
+    <p><a href="tel:0118-999-881-999-119-725-3">0118-999-881-999-119-725-3</a></p>
