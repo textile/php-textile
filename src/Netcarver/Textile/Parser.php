@@ -4021,7 +4021,7 @@ class Parser
      * Completes and formats a relative URL.
      *
      * This method adds $this->relativeImagePrefix to the
-     * URL if its relative.
+     * URL if it is relative.
      *
      * The URI is kept as is if it starts with a '/', './', '../',
      * or the URL starts with one of $this->url_schemes. Otherwise
