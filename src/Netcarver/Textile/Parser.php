@@ -464,7 +464,7 @@ class Parser
 
     /**
      * Whether block tags are enabled.
-     * 
+     *
      * @var   bool
      * @since 3.6.0
      */
