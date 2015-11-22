@@ -4040,7 +4040,7 @@ class Parser
             }
 
             foreach ($this->url_schemes as $scheme) {
-                if (strpos($url, $scheme . '://') === 0) {
+                if (strpos($url, $scheme . ':') === 0) {
                     return $url;
                 }
             }
