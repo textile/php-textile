@@ -1,3 +1,25 @@
+Multiline Link using HTML br tags:
+  input : |
+    First "link":/test/ and now a second link with newline in it: "line 1
+    line 2":/test/. Even "Telephone
+    links":tel:123123123
+
+  expect: |
+    <p>First <a href="/test/">link</a> and now a second link with newline in it: <a href="/test/">line 1<br />
+    line 2</a>. Even <a href="tel:123123123">Telephone<br />
+    links</a></p>
+
+Multiline Link using spaces:
+  setup:
+    - setLineWrap: 0
+  input : |
+    First "link":/test/ and now a second link with newline in it: "line 1
+    line 2":/test/. Even "Telephone
+    links":tel:123123123
+
+  expect: |
+    <p>First <a href="/test/">link</a> and now a second link with newline in it: <a href="/test/">line 1 line 2</a>. Even <a href="tel:123123123">Telephone links</a></p>
+
 Left and right:
   input : |
     "Left":/ and "Right":/
