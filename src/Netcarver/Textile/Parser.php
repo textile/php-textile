@@ -455,6 +455,16 @@ class Parser
     protected $cls;
 
     /**
+     * Controls visibility of URL schemes in output
+     *
+     * Default false hides URL scheme in self-links.
+     *
+     * @var bool
+     */
+
+    protected $self_link_scheme_visibility = false;
+
+    /**
      * Whitelisted block tags.
      *
      * @var array
@@ -1360,6 +1370,33 @@ class Parser
     public function isLineWrapEnabled()
     {
         return (bool) $this->lineWrapEnabled;
+    }
+
+
+    /**
+     * Sets the visibility of URL schemes in self-links
+     *
+     * @param  bool $visible  TRUE turns on the display of the scheme, FALSE hides the scheme
+     * @return Parser
+     * @see    Parser::getSelfLinksSchemeVisibility()
+     * @api
+     */
+    public function setSelfLinkSchemeVisibility($visible)
+    {
+        $this->self_link_scheme_visibility = (bool) $visible;
+        return $this;
+    }
+
+    /**
+     * Gets the visibility of URL schemes in self-links
+     *
+     * @return bool TRUE if visible, FALSE if hidden
+     * @see    Parser:setSelfLinksSchemeVisibility()
+     * @api
+     */
+    public function getSelfLinksSchemeVisibility()
+    {
+        return (bool) $this->self_link_scheme_visibility;
     }
 
     /**
@@ -3853,7 +3890,12 @@ class Parser
 
         if ('$' === $text) {
             if ($scheme_in_list) {
-                $text = ltrim($this->rebuildURI($uri_parts, 'authority,path,query,fragment', false), '/');
+                $parts_to_show = '';
+                if ('mailto' !== $scheme && $this->self_link_scheme_visibility) {
+                    $parts_to_show .= 'scheme,';
+                }
+                $parts_to_show .= 'authority,path,query,fragment';
+                $text = ltrim($this->rebuildURI($uri_parts, $parts_to_show, false), '/');
             } else {
                 if (isset($this->urlrefs[$url])) {
                     $url = urldecode($this->urlrefs[$url]);
