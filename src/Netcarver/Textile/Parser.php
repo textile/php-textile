@@ -1743,7 +1743,7 @@ class Parser
         $this->glyph_replace = array();
 
         // Dimension sign
-        $this->glyph_search[] = '/([0-9]+[\])]?[\'"]? ?)[xX]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]+)/'.
+        $this->glyph_search[] = '/(?<=\b|x)([0-9]++[\])]?[\'"]? ?)[x]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]++)/i'.
             $this->regex_snippets['mod'];
         $this->glyph_replace[] = '$1'.$this->symbols['dimension'].'$2';
 
