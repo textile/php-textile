@@ -9,6 +9,20 @@ Multiline Link using HTML br tags:
     line 2</a>. Even <a href="tel:123123123">Telephone<br />
     links</a></p>
 
+Default SelfLinks:
+  input : |
+    "$":https://gmail.com "$":http://gmail.com "$":mailto:no-one@home.com
+  expect: |
+    <p><a href="https://gmail.com">gmail.com</a> <a href="http://gmail.com">gmail.com</a> <a href="mailto:no-one@home.com">no-one@home.com</a></p>
+
+Scheme Included In SelfLinks:
+  setup:
+    - setSelfLinkSchemeVisibility: true
+  input : |
+    "$":https://gmail.com "$":http://gmail.com "$":mailto:no-one@home.com
+  expect: |
+    <p><a href="https://gmail.com">https://gmail.com</a> <a href="http://gmail.com">http://gmail.com</a> <a href="mailto:no-one@home.com">no-one@home.com</a></p>
+
 Multiline Link using spaces:
   setup:
     - setLineWrap: 0
