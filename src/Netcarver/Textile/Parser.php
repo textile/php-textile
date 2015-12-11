@@ -2074,7 +2074,6 @@ class Parser
         }
 
         if (preg_match("/\(([^()]+)\)/U", $matched, $cls)) {
-
             $class_regex = "/^([-a-zA-Z 0-9_\.]*)$/";
 
             // Consume entire class block -- valid or invalid.
@@ -2267,7 +2266,6 @@ class Parser
         }
 
         foreach (preg_split("/\|{$space}*?$/m", $matches['rows'], -1, PREG_SPLIT_NO_EMPTY) as $row) {
-
             $row = ltrim($row);
 
             // Caption -- can only occur on row 1, otherwise treat '|=. foo |...'
@@ -2748,7 +2746,6 @@ class Parser
         $out = array();
 
         foreach ($textblocks as $block) {
-
             // Line is just whitespace, keep it for the next block.
             if (trim($block) === '') {
                 if ($eatWhitespace === false) {
@@ -3556,13 +3553,11 @@ class Parser
         $slices = preg_split('/":(?='.$this->regex_snippets['char'].')/'.$mod, $text);
 
         if (count($slices) > 1) {
-
             // There are never any start of links in the last slice, so pop it
             // off (we'll glue it back later).
             $last_slice = array_pop($slices);
 
             foreach ($slices as &$slice) {
-
                 // If there is no possible start quote then this slice is not a link
                 if (strpos($slice, '"') === false) {
                     continue;
@@ -3775,7 +3770,6 @@ class Parser
             $c = array_pop($url_chars);
             $popped = false;
             switch ($c) {
-
                 // Textile URL shouldn't end in these characters, we pop
                 // them off the end and push them out the back of the url again.
                 case '!':
@@ -4038,7 +4032,6 @@ class Parser
     protected function relURL($url)
     {
         if ($this->relativeImagePrefix) {
-
             if (strpos($url, '/') === 0 || strpos($url, './') === 0 || strpos($url, '../') === 0) {
                 return $url;
             }
