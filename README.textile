@@ -93,8 +93,4 @@ $parser
 
 h2. Getting in contact
 
-The PHP-Textile project welcomes constructive input and bug reports from users. You can contact us in several ways:
-
-* "Open an issue":https://github.com/textile/php-textile/issues on the repository for a feature request or bug.
-* If you are on IRC, feel free to drop into *#textile* on *freenode.net* ("webchat":http://webchat.freenode.net/?channels=#textile.)
-* Use the generic "contact form":http://sitemonks.com/.
+The PHP-Textile project welcomes constructive input and bug reports from users. Please "open an issue":https://github.com/textile/php-textile/issues on the repository for a comment, feature request or bug.
