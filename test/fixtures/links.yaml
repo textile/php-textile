@@ -2,7 +2,7 @@ Space at start of link text:
   input : |
     My E-Mail "name":mailto:test@test.de
 
-    My E-Mail " name":mailto:test@test.de
+    My E-Mail "  name":mailto:test@test.de
 
   expect: |
     <p>My E-Mail <a href="mailto:test@test.de">name</a></p>
