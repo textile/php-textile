@@ -62,11 +62,11 @@ bc. Hello <strong>strong</strong> world!
 
 h3. Doctypes
 
-Currently, PHP-Textile can target either XHTML or HTML5 output with XHTML being the default for backward compatibility. The targeted doctype can be changed through the @setDocumentType()@ method:
+Currently, PHP-Textile can target either XHTML or HTML5 output with XHTML being the default for backward compatibility.
+The targeted doctype can be changed via constructor injection:
 
-bc. $parser = new \Netcarver\Textile\Parser();
+bc. $parser = new \Netcarver\Textile\Parser('html5');
 echo $parser
-    ->setDocumentType('html5')
     ->parse('HTML(HyperText Markup Language)");
 
 In HTML5 mode, you'll get @abbr@ instead of @acronym@ and if you use alignment markers on your images you'll have extra classes placed on them instead of XHTML's @align@ attribute.
