@@ -3563,21 +3563,28 @@ class Parser
                     continue;
                 }
 
+                // Init the balanced count. If this is still zero at the end
+                // of our do loop we'll mark the " that caused it to balance
+                // as the start of the link and move on to the next slice.
+                $balanced  = 0;
+                $linkparts = array();
+                $iter      = 0;
+
                 // Cut this slice into possible starting points wherever we
                 // find a '"' character. Any of these parts could represent
                 // the start of the link text - we have to find which one.
                 $possible_start_quotes = explode('"', $slice);
 
-                // Start our search for the start of the link with the closest prior
-                // quote mark.
-                $possibility = rtrim(array_pop($possible_start_quotes));
+                if (count($possible_start_quotes) === 2) {
+                    $possibility = trim(array_pop($possible_start_quotes), " ");
+                    $linkparts[] = $possibility;
+                    $possibility = null; // there are no other possible parts that make up the link text!
+                } else {
+                    // Start our search for the start of the link with the closest prior
+                    // quote mark.
+                    $possibility = rtrim(array_pop($possible_start_quotes));
+                }
 
-                // Init the balanced count. If this is still zero at the end
-                // of our do loop we'll mark the " that caused it to balance
-                // as the start of the link and move on to the next slice.
-                $balanced = 0;
-                $linkparts = array();
-                $iter = 0;
 
                 while ($possibility !== null) {
                     // Starting at the end, pop off the previous part of the
