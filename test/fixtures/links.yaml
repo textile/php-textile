@@ -1,3 +1,25 @@
+Space at start of link text:
+  input : |
+    My E-Mail "name":mailto:test@test.de
+
+    My E-Mail " name":mailto:test@test.de
+
+  expect: |
+    <p>My E-Mail <a href="mailto:test@test.de">name</a></p>
+
+    <p>My E-Mail <a href="mailto:test@test.de">name</a></p>
+
+Space at start of links in ul:
+  input : |
+    * "Bauordnung für Berlin":http://www.stadtentwicklung.berlin.de/service/gesetzestexte/de/bauen.shtml
+    * " Verwaltungsverfahrensgesetz":http://www.gesetze-im-internet.de/vwvfg/BJNR012530976.html
+
+  expect: |
+    <ul>
+    	<li><a href="http://www.stadtentwicklung.berlin.de/service/gesetzestexte/de/bauen.shtml">Bauordnung für Berlin</a></li>
+    	<li><a href="http://www.gesetze-im-internet.de/vwvfg/BJNR012530976.html">Verwaltungsverfahrensgesetz</a></li>
+    </ul>
+
 Multiline Link using HTML br tags:
   input : |
     First "link":/test/ and now a second link with newline in it: "line 1
