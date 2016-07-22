@@ -2068,8 +2068,10 @@ class Parser
         if (preg_match("/\[([^]]+)\]/U", $matched, $lng)) {
             // Consume entire lang block -- valid or invalid.
             $matched = str_replace($lng[0], '', $matched);
-            if (preg_match("/\[([a-zA-Z]{2}(?:[\-\_][a-zA-Z]{2})?)\]/U", $lng[0], $lng)) {
-                $lang = $lng[1];
+            if ($element === 'code' && preg_match("/\[([a-zA-Z0-9_-]+)\]/U", $lng[0], $lng1)) {
+                $lang = $lng1[1];
+            } elseif (preg_match("/\[([a-zA-Z]{2}(?:[\-\_][a-zA-Z]{2})?)\]/U", $lng[0], $lng2)) {
+                $lang = $lng2[1];
             }
         }
 
@@ -2903,7 +2905,14 @@ class Parser
             $c2 = "</p>";
             $c1 = "\n</blockquote>";
         } elseif ($tag == 'bc') {
-            $o1 = "<pre$atts><code>";
+            $attrib_array = $this->parseAttribsToArray($att, 'code');
+            $code_class   = '';
+            if (isset($attrib_array['lang'])) {
+                $code_class = ' class="'.$attrib_array['lang'].'"';
+                unset($attrib_array['lang']);
+                $atts = $this->formatAttributeString($attrib_array);
+            }
+            $o1 = "<pre$atts><code$code_class>";
             $c1 = "</code></pre>";
             $content = $this->shelve($this->rEncodeHTML($content));
         } elseif ($tag == 'notextile') {
