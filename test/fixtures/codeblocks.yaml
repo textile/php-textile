@@ -1,0 +1,35 @@
+bc without attribs :
+  input : |
+    bc. Here is some code
+
+  expect: |
+    <pre><code>Here is some code</code></pre>
+
+bc with class:
+  input : |
+    bc(indented). Here is some code
+
+  expect: |
+    <pre class="indented"><code>Here is some code</code></pre>
+
+bc with class and lang:
+  input : |
+    bc(indented)[language-php]. Here is some code
+
+  expect: |
+    <pre class="indented"><code class="language-php">Here is some code</code></pre>
+
+bc with class, id and lang:
+  input : |
+    bc(indented#uno)[language-php]. Here is some code
+
+  expect: |
+    <pre class="indented" id="uno"><code class="language-php">Here is some code</code></pre>
+
+bc with class, id and invalid lang:
+  input : |
+    bc(indented#uno)[language*php]. Here is some code
+
+  expect: |
+    <pre class="indented" id="uno"><code>Here is some code</code></pre>
+
