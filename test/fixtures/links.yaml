@@ -1,13 +1,93 @@
+Seven-1:
+  input:  |
+    "The use of the assignment $ = "0" in textile":help.html..!
+
+    "The use of the assignment $="1" in textile":help.html..!
+
+    "The use of the assignment $="2" in textile":help.html..!
+  expect: |
+    <p><a href="help.html">The use of the assignment $ = &#8220;0&#8221; in textile</a>..!</p>
+
+    <p><a href="help.html">The use of the assignment $=&#8220;1&#8221; in textile</a>..!</p>
+
+    <p><a href="help.html">The use of the assignment $=&#8220;2&#8221; in textile</a>..!</p>
+
 Space at start of link text:
   input : |
-    My E-Mail "name":mailto:test@test.de
-
-    My E-Mail "  name":mailto:test@test.de
+    My E-Mail "    name":mailto:test@test.de
 
   expect: |
     <p>My E-Mail <a href="mailto:test@test.de">name</a></p>
 
-    <p>My E-Mail <a href="mailto:test@test.de">name</a></p>
+Eight-2:
+  input:  |
+    About "the use of the assignment $="2" in textile":help.html..!
+  expect: |
+    <p>About <a href="help.html">the use of the assignment $=&#8220;2&#8221; in textile</a>..!</p>
+
+Some of my Links:
+  input : |
+    ":url
+
+    "":url
+
+    " ":url
+
+    " a ":url
+
+    A "link":url and some text":url
+
+    A "link":url and some "text":url
+
+    A "link":url "and" some "text":url
+
+  expect: |
+    <p>&#8220;:url</p>
+
+    <p>&#8220;&#8221;:url</p>
+
+    <p>&#8220;&#8221;:url</p>
+
+    <p><a href="url">a</a></p>
+
+    <p>A <a href="url">link</a> and some text&#8221;:url</p>
+
+    <p>A <a href="url">link</a> and some <a href="url">text</a></p>
+
+    <p>A <a href="url">link</a> &#8220;and&#8221; some <a href="url">text</a></p>
+
+Space at start of link text2:
+  input : |
+    It grew 2" overnight. Here is a link":url
+
+  expect: |
+    <p>It grew 2&#8221; overnight. Here is a link&#8221;:url</p>
+
+Space at start of link text with preceding quoted text:
+  input : |
+    A "Quote!" My E-Mail " name":mailto:test@test.de
+
+    A "Quote!" My E-Mail "  name":mailto:test@test.de
+
+    A "link":url "and" some " text":url
+
+  expect: |
+    <p>A &#8220;Quote!&#8221; My E-Mail <a href="mailto:test@test.de">name</a></p>
+
+    <p>A &#8220;Quote!&#8221; My E-Mail <a href="mailto:test@test.de">name</a></p>
+
+    <p>A <a href="url">link</a> &#8220;and&#8221; some <a href="url">text</a></p>
+
+Space at start of links in ul - with preceeding quoted text:
+  input : |
+    * "A" "Bauordnung für Berlin":http://www.stadtentwicklung.berlin.de/service/gesetzestexte/de/bauen.shtml
+    * "B" " Verwaltungsverfahrensgesetz":http://www.gesetze-im-internet.de/vwvfg/BJNR012530976.html
+
+  expect: |
+    <ul>
+    	<li>&#8220;A&#8221; <a href="http://www.stadtentwicklung.berlin.de/service/gesetzestexte/de/bauen.shtml">Bauordnung für Berlin</a></li>
+    	<li>&#8220;B&#8221; <a href="http://www.gesetze-im-internet.de/vwvfg/BJNR012530976.html">Verwaltungsverfahrensgesetz</a></li>
+    </ul>
 
 Space at start of links in ul:
   input : |
@@ -741,7 +821,7 @@ Redcloth Links:
     <p><a href="http://slashdot.org/">(just in case you were wondering)</a></p>
 
     <p><a class="myclass" href="http://slashdot.org/">(just in case you were wondering)</a></p>
-    
+
     <p><a href="http://slashdot.org/">It is (very) fortunate that this works</a></p>
 
     <p><a href="#1">link text</a></p>
@@ -895,9 +975,9 @@ Links in tables... :
     | "abc":url |
 
     | "abc":url|
-    
+
     |"abc":url |
-    
+
     |"abc":url|
 
     |"abc":url|"def":url2|
