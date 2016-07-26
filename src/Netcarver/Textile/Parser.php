@@ -2052,7 +2052,7 @@ class Parser
         }
 
         if ($element == 'td' or $element == 'tr') {
-            if (preg_match("/($this->vlgn)/", $matched, $vert)) {
+            if (preg_match("/^($this->vlgn)/", $matched, $vert)) {
                 $style[] = "vertical-align:" . $this->vAlign($vert[1]);
             }
         }
