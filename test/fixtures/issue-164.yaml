@@ -1,0 +1,35 @@
+Hyphen in class on table cell:
+  input : |
+    table(linkblog-thumbnail).
+    |(linkblog-thumbnail-cell). apple|bear|
+  expect: |
+    <table class="linkblog-thumbnail">
+    		<tr>
+    			<td class="linkblog-thumbnail-cell">apple</td>
+    			<td>bear</td>
+    		</tr>
+    </table>
+
+Caret in class on table cell:
+  input : |
+    table(linkblog-thumbnail).
+    |(linkblog^thumbnail-cell). apple|bear|
+  expect: |
+    <table class="linkblog-thumbnail">
+    		<tr>
+    			<td>apple</td>
+    			<td>bear</td>
+    		</tr>
+    </table>
+
+Tilde in class on table cell:
+  input : |
+    table(linkblog-thumbnail).
+    |(linkblog-thumbnail~cell). apple|bear|
+  expect: |
+    <table class="linkblog-thumbnail">
+    		<tr>
+    			<td>apple</td>
+    			<td>bear</td>
+    		</tr>
+    </table>
