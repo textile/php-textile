@@ -1,4 +1,18 @@
-Seven-1:
+Multiline link text with leading space:
+  input : |
+    E-Mail: "Line-1
+    ":mailto:test@test.de
+
+    E-Mail: " Line-1
+    Line-2":mailto:test@test.de
+  expect: |
+    <p>E-Mail: <a href="mailto:test@test.de">Line-1</a></p>
+
+    <p>E-Mail: <a href="mailto:test@test.de">Line-1<br />
+    Line-2</a></p>
+
+
+Ambiguous quote in link text:
   input:  |
     "The use of the assignment $ = "0" in textile":help.html..!
 
@@ -15,7 +29,6 @@ Seven-1:
 Space at start of link text:
   input : |
     My E-Mail "    name":mailto:test@test.de
-
   expect: |
     <p>My E-Mail <a href="mailto:test@test.de">name</a></p>
 
