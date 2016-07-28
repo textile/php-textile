@@ -3653,7 +3653,7 @@ class Parser
             $replaced = 0;
             $slice = preg_replace('~ +" +~'.$mod, ' '.$this->uid.'linkStartMarker:"', $slice, 1, $replaced);
             if ($replaced == 0) {
-                $slice = preg_replace('~^" +~'.$mod, $this->uid.'linkStartMarker:"', $slice, 1, $replaced);
+                $slice = preg_replace('~^" +~m'.$mod, $this->uid.'linkStartMarker:"', $slice, 1, $replaced);
             }
         } else {
             // Rebuild the link's text by reversing the parts and sticking them back together with quotes.
