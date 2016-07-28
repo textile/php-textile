@@ -1,0 +1,13 @@
+Dimensions on images outside document root directory:
+  input: |
+    !10x10.gif! in test directory
+
+    !../textile-wordmark.png! exists in php-textile root directory, but dimension read is prevented
+
+    !../../10x10.gif! above root directory, access prevented
+  expect: |
+    <p><img alt="" height="10" src="10x10.gif" width="10" /> in test directory</p>
+
+    <p><img alt="" src="../textile-wordmark.png" /> exists in php-textile root directory, but dimension read is prevented</p>
+
+    <p><img alt="" src="../../10x10.gif" /> above root directory, access prevented</p>
