@@ -1,3 +1,13 @@
+Multiple links on separate lines, each with a leading space:
+  input : |
+    " link-1":/url1
+    " link-2":/url2
+    " link-3":/url3
+  expect: |
+    <p><a href="/url1">link-1</a><br />
+    <a href="/url2">link-2</a><br />
+    <a href="/url3">link-3</a></p>
+
 Multiline link text with leading space:
   input : |
     E-Mail: "Line-1
