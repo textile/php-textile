@@ -2,7 +2,9 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
-h2. Version 3.6.0 - upcoming
+h2. Version 3.6.x - upcoming
+
+h2. "Version 3.6.0 - 2016/11/17":https://github.com/textile/php-textile/releases/tag/v3.6.0
 
 * Fix empty-like link texts (closes "#141":https://github.com/textile/php-textile/issues/141).
 * Fix empty-like RedCloth definitions (closes "#142":https://github.com/textile/php-textile/issues/142).
