@@ -24,7 +24,8 @@ h2. Version 3.6.0 - upcoming
 * Feature/Fix: Allow link text that contains newline characters (closes "#154":https://github.com/textile/php-textile/issues/154, "#155":https://github.com/textile/php-textile/issues/155 & "#167":https://github.com/textile/php-textile/issues/167).
 * Fix: Stop encoding '+' characters in tel: links (closes "#156":https://github.com/textile/php-textile/issues/156).
 * Make dimension glyph replacements a little stricter.
-* Fix: Bugfix: Prevent hyphenated class on td cells adding incorrect style (closes "#164":https://github.com/textile/php-textile/issues/164).
+* Fix: Prevent hyphenated class on td cells adding incorrect style (closes "#164":https://github.com/textile/php-textile/issues/164).
+* Jail read of image dimensions to images within the document root path (closes "#145":https://github.com/textile/php-textile/issues/145).
 * Various code cleanups, typo corrections and refactorings.
 * Documentation fixes and extensions.
 
