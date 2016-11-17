@@ -28,7 +28,7 @@ h2. "Version 3.6.0 - 2016/11/17":https://github.com/textile/php-textile/releases
 * Make dimension glyph replacements a little stricter.
 * Fix: Prevent hyphenated class on td cells adding incorrect style (closes "#164":https://github.com/textile/php-textile/issues/164).
 * Jail read of image dimensions to images within the document root path (closes "#145":https://github.com/textile/php-textile/issues/145).
-* Various code cleanups, typo corrections and refactorings.
+* Various code cleanups, typo corrections and refactoring.
 * Documentation fixes and extensions.
 
 
