@@ -2188,7 +2188,6 @@ class Parser
                 }
             }
 
-            
             $o['style'] = trim(str_replace(array("\n", ';;'), array('', ';'), $so));
         }
 
