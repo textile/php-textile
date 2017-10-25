@@ -4,7 +4,7 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 3.6.x - upcoming
 
-* Fix problems with attribute parsing under PHP7.1
+* Fix problems with attribute parsing under PHP7.1 (closes "#175":https://github.com/textile/php-textile/issues/175 and "#176":https://github.com/textile/php-textile/issues/176).
 
 
 h2. "Version 3.6.0 - 2016/11/17":https://github.com/textile/php-textile/releases/tag/v3.6.0
