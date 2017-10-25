@@ -695,6 +695,8 @@ Headers 1-6 :
     h1. Two line with *strong*
     heading
 
+    h1=. Centered headline
+
   expect : |
     <h1>Heading 1</h1>
 
@@ -710,6 +712,8 @@ Headers 1-6 :
 
     <h1>Two line with <strong>strong</strong><br />
     heading</h1>
+
+    <h1 style="text-align:center;">Centered headline</h1>
 
 Paragraph text :
   notes  : Paragraphs should be properly wrapped in <p>...</p> tags and newlines replaced with <br /> tags.
