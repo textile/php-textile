@@ -1329,6 +1329,12 @@ Unicode Links (restricted) :
 
     <p><a href="http://google.com" rel="nofollow">Google</a> or <a href="https://google.com" rel="nofollow">secure google</a></p>
 
+Unicode In title:
+  input: |
+    !http://lala.com/lol.gif(♡ imáges)!
+  expect: |
+    <p><img alt="♡ imáges" src="http://lala.com/lol.gif" title="♡ imáges" /></p>
+
 Max Link Index Test :
   class:  \Netcarver\Textile\Test\Parser\MaxLinkIndex
   input  : |
