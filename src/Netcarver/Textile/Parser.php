@@ -3882,18 +3882,18 @@ class Parser
         return $pre . $out . $pop . $tight;
     }
 
-     /**
-      * Finds URI aliases within the given input.
-      *
-      * This method finds URI aliases in the Textile input. Links are stored
-      * in an internal cache, so that they can be referenced from any link
-      * in the document.
-      *
-      * This operation happens before the actual link parsing takes place.
-      *
-      * @param  string $text Textile input
-      * @return string The Textile document with any URI aliases removed
-      */
+    /**
+     * Finds URI aliases within the given input.
+     *
+     * This method finds URI aliases in the Textile input. Links are stored
+     * in an internal cache, so that they can be referenced from any link
+     * in the document.
+     *
+     * This operation happens before the actual link parsing takes place.
+     *
+     * @param  string $text Textile input
+     * @return string The Textile document with any URI aliases removed
+     */
 
     protected function getRefs($text)
     {
@@ -4337,8 +4337,8 @@ class Parser
 
     protected function noTextile($text)
     {
-         $text = $this->doSpecial($text, '<notextile>', '</notextile>', 'fTextile');
-         return $this->doSpecial($text, '==', '==', 'fTextile');
+        $text = $this->doSpecial($text, '<notextile>', '</notextile>', 'fTextile');
+        return $this->doSpecial($text, '==', '==', 'fTextile');
     }
 
     /**
