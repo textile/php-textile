@@ -4,7 +4,7 @@ Please take a quick look at this document before to make contribution process ea
 
 h2. License
 
-"BSD 3-Clause":https://raw.github.com/textile/php-textile/blob/master/LICENSE. By contributing code, you agree to license your additions under the BSD 3-Clause license.
+"BSD 3-Clause":https://github.com/textile/php-textile/blob/master/LICENSE. By contributing code, you agree to license your additions under the BSD 3-Clause license.
 
 h2. Configure git
 
@@ -17,7 +17,7 @@ Make sure to use an email address that is linked to your GitHub account. It can 
 
 h2. Dependencies
 
-Dependencies are managed using "Composer":http://getcomposer.org. After you have cloned the repository, run composer install:
+Dependencies are managed using "Composer":https://getcomposer.org. After you have cloned the repository, run composer install:
 
 bc. $ composer install
 
@@ -33,7 +33,7 @@ bc. $ ./vendor/bin/phpcs --standard=PSR1,PSR2 src test
 
 h2. Versioning
 
-"Semantic Versioning":http://semver.org/ and major.minor.path format:
+"Semantic Versioning":https://semver.org and major.minor.path format:
 
 * Only major versions can make incompatible API changes.
 * Minor versions can add backwards-compatible features and changes.
@@ -43,10 +43,10 @@ Keep backwards compatibility in mind when you do changes to the Textile language
 
 h2. Testing and code coverage
 
-The project uses "PHPunit":http://phpunit.de for running its unit tests. As much of the codebase should be covered with tests as possible. When adding new features, also add tests for them. If you find a bug, create a test that can replicate the said bug and, if possible, fix it so that the tests pass. To run tests, simply run:
+The project uses "PHPunit":https://phpunit.de for running its unit tests. As much of the codebase should be covered with tests as possible. When adding new features, also add tests for them. If you find a bug, create a test that can replicate the said bug and, if possible, fix it so that the tests pass. To run tests, simply run:
 
 bc. $ ./vendor/bin/phpunit
 
-Running tests requires PHP 5.4.0 and PCRE with PCRE_UTF8 support. Generating optional code coverage reports requires "Xdebug":http://xdebug.org/.
+Running tests requires PHP 5.4.0 and PCRE with PCRE_UTF8 support. Generating optional code coverage reports requires "Xdebug":https://xdebug.org.
 
 Tests should pass before the changes can be merged to the codebase. If you create a pull requests that does not pass tests, CI will complain in the pull request thread. To get your changes merged, you should rework the code or tests until everything works smoothly.
