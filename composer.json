@@ -26,5 +26,9 @@
         "branch-alias": {
             "dev-master": "3.6-dev"
         }
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit",
+        "cs": "./vendor/bin/phpcs --standard=PSR1,PSR2 src test"
     }
 }

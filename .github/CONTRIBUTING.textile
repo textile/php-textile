@@ -29,7 +29,7 @@ h2. Coding standard
 
 The project follows the "PSR-0":https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md and "PSR-2":https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide-meta.md standards. You can use PHP_CodeSniffer to make sure your additions follow them too:
 
-bc. $ ./vendor/bin/phpcs --standard=PSR1,PSR2 src test
+bc. $ composer cs
 
 h2. Versioning
 
@@ -45,7 +45,7 @@ h2. Testing and code coverage
 
 The project uses "PHPunit":https://phpunit.de for running its unit tests. As much of the codebase should be covered with tests as possible. When adding new features, also add tests for them. If you find a bug, create a test that can replicate the said bug and, if possible, fix it so that the tests pass. To run tests, simply run:
 
-bc. $ ./vendor/bin/phpunit
+bc. $ composer test
 
 Running tests requires PHP 5.4.0 and PCRE with PCRE_UTF8 support. Generating optional code coverage reports requires "Xdebug":https://xdebug.org.
 
