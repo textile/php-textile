@@ -1431,7 +1431,7 @@ class Parser
      * Allows client systems to have PHP-Textile convert relative paths to
      * absolute or prefixed paths. This method is used to set that base path,
      * usually an absolute HTTP address pointing to a directory. Note that
-     * despite its name it applies to both to links and images.
+     * despite its name it applies to both links and images.
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
      * $parser->setRelativeImagePrefix('http://static.example.com/');
