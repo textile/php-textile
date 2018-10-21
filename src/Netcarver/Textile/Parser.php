@@ -4119,21 +4119,24 @@ class Parser
     }
 
     /**
-     * Checks the given path to see if it lies within, or below, the document root
+     * Checks that the given path is under the document root.
      *
      * @param  string Path to check
-     * @return bool True if path is within the image document root
+     * @return bool   TRUE if path is within the image document root
      * @see    Parser::images()
+     * @since  3.6.0
      */
 
     protected function isInDocumentRootDirectory($path)
     {
         $realpath = realpath($path);
+
         if ($realpath) {
-            $root     = str_replace('\\', '/', $this->getDocumentRootDirectory());
+            $root = str_replace('\\', '/', $this->getDocumentRootDirectory());
             $realpath = str_replace('\\', '/', $realpath);
             return (0 === strpos($realpath, $root));
         }
+
         return false;
     }
 
