@@ -2,13 +2,13 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
-h2. Version 3.6.x - upcoming
+h2. "Version 3.6.1 - 2018/10/21":https://github.com/textile/php-textile/releases/tag/v3.6.1
 
 * Fix problems with attribute parsing under PHP >= 7.1 (closes "#175":https://github.com/textile/php-textile/issues/175 and "#176":https://github.com/textile/php-textile/issues/176).
-* Fix test suite compatibility issues under PHP >= 7.2.
+* Fix test suite compatibility issues under PHP >= 7.2 (closes "#184":https://github.com/textile/php-textile/issues/184).
 * Fix missing deprecation notices.
 * Add test fixture for Unicode characters in image title attributes.
-* Tidy entity encoding process.
+* Tidy entity encoding process (closes "#182":https://github.com/textile/php-textile/issues/182).
 * Drop legacy PHP 5.5 and 5.4 unit test targets due to test suite's depedencies' requirements.
 
 h2. "Version 3.6.0 - 2016/11/17":https://github.com/textile/php-textile/releases/tag/v3.6.0
