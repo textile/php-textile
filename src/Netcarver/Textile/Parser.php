@@ -4192,10 +4192,10 @@ class Parser
 
         if (!$this->dimensionless_images && $this->isRelUrl($url)) {
             $location = $this->getDocumentRootDirectory().ltrim($url, '\\/');
-            $real_location = realpath($location);
-            if ($real_location) {
-                $location_ok = $this->isInDocumentRootDirectory($real_location);
-                if ($location_ok && $size = getimagesize($real_location)) {
+            $location_ok = $this->isInDocumentRootDirectory($location);
+            if ($location_ok) {
+                $real_location = realpath($location);
+                if ($size = getimagesize($real_location)) {
                     $img->height($size[1])->width($size[0]);
                 }
             }
