@@ -47,6 +47,6 @@ The project uses "PHPunit":https://phpunit.de for running its unit tests. As muc
 
 bc. $ composer test
 
-Running tests requires PHP 5.4.0 and PCRE with PCRE_UTF8 support. Generating optional code coverage reports requires "Xdebug":https://xdebug.org.
+Running tests requires PHP 5.6.0 and PCRE with PCRE_UTF8 support. Generating optional code coverage reports requires "Xdebug":https://xdebug.org.
 
 Tests should pass before the changes can be merged to the codebase. If you create a pull requests that does not pass tests, CI will complain in the pull request thread. To get your changes merged, you should rework the code or tests until everything works smoothly.
