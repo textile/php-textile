@@ -165,6 +165,29 @@ class BasicTest extends \PHPUnit_Framework_TestCase
      * @expectedException \PHPUnit_Framework_Error
      */
 
+    public function testDeprecatedTextileCommon()
+    {
+        $parser = new Parser\DeprecatedTextileCommon();
+        $this->assertEquals(' content', @$parser->testTextileCommon(' content', false));
+        $this->assertEquals(' content', @$parser->testTextileCommon(' content', true));
+        $parser->testTextileCommon('content', false);
+    }
+
+    /**
+     * @expectedException \PHPUnit_Framework_Error
+     */
+
+    public function testDeprecatedPrepare()
+    {
+        $parser = new Parser\DeprecatedPrepare();
+        $this->assertEquals(' content', @$parser->parse(' content'));
+        $parser->parse('content');
+    }
+
+    /**
+     * @expectedException \PHPUnit_Framework_Error
+     */
+
     public function testDeprecatedTextileRestricted()
     {
         $parser = new Textile();
