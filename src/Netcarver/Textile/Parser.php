@@ -1644,12 +1644,17 @@ class Parser
     {
         if ($encode) {
             trigger_error(
-                'Use of the $encode argument is discouraged. Use Parser::textileEncode() instead.',
+                '$encode argument is deprecated. Use Parser::textileEncode() instead.',
                 E_USER_DEPRECATED
             );
 
             return $this->textileEncode($text);
         }
+
+        trigger_error(
+            'Parser::textileThis() is deprecated. Use Parser::parse() instead.',
+            E_USER_DEPRECATED
+        );
 
         return $this
             ->setRestricted(false)
@@ -1685,6 +1690,10 @@ class Parser
      * @param  bool   $noimage Allow images
      * @param  string $rel     Relationship attribute applied to generated links
      * @return string Parsed input
+     * @see    Parser::setRestricted()
+     * @see    Parser::setLite()
+     * @see    Parser::setImages()
+     * @see    Parser::setLinkRelationShip()
      * @see    Parser::parse()
      * @deprecated in 3.6.0
      * @api
@@ -1692,6 +1701,11 @@ class Parser
 
     public function textileRestricted($text, $lite = true, $noimage = true, $rel = 'nofollow')
     {
+        trigger_error(
+            'Parser::textileRestricted() is deprecated. Use Parser::parse() with Parser::setRestricted() instead.',
+            E_USER_DEPRECATED
+        );
+
         return $this
             ->setRestricted(true)
             ->setLite($lite)

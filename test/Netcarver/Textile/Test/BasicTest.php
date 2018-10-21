@@ -162,6 +162,28 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException \PHPUnit_Framework_Error
+     */
+
+    public function testDeprecatedTextileRestricted()
+    {
+        $parser = new Textile();
+        $this->assertEquals(' content', @$parser->textileRestricted(' content'));
+        $parser->textileRestricted('content');
+    }
+
+    /**
+     * @expectedException \PHPUnit_Framework_Error
+     */
+
+    public function testDeprecatedTextileThis()
+    {
+        $parser = new Textile();
+        $this->assertEquals(' content', @$parser->textileThis(' content'));
+        $parser->textileThis('content');
+    }
+
+    /**
      * @expectedException \InvalidArgumentException
      */
 
@@ -177,8 +199,8 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 
         for ($i = 1; $i <= 100; $i++) {
             $content = "Note[1]\n\nfn1. Footnote";
-            $parsed[0] = $parser->textileThis($content);
-            $parsed[1] = $parser->textileThis('*strong*');
+            $parsed[0] = $parser->parse($content);
+            $parsed[1] = $parser->parse('*strong*');
             $this->assertTrue($parsed[0] !== $previous[0]);
             $this->assertEquals($previous[1], $parsed[1]);
             $previous[0] = $parsed[0];
@@ -189,7 +211,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     public function testLineSpaceEscaping()
     {
         $parser = new Textile();
-        $this->assertEquals(' <strong>line</strong>', $parser->textileThis(' *line*'));
+        $this->assertEquals(' <strong>line</strong>', $parser->parse(' *line*'));
     }
 
     public function testDocumentRoot()
