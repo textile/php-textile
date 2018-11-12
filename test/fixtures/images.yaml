@@ -1,0 +1,26 @@
+Image schemes :
+  input  : |
+    !//example.com/favicon.ico!
+
+    !http://example.com/favicon.ico!
+
+    !https://example.com/favicon.ico!
+
+    !file://example.com/favicon.ico!
+
+    !ftp://example.com/favicon.ico!
+
+    !invalid://example.com/favicon.ico!
+
+  expect: |
+    <p><img alt="" src="//example.com/favicon.ico" /></p>
+
+    <p><img alt="" src="http://example.com/favicon.ico" /></p>
+
+    <p><img alt="" src="https://example.com/favicon.ico" /></p>
+
+    <p><img alt="" src="file://example.com/favicon.ico" /></p>
+
+    <p><img alt="" src="ftp://example.com/favicon.ico" /></p>
+
+    <p>!invalid://example.com/favicon.ico!</p>
