@@ -48,8 +48,7 @@ In restricted mode PHP-Textile doesn't allow more powerful formatting options su
 
 h3. Parsing single-line fields
 
-If you are using PHP-Textile as a field-level formatter to parse just inline spans and glyphs, use the
-@setBlockTags()@ method to disable block tags:
+If you are using PHP-Textile as a field-level formatter to parse just inline spans and glyphs, use the @setBlockTags@ method to disable block tags:
 
 bc. $parser = new \Netcarving\Textile\Parser();
 echo $parser
@@ -62,29 +61,28 @@ bc. Hello <strong>strong</strong> world!
 
 h3. Doctypes
 
-Currently, PHP-Textile can target either XHTML or HTML5 output with XHTML being the default for backward compatibility.
-The targeted doctype can be changed via constructor injection:
+Currently, PHP-Textile can target either XHTML or HTML5 output with XHTML being the default for backward compatibility. The targeted doctype can be changed via the constructor:
 
 bc. $parser = new \Netcarver\Textile\Parser('html5');
 echo $parser
-    ->parse('HTML(HyperText Markup Language)");
+    ->parse('HTML(HyperText Markup Language)');
 
 In HTML5 mode, you'll get @abbr@ instead of @acronym@ and if you use alignment markers on your images you'll have extra classes placed on them instead of XHTML's @align@ attribute.
 
 h3. Setting alternate glyphs
 
-Textile's typographic substitutions can be overridden with the @setSymbol@ method. If you need to setup Textile to do non-standard substitutions, call @setSymbol@ before you parse the input with @textileThis@ or @textileRestricted@.
+Textile's typographic substitutions can be overridden with the @setSymbol@ method. If you need to setup Textile to do non-standard substitutions, call @setSymbol@ before you parse the input with @parse@.
 
 bc. $parser = new \Netcarver\Textile\Parser();
 $parser
     ->setSymbol('half', '1&#8260;2')
     ->parse('Hello [1/2] World!');
 
-The symbol names you can pass to @setSymbol()@ can be found "here":https://github.com/textile/php-textile/blob/582fb7e2af83bb043fe6dd3846220796c814f999/classTextile.php#L468.
+The symbol names you can pass to @setSymbol@ can be found "here":https://github.com/textile/php-textile/blob/v3.6.1/src/Netcarver/Textile/Parser.php#L710.
 
 h3. Prefixing relative image paths
 
-Setting a image path prefix might be useful if your application only allows users to reference images from a certain location like, say, an images directory. The prefix can be set with the @setRelativeImagePrefix()@ method:
+Setting a image path prefix might be useful if your application only allows users to reference images from a certain location like, say, an images directory. The prefix can be set with the @setRelativeImagePrefix@ method:
 
 bc. $parser = new \Netcarver\Textile\Parser();
 $parser
