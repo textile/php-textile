@@ -165,6 +165,8 @@ URI-Schemes :
 
     "$":sftp://foobar@textileit.com
 
+    "link with no scheme"://example.com
+
     Find it "here":http://github.com/netcarver/some+thing+completely+different on github.
 
     "link with sftp alias":uri-alias3
@@ -214,6 +216,8 @@ URI-Schemes :
     <p><a href="sftp://foobar@textileit.com">link with sftp</a></p>
 
     <p><a href="sftp://foobar@textileit.com">foobar@textileit.com</a></p>
+
+    <p><a href="//example.com">link with no scheme</a></p>
 
     <p>Find it <a href="http://github.com/netcarver/some+thing+completely+different">here</a> on github.</p>
 
@@ -719,7 +723,7 @@ Redcloth Links:
     <p><a href="http://slashdot.org/">(just in case you were wondering)</a></p>
 
     <p><a class="myclass" href="http://slashdot.org/">(just in case you were wondering)</a></p>
-    
+
     <p><a href="http://slashdot.org/">It is (very) fortunate that this works</a></p>
 
     <p><a href="#1">link text</a></p>
@@ -873,9 +877,9 @@ Links in tables... :
     | "abc":url |
 
     | "abc":url|
-    
+
     |"abc":url |
-    
+
     |"abc":url|
 
     |"abc":url|"def":url2|
