@@ -1291,7 +1291,7 @@ class Parser
      *
      * The above generates:
      *
-     * bc. h1. Hello *strong* world!
+     * bc. h1. Hello <strong>strong</strong> world!
      *
      * @param  bool   $enabled TRUE to enable, FALSE to disable
      * @return Parser
