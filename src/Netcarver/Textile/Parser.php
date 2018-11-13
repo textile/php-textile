@@ -656,9 +656,30 @@ class Parser
      * Relative image path.
      *
      * @var string
+     * @deprecated in 3.7.0
+     * @see Parser::$relImagePrefix
+     * @see Parser::$relLinkPrefix
      */
 
-    protected $relativeImagePrefix = '';
+    protected $relativeImagePrefix;
+
+    /**
+     * Relative link prefix.
+     *
+     * @var   string
+     * @since 3.7.0
+     */
+
+    protected $relLinkPrefix = '';
+
+    /**
+     * Prefix applied to relative images.
+     *
+     * @var   string
+     * @since 3.7.0
+     */
+
+    protected $relImagePrefix = '';
 
     /**
      * Maximum nesting level for inline elements.
@@ -1425,6 +1446,49 @@ class Parser
     }
 
     /**
+     * Sets base relative image prefix.
+     *
+     * The given string is used to prefix relative image paths, usually an
+     * absolute HTTP address pointing a the site's image, or upload, directory.
+     * PHP-Textile to convert relative paths to absolute, or prefixed paths.
+     *
+     * bc. $parser = new \Netcarver\Textile\Parser();
+     * $parser->setImagePrefix('https://static.example.com/images/');
+     *
+     * @param string $prefix The prefix
+     * @return Parser
+     * @since 3.7.0
+     * @api
+     */
+
+    public function setImagePrefix($prefix)
+    {
+        $this->relImagePrefix = (string) $prefix;
+        return $this;
+    }
+
+    /**
+     * Sets base relative link prefix.
+     *
+     * The given string is used to prefix relative link paths. This allows
+     * PHP-Textile convert relative paths to absolute, or prefixed, links.
+     *
+     * bc. $parser = new \Netcarver\Textile\Parser();
+     * $parser->setLinkPrefix('https://example.com/');
+     *
+     * @param string $prefix The prefix
+     * @return Parser
+     * @since 3.7.0
+     * @api
+     */
+
+    public function setLinkPrefix($prefix)
+    {
+        $this->relLinkPrefix = (string) $prefix;
+        return $this;
+    }
+
+    /**
      * Sets base relative image and link directory path.
      *
      * This is used when Textile is supplied with a relative image or link path.
@@ -1434,15 +1498,24 @@ class Parser
      * despite its name it applies to both links and images.
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
-     * $parser->setRelativeImagePrefix('http://static.example.com/');
+     * $parser->setRelativeImagePrefix('https://example.com/');
      *
      * @param  string $prefix  The string to prefix all relative image paths with
      * @return Parser
+     * @deprecated in 3.7.0
+     * @see Parser::setImagePrefix
+     * @see Parser::setLinkPrefix
      * @api
      */
 
     public function setRelativeImagePrefix($prefix = '')
     {
+        trigger_error(
+            'Parser::setRelativeImagePrefix() is deprecated.'.
+            'Use Parser::setImagePrefix() and Parser::setLinkPrefix() instead.',
+            E_USER_DEPRECATED
+        );
+
         $this->relativeImagePrefix = $prefix;
         return $this;
     }
@@ -3947,19 +4020,24 @@ class Parser
      * Stores away a URL fragments that have been parsed
      * and requires no more processing.
      *
-     * @param  string $text The URL
+     * @param  string $text  The URL
+     * @param  string $type  The type
      * @return string The fragment's unique reference ID
      * @see    Parser::retrieveURLs()
      */
 
-    protected function shelveURL($text)
+    protected function shelveURL($text, $type = null)
     {
         if ('' === $text) {
             return '';
         }
 
+        if ($type === null) {
+            $type = 'url';
+        }
+
         $this->refCache[$this->refIndex] = $text;
-        return $this->uid.($this->refIndex++).':url';
+        return $this->uid.($this->refIndex++).':'.$type;
     }
 
     /**
@@ -3975,7 +4053,11 @@ class Parser
 
     protected function retrieveURLs($text)
     {
-        return preg_replace_callback('/'.$this->uid.'(?P<token>[0-9]+):url/', array($this, 'retrieveURL'), $text);
+        return preg_replace_callback(
+            '/'.$this->uid.'(?P<token>[0-9]+):(?P<type>url|image)/',
+            array($this, 'retrieveURL'),
+            $text
+        );
     }
 
     /**
@@ -3992,11 +4074,12 @@ class Parser
         }
 
         $url = $this->refCache[$m['token']];
+
         if (isset($this->urlrefs[$url])) {
             $url = $this->urlrefs[$url];
         }
 
-        return $this->rEncodeHTML($this->relURL($url));
+        return $this->rEncodeHTML($this->relURL($url, $m['type']));
     }
 
     /**
@@ -4036,13 +4119,23 @@ class Parser
      * or the URL starts with one of $this->url_schemes. Otherwise
      * the URL is prefixed.
      *
-     * @param  string $url The URL
+     * @param  string $url  The URL
+     * @param  string $type The type
      * @return string Absolute URL
      */
 
-    protected function relURL($url)
+    protected function relURL($url, $type = null)
     {
-        if ($this->relativeImagePrefix) {
+        if ($this->relativeImagePrefix !== null) {
+            // Use legacy fallback if set. Deprecated in 3.7.0.
+            $prefix = $this->relativeImagePrefix;
+        } elseif ($type === null || $type === 'image') {
+            $prefix = $this->relImagePrefix;
+        } else {
+            $prefix = $this->relLinkPrefix;
+        }
+
+        if ($prefix) {
             if (strpos($url, '/') === 0 || strpos($url, './') === 0 || strpos($url, '../') === 0) {
                 return $url;
             }
@@ -4053,7 +4146,7 @@ class Parser
                 }
             }
 
-            return $this->relativeImagePrefix.$url;
+            return $prefix.$url;
         }
 
         return $url;
@@ -4187,7 +4280,7 @@ class Parser
         $img = $this->newTag('img', $this->parseAttribsToArray($atts, '', 1, $extras))
             ->align($align)
             ->alt($title, true)
-            ->src($this->shelveURL($url), true)
+            ->src($this->shelveURL($url, 'image'), true)
             ->title($title);
 
         if (!$this->dimensionless_images && $this->isRelUrl($url)) {

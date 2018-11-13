@@ -96,6 +96,10 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('test', $textile->getSymbol());
     }
 
+    /**
+     * @expectedException \PHPUnit_Framework_Error
+     */
+
     public function testSetRelativeImagePrefixChaining()
     {
         $textile = new Textile();

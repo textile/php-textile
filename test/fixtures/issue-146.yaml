@@ -1,6 +1,7 @@
 Relative links and images:
   setup:
-    - setRelativeImagePrefix: http://example.com/
+    - setImagePrefix: http://example.com/images/
+    - setLinkPrefix: http://example.com/
   input: |
     "Text":link
 
@@ -26,7 +27,7 @@ Relative links and images:
 
     <p><a href="http://example.com/">Text</a></p>
 
-    <p><img alt="" height="10" src="http://example.com/10x10.gif" width="10" /></p>
+    <p><img alt="" height="10" src="http://example.com/images/10x10.gif" width="10" /></p>
 
     <p><img alt="" height="10" src="./10x10.gif" width="10" /></p>
 
