@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PHP_CodeSniffer">
+    <file>src</file>
+    <file>test</file>
+    <rule ref="PSR1"/>
+    <rule ref="PSR2"/>
+</ruleset>
