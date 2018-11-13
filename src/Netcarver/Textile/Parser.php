@@ -1421,7 +1421,7 @@ class Parser
      * array containing the full symbol table.
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
-     * print_r($parser-getSymbol);
+     * print_r($parser->getSymbol);
      *
      * The above outputs all available symbol definitions.
      *
@@ -1455,9 +1455,9 @@ class Parser
      * bc. $parser = new \Netcarver\Textile\Parser();
      * $parser->setImagePrefix('https://static.example.com/images/');
      *
-     * @param string $prefix The prefix
+     * @param  string $prefix The prefix
      * @return Parser
-     * @since 3.7.0
+     * @since  3.7.0
      * @api
      */
 
@@ -1476,9 +1476,9 @@ class Parser
      * bc. $parser = new \Netcarver\Textile\Parser();
      * $parser->setLinkPrefix('https://example.com/');
      *
-     * @param string $prefix The prefix
+     * @param  string $prefix The prefix
      * @return Parser
-     * @since 3.7.0
+     * @since  3.7.0
      * @api
      */
 
