@@ -12,7 +12,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
      * @dataProvider provider
      */
 
-    public function testAdd($name, $test)
+    public function testAdd($file, $name, $test)
     {
         if (isset($test['class'])) {
             $class = $test['class'];
@@ -65,7 +65,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
             );
         }
 
-        $this->assertEquals($expect, $input, 'In section: '.$name);
+        $this->assertEquals($expect, $input, $name . ' in ' . $file);
         $public = implode(', ', array_keys(get_object_vars($textile)));
         $this->assertEquals('', $public, 'Leaking public class properties.');
     }
@@ -135,7 +135,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
                         continue;
                     }
 
-                    $out[] = array($name, $test);
+                    $out[] = array($file, $name, $test);
                 }
             }
         }
