@@ -11,7 +11,9 @@
         "source": "https://github.com/textile/php-textile"
     },
     "autoload": {
-        "psr-0": { "Netcarver\\Textile": "src/" }
+        "psr-4": {
+            "Netcarver\\Textile\\": "src/Netcarver/Textile/"
+        }
     },
     "require": {
         "php": ">=5.3.0"
