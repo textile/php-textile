@@ -211,6 +211,21 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException \PHPUnit_Framework_Error
+     */
+
+    public function testDeprecatedSetRelativeImagePrefix()
+    {
+        $parser = new Textile();
+        @$parser->setRelativeImagePrefix('/1/');
+        $this->assertEquals(
+            ' <img alt="" src="/1/2.jpg" /> <a href="/1/2">1</a>',
+            $parser->parse(' !2.jpg! "1":2')
+        );
+        $parser->setRelativeImagePrefix('/1/');
+    }
+
+    /**
      * @expectedException \InvalidArgumentException
      */
 
