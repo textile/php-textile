@@ -1458,6 +1458,7 @@ class Parser
      * @param  string $prefix The prefix
      * @return Parser
      * @since  3.7.0
+     * @see    Parser::getImagePrefix()
      * @api
      */
 
@@ -1465,6 +1466,23 @@ class Parser
     {
         $this->relImagePrefix = (string) $prefix;
         return $this;
+    }
+
+    /**
+     * Gets base relative image prefix.
+     *
+     * bc. $parser = new \Netcarver\Textile\Parser();
+     * echo $parser->getImagePrefix();
+     *
+     * @return string The prefix
+     * @since  3.7.0
+     * @see    Parser::setImagePrefix()
+     * @api
+     */
+
+    public function getImagePrefix()
+    {
+        return (string) $this->relImagePrefix;
     }
 
     /**
@@ -1479,6 +1497,7 @@ class Parser
      * @param  string $prefix The prefix
      * @return Parser
      * @since  3.7.0
+     * @see    Parser::getLinkPrefix()
      * @api
      */
 
@@ -1486,6 +1505,23 @@ class Parser
     {
         $this->relLinkPrefix = (string) $prefix;
         return $this;
+    }
+
+    /**
+     * Gets base relative link prefix.
+     *
+     * bc. $parser = new \Netcarver\Textile\Parser();
+     * echo $parser->getLinkPrefix();
+     *
+     * @return string The prefix
+     * @since  3.7.0
+     * @see    Parser::setLinkPrefix()
+     * @api
+     */
+
+    public function getLinkPrefix()
+    {
+        return (string) $this->relLinkPrefix;
     }
 
     /**

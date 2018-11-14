@@ -282,4 +282,16 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($parser->setRestricted(true)->isRestrictedModeEnabled());
         $this->assertFalse($parser->setRestricted(false)->isRestrictedModeEnabled());
     }
+
+    public function testImagePrefix()
+    {
+        $parser = new Textile();
+        $this->assertEquals('test', $parser->setLinkPrefix('test')->getLinkPrefix());
+    }
+
+    public function testLinkPrefix()
+    {
+        $parser = new Textile();
+        $this->assertEquals('test', $parser->setImagePrefix('test')->getImagePrefix());
+    }
 }
