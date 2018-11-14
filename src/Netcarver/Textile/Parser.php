@@ -1421,7 +1421,7 @@ class Parser
      * array containing the full symbol table.
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
-     * print_r($parser->getSymbol);
+     * print_r($parser->getSymbol());
      *
      * The above outputs all available symbol definitions.
      *
