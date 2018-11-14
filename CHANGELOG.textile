@@ -2,6 +2,11 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
+h2. Version 3.7.0 - upcoming
+
+* Add @Parser::setImagePrefix()@, @Parser::setLinkPrefix()@, @Parser::getImagePrefix()@ and @Parser::getLinkPrefix()@ (closes "#169":https://github.com/textile/php-textile/issues/169).
+* Deprecate @Parser::setRelativeImagePrefix()@ and @Parser::$relativeImagePrefix@ in favour of the new decoupled methods.
+
 h2. "Version 3.6.1 - 2018/10/21":https://github.com/textile/php-textile/releases/tag/v3.6.1
 
 * Fix problems with attribute parsing under PHP >= 7.1 (closes "#175":https://github.com/textile/php-textile/issues/175 and "#176":https://github.com/textile/php-textile/issues/176).
@@ -28,7 +33,7 @@ h2. "Version 3.6.0 - 2016/11/17":https://github.com/textile/php-textile/releases
 * Add @Parser::setLinkRelationShip()@ and @Parser::getLinkRelationShip()@.
 * Add @Parser::setLineWrap()@ and @Parser::isLineWrapEnabled()@ (closes "#139":https://github.com/textile/php-textile/issues/139).
 * Deprecate @Parser::textileThis()@, @Parser::textileRestricted()@ and @Parser::textileCommon()@ in favour of the more versatile @Parser::parse()@.
-* Fix: relURL() now supports unicode characters (closes "#146":https://github.com/textile/php-textile/issues/146).
+* Fix: @Parser::relURL()@ now supports unicode characters (closes "#146":https://github.com/textile/php-textile/issues/146).
 * Fix: Undefined variable warning.
 * Feature/Fix: Allow link text that contains newline characters (closes "#154":https://github.com/textile/php-textile/issues/154, "#155":https://github.com/textile/php-textile/issues/155 & "#167":https://github.com/textile/php-textile/issues/167).
 * Fix: Stop encoding '+' characters in tel: links (closes "#156":https://github.com/textile/php-textile/issues/156).
@@ -37,7 +42,6 @@ h2. "Version 3.6.0 - 2016/11/17":https://github.com/textile/php-textile/releases
 * Jail read of image dimensions to images within the document root path (closes "#145":https://github.com/textile/php-textile/issues/145).
 * Various code cleanups, typo corrections and refactoring.
 * Documentation fixes and extensions.
-
 
 h2. "Version 3.5.5 - 2014/01/02":https://github.com/textile/php-textile/releases/tag/v3.5.5
 
