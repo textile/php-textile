@@ -31,6 +31,8 @@
     },
     "scripts": {
         "test": "./vendor/bin/phpunit",
-        "cs": "./vendor/bin/phpcs"
+        "cs": "./vendor/bin/phpcs",
+        "bump": "@php ./scripts/release.php",
+        "bump-dev": "@php ./scripts/release.php --dev"
     }
 }
