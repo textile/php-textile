@@ -50,6 +50,12 @@ class BasicTest extends \PHPUnit_Framework_TestCase
             }
         }
 
+        foreach (array('expect', 'input') as $field) {
+            $test[$field] = strtr($test[$field], array(
+                '\x20' => ' ',
+            ));
+        }
+
         $expect = rtrim($test['expect']);
         array_unshift($args, $test['input']);
         $input = rtrim(call_user_func_array(array($textile, $method), $args));

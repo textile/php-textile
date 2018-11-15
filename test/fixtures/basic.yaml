@@ -431,7 +431,7 @@ Punctuation:
 
     in '89
 
-    in '89 
+    in '89\x20
 
     Happened in '89. it did.
 
@@ -1320,7 +1320,7 @@ Relative Images (responsive) :
   setup :
     - setDimensionlessImages: true
 
-Unicode image src, alt and title : 
+Unicode image src, alt and title :
   input : |
     !大阪府.png(大阪府)!
   expect : |
@@ -2077,17 +2077,17 @@ Table colgroups and captions:
     |:\5. 80|
     |a|b|c|d|e|
 
-    |=. Testing colgroup and col syntax 
-    |:\5. 80 
+    |=. Testing colgroup and col syntax\x20
+    |:\5. 80\x20
     |a|b|c|d|e|
 
-    |=. Testing colgroup and col syntax| 
-    |:\5. 80| 
+    |=. Testing colgroup and col syntax|\x20
+    |:\5. 80|\x20
     |a|b|c|d|e|
 
-    |=. Testing colgroup and col syntax | 
-    |:\5. 80 | 
-    |a|b|c|d|e| 
+    |=. Testing colgroup and col syntax |\x20
+    |:\5. 80 |\x20
+    |a|b|c|d|e|\x20
 
   expect : |
     <table>
@@ -2220,7 +2220,7 @@ Lists in tables:
     # __Five__ |
     |-(hot) coffee := Hot and black
     -(hot#tea) tea := Also hot, but a little less black
-    -(cold) milk := 
+    -(cold) milk :=\x20
     Nourishing beverage for baby cows.
     Cold drink that goes great with cookies. =:
     |
@@ -2303,7 +2303,7 @@ Redcloth Definition list:
 
     -(hot) coffee := Hot and black
     -(hot#tea) tea := Also hot, but a little less black
-    -(cold) milk := 
+    -(cold) milk :=\x20
     Nourishing beverage for baby cows.
     Cold drink that goes great with cookies. =:
 
@@ -2883,7 +2883,7 @@ Issue 72 - spans around foreign chars :
   input  : |
     *W skład zestawu wchodzą*:
 
-    *W skład zestawu wchodzą*: 
+    *W skład zestawu wchodzą*:\x20
   expect : |
     <p><strong>W skład zestawu wchodzą</strong>:</p>
 
@@ -2912,10 +2912,10 @@ Smileys still smileys? :
 
     :)
 
-    :( 
-    :( 
-    :( 
-    :) 
+    :(\x20
+    :(\x20
+    :(\x20
+    :)\x20
 
     Pinocchio!
     :^)
@@ -2926,13 +2926,13 @@ Smileys still smileys? :
     Wink!
     ;)
 
-    :[ 
+    :[\x20
     :]
 
     ;(
     something
     dark side
-    :) 
+    :)\x20
 
     ;(c)[de] Item
 
@@ -3126,7 +3126,7 @@ Github Issue 50 (en-dash & strike) :
     - xyz
 
     a -b-
-    a -b- 
+    a -b-\x20
     a - b
     a -b
     a- b
@@ -3136,7 +3136,7 @@ Github Issue 50 (en-dash & strike) :
     b
     a -
     b
-    a - 
+    a -\x20
     b
   expect: |
     <p>fjfhfjhf<br />
