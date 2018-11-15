@@ -1,0 +1,66 @@
+Text-aligment is stripped in restricted mode, but kept with images and such:
+  setup:
+    - setRestricted: true
+  input: |
+    p<. Left aligned paragraph.
+
+    p>. Right aligned paragraph.
+
+    p=. Center aligned paragraph.
+
+    p<>. Justified paragraph.
+
+    !<1.jpg!
+
+    !>1.jpg!
+
+    !=1.jpg!
+
+  expect: |
+    <p>Left aligned paragraph.</p>
+
+    <p>Right aligned paragraph.</p>
+
+    <p>Center aligned paragraph.</p>
+
+    <p>Justified paragraph.</p>
+
+    <p><img align="left" alt="" src="1.jpg" /></p>
+
+    <p><img align="right" alt="" src="1.jpg" /></p>
+
+    <p><img align="center" alt="" src="1.jpg" /></p>
+
+Aligment uses classes with HTML5:
+  setup:
+    - setRestricted: true
+  doctype: html5
+  input: |
+    p<. Left aligned paragraph.
+
+    p>. Right aligned paragraph.
+
+    p=. Center aligned paragraph.
+
+    p<>. Justified paragraph.
+
+    !<1.jpg!
+
+    !>1.jpg!
+
+    !=1.jpg!
+
+  expect: |
+    <p>Left aligned paragraph.</p>
+
+    <p>Right aligned paragraph.</p>
+
+    <p>Center aligned paragraph.</p>
+
+    <p>Justified paragraph.</p>
+
+    <p><img alt="" class="align-left" src="1.jpg" /></p>
+
+    <p><img alt="" class="align-right" src="1.jpg" /></p>
+
+    <p><img alt="" class="align-center" src="1.jpg" /></p>
