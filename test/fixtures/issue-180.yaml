@@ -1,4 +1,4 @@
-Text-aligment is stripped in restricted mode, but kept with images and such:
+Text-alignment is stripped in restricted mode, but kept with images and such:
   setup:
     - setRestricted: true
   input: |
@@ -31,7 +31,7 @@ Text-aligment is stripped in restricted mode, but kept with images and such:
 
     <p><img align="center" alt="" src="1.jpg" /></p>
 
-Aligment uses classes with HTML5:
+Alignment uses classes with HTML5:
   setup:
     - setRestricted: true
   doctype: html5
