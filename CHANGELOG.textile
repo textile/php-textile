@@ -5,6 +5,7 @@ Here's a summary of changes in each release. The list doesn't include some small
 h2. Version 3.7.0 - upcoming
 
 * Add @Parser::setImagePrefix()@, @Parser::setLinkPrefix()@, @Parser::getImagePrefix()@ and @Parser::getLinkPrefix()@ (closes "#169":https://github.com/textile/php-textile/issues/169).
+* Add @Parser::setRawBlocks()@ and @Parser::isRawBlocksEnabled()@.
 * Deprecate @Parser::setRelativeImagePrefix()@ and @Parser::$relativeImagePrefix@ in favour of the new decoupled methods.
 
 h2. "Version 3.6.1 - 2018/10/21":https://github.com/textile/php-textile/releases/tag/v3.6.1

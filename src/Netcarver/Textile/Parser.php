@@ -463,6 +463,24 @@ class Parser
     protected $blocktag_whitelist = array();
 
     /**
+     * Whether raw blocks are enabled.
+     *
+     * @var   bool
+     * @since 3.7.0
+     */
+
+    protected $rawBlocksEnabled = false;
+
+    /**
+     * An array of patterns used for matching raw blocks.
+     *
+     * @var   array
+     * @since 3.7.0
+     */
+
+    protected $rawBlocks = array();
+
+    /**
      * Whether block tags are enabled.
      *
      * @var   bool
@@ -1299,6 +1317,55 @@ class Parser
     }
 
     /**
+     * Enables and disables raw blocks.
+     *
+     * When raw blocks are enabled, any paragraphs starting with a HTML tag, or
+     * as filtered by Parser::isRawBlock(), are left as is. What blocks are
+     * considered raw, can be changed by extending Parser::isRawBlock().
+     *
+     * bc. $parser = new \Netcarver\Textile\Parser();
+     * echo $parser
+     *     ->setRawBlocks(true)
+     *     ->parse('<div>A *raw* block.</div>');
+     *
+     * The above generates:
+     *
+     * bc. <div>A *raw* block.</div>
+     *
+     * @param  bool $enabled TRUE to enable, FALSE to disable
+     * @return Parser
+     * @since  3.7.0
+     * @see    Parser::isRawBlocksEnabled()
+     * @see    Parser::isRawBlock()
+     * @api
+     */
+
+    public function setRawBlocks($enabled)
+    {
+        $this->rawBlocksEnabled = (bool) $enabled;
+        return $this;
+    }
+
+    /**
+     * Whether raw blocks are enabled.
+     *
+     * bc. $parser = new \Netcarver\Textile\Parser();
+     * if ($parser->isRawBlocksEnabled() === true) {
+     *     echo 'Raw blocks are enabled';
+     * }
+     *
+     * @return bool TRUE if enabled, FALSE otherwise
+     * @since  3.7.0
+     * @see    Parser::setRawBlocks()
+     * @api
+     */
+
+    public function isRawBlocksEnabled()
+    {
+        return (bool) $this->rawBlocksEnabled;
+    }
+
+    /**
      * Enables and disables block-level tags and formatting features.
      *
      * When disabled, block-level tags aren't rendered. This allows PHP-Textile to
@@ -1675,6 +1742,9 @@ class Parser
         if ($this->isRestrictedModeEnabled()) {
             // Escape any raw HTML.
             $text = $this->encodeHTML($text, 0);
+            $this->rawBlocks = array('&lt;\w');
+        } else {
+            $this->rawBlocks = array('\<\w');
         }
 
         $text = $this->cleanWhiteSpace($text);
@@ -2902,7 +2972,9 @@ class Parser
                     $block .= $c1;
                 }
             } else {
-                if ($ext || strpos($block, ' ') !== 0) {
+                $rawBlock = $this->isRawBlocksEnabled() && $this->isRawBlock($block);
+
+                if ($ext || (strpos($block, ' ') !== 0 && !$rawBlock)) {
                     list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(
                         0,
                         $tag,
@@ -2918,6 +2990,10 @@ class Parser
                     } else {
                         $block = $o2.$content.$c2;
                     }
+                } elseif ($rawBlock && $this->isRestrictedModeEnabled()) {
+                    $block = $this->shelve($this->rEncodeHTML($block));
+                } elseif ($rawBlock) {
+                    $block = $this->shelve($block);
                 } else {
                     $block = $this->graf($block);
                 }
@@ -3048,6 +3124,22 @@ class Parser
         $content = (!$eat) ? $this->graf($content) : '';
 
         return array($o1, $o2, $content, $c2, $c1, $eat);
+    }
+
+    /**
+     * Whether the block is a raw document node.
+     *
+     * Raw blocks will be shelved and left as is.
+     *
+     * @param  string $text Block to check
+     * @return bool   TRUE if the block is raw, FALSE otherwise
+     * @see    Parser::$rawBlocks
+     * @since  3.7.0
+     */
+
+    protected function isRawBlock($text)
+    {
+        return !(!preg_match('/^(?:'.join('|', $this->rawBlocks).')/', $text));
     }
 
     /**

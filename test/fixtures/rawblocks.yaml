@@ -1,0 +1,66 @@
+Paragraphs wrapped in HTML are skipped when raw blocks are enabled:
+  setup:
+    - setRawBlocks: true
+  input: |
+    <p>Paragraph *with* _some_ Textile-like syntax.</p>
+
+    <div>
+      <p>Multiple -- *multiple* -- lines.</p>
+      <p>...are supported by @Parser@</p>
+    </div>
+
+    But _normal_ paragraphs are still Textiled
+    *normally*.
+
+    &lt;p&gt;Escaped *tags* are not matched.&lt;p&gt;
+
+     <p>Paragraphs starting with a space *are* parsed...</p>
+
+     ...and non-wrapped paragraphs work the *same* too.
+
+    bc.. Extended blocks...
+
+    <div>...and *code* are kept intact.</div>
+  expect: |
+    <p>Paragraph *with* _some_ Textile-like syntax.</p>
+
+    <div>
+      <p>Multiple -- *multiple* -- lines.</p>
+      <p>...are supported by @Parser@</p>
+    </div>
+
+    <p>But <em>normal</em> paragraphs are still Textiled<br />
+    <strong>normally</strong>.</p>
+
+    <p>&lt;p&gt;Escaped <strong>tags</strong> are not matched.&lt;p&gt;</p>
+
+     <p>Paragraphs starting with a space <strong>are</strong> parsed&#8230;</p>
+
+     &#8230;and non-wrapped paragraphs work the <strong>same</strong> too.
+
+    <pre><code>Extended blocks...
+
+    &lt;div&gt;...and *code* are kept intact.&lt;/div&gt;</code></pre>
+
+Raw blocks are still escaped in restricted mode, but Textile is not parsed:
+  setup:
+    - setRawBlocks: true
+    - setRestricted: true
+  input: |
+    <p>Paragraph *with* _some_ Textile-like syntax<br />
+    is kept as is, but "escaped".</p>
+
+    &lt;p&gt;Escaped *tags* are not matched.&lt;p&gt;
+
+     <div>Wrapped *inlines* are parsed...</div>
+
+     ...and inline *too*.
+  expect: |
+    &lt;p&gt;Paragraph *with* _some_ Textile-like syntax&lt;br /&gt;
+    is kept as is, but &quot;escaped&quot;.&lt;/p&gt;
+
+    <p>&amp;lt;p&amp;gt;Escaped <strong>tags</strong> are not matched.&amp;lt;p&amp;gt;</p>
+
+     &lt;div&gt;Wrapped <strong>inlines</strong> are parsed&#8230;&lt;/div&gt;
+
+     &#8230;and inline <strong>too</strong>.
