@@ -606,6 +606,15 @@ class Parser
     );
 
     /**
+     * An array of built patterns.
+     *
+     * @var   array
+     * @since 3.7.0
+     */
+
+    protected $patterns = array();
+
+    /**
      * Whether block tags are enabled.
      *
      * @var   bool
@@ -1118,6 +1127,17 @@ class Parser
                 'char'  => '\S',
             );
         }
+
+        $block = implode('|', $this->blockContent);
+        $divider = implode('|', $this->dividerContent);
+        $phrasing = implode('|', $this->phrasingContent);
+
+        $this->patterns = array(
+            'divider' => '/^(?:<\/?('.$divider.')(?:\s[^>]*?|\/?)>(?:<\/\1\s*?>)?)+$/smi',
+            'phrasing' => '/^(?:'.$phrasing.')$/i',
+            'wrapped' => '/^<\/?(?P<open>[^\s>]+)[^>]*?>.*<\/\1>$/smi',
+            'unwrappable' => '/<\/?(?:'.$block.')(?:\s[^>]*?|\/?)>/smi',
+        );
 
         $this->urlch = '['.$this->regex_snippets['wrd'].'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
         $this->quote_starts = implode('|', array_map('preg_quote', array_keys($this->quotes)));
@@ -2525,16 +2545,16 @@ class Parser
 
     protected function hasRawText($text)
     {
-        if (preg_match('/<\/?(?:'.join('|', $this->blockContent).')(?:\s[^>]*?|\/?)>/smi', $text)) {
+        if (preg_match($this->patterns['unwrappable'], $text)) {
             return false;
         }
 
-        if (preg_match('/^(?:<\/?('.join('|', $this->dividerContent).')(?:\s[^>]*?|\/?)>(?:<\/\1\s*?>)?)+$/smi', $text)) {
+        if (preg_match($this->patterns['divider'], $text)) {
             return false;
         }
 
-        if (preg_match('/^<\/?(?P<open>[^\s>]+)[^>]*?>.*<\/\1>$/smi', $text, $m)) {
-            if (preg_match('/^(?:'.join('|', $this->phrasingContent).')$/i', $m['open'])) {
+        if (preg_match($this->patterns['wrapped'], $text, $m)) {
+            if (preg_match($this->patterns['phrasing'], $m['open'])) {
                 return true;
             }
 
