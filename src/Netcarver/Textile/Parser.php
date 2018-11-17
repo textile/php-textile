@@ -2525,15 +2525,15 @@ class Parser
 
     protected function hasRawText($text)
     {
-        if (preg_match('/<(?:'.join('|', $this->blockContent).')(?:\s[^>]*?|\/?)>/smi', $text)) {
+        if (preg_match('/<\/?(?:'.join('|', $this->blockContent).')(?:\s[^>]*?|\/?)>/smi', $text)) {
             return false;
         }
 
-        if (preg_match('/^(?:<('.join('|', $this->dividerContent).')(?:\s[^>]*?|\/?)>(?:<\/\1\s*?>)?)+$/smi', $text)) {
+        if (preg_match('/^(?:<\/?('.join('|', $this->dividerContent).')(?:\s[^>]*?|\/?)>(?:<\/\1\s*?>)?)+$/smi', $text)) {
             return false;
         }
 
-        if (preg_match('/^<(?P<open>[^\s>]+)[^>]*?>.*<\/\1>$/smi', $text, $m)) {
+        if (preg_match('/^<\/?(?P<open>[^\s>]+)[^>]*?>.*<\/\1>$/smi', $text, $m)) {
             if (preg_match('/^(?:'.join('|', $this->phrasingContent).')$/i', $m['open'])) {
                 return true;
             }

@@ -38,6 +38,18 @@ Blocks are wrapped if they are not already wrapped with a non-phrasing tag:
     <div>It does not</div> wrap content that is *not* entirely wrapped either,
     if the tag is specifically *block* type.
 
+    This will also allow using custom HTML:
+
+    <section>
+
+    Paragraph.
+
+    <div>
+      *Hello there.*
+    </div>
+
+    </section>
+
   expect: |
     <p>This is a normal wrapped paragraph, but the following&#8230;</p>
 
@@ -76,3 +88,15 @@ Blocks are wrapped if they are not already wrapped with a non-phrasing tag:
 
     <div>It does not</div> wrap content that is <strong>not</strong> entirely wrapped either,
     if the tag is specifically <strong>block</strong> type.
+
+    <p>This will also allow using custom <span class="caps">HTML</span>:</p>
+
+    <section>
+
+    <p>Paragraph.</p>
+
+    <div>
+      <strong>Hello there.</strong>
+    </div>
+
+    </section>
