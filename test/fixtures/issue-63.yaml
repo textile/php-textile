@@ -1,0 +1,34 @@
+HTML blocks are not wrapped:
+  input: |
+    <div class="test">
+
+    Soy un *super* robot.
+
+    </div>
+
+    <figure>!1.jpg!
+    <figcaption>Dude, *beware*. A Corgi stampede!</figcaption>
+    </figure>
+
+    <figure>!1.jpg!
+
+    <figcaption>Dude, *beware*. A Corgi stampede!</figcaption>
+
+    </figure>
+
+  expect: |
+    <div class="test">
+
+    <p>Soy un <strong>super</strong> robot.</p>
+
+    </div>
+
+    <figure><img alt="" src="1.jpg" />
+    <figcaption>Dude, <strong>beware</strong>. A Corgi stampede!</figcaption>
+    </figure>
+
+    <figure><img alt="" src="1.jpg" />
+
+    <figcaption>Dude, <strong>beware</strong>. A Corgi stampede!</figcaption>
+
+    </figure>
