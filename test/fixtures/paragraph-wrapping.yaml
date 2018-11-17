@@ -1,0 +1,78 @@
+Blocks are wrapped if they are not already wrapped with a non-phrasing tag:
+  input: |
+    This is a normal wrapped paragraph, but the following...
+
+    <figure class="roses">
+      <div>
+        Is not, but *Textile* is still _parsed_.
+      </div>
+    </figure>
+
+    <pfx:priv>
+      Even applies no matter *what* the tag is.
+    </pfx:priv>
+
+    <div title="or if it is self closing"/>
+
+    <a href="#">Phrasing content on the other hand...</a>
+
+    <span>...is wrapped *and* parsed</span>
+
+    Exception are self-closing dividers:
+
+    <img src="1.jpg" />
+
+    <hr/>
+
+    <hr>
+
+    <hr></hr><hr></hr>
+
+    <img src="1.jpg" /> but not when it is not the only
+    item.
+
+     <div>Leading whitespace does not matter.</div>
+
+    <div>Neither does if the HTML is valid</a></div>
+
+    <div>It does not</div> wrap content that is *not* entirely wrapped either,
+    if the tag is specifically *block* type.
+
+  expect: |
+    <p>This is a normal wrapped paragraph, but the following&#8230;</p>
+
+    <figure class="roses">
+      <div>
+        Is not, but <strong>Textile</strong> is still <em>parsed</em>.
+      </div>
+    </figure>
+
+    <pfx:priv>
+      Even applies no matter <strong>what</strong> the tag is.
+    </pfx:priv>
+
+    <div title="or if it is self closing"/>
+
+    <p><a href="#">Phrasing content on the other hand&#8230;</a></p>
+
+    <p><span>&#8230;is wrapped <strong>and</strong> parsed</span></p>
+
+    <p>Exception are self-closing dividers:</p>
+
+    <img src="1.jpg" />
+
+    <hr/>
+
+    <hr>
+
+    <hr></hr><hr></hr>
+
+    <p><img src="1.jpg" /> but not when it is not the only<br />
+    item.</p>
+
+     <div>Leading whitespace does not matter.</div>
+
+    <div>Neither does if the <span class="caps">HTML</span> is valid</a></div>
+
+    <div>It does not</div> wrap content that is <strong>not</strong> entirely wrapped either,
+    if the tag is specifically <strong>block</strong> type.

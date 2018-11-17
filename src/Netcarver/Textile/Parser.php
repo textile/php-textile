@@ -481,6 +481,131 @@ class Parser
     protected $rawBlocks = array();
 
     /**
+     * An array of patterns used for matching phrasing tags.
+     *
+     * Phrasing tags, unline others, are wrapped in a paragraph even if they
+     * already wrap the block.
+     *
+     * @var   array
+     * @since 3.7.0
+     */
+
+    protected $phrasingContent = array(
+        'a',
+        'abbr',
+        'acronym',
+        'area',
+        'audio',
+        'b',
+        'bdo',
+        'br',
+        'button',
+        'canvas',
+        'cite',
+        'code',
+        'command',
+        'data',
+        'datalist',
+        'del',
+        'dfn',
+        'em',
+        'embed',
+        'i',
+        'iframe',
+        'img',
+        'input',
+        'ins',
+        'kbd',
+        'keygen',
+        'label',
+        'link',
+        'map',
+        'mark',
+        'math',
+        'meta',
+        'meter',
+        'noscript',
+        'object',
+        'output',
+        'progress',
+        'q',
+        'ruby',
+        'samp',
+        'script',
+        'select',
+        'small',
+        'span',
+        'strong',
+        'sub',
+        'sup',
+        'svg',
+        'textarea',
+        'time',
+        'var',
+        'video',
+        'wbr',
+    );
+
+    /**
+     * An array of patterns used to match divider tags.
+     *
+     * Blocks containing only self-closing divider tags are not wrapped in
+     * paragraph tags.
+     *
+     * @var   array
+     * @since 3.7.0
+     */
+
+    protected $dividerContent = array(
+        'br',
+        'hr',
+        'img',
+    );
+
+    /**
+     * An array of patterns used to match unwrappable block tags.
+     *
+     * Blocks containing any of these unwrappable tags will not be wrapped in
+     * paragraphs.
+     *
+     * @var   array
+     * @since 3.7.0
+     */
+
+    protected $blockContent = array(
+        'address',
+        'article',
+        'aside',
+        'blockquote',
+        'details',
+        'div',
+        'dl',
+        'fieldset',
+        'figure',
+        'footer',
+        'form',
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
+        'header',
+        'hgroup',
+        'main',
+        'menu',
+        'nav',
+        'ol',
+        'p',
+        'pre',
+        's',
+        'section',
+        'table',
+        'template',
+        'ul',
+    );
+
+    /**
      * Whether block tags are enabled.
      *
      * @var   bool
@@ -2392,21 +2517,31 @@ class Parser
     }
 
     /**
-     * Checks whether the text is not enclosed by a block tag.
+     * Checks whether the text block should be wrapped in a paragraph.
      *
      * @param  string $text The input string
-     * @return bool   TRUE if the text is not enclosed
+     * @return bool   TRUE if the text can be wrapped, FALSE otherwise
      */
 
     protected function hasRawText($text)
     {
-        $r = preg_replace(
-            '@<(p|hr|br|img|blockquote|div|form|table|ul|ol|dl|pre|h[1-6])[^>]*?'.chr(62).'.*</\1[^>]*?>@si',
-            '',
-            trim($text)
-        );
-        $r = trim(preg_replace('@<(br|hr|img)[^>]*?/?>@i', '', trim($r)));
-        return '' != $r;
+        if (preg_match('/<(?:'.join('|', $this->blockContent).')(?:\s[^>]*?|\/?)>/smi', $text)) {
+            return false;
+        }
+
+        if (preg_match('/^(?:<('.join('|', $this->dividerContent).')(?:\s[^>]*?|\/?)>(?:<\/\1\s*?>)?)+$/smi', $text)) {
+            return false;
+        }
+
+        if (preg_match('/^<(?P<open>[^\s>]+)[^>]*?>.*<\/\1>$/smi', $text, $m)) {
+            if (preg_match('/^(?:'.join('|', $this->phrasingContent).')$/i', $m['open'])) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
