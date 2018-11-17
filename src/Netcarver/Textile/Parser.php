@@ -478,7 +478,11 @@ class Parser
      * @since 3.7.0
      */
 
-    protected $rawBlocks = array();
+    protected $rawContent = array(
+        'code',
+        'notextile',
+        'pre',
+    );
 
     /**
      * An array of patterns used for matching phrasing tags.
@@ -1131,10 +1135,13 @@ class Parser
         $block = implode('|', $this->blockContent);
         $divider = implode('|', $this->dividerContent);
         $phrasing = implode('|', $this->phrasingContent);
+        $raw = implode('|', $this->rawContent);
 
         $this->patterns = array(
+            'block' => '/^(?:'.$block.')$/i',
             'divider' => '/^(?:<\/?('.$divider.')(?:\s[^>]*?|\/?)>(?:<\/\1\s*?>)?)+$/smi',
             'phrasing' => '/^(?:'.$phrasing.')$/i',
+            'raw' => '/^(?:'.$raw.')$/i',
             'wrapped' => '/^<\/?(?P<open>[^\s>]+)[^>]*?>.*<\/\1>$/smi',
             'unwrappable' => '/<\/?(?:'.$block.')(?:\s[^>]*?|\/?)>/smi',
         );
@@ -1464,9 +1471,9 @@ class Parser
     /**
      * Enables and disables raw blocks.
      *
-     * When raw blocks are enabled, any paragraphs starting with a HTML tag, or
-     * as filtered by Parser::isRawBlock(), are left as is. What blocks are
-     * considered raw, can be changed by extending Parser::isRawBlock().
+     * When raw blocks are enabled, any paragraph blocks wrapped in a tag
+     * not matching Parser::$blockContent or Parser::$phrasingContent will not
+     * be parsed, and instead is left as is.
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
      * echo $parser
@@ -1887,9 +1894,6 @@ class Parser
         if ($this->isRestrictedModeEnabled()) {
             // Escape any raw HTML.
             $text = $this->encodeHTML($text, 0);
-            $this->rawBlocks = array('&lt;\w');
-        } else {
-            $this->rawBlocks = array('\<\w');
         }
 
         $text = $this->cleanWhiteSpace($text);
@@ -3288,13 +3292,28 @@ class Parser
      *
      * @param  string $text Block to check
      * @return bool   TRUE if the block is raw, FALSE otherwise
-     * @see    Parser::$rawBlocks
      * @since  3.7.0
      */
 
     protected function isRawBlock($text)
     {
-        return !(!preg_match('/^(?:'.join('|', $this->rawBlocks).')/', $text));
+        if (preg_match($this->patterns['wrapped'], $text, $m)) {
+            if (preg_match($this->patterns['raw'], $m['open'])) {
+                return true;
+            }
+
+            if (preg_match($this->patterns['phrasing'], $m['open'])) {
+                return false;
+            }
+
+            if (preg_match($this->patterns['block'], $m['open'])) {
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
