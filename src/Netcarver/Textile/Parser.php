@@ -22,7 +22,7 @@ namespace Netcarver\Textile;
  * Additions and fixes Copyright (c) 2010-13 Netcarver         https://github.com/netcarver
  * Additions and fixes Copyright (c) 2011    Jeff Soo          http://ipsedixit.net/
  * Additions and fixes Copyright (c) 2012    Robert Wetzlmayr  http://wetzlmayr.com/
- * Additions and fixes Copyright (c) 2012-13 Jukka Svahn       http://rahforum.biz/
+ * Additions and fixes Copyright (c) 2012-18 Jukka Svahn       http://rahforum.biz/
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -350,7 +350,7 @@ class Parser
      * @var string
      */
 
-    protected $ver = '3.5.5';
+    protected $ver = '3.5.6';
 
     /**
      * Regular expression snippets.
@@ -1508,7 +1508,7 @@ class Parser
 
     protected function parseAttribsToArray($in, $element = '', $include_id = true, $autoclass = '')
     {
-        $style = '';
+        $style = array();
         $class = '';
         $lang = '';
         $colspan = '';
@@ -1552,7 +1552,6 @@ class Parser
         }
 
         if (preg_match("/\(([^()]+)\)/U", $matched, $cls)) {
-
             $class_regex = "/^([-a-zA-Z 0-9_\.]*)$/";
 
             // Consume entire class block -- valid or invalid.
@@ -1643,7 +1642,7 @@ class Parser
             $o['span'] = $this->cleanAttribs($span);
         }
 
-        if ($style) {
+        if (!empty($style)) {
             $so = '';
             $tmps = array();
             foreach ($style as $s) {
@@ -1661,9 +1660,8 @@ class Parser
                     $so .= $p.';';
                 }
             }
-            $style = trim(str_replace(array("\n", ';;'), array('', ';'), $so));
 
-            $o['style'] = $style;
+            $o['style'] = trim(str_replace(array("\n", ';;'), array('', ';'), $so));
         }
 
         if ($width) {
@@ -1735,7 +1733,6 @@ class Parser
         $c_row = 1;
 
         foreach (preg_split("/\|{$space}*?$/m", $matches['rows'], -1, PREG_SPLIT_NO_EMPTY) as $row) {
-
             $row = ltrim($row);
 
             // Caption -- can only occur on row 1, otherwise treat '|=. foo |...'
@@ -2186,7 +2183,6 @@ class Parser
         $out = array();
 
         foreach ($textblocks as $block) {
-
             // Line is just whitespace, keep it for the next block.
             if (trim($block) === '') {
                 if ($eatWhitespace === false) {
@@ -2257,7 +2253,6 @@ class Parser
             } else {
                 $whitespace = '';
             }
-
         }
 
         if ($ext) {
@@ -3003,13 +2998,11 @@ class Parser
         $slices = preg_split('/":(?='.$this->regex_snippets['char'].')/'.$mod, $text);
 
         if (count($slices) > 1) {
-
             // There are never any start of links in the last slice, so pop it
             // off (we'll glue it back later).
             $last_slice = array_pop($slices);
 
             foreach ($slices as &$slice) {
-
                 // If there is no possible start quote then this slice is not a link
                 if (false === strpos($slice, '"')) {
                     continue;
@@ -3078,7 +3071,6 @@ class Parser
                         array_push($possible_start_quotes, $possibility);
                         break;
                     }
-
                 }
 
                 // Rebuild the link's text by reversing the parts and sticking them back
@@ -3221,7 +3213,6 @@ class Parser
             $c = array_pop($url_chars);
             $popped = false;
             switch ($c) {
-
                 // Textile URL shouldn't end in these characters, we pop
                 // them off the end and push them out the back of the url again.
                 case '!':

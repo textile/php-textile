@@ -2,7 +2,7 @@ h1. PHP-Textile
 
 "Downloads":https://github.com/textile/php-textile/releases | "Textile reference":http://txstyle.org/article/43/a-short-introduction | "Live editor":http://txstyle.org/ | "Packagist":https://packagist.org/packages/netcarver/textile
 
-!https://travis-ci.org/textile/php-textile.png?branch=master!:https://travis-ci.org/textile/php-textile !https://coveralls.io/repos/textile/php-textile/badge.png?branch=master!:https://coveralls.io/r/textile/php-textile?branch=master
+!https://travis-ci.org/textile/php-textile.png?branch=3.5!:https://travis-ci.org/textile/php-textile !https://coveralls.io/repos/textile/php-textile/badge.png?branch=3.5!:https://coveralls.io/r/textile/php-textile?branch=3.5
 
 PHP-Textile is a modern Textile markup language parser for PHP. Textile is a humane web text generator that takes lightweight, readable, plaintext-like markup language and converts it into well formed HTML.
 

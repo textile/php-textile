@@ -11,15 +11,21 @@
         "source": "https://github.com/textile/php-textile"
     },
     "autoload": {
-        "psr-0": { "Netcarver\\Textile": "src/" }
+        "psr-4": {
+          "Netcarver\\Textile\\": "src/Netcarver/Textile/"
+        }
     },
     "require": {
         "php": ">=5.3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*",
-        "symfony/yaml": "2.3.*",
-        "squizlabs/php_codesniffer": "1.5.*",
+        "phpunit/phpunit": "5.7.*",
+        "symfony/yaml": "2.4.*",
+        "squizlabs/php_codesniffer": "3.*",
         "satooshi/php-coveralls": "0.6.*"
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit",
+        "cs": "./vendor/bin/phpcs"
     }
 }
