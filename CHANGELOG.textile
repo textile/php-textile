@@ -2,6 +2,10 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
+h2. "Version 2.5.5 - 2018/11/18":https://github.com/textile/php-textile/releases/tag/v2.5.5
+
+* Fix PHP >= 7.1 compatibility.
+
 _The 2.5 branch was feature frozen at this point._
 
 h2. "Version 2.5.4 - 2013/11/06":https://github.com/textile/php-textile/releases/tag/v2.5.4

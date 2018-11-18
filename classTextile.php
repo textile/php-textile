@@ -14,7 +14,7 @@
  * Additions and fixes Copyright (c) 2010-13 Netcarver         http://github.com/netcarver
  * Additions and fixes Copyright (c) 2011    Jeff Soo          http://ipsedixit.net
  * Additions and fixes Copyright (c) 2012    Robert Wetzlmayr  http://wetzlmayr.com/
- * Additions and fixes Copyright (c) 2012-13 Jukka Svahn       http://rahforum.biz/
+ * Additions and fixes Copyright (c) 2012-18 Jukka Svahn       http://rahforum.biz/
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -411,7 +411,7 @@ class Textile
      * @var string
      */
 
-    protected $ver = '2.5.4';
+    protected $ver = '2.5.5';
 
     /**
      * Regular expression snippets.
@@ -1448,7 +1448,7 @@ class Textile
 
     protected function parseAttribsToArray($in, $element = '', $include_id = true, $autoclass = '')
     {
-        $style = '';
+        $style = array();
         $class = '';
         $lang = '';
         $colspan = '';
@@ -1553,7 +1553,7 @@ class Textile
         }
 
         $o = '';
-        if ($style) {
+        if (!empty($style)) {
             $tmps = array();
             foreach ($style as $s) {
                 $parts = explode(';', $s);
