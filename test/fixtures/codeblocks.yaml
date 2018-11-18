@@ -1,0 +1,97 @@
+bc without attribs :
+  input : |
+    bc. Here is some code
+
+    bc.. Code block
+
+    with empty lines
+
+    p(regular#somestuff). _Aaaand_, *__relax__*.
+
+  expect: |
+    <pre><code>Here is some code</code></pre>
+
+    <pre><code>Code block
+
+    with empty lines</code></pre>
+
+    <p class="regular" id="somestuff"><em>Aaaand</em>, <strong><i>relax</i></strong>.</p>
+
+bc with class:
+  input : |
+    bc(indented). Here is some code
+
+    bc(abc).. Code block
+
+    with empty lines
+
+    p(regular#somestuff). _Aaaand_, *__relax__*.
+
+  expect: |
+    <pre class="indented"><code>Here is some code</code></pre>
+
+    <pre class="abc"><code>Code block
+
+    with empty lines</code></pre>
+
+    <p class="regular" id="somestuff"><em>Aaaand</em>, <strong><i>relax</i></strong>.</p>
+
+bc with class and lang:
+  input : |
+    bc(indented)[language-php]. Here is some code
+
+    bc(abc)[example].. Code block
+
+    with empty lines
+
+    p(regular#somestuff). _Aaaand_, *__relax__*.
+  expect: |
+    <pre class="indented"><code class="language-php">Here is some code</code></pre>
+
+    <pre class="abc"><code class="example">Code block
+
+    with empty lines</code></pre>
+
+    <p class="regular" id="somestuff"><em>Aaaand</em>, <strong><i>relax</i></strong>.</p>
+
+bc with class, id and lang:
+  input : |
+    bc(indented#uno)[language-php]. Here is some code
+
+    bc(abc#123)[example].. Code block
+
+    with empty lines
+
+    p(regular#somestuff). _Aaaand_, *__relax__*.
+  expect: |
+    <pre class="indented" id="uno"><code class="language-php">Here is some code</code></pre>
+
+    <pre class="abc" id="123"><code class="example">Code block
+
+    with empty lines</code></pre>
+
+    <p class="regular" id="somestuff"><em>Aaaand</em>, <strong><i>relax</i></strong>.</p>
+
+bc with class, id and invalid lang:
+  input : |
+    bc(indented#uno)[language*php]. Here is some code
+
+    bc(abc#123)[example*redis].. Code block
+
+    with empty lines
+
+    p(regular#somestuff). _Aaaand_, *__relax__*.
+  expect: |
+    <pre class="indented" id="uno"><code>Here is some code</code></pre>
+
+    <pre class="abc" id="123"><code>Code block
+
+    with empty lines</code></pre>
+
+    <p class="regular" id="somestuff"><em>Aaaand</em>, <strong><i>relax</i></strong>.</p>
+
+Pre-formatted content including something that looks like inline code:
+  input  : |
+    <pre>sdada <a href="link">Link</a> @code@ dadsada</pre>
+  expect : |
+    <pre>sdada &lt;a href=&quot;link&quot;&gt;Link&lt;/a&gt; <code>code</code> dadsada</pre>
