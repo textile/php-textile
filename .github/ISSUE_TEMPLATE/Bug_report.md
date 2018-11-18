@@ -8,7 +8,7 @@ about: Create a report to help us improve PHP-Textile.
 <!--- We're here to help! -->
 
 ### Prerequisites
-
+<!--- Put an `x` in all the boxes that apply. -->
 * [ ] Are you running the latest version of PHP-Textile?
 * [ ] `$ composer update`?
 

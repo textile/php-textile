@@ -8,7 +8,7 @@ about: Report an issue with parsing a Textile document.
 <!--- We're here to help! -->
 
 ### Prerequisites
-
+<!--- Put an `x` in all the boxes that apply. -->
 * [ ] Are you running the latest version of PHP-Textile?
 * [ ] `$ composer update`?
 
