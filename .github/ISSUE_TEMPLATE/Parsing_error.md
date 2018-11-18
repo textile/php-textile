@@ -1,6 +1,6 @@
 ---
-name: Bug report
-about: Create a report to help us improve PHP-Textile.
+name: Parsing error
+about: Report an issue with parsing a Textile document
 ---
 
 <!--- Please replace `{Please write here}` with your answers as best you can. -->
@@ -12,17 +12,29 @@ about: Create a report to help us improve PHP-Textile.
 * [ ] Are you running the latest version of PHP-Textile?
 * [ ] `$ composer update`?
 
-### Expected behaviour
+### Problematic Textile markup
 
+```textile
 {Please write here}
+```
 
-### Actual behaviour
+### Expected output
 
+```html
 {Please write here}
+```
 
-### Steps to reproduce
+### Actual output
 
+```html
 {Please write here}
+```
+
+### Used PHP code
+
+```php
+{Please write here}
+```
 
 #### Additional information
 
