@@ -1,0 +1,25 @@
+Invalid starting list depth:
+  input: |
+    ## Red
+    ## Green
+    ## Blue
+
+    ## Red
+
+    # Red
+    ## Green
+    # Blue
+  expect: |
+    <p>## Red<br />
+    ## Green<br />
+    ## Blue</p>
+
+    <p>## Red</p>
+
+    <ol>
+    	<li>Red
+    	<ol>
+    		<li>Green</li>
+    	</ol></li>
+    	<li>Blue</li>
+    </ol>

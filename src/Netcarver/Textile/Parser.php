@@ -2878,14 +2878,20 @@ class Parser
 
     protected function fTextileList($m)
     {
-        $text = preg_split('/\n(?=[*#;:])/m', $m[0]);
+        $text = $m[0];
+        $lines = preg_split('/\n(?=[*#;:])/m', $m[0]);
         $pt = '';
 
-        foreach ($text as $nr => $line) {
-            $nextline = isset($text[$nr+1]) ? $text[$nr+1] : false;
+        foreach ($lines as $nr => $line) {
+            $nextline = isset($lines[$nr+1]) ? $lines[$nr+1] : false;
 
             if (preg_match("/^(?P<tl>[#*;:]+)(?P<st>_|\d+)?(?P<atts>$this->cls)[ .](?P<content>.*)$/s", $line, $m)) {
                 $tl = $m['tl'];
+
+                if ($nr === 0 && strlen($tl) > 1) {
+                    return $text;
+                }
+
                 $st = $m['st'];
                 $atts = $m['atts'];
                 $content = trim($m['content']);
