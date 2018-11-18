@@ -1,6 +1,6 @@
 ---
 name: Parsing error
-about: Report an issue with parsing a Textile document
+about: Report an issue with parsing a Textile document.
 ---
 
 <!--- Please replace `{Please write here}` with your answers as best you can. -->
