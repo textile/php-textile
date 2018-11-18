@@ -27,7 +27,7 @@ bc. $ composer update
 
 h2. Coding standard
 
-The project follows the "PSR-0":https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md and "PSR-2":https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide-meta.md standards. You can use PHP_CodeSniffer to make sure your additions follow them too:
+The project follows the "PSR-4":https://www.php-fig.org/psr/psr-4/ and "PSR-2":https://www.php-fig.org/psr/psr-2/ standards. You can use PHP_CodeSniffer to make sure your additions follow them too:
 
 bc. $ composer cs
 
@@ -47,6 +47,6 @@ The project uses "PHPunit":https://phpunit.de for running its unit tests. As muc
 
 bc. $ composer test
 
-Running tests requires PHP 5.6.0 and PCRE with PCRE_UTF8 support. Generating optional code coverage reports requires "Xdebug":https://xdebug.org.
+Running tests requires PHP >=5.6.0 and PCRE with PCRE_UTF8 support. Generating optional code coverage reports requires "Xdebug":https://xdebug.org.
 
 Tests should pass before the changes can be merged to the codebase. If you create a pull requests that does not pass tests, CI will complain in the pull request thread. To get your changes merged, you should rework the code or tests until everything works smoothly.
