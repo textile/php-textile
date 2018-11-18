@@ -1,0 +1,37 @@
+Lists should not be wrapped into paragraphs:
+  input: |
+    *Colors*
+    * Red
+    * Green
+    * Blue
+
+    Colors
+    # Red
+    # Green
+    # Blue
+
+    _Colors_
+    ; Red
+    ; Green
+    ; Blue
+  expect: |
+    <strong>Colors</strong>
+    <ul>
+    	<li>Red</li>
+    	<li>Green</li>
+    	<li>Blue</li>
+    </ul>
+
+    Colors
+    <ol>
+    	<li>Red</li>
+    	<li>Green</li>
+    	<li>Blue</li>
+    </ol>
+
+    <em>Colors</em>
+    <dl>
+    	<dt>Red</dt>
+    	<dt>Green</dt>
+    	<dt>Blue</dt>
+    </dl>
