@@ -20,6 +20,12 @@ Paragraphs wrapped in non-standard HTML are kept as is:
     bc.. Extended blocks...
 
     <div>...and *code* are kept intact.</div>
+
+    p. Paragraph.
+
+    <pre><code>Some code.</code></pre>
+
+    <span>Phrasing content.</span>
   expect: |
     <p>Paragraph <strong>with</strong> <em>some</em> Textile-like syntax.</p>
 
@@ -39,6 +45,12 @@ Paragraphs wrapped in non-standard HTML are kept as is:
     <pre><code>Extended blocks...
 
     &lt;div&gt;...and *code* are kept intact.&lt;/div&gt;</code></pre>
+
+    <p>Paragraph.</p>
+
+    <pre><code>Some code.</code></pre>
+
+    <p><span>Phrasing content.</span></p>
 
 Raw blocks are ignored in restricted mode:
   setup:
