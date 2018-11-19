@@ -1,0 +1,163 @@
+Selected elements can be used a dividers blocks:
+  input: |
+    <br>
+
+    <hr>
+
+    <img>
+  expect: |
+    <br>
+
+    <hr>
+
+    <img>
+
+Textile-like syntax within divider blocks is not parsed:
+  input: |
+    The following _strong_ is not so.
+
+    <hr title="Hello *strong* world!">
+  expect: |
+    <p>The following <em>strong</em> is not so.</p>
+
+    <hr title="Hello *strong* world!">
+
+Dividers can be escaped by starting the block with whitespace, but it also escapes wrapping:
+  input: |
+    <img src="image.jpg">
+
+     <img src="image.jpg">
+  expect: |
+    <img src="image.jpg">
+
+     <img src="image.jpg">
+
+Dividers accept attributes:
+  input: |
+    <img src="image.jpg">
+  expect: |
+    <img src="image.jpg">
+
+Dividers accept trailing whitespace within the tag:
+  input: |
+    <br >
+
+    <br   >
+  expect: |
+    <br >
+
+    <br   >
+
+Dividers can be self-closing:
+  input: |
+    <hr/>
+
+    <br />
+  expect: |
+    <hr/>
+
+    <br />
+
+Dividers can be paired containers:
+  input: |
+    <hr></hr>
+
+  expect: |
+    <hr></hr>
+
+Dividers do not terminate extended blocks:
+  input: |
+    bc.. <hr>
+
+    <br>
+
+    <img src="image.jpg">
+
+    p. Paragraph.
+  expect: |
+    <pre><code>&lt;hr&gt;
+
+    &lt;br&gt;
+
+    &lt;img src=&quot;image.jpg&quot;&gt;</code></pre>
+
+    <p>Paragraph.</p>
+
+Textile-block containing divider content is not a divider:
+  input: |
+    p. <img src="image.jpg">
+  expect: |
+    <p><img src="image.jpg"></p>
+
+Divider matching does not care about character encoding:
+  input: |
+    <img src="福島駅.jpg">
+  expect: |
+    <img src="福島駅.jpg">
+
+Divider matching is case-insensitive:
+  input: |
+    <HR>
+
+    <hR>
+  expect: |
+    <HR>
+
+    <hR>
+
+Divider can not wrap content:
+  input: |
+    <img>Content.</img>
+
+  expect: |
+    <p><img>Content.</img></p>
+
+Divider that wraps content will not be wrapped if its not a phrasing element:
+  input: |
+    <hr>Content.</hr>
+  expect: |
+    <hr>Content.</hr>
+
+Divider can not contain any other content:
+  input: |
+    <img src="image.jpg"> *Content*.
+  expect: |
+    <p><img src="image.jpg"> <strong>Content</strong>.</p>
+
+Divider blocks can consist of multiple tags:
+  input: |
+    <br><br><br><hr>
+  expect: |
+    <br><br><br><hr>
+
+Dividers must be closed:
+  input: |
+    <hr
+
+    <br
+
+    <hr</hr>
+  expect: |
+    <p>&lt;hr</p>
+
+    <p>&lt;br</p>
+
+    <p><hr</hr></p>
+
+Textile syntax that generates divider-like tags is not a divider:
+  input: |
+    !image.jpg!
+  expect: |
+    <p><img alt="" src="image.jpg" /></p>
+
+Dividers are sanitized in restricted mode:
+  setup:
+    - setRestricted: true
+  input: |
+    <img src="image.jpg">
+
+    !image.jpg!
+  expect: |
+    <p>&lt;img src=&#8220;image.jpg&#8221;&gt;</p>
+
+    <p><img alt="" src="image.jpg" /></p>
