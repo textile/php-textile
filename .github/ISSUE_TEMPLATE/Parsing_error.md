@@ -3,9 +3,7 @@ name: Parsing error
 about: Report an issue with parsing a Textile document.
 ---
 
-<!--- Please replace `{Please write here}` with your answers as best you can. -->
-<!--- If you're unsure about any of these, don't hesitate to ask. -->
-<!--- We're here to help! -->
+<!--- Please replace `{Please write here}` with your answers as best you can. If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
 
 ### Prerequisites
 <!--- Put an `x` in all the boxes that apply. -->
@@ -14,7 +12,7 @@ about: Report an issue with parsing a Textile document.
 
 ### Problematic Textile markup
 
-```textile
+```
 {Please write here}
 ```
 
