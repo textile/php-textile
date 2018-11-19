@@ -3139,7 +3139,8 @@ class Parser
                     $block .= $c1;
                 }
             } else {
-                $rawBlock = $this->isRawBlocksEnabled() && $this->isRawBlock($block);
+                $rawBlock = preg_match($this->patterns['divider'], $block) ||
+                    ($this->isRawBlocksEnabled() && $this->isRawBlock($block));
 
                 if ($ext || (strpos($block, ' ') !== 0 && !$rawBlock)) {
                     list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock(array(
