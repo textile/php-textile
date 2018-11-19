@@ -1,5 +1,5 @@
-Just unicode:
-  input : |
+Basic unicode blocks are wrapped:
+  input: |
     福島駅
 
     "福島駅"
@@ -8,8 +8,8 @@ Just unicode:
 
     <p>&#8220;福島駅&#8221;</p>
 
-Links... :
-  input:  |
+Unicode links:
+  input: |
     "福島駅":http://ja.wikipedia.org/wiki/福島駅_(大阪府)/?q[]=x
 
     "福島駅":福島駅
@@ -26,8 +26,8 @@ Links... :
 
     <p><a href="http://ja.wikipedia.org/wiki/%E7%A6%8F%E5%B3%B6%E9%A7%85_%28%E5%A4%A7%E9%98%AA%E5%BA%9C%29/?q[]=x">&#8220;福島駅&#8221;</a></p>
 
-Links in tables... :
-  input:  |
+Unicode links in tables:
+  input: |
     | ""福島駅"":http://ja.wikipedia.org/wiki/福島駅_(大阪府)/?q[]=x |
 
     |""福島駅"":http://ja.wikipedia.org/wiki/福島駅_(大阪府)/?q[]=x|
@@ -52,8 +52,8 @@ Links in tables... :
     		</tr>
     </table>
 
-Unicode Links :
-  input  : |
+More unicode links:
+  input: |
     "Übermensch":https://de.wikipedia.org/wiki/Übermensch
 
     "$":https://de.wikipedia.org/wiki/Übermensch
@@ -81,7 +81,7 @@ Unicode Links :
     [link4]https://en.wikipedia.com/ä/öüÄÖÜßç/éáóúè/àòùÉÁÓÚ/ÈÀÒÙêÊôÔâÂû/ÛåÅœŒæÆøØëËïÏ/
     [link5]http://ja.wikipedia.org/wiki/福島駅_(大阪府)
     [link6]http://ja.wikipedia.org/wiki/福島駅_(大阪府)/
-  expect : |
+  expect: |
     <p><a href="https://de.wikipedia.org/wiki/%C3%9Cbermensch">Übermensch</a></p>
 
     <p><a href="https://de.wikipedia.org/wiki/%C3%9Cbermensch">de.wikipedia.org/wiki/Übermensch</a></p>
@@ -104,12 +104,12 @@ Unicode Links :
 
     <p><a href="http://google.com">Google</a> or <a href="https://google.com">secure google</a></p>
 
-Unicode footnotes :
-  input : |
+Unicode footnotes:
+  input: |
     Footnotes should allows using native language, or full-width digits[１].
 
     fn１. Localised footnotes.
-  expect : |
+  expect: |
     <p>Footnotes should allows using native language, or full-width digits<sup class="footnote"><a>１</a></sup>.</p>
 
     <p class="footnote"><sup>１</sup> Localised footnotes.</p>

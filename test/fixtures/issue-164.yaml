@@ -1,5 +1,5 @@
 Hyphen in class on table cell:
-  input : |
+  input: |
     table(linkblog-thumbnail).
     |(linkblog-thumbnail-cell). apple|bear|
   expect: |
@@ -11,7 +11,7 @@ Hyphen in class on table cell:
     </table>
 
 Caret in class on table cell:
-  input : |
+  input: |
     table(linkblog-thumbnail).
     |(linkblog^thumbnail-cell). apple|bear|
   expect: |
@@ -23,7 +23,7 @@ Caret in class on table cell:
     </table>
 
 Tilde in class on table cell:
-  input : |
+  input: |
     table(linkblog-thumbnail).
     |(linkblog-thumbnail~cell). apple|bear|
   expect: |

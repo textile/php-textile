@@ -1,5 +1,5 @@
 Citations are strange beasts:
-  input  : |
+  input: |
     bq.:http://textpattern.com/ Code is pottery.
 
     ??:http://textpattern.com Code is pottery.??
@@ -10,13 +10,13 @@ Citations are strange beasts:
 
     Please, add visual feedback to link _(c)[en]:active :active_ and _:hover :hover_ events
 
-  expect : |
+  expect: |
     <blockquote cite="http://textpattern.com/">
     	<p>Code is pottery.</p>
     </blockquote>
 
     <p><cite cite="http://textpattern.com">Code is pottery.</cite></p>
-    
+
     <p>Please, add visual feedback to link <em>:active</em> and <em>:hover</em> events</p>
 
     <p>Please, add visual feedback to link <em cite="active">active</em> and <em cite="hover">hover</em> events</p>

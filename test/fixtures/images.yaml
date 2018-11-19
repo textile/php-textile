@@ -1,5 +1,5 @@
-Image schemes :
-  input  : |
+Image schemes:
+  input: |
     !//example.com/favicon.ico!
 
     !http://example.com/favicon.ico!
@@ -11,7 +11,6 @@ Image schemes :
     !ftp://example.com/favicon.ico!
 
     !invalid://example.com/favicon.ico!
-
   expect: |
     <p><img alt="" src="//example.com/favicon.ico" /></p>
 

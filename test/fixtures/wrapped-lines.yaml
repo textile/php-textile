@@ -1,7 +1,6 @@
 Lines are wrapped and line breaks should not be formatted:
   setup:
     - setLineWrap: false
-
   input:  |
     This line
     wraps to multiple

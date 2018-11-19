@@ -1,16 +1,15 @@
 Issue 106:
-  input  : |
+  input: |
     __(think)__ and __(talk)__
 
     __(think)think__ and __(talk)talk__
-
-  expect : |
+  expect: |
     <p><i>(think)</i> and <i>(talk)</i></p>
 
     <p><i class="think">think</i> and <i class="talk">talk</i></p>
 
 All span patterns with and without classes:
-  input  : |
+  input: |
     __(think)__ and __(talk)__ and *(walk)* or *(run)* or _(sleep)_ and _(dream_of_sheep)_
 
     ~(think)~ and ~(talk)~ and ^(walk)^ or ^(run)^ or %(sleep)% and %(dream_of_sheep)%
@@ -45,14 +44,14 @@ All span patterns with and without classes:
     <p><cite class="c">(think)</cite> and <cite class="c">(talk)</cite></p>
 
 Expanded patterns with other attributes:
-  input  : |
+  input: |
     __[think]__ and __{talk}__ and *[walk]* or *{run}* or _[sleep]_ and _{dream_of_sheep}_
 
     ~[think]~ and ~{talk}~ and ^[walk]^ or ^{run}^ or %[sleep]% and %{dream_of_sheep}%
 
     __[en][think]__ and __(c)[talk]__ and *[en](walk)* or *(c){run}* or _[en](sleep)_ and _(c)[dream_of_sheep]_
 
-  expect : |
+  expect: |
     <p><i>[think]</i> and <i>{talk}</i> and <strong>[walk]</strong> or <strong>{run}</strong> or <em>[sleep]</em> and <em>{dream_of_sheep}</em></p>
 
     <p><sub>[think]</sub> and <sub>{talk}</sub> and <sup>[walk]</sup> or <sup>{run}</sup> or <span>[sleep]</span> and <span>{dream_of_sheep}</span></p>

@@ -1,5 +1,5 @@
 Test styles, classes and lang attributes in all permutations:
-  input:  |
+  input: |
     "t":example.com
 
     Empty class "()t":example.com

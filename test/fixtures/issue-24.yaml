@@ -1,4 +1,4 @@
-Invalid starting list depth:
+Lists with invalid starting list depth are ignored:
   input: |
     ## Red
     ## Green

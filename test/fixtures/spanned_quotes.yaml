@@ -1,6 +1,6 @@
 Non-English Punctuation and spans:
-  notes  : Should be able to span around non-English quotes...
-  input  : |
+  notes: Should be able to span around non-English quotes.
+  input: |
     ‹abc›
 
     *‹abc›*
@@ -17,7 +17,7 @@ Non-English Punctuation and spans:
 
     p{font-size:160%}. ‚**abc**‘
 
-  expect : |
+  expect: |
     <p>‹abc›</p>
 
     <p><strong>‹abc›</strong></p>

@@ -1,6 +1,6 @@
 Urlencoded styles:
-  doctype : html5
-  input  : |
+  doctype: html5
+  input: |
     p{color: red}. 0.1
 
     p{color: red;}. 0.2
@@ -21,7 +21,7 @@ Urlencoded styles:
 
     p{%2525252563%252525256F%252525256C%252525256F%2525252572%252525253A%2525252520%2525252572%2525252565%2525252564}. 5
 
-  expect : |
+  expect: |
     <p style="color: red;">0.1</p>
 
     <p style="color: red;">0.2</p>
@@ -42,14 +42,14 @@ Urlencoded styles:
 
     <p>5</p>
 
-Urlencoded styles (restricted):
+Urlencoded styles in restricted mode:
   setup:
     - setRestricted: true
     - setLite: true
     - setImages: false
     - setLinkRelationShip: nofollow
   doctype : html5
-  input  : |
+  input: |
     p{color: red}. 0
 
     p{%63%6F%6C%6F%72%3A%20%72%65%64}. 1
@@ -62,7 +62,7 @@ Urlencoded styles (restricted):
 
     p{%2525252563%252525256F%252525256C%252525256F%2525252572%252525253A%2525252520%2525252572%2525252565%2525252564}. 5
 
-  expect : |
+  expect: |
     <p>0</p>
 
     <p>1</p>

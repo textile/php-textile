@@ -1,23 +1,22 @@
 One:
-  input:  |
-    "": 
+  input: |
+    "":\x20
 
-    "":- 
+    "":-\x20
 
-    " ":- 
+    " ":-\x20
 
-    "A": 
+    "A":\x20
 
-    "B":- 
+    "B":-\x20
 
-    "C":/ 
+    "C":/\x20
 
     "Text(title)":/
 
     " (title)":/
 
     Call "fx()(title)":/.
-    
   expect: |
     <p>&#8220;&#8221;: </p>
 
@@ -28,7 +27,7 @@ One:
     <p>&#8220;A&#8221;: </p>
 
     <p><a href="-">B</a> </p>
-    
+
     <p><a href="/">C</a> </p>
 
     <p><a href="/" title="title">Text</a></p>
@@ -38,7 +37,7 @@ One:
     <p>Call <a href="/" title="title">fx()</a>.</p>
 
 Two:
-  input:  |
+  input: |
     ":https://github.com
   expect: |
     <p>&#8220;:https://github.com</p>
@@ -50,7 +49,7 @@ Three:
     <p>&#8220;&#8221;:https://github.com</p>
 
 Four:
-  input:  |
+  input: |
     A "link" -- so called? "":https://github.com
   expect: |
     <p>A &#8220;link&#8221; &#8212; so called? &#8220;&#8221;:https://github.com</p>
@@ -62,7 +61,7 @@ Five:
     <p>A &#8220;link &#8212; so called? &#8220;&#8221;:https://github.com</p>
 
 Six:
-  input:  |
+  input: |
     "The use of the character " in textile":help.html..!
   expect: |
     <p><a href="help.html">The use of the character &#8220; in textile</a>..!</p>
@@ -74,25 +73,25 @@ Six-one:
     <p><a href="help.html">The use of the character ! in textile</a>..!</p>
 
 Seven:
-  input:  |
+  input: |
     "The use of the assignment $="2" in textile":help.html..!
   expect: |
     <p><a href="help.html">The use of the assignment $=&#8220;2&#8221; in textile</a>..!</p>
 
 Eight:
-  input:  |
+  input: |
     "The use of the character '"' in textile":help.html..!
   expect: |
     <p><a href="help.html">The use of the character &#8216;&quot;&#8217; in textile</a>..!</p>
 
 Nine:
-  input:  |
+  input: |
     "The use of the character "!" in textile":help.html..!
   expect: |
     <p><a href="help.html">The use of the character &#8220;!&#8221; in textile</a>..!</p>
 
 Nine-One:
-  input:  |
+  input: |
     "The use of the character ("!") in textile":help.html..!
   expect: |
     <p><a href="help.html">The use of the character (&#8220;!&#8221;) in textile</a>..!</p>
@@ -104,55 +103,55 @@ Nine-Two:
     <p><a href="help.html">The use of the character (&#8220;!&#8221;) in textile</a>.</p>
 
 Nine-Three:
-  input:  |
+  input: |
     ("The use of the character "!" in textile":help.html)..!
   expect: |
     <p>(<a href="help.html">The use of the character &#8220;!&#8221; in textile</a>)..!</p>
 
 Nine-Four:
-  input:  |
+  input: |
     "The use of the characters () in textile":help.html.
   expect: |
     <p><a href="help.html">The use of the characters () in textile</a>.</p>
 
 Ten:
-  input:  |
+  input: |
     "The use of the characters "" in textile":help.html..!
   expect: |
     <p><a href="help.html">The use of the characters &#8220;&#8221; in textile</a>..!</p>
 
 Ten-One:
-  input:  |
+  input: |
     "The use of the characters '' in textile":help.html..!
   expect: |
     <p><a href="help.html">The use of the characters &#8216;&#8217; in textile</a>..!</p>
 
 Ten-Two:
-  input:  |
+  input: |
     "The use of the character " in textile":help.html..!
   expect: |
     <p><a href="help.html">The use of the character &#8220; in textile</a>..!</p>
 
 Eleven:
-  input:  |
+  input: |
     A "link":/ and "another":/ and "yet another":/.
   expect: |
     <p>A <a href="/">link</a> and <a href="/">another</a> and <a href="/">yet another</a>.</p>
 
 Twelve:
-  input:  |
+  input: |
     A ("link":/) and ("another":/ and "yet another":/).
   expect: |
     <p>A (<a href="/">link</a>) and (<a href="/">another</a> and <a href="/">yet another</a>).</p>
 
 Quotes in code:
-  input:  |
+  input: |
     @Use of the '"' char@ and @use of the "'" char@.
   expect: |
     <p><code>Use of the &#39;&quot;&#39; char</code> and <code>use of the &quot;&#39;&quot; char</code>.</p>
 
 Combinations of valid and invalid links:
-  input:  |
+  input: |
     Here is a valid link "github":https://github.com and an invalid one ":https://github.com.
 
     Here is an invalid link github":https://github.com and a valid one "github":https://github.com.
@@ -175,7 +174,7 @@ Combinations of valid and invalid links:
     <p>Some invalid&#8221;:/ and <a href="/">valid</a> and <a href="/">valid</a> links.</p>
 
 Weird cases:
-  input:  |
+  input: |
     "(class)(text)(title)":http://example.com/
 
     "(class) (text)(title)":http://example.com/
