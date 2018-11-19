@@ -1139,6 +1139,7 @@ class Parser
 
         $this->patterns = array(
             'block' => '/^(?:'.$block.')$/i',
+            'contained' => '/^<\/?(?P<open>[^\s>]+)(?:\s|\/?>).*>$/smi',
             'divider' => '/^(?:<\/?('.$divider.')(?:\s[^>]*?|\/?)>(?:<\/\1\s*?>)?)+$/smi',
             'phrasing' => '/^(?:'.$phrasing.')$/i',
             'raw' => '/^(?:'.$raw.')$/i',
@@ -3313,7 +3314,7 @@ class Parser
 
     protected function isRawBlock($text)
     {
-        if (preg_match($this->patterns['wrapped'], $text, $m)) {
+        if (preg_match($this->patterns['contained'], $text, $m)) {
             if (preg_match($this->patterns['raw'], $m['open'])) {
                 return true;
             }
