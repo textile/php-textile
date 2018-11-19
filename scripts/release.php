@@ -80,7 +80,7 @@ $update = [
 
 if ($release) {
     $update['README.textile'] = [
-        '/(\/textile )(\d+\.\d+\.\*)/' => function ($m) use ($install) {
+        '/(\/textile[ :])(\d+\.\d+\.\*)/' => function ($m) use ($install) {
             return $m[1] . $install;
         }
     ];
