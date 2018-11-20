@@ -15,6 +15,11 @@
             "Netcarver\\Textile\\": "src/Netcarver/Textile/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Netcarver\\Textile\\Test\\": "test/Netcarver/Textile/Test/"
+        }
+    },
     "require": {
         "php": ">=5.3.0"
     },
