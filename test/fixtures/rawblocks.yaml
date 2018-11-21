@@ -1,4 +1,88 @@
-Paragraphs wrapped in non-standard HTML are kept as is:
+Raw-block can be any paragraph block wrapped in non-standard HTML tags:
+  setup:
+    - setRawBlocks: true
+  input: |
+    <pfx:tag>
+      Block *with* _some_ Textile-like syntax.
+    </pfx:tag>
+  expect: |
+    <pfx:tag>
+      Block *with* _some_ Textile-like syntax.
+    </pfx:tag>
+
+Raw-block can be self-closing:
+  setup:
+    - setRawBlocks: true
+  input: |
+    <pfx:tag attribute="with *some* Textile-like syntax" />
+
+    <pfx:tag attribute="with *some* Textile-like syntax">
+  expect: |
+    <pfx:tag attribute="with *some* Textile-like syntax" />
+
+    <pfx:tag attribute="with *some* Textile-like syntax">
+
+Raw-block can be empty:
+  setup:
+    - setRawBlocks: true
+  input: |
+    <pfx:tag></pfx:tag>
+
+    <pfx:tag attribute="with *some* Textile-like syntax"></pfx:tag>
+  expect: |
+    <pfx:tag></pfx:tag>
+
+    <pfx:tag attribute="with *some* Textile-like syntax"></pfx:tag>
+
+Raw-block tags do not care about trailing white-space:
+  setup:
+    - setRawBlocks: true
+  input: |
+    <pfx:tag attribute="with *some* Textile-like syntax"  >
+
+    <pfx:tag attribute="with *some* Textile-like syntax"  >
+
+    <pfx:tag attribute="with *some* Textile-like syntax"  />
+
+    <pfx:tag   >
+      Block *with* _some_ Textile-like syntax.
+    </pfx:tag>
+  expect: |
+    <pfx:tag attribute="with *some* Textile-like syntax"  >
+
+    <pfx:tag attribute="with *some* Textile-like syntax"  >
+
+    <pfx:tag attribute="with *some* Textile-like syntax"  />
+
+    <pfx:tag   >
+      Block *with* _some_ Textile-like syntax.
+    </pfx:tag>
+
+Raw-blocks must support nesting within tags and their attributes:
+  setup:
+    - setRawBlocks: true
+  input: |
+    <pfx:tag attribute="<pfx:tag />">
+
+    <pfx:tag attribute="<pfx:tag />" />
+
+    <pfx:tag attribute='<pfx:tag name=''<pfx:tag attribute="value">with *some* Textile-like syntax</pfx:tag>'' />' />
+
+    <pfx:tag attribute='<pfx:tag name=''<pfx:tag attribute="value">content</pfx:tag>'' />'>
+      with *some* Textile-like syntax
+    </pxf:tag>
+  expect: |
+    <pfx:tag attribute="<pfx:tag />">
+
+    <pfx:tag attribute="<pfx:tag />" />
+
+    <pfx:tag attribute='<pfx:tag name=''<pfx:tag attribute="value">with *some* Textile-like syntax</pfx:tag>'' />' />
+
+    <pfx:tag attribute='<pfx:tag name=''<pfx:tag attribute="value">content</pfx:tag>'' />'>
+      with *some* Textile-like syntax
+    </pxf:tag>
+
+Raw-blocks are not parsed and are left as is:
   setup:
     - setRawBlocks: true
   input: |
@@ -8,28 +92,9 @@ Paragraphs wrapped in non-standard HTML are kept as is:
       Block *with* _some_ Textile-like syntax.
     </pfx:tag>
 
-    <pfx:tag attribute="Some *self-closing* content." />
+    <pfx:tag attribute="Some *self-closing* content" />
 
-    <pfx:tag attribute='<pfx:nested />' />
-
-    But _normal_ paragraphs are still Textiled
-    *normally*.
-
-    &lt;p&gt;Escaped *tags* are not matched.&lt;p&gt;
-
-     <pfx:tag>Paragraphs starting with a space *are* parsed...</pfx:tag>
-
-     ...and non-wrapped paragraphs work the *same* too.
-
-    bc.. Extended blocks...
-
-    <div>...and *code* are kept intact.</div>
-
-    p. Paragraph.
-
-    <pre><code>Some code.</code></pre>
-
-    <span>Phrasing content.</span>
+    Paragraph *with* _some_ Textile-like syntax.
   expect: |
     <p>Paragraph <strong>with</strong> <em>some</em> Textile-like syntax.</p>
 
@@ -37,30 +102,91 @@ Paragraphs wrapped in non-standard HTML are kept as is:
       Block *with* _some_ Textile-like syntax.
     </pfx:tag>
 
-    <pfx:tag attribute="Some *self-closing* content." />
+    <pfx:tag attribute="Some *self-closing* content" />
 
-    <pfx:tag attribute='<pfx:nested />' />
+    <p>Paragraph <strong>with</strong> <em>some</em> Textile-like syntax.</p>
 
-    <p>But <em>normal</em> paragraphs are still Textiled<br />
-    <strong>normally</strong>.</p>
+Normal HTML phrasing and block tags are not raw-blocks:
+  setup:
+    - setRawBlocks: true
+  input: |
+    <pfx:tag>Paragraph *with* _some_ Textile-like syntax.</pfx:tag>
+
+    <p>Paragraph *with* _some_ Textile-like syntax.</p>
+
+    <a href="#">Paragraph *with* _some_ Textile-like syntax.</a>
+  expect: |
+    <pfx:tag>Paragraph *with* _some_ Textile-like syntax.</pfx:tag>
+
+    <p>Paragraph <strong>with</strong> <em>some</em> Textile-like syntax.</p>
+
+    <p><a href="#">Paragraph <strong>with</strong> <em>some</em> Textile-like syntax.</a></p>
+
+Escaped and encoded tag instances are not matched:
+  setup:
+    - setRawBlocks: true
+  input: |
+    <pfx:tag>Paragraph *with* _some_ Textile-like syntax.</pfx:tag>
+
+    &lt;p&gt;Escaped *tags* are not matched.&lt;p&gt;
+  expect: |
+    <pfx:tag>Paragraph *with* _some_ Textile-like syntax.</pfx:tag>
 
     <p>&lt;p&gt;Escaped <strong>tags</strong> are not matched.&lt;p&gt;</p>
 
-     <pfx:tag>Paragraphs starting with a space <strong>are</strong> parsed&#8230;</pfx:tag>
+Raw-blocks can be escaped with starting the block with white-space:
+  setup:
+    - setRawBlocks: true
+  input: |
+    <pfx:tag>Paragraph *with* _some_ Textile-like syntax.</pfx:tag>
 
-     &#8230;and non-wrapped paragraphs work the <strong>same</strong> too.
+     <pfx:tag>Paragraph *with* _some_ Textile-like syntax.</pfx:tag>
 
-    <pre><code>Extended blocks...
+    Paragraph *with* _some_ Textile-like syntax.
+  expect: |
+    <pfx:tag>Paragraph *with* _some_ Textile-like syntax.</pfx:tag>
 
-    &lt;div&gt;...and *code* are kept intact.&lt;/div&gt;</code></pre>
+     <pfx:tag>Paragraph <strong>with</strong> <em>some</em> Textile-like syntax.</pfx:tag>
 
-    <p>Paragraph.</p>
+    <p>Paragraph <strong>with</strong> <em>some</em> Textile-like syntax.</p>
 
-    <pre><code>Some code.</code></pre>
+Raw-blocks do not terminate extended blocks:
+  setup:
+    - setRawBlocks: true
+  input: |
+    <pfx:tag>Paragraph *with* _some_ Textile-like syntax.</pfx:tag>
 
-    <p><span>Phrasing content.</span></p>
+    bc.. Extended *code* block
 
-Raw blocks are ignored in restricted mode:
+    <pfx:tag>Paragraph *with* _some_ Textile-like syntax.</pfx:tag>
+
+    p. *Paragraph*.
+  expect: |
+    <pfx:tag>Paragraph *with* _some_ Textile-like syntax.</pfx:tag>
+
+    <pre><code>Extended *code* block
+
+    &lt;pfx:tag&gt;Paragraph *with* _some_ Textile-like syntax.&lt;/pfx:tag&gt;</code></pre>
+
+    <p><strong>Paragraph</strong>.</p>
+
+Raw-block is just a single block and does not extend:
+  setup:
+    - setRawBlocks: true
+  input: |
+    <pfx:tag>
+
+    Paragraph *with* _some_ Textile-like syntax.
+
+    </pfx:tag>
+  expect: |
+    <pfx:tag>
+
+    <p>Paragraph <strong>with</strong> <em>some</em> Textile-like syntax.</p>
+
+    </pfx:tag>
+
+Raw-blocks are ignored in restricted mode:
   setup:
     - setRawBlocks: true
     - setRestricted: true
