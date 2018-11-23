@@ -928,6 +928,8 @@ class Parser
         'fn_ref_pattern'     => '<sup{atts}>{marker}</sup>',
         'fn_foot_pattern'    => '<sup{atts}>{marker}</sup>',
         'nl_ref_pattern'     => '<sup{atts}>{marker}</sup>',
+        'caps'               => '<span class="caps">{content}</span>',
+        'acronym'            => null,
     );
 
     /**
@@ -2181,22 +2183,37 @@ class Parser
             $this->glyph_replace[] = $this->symbols['quote_double_open'];
         }
 
-        // 3+ uppercase acronym
-        $this->glyph_search[] = '/\b(['.$this->regex_snippets['abr'].']['.
-            $this->regex_snippets['acr'].']{2,})\b(?:[(]([^)]*)[)])/'.$this->regex_snippets['mod'];
-
-        if ($this->getDocumentType() === 'html5') {
-            $this->glyph_replace[] = '<abbr title="$2">$1</abbr>';
+        if ($this->symbols['acronym'] === null) {
+            if ($this->getDocumentType() === 'html5') {
+                $acronym = '<abbr title="{title}">{content}</abbr>';
+            } else {
+                $acronym = '<acronym title="{title}">{content}</acronym>';
+            }
         } else {
-            $this->glyph_replace[] = '<acronym title="$2">$1</acronym>';
+            $acronym = $this->symbols['acronym'];
+        }
+
+        // 3+ uppercase acronym
+        if ($acronym !== false) {
+            $this->glyph_search[] = '/\b(['.$this->regex_snippets['abr'].']['.
+                $this->regex_snippets['acr'].']{2,})\b(?:[(]([^)]*)[)])/'.$this->regex_snippets['mod'];
+            $this->glyph_replace[] = strtr($acronym, array(
+                '{title}' => '$2',
+                '{content}' => '$1',
+            ));
         }
 
         // 3+ uppercase
-        $this->glyph_search[] = '/('.$this->regex_snippets['space'].'|^|[>(;-])'.
-            '(['.$this->regex_snippets['abr'].']{3,})'.
-            '(['.$this->regex_snippets['nab'].']*)(?='.$this->regex_snippets['space'].'|'.$pnc.'|<|$)'.
-            '(?=[^">]*?(<|$))/'.$this->regex_snippets['mod'];
-        $this->glyph_replace[] = '$1<span class="caps">'.$this->uid.':glyph:$2</span>$3';
+        if ($this->symbols['caps'] !== false) {
+            $this->glyph_search[] = '/('.$this->regex_snippets['space'].'|^|[>(;-])'.
+                '(['.$this->regex_snippets['abr'].']{3,})'.
+                '(['.$this->regex_snippets['nab'].']*)(?='.
+                $this->regex_snippets['space'].'|'.$pnc.'|<|$)'.
+                '(?=[^">]*?(<|$))/'.$this->regex_snippets['mod'];
+            $this->glyph_replace[] = strtr('$1'.$this->symbols['caps'].'$3', array(
+                '{content}' => $this->uid.':glyph:$2',
+            ));
+        }
 
         // Ellipsis
         if ($this->symbols['ellipsis'] !== false) {
@@ -5007,15 +5024,15 @@ class Parser
 
     protected function glyphs($text)
     {
+        if (!$this->glyph_search) {
+            return $text;
+        }
+
         // Fix: hackish -- adds a space if final char of text is a double quote.
         $text = preg_replace('/"\z/', "\" ", $text);
         $text = preg_split("@(<[\w/!?].*>)@Us".$this->regex_snippets['mod'], $text, -1, PREG_SPLIT_DELIM_CAPTURE);
         $i = 0;
         $glyph_out = array();
-
-        if (!$this->glyph_search) {
-            return $text;
-        }
 
         foreach ($text as $line) {
             // Text tag text tag text ...
