@@ -175,3 +175,10 @@ Dimensions:
     <p>What is .2&#8221;&#215; .5&#8221;?</p>
 
     <p>1 &#215; $10.00 &#215; -£ 1.23 &#215; ¥20,000 &#215; -¤120.00 &#215; ฿1,000,000 &#215; -€110,00</p>
+
+Disabled dimension:
+  class: \Netcarver\Textile\Test\Parser\DisableSymbols
+  input: |
+    1 x 1 = 1
+  expect: |
+    <p>1 x 1 = 1</p>

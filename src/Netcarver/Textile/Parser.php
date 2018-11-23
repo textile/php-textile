@@ -1654,7 +1654,7 @@ class Parser
      * See Parser::getSymbol() to find out all available symbols.
      *
      * @param  string $name  Name of the symbol to assign a new value to
-     * @param  string $value New value for the symbol
+     * @param  string|bool $value New value for the symbol, or FALSE to disable
      * @return Parser
      * @see    Parser::getSymbol()
      * @api
@@ -1662,7 +1662,13 @@ class Parser
 
     public function setSymbol($name, $value)
     {
-        $this->symbols[(string) $name] = (string) $value;
+        if ($value === false || $value === null) {
+            $value = false;
+        } else {
+            $value = (string) $value;
+        }
+
+        $this->symbols[(string) $name] = $value;
         $this->rebuild_glyphs = true;
         return $this;
     }
@@ -2118,46 +2124,62 @@ class Parser
         $this->glyph_replace = array();
 
         // Dimension sign
-        $this->glyph_search[] = '/(?<=\b|x)([0-9]++[\])]?[\'"]? ?)[x]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]++)/i'.
+        if ($this->symbols['dimension'] !== false) {
+            $this->glyph_search[] = '/(?<=\b|x)([0-9]++[\])]?[\'"]? ?)[x]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]++)/i'.
             $this->regex_snippets['mod'];
-        $this->glyph_replace[] = '$1'.$this->symbols['dimension'].'$2';
+            $this->glyph_replace[] = '$1'.$this->symbols['dimension'].'$2';
+        }
 
         // Apostrophe
-        $this->glyph_search[] = '/('.$this->regex_snippets['wrd'].'|\))\''.
+        if ($this->symbols['apostrophe'] !== false) {
+            $this->glyph_search[] = '/('.$this->regex_snippets['wrd'].'|\))\''.
             '('.$this->regex_snippets['wrd'].')/'.$this->regex_snippets['mod'];
-        $this->glyph_replace[] = '$1'.$this->symbols['apostrophe'].'$2';
+            $this->glyph_replace[] = '$1'.$this->symbols['apostrophe'].'$2';
 
-        // Back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
-        $this->glyph_search[] = '/('.$this->regex_snippets['space'].')\''.
+            // Back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
+            $this->glyph_search[] = '/('.$this->regex_snippets['space'].')\''.
             '(\d+'.$this->regex_snippets['wrd'].'?)\b(?![.]?['.$this->regex_snippets['wrd'].']*?\')/'.
             $this->regex_snippets['mod'];
-        $this->glyph_replace[] = '$1'.$this->symbols['apostrophe'].'$2';
+            $this->glyph_replace[] = '$1'.$this->symbols['apostrophe'].'$2';
+        }
 
         // Single open following open bracket
-        $this->glyph_search[] = "/([([{])'(?=\S)/".$this->regex_snippets['mod'];
-        $this->glyph_replace[] = '$1'.$this->symbols['quote_single_open'];
+        if ($this->symbols['quote_single_open'] !== false) {
+            $this->glyph_search[] = "/([([{])'(?=\S)/".$this->regex_snippets['mod'];
+            $this->glyph_replace[] = '$1'.$this->symbols['quote_single_open'];
+        }
 
         // Single closing
-        $this->glyph_search[] = '/(\S)\'(?='.$this->regex_snippets['space'].'|'.$pnc.'|<|$)/'.
-            $this->regex_snippets['mod'];
-        $this->glyph_replace[] = '$1'.$this->symbols['quote_single_close'];
+        if ($this->symbols['quote_single_close'] !== false) {
+            $this->glyph_search[] = '/(\S)\'(?='.$this->regex_snippets['space'].'|'.$pnc.'|<|$)/'.
+                $this->regex_snippets['mod'];
+            $this->glyph_replace[] = '$1'.$this->symbols['quote_single_close'];
+        }
 
         // Default single opening
-        $this->glyph_search[] = "/'/";
-        $this->glyph_replace[] = $this->symbols['quote_single_open'];
+        if ($this->symbols['quote_single_open'] !== false) {
+            $this->glyph_search[] = "/'/";
+            $this->glyph_replace[] = $this->symbols['quote_single_open'];
+        }
 
         // Double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
-        $this->glyph_search[] = '/([([{])"(?=\S)/'.$this->regex_snippets['mod'];
-        $this->glyph_replace[] = '$1'.$this->symbols['quote_double_open'];
+        if ($this->symbols['quote_double_open'] !== false) {
+            $this->glyph_search[] = '/([([{])"(?=\S)/'.$this->regex_snippets['mod'];
+            $this->glyph_replace[] = '$1'.$this->symbols['quote_double_open'];
+        }
 
         // Double closing
-        $this->glyph_search[] = '/(\S)"(?='.$this->regex_snippets['space'].'|'.$pnc.'|<|$)/'.
-            $this->regex_snippets['mod'];
-        $this->glyph_replace[] = '$1'.$this->symbols['quote_double_close'];
+        if ($this->symbols['quote_double_close'] !== false) {
+            $this->glyph_search[] = '/(\S)"(?='.$this->regex_snippets['space'].'|'.$pnc.'|<|$)/'.
+                $this->regex_snippets['mod'];
+            $this->glyph_replace[] = '$1'.$this->symbols['quote_double_close'];
+        }
 
         // Default double opening
-        $this->glyph_search[] = '/"/';
-        $this->glyph_replace[] = $this->symbols['quote_double_open'];
+        if ($this->symbols['quote_double_open'] !== false) {
+            $this->glyph_search[] = '/"/';
+            $this->glyph_replace[] = $this->symbols['quote_double_open'];
+        }
 
         // 3+ uppercase acronym
         $this->glyph_search[] = '/\b(['.$this->regex_snippets['abr'].']['.
@@ -2177,48 +2199,70 @@ class Parser
         $this->glyph_replace[] = '$1<span class="caps">'.$this->uid.':glyph:$2</span>$3';
 
         // Ellipsis
-        $this->glyph_search[] = '/([^.]?)\.{3}/';
-        $this->glyph_replace[] = '$1'.$this->symbols['ellipsis'];
+        if ($this->symbols['ellipsis'] !== false) {
+            $this->glyph_search[] = '/([^.]?)\.{3}/';
+            $this->glyph_replace[] = '$1'.$this->symbols['ellipsis'];
+        }
 
         // em dash
-        $this->glyph_search[] = '/--/';
-        $this->glyph_replace[] = $this->symbols['emdash'];
+        if ($this->symbols['emdash'] !== false) {
+            $this->glyph_search[] = '/--/';
+            $this->glyph_replace[] = $this->symbols['emdash'];
+        }
 
         // en dash
-        $this->glyph_search[] = '/ - /';
-        $this->glyph_replace[] = ' '.$this->symbols['endash'].' ';
+        if ($this->symbols['endash'] !== false) {
+            $this->glyph_search[] = '/ - /';
+            $this->glyph_replace[] = ' '.$this->symbols['endash'].' ';
+        }
 
         // Trademark
-        $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]TM[])]/i'.$this->regex_snippets['mod'];
-        $this->glyph_replace[] = '$1'.$this->symbols['trademark'];
+        if ($this->symbols['trademark'] !== false) {
+            $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]TM[])]/i'.$this->regex_snippets['mod'];
+            $this->glyph_replace[] = '$1'.$this->symbols['trademark'];
+        }
 
         // Registered
-        $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]R[])]/i'.$this->regex_snippets['mod'];
-        $this->glyph_replace[] = '$1'.$this->symbols['registered'];
+        if ($this->symbols['registered'] !== false) {
+            $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]R[])]/i'.$this->regex_snippets['mod'];
+            $this->glyph_replace[] = '$1'.$this->symbols['registered'];
+        }
 
         // Copyright
-        $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]C[])]/i'.$this->regex_snippets['mod'];
-        $this->glyph_replace[] = '$1'.$this->symbols['copyright'];
+        if ($this->symbols['copyright'] !== false) {
+            $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]C[])]/i'.$this->regex_snippets['mod'];
+            $this->glyph_replace[] = '$1'.$this->symbols['copyright'];
+        }
 
         // 1/4
-        $this->glyph_search[] = '/[([]1\/4[])]/';
-        $this->glyph_replace[] = $this->symbols['quarter'];
+        if ($this->symbols['quarter'] !== false) {
+            $this->glyph_search[] = '/[([]1\/4[])]/';
+            $this->glyph_replace[] = $this->symbols['quarter'];
+        }
 
         // 1/2
-        $this->glyph_search[] = '/[([]1\/2[])]/';
-        $this->glyph_replace[] = $this->symbols['half'];
+        if ($this->symbols['half'] !== false) {
+            $this->glyph_search[] = '/[([]1\/2[])]/';
+            $this->glyph_replace[] = $this->symbols['half'];
+        }
 
         // 3/4
-        $this->glyph_search[] = '/[([]3\/4[])]/';
-        $this->glyph_replace[] = $this->symbols['threequarters'];
+        if ($this->symbols['threequarters'] !== false) {
+            $this->glyph_search[] = '/[([]3\/4[])]/';
+            $this->glyph_replace[] = $this->symbols['threequarters'];
+        }
 
         // Degrees -- that's a small 'oh'
-        $this->glyph_search[] = '/[([]o[])]/';
-        $this->glyph_replace[] = $this->symbols['degrees'];
+        if ($this->symbols['degrees'] !== false) {
+            $this->glyph_search[] = '/[([]o[])]/';
+            $this->glyph_replace[] = $this->symbols['degrees'];
+        }
 
         // Plus minus
-        $this->glyph_search[] = '/[([]\+\/-[])]/';
-        $this->glyph_replace[] = $this->symbols['plusminus'];
+        if ($this->symbols['plusminus'] !== false) {
+            $this->glyph_search[] = '/[([]\+\/-[])]/';
+            $this->glyph_replace[] = $this->symbols['plusminus'];
+        }
 
         // No need to rebuild next run unless a symbol is redefined
         $this->rebuild_glyphs = false;
@@ -4964,6 +5008,11 @@ class Parser
         $text = preg_replace('/"\z/', "\" ", $text);
         $text = preg_split("@(<[\w/!?].*>)@Us".$this->regex_snippets['mod'], $text, -1, PREG_SPLIT_DELIM_CAPTURE);
         $i = 0;
+        $glyph_out = array();
+
+        if (!$this->glyph_search) {
+            return $text;
+        }
 
         foreach ($text as $line) {
             // Text tag text tag text ...
