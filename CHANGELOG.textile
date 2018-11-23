@@ -4,6 +4,7 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 3.7.0 - upcoming
 
+* Fix problems with list parsing; no longer matches inline-syntax, such as strongs, as list item markers (closes "#172":https://github.com/textile/php-textile/issues/172).
 * Add option to apply classes, such as language-identifiers, to the code element within a @bc@ (closes "#96":https://github.com/textile/php-textile/issues/96).
 * Add @Parser::configure()@, the method can be extended to create pre-configured parser classes.
 * Automatic paragraph wrapping now checks the contents and does not wrap paragraphs already wrapped in non-phrasing HTML tags (closes "#22":https://github.com/textile/php-textile/issues/22 and "#63":https://github.com/textile/php-textile/issues/63).
