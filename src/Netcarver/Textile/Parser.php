@@ -2218,19 +2218,22 @@ class Parser
 
         // Trademark
         if ($this->symbols['trademark'] !== false) {
-            $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]TM[])]/i'.$this->regex_snippets['mod'];
+            $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]TM[])]/i'.
+                $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1'.$this->symbols['trademark'];
         }
 
         // Registered
         if ($this->symbols['registered'] !== false) {
-            $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]R[])]/i'.$this->regex_snippets['mod'];
+            $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]R[])]/i'.
+                $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1'.$this->symbols['registered'];
         }
 
         // Copyright
         if ($this->symbols['copyright'] !== false) {
-            $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]C[])]/i'.$this->regex_snippets['mod'];
+            $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]C[])]/i'.
+                $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1'.$this->symbols['copyright'];
         }
 
