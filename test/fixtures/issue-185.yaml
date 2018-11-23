@@ -1,0 +1,20 @@
+Links followed, or wrapped, by inline syntax:
+  input: |
+    ["Roses":http://example.com][#red],  grass[#green] and sky[#blue].
+
+    notelist:‡.
+
+    note#red. Roses are %(class)["red":https://examle.com].%
+
+    note#green. Grass is green.
+
+    note#blue. Sky is blue.
+
+  expect: |
+    <p><a href="http://example.com">Roses</a><sup><a><span>1</span></a></sup>,  grass<sup><a><span>2</span></a></sup> and sky<sup><a><span>3</span></a></sup>.</p>
+
+    <ol>
+    	<li><sup><a>‡</a></sup><span> </span>Roses are <span class="class"><a href="https://examle.com">red</a>.</span></li>
+    	<li><sup><a>‡</a></sup><span> </span>Grass is green.</li>
+    	<li><sup><a>‡</a></sup><span> </span>Sky is blue.</li>
+    </ol>
