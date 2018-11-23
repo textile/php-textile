@@ -2948,10 +2948,6 @@ class Parser
                     'level' => strlen($m['tl']),
                 ));
             } else {
-                if (!$list) {
-                    return $text;
-                }
-
                 $list[count($list) - 1]['content'] .= "\n" . $line;
             }
         }
