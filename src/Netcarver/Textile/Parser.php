@@ -637,7 +637,7 @@ class Parser
      * @since 3.7.0
      */
 
-    protected $patterns = array();
+    protected $patterns;
 
     /**
      * Whether block tags are enabled.
@@ -1152,21 +1152,6 @@ class Parser
                 'char'  => '\S',
             );
         }
-
-        $block = implode('|', $this->blockContent);
-        $divider = implode('|', $this->dividerContent);
-        $phrasing = implode('|', $this->phrasingContent);
-        $raw = implode('|', $this->rawContent);
-
-        $this->patterns = array(
-            'block' => '/^(?:'.$block.')$/i',
-            'contained' => '/^<\/?(?P<open>[^\s>]+)(?:\s.*|\/?>.*|)>$/smi',
-            'divider' => '/^(?:<\/?('.$divider.')(?:\s[^>]*?|\/?)>(?:<\/\1\s*?>)?)+$/smi',
-            'phrasing' => '/^(?:'.$phrasing.')$/i',
-            'raw' => '/^(?:'.$raw.')$/i',
-            'wrapped' => '/^<\/?(?P<open>[^\s>]+)[^>]*?>.*<\/\1>$/smi',
-            'unwrappable' => '/<\/?(?:'.$block.')(?:\s[^>]*?|\/?)>/smi',
-        );
 
         $this->urlch = '['.$this->regex_snippets['wrd'].'"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
         $this->quote_starts = implode('|', array_map('preg_quote', array_keys($this->quotes)));
@@ -2305,6 +2290,23 @@ class Parser
             );
 
             $this->setLinkRelationShip($rel);
+        }
+
+        if ($this->patterns === null) {
+            $block = implode('|', $this->blockContent);
+            $divider = implode('|', $this->dividerContent);
+            $phrasing = implode('|', $this->phrasingContent);
+            $raw = implode('|', $this->rawContent);
+
+            $this->patterns = array(
+                'block' => '/^(?:'.$block.')$/i',
+                'contained' => '/^<\/?(?P<open>[^\s>]+)(?:\s.*|\/?>.*|)>$/smi',
+                'divider' => '/^(?:<\/?('.$divider.')(?:\s[^>]*?|\/?)>(?:<\/\1\s*?>)?)+$/smi',
+                'phrasing' => '/^(?:'.$phrasing.')$/i',
+                'raw' => '/^(?:'.$raw.')$/i',
+                'wrapped' => '/^<\/?(?P<open>[^\s>]+)[^>]*?>.*<\/\1>$/smi',
+                'unwrappable' => '/<\/?(?:'.$block.')(?:\s[^>]*?|\/?)>/smi',
+            );
         }
 
         $this->prepGlyphs();
