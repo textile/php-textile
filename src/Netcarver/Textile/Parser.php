@@ -2931,96 +2931,117 @@ class Parser
     {
         $text = $m[0];
         $lines = preg_split('/\n(?=[*#;:])/m', $m[0]);
-        $pt = '';
+        $list = array();
+        $prev = false;
+        $out = array();
+        $lists = array();
 
-        foreach ($lines as $nr => $line) {
-            $nextline = isset($lines[$nr+1]) ? $lines[$nr+1] : false;
+        foreach ($lines as $line) {
+            $match = preg_match(
+                "/^(?P<tl>[#*;:]+)(?P<st>_|\d+)?(?P<atts>$this->cls)[ .](?P<content>.*)$/s",
+                $line,
+                $m
+            );
 
-            if (preg_match("/^(?P<tl>[#*;:]+)(?P<st>_|\d+)?(?P<atts>$this->cls)[ .](?P<content>.*)$/s", $line, $m)) {
-                $tl = $m['tl'];
-
-                if ($nr === 0 && strlen($tl) > 1) {
+            if ($match) {
+                $list[] = array_merge($m, array(
+                    'level' => strlen($m['tl']),
+                ));
+            } else {
+                if (!$list) {
                     return $text;
                 }
 
-                $st = $m['st'];
-                $atts = $m['atts'];
-                $content = trim($m['content']);
-                $nl = '';
-                $ltype = $this->liType($tl);
-                $litem = (strpos($tl, ';') !== false) ? 'dt' : ((strpos($tl, ':') !== false) ? 'dd' : 'li');
-                $showitem = (strlen($content) > 0);
+                $list[count($list) - 1]['content'] .= "\n" . $line;
+            }
+        }
 
-                if ('o' === $ltype) {
-                    // Handle list continuation/start attribute on ordered lists.
-                    if (!isset($this->olstarts[$tl])) {
-                        $this->olstarts[$tl] = 1;
-                    }
+        if (!$list || $list[0]['level'] > 1) {
+            return $text;
+        }
 
-                    if (strlen($tl) > strlen($pt)) {
-                        // First line of this level of ol -- has a start attribute?
-                        if ('' == $st) {
-                            // No => reset count to 1.
-                            $this->olstarts[$tl] = 1;
-                        } elseif ('_' !== $st) {
-                            // Yes, and numeric => reset to given.
-                            // TRICKY: the '_' continuation marker just means
-                            // output the count so don't need to do anything
-                            // here.
-                            $this->olstarts[$tl] = (int) $st;
-                        }
-                    }
+        foreach ($list as $index => $m) {
+            $start = '';
+            $content = trim($m['content']);
+            $ltype = $this->liType($m['tl']);
 
-                    if ((strlen($tl) > strlen($pt)) && '' !== $st) {
-                        // Output the start attribute if needed.
-                        $st = ' start="' . $this->olstarts[$tl] . '"';
-                    }
-
-                    if ($showitem) {
-                        // TRICKY: Only increment the count for list items;
-                        // not when a list definition line is encountered.
-                        $this->olstarts[$tl] += 1;
-                    }
-                }
-
-                if (preg_match("/^(?P<nextlistitem>[#*;:]+)(_|[\d]+)?($this->cls)[ .].*/", $nextline, $nm)) {
-                    $nl = $nm['nextlistitem'];
-                }
-
-                if ((strpos($pt, ';') !== false) && (strpos($tl, ':') !== false)) {
-                    // We're already in a <dl> so flag not to start another
-                    $lists[$tl] = 2;
-                }
-
-                $tabs = str_repeat("\t", strlen($tl)-1);
-                $atts = $this->parseAttribs($atts);
-
-                if (!isset($lists[$tl])) {
-                    $lists[$tl] = 1;
-                    $line = "$tabs<" . $ltype . "l$atts$st>" . (($showitem) ? "\n$tabs\t<$litem>" . $content : '');
-                } else {
-                    $line = ($showitem) ? "$tabs\t<$litem$atts>" . $content : '';
-                }
-
-                if ((strlen($nl) <= strlen($tl))) {
-                    $line .= (($showitem) ? "</$litem>" : '');
-                }
-
-                foreach (array_reverse($lists) as $k => $v) {
-                    if (strlen($k) > strlen($nl)) {
-                        $line .= ($v==2) ? '' : "\n$tabs</" . $this->liType($k) . "l>";
-
-                        if ((strlen($k) > 1) && ($v != 2)) {
-                            $line .= "</".$litem.">";
-                        }
-
-                        unset($lists[$k]);
-                    }
-                }
-
-                $pt = $tl; // Remember the current Textile tag
+            if (isset($list[$index + 1])) {
+                $next = $list[$index + 1];
+            } else {
+                $next = false;
             }
 
+            if (strpos($m['tl'], ';') !== false) {
+                $litem = 'dt';
+            } elseif (strpos($m['tl'], ':') !== false) {
+                $litem = 'dd';
+            } else {
+                $litem = 'li';
+            }
+
+            $showitem = ($content !== '');
+
+            if ('o' === $ltype) {
+                if (!isset($this->olstarts[$m['tl']])) {
+                    $this->olstarts[$m['tl']] = 1;
+                }
+
+                if (!$prev || $m['level'] > $prev['level']) {
+                    if ($m['st'] === '') {
+                        $this->olstarts[$m['tl']] = 1;
+                    } elseif ($m['st'] !== '_') {
+                        $this->olstarts[$m['tl']] = (int) $m['st'];
+                    }
+                }
+
+                if ($m['level'] > $prev['level'] && $m['st'] !== '') {
+                    $start = ' start="' . $this->olstarts[$m['tl']] . '"';
+                }
+
+                if ($showitem) {
+                    $this->olstarts[$m['tl']] += 1;
+                }
+            }
+
+            if (strpos($prev['tl'], ';') !== false && strpos($m['tl'], ':') !== false) {
+                $lists[$m['tl']] = 2;
+            }
+
+            $tabs = str_repeat("\t", $m['level'] - 1);
+            $atts = $this->parseAttribs($m['atts']);
+
+            if (!isset($lists[$m['tl']])) {
+                $lists[$m['tl']] = 1;
+                $line = $tabs.'<'.$ltype.'l'.$atts.$start.'>';
+
+                if ($showitem) {
+                    $line .= "\n$tabs\t<$litem>$content";
+                }
+            } elseif ($showitem) {
+                $line = "$tabs\t<$litem$atts>$content";
+            }
+
+            if ((!$next || $next['level'] <= $m['level']) && $showitem) {
+                $line .= "</$litem>";
+            }
+
+            foreach (array_reverse($lists) as $k => $v) {
+                $indent = strlen($k);
+
+                if (!$next || $indent > $next['level']) {
+                    if ($v !== 2) {
+                        $line .= "\n$tabs</" . $this->liType($k) . "l>";
+                    }
+
+                    if ($v !== 2 && $indent > 1) {
+                        $line .= "</".$litem.">";
+                    }
+
+                    unset($lists[$k]);
+                }
+            }
+
+            $prev = $m;
             $out[] = $line;
         }
 
@@ -3121,7 +3142,7 @@ class Parser
     protected function fBr($m)
     {
         $content = preg_replace(
-            "@(.+)(?<!<br>|<br />|</li>|</dd>|</dt>)\n(?![#*;:\s|])@",
+            "@(.+)(?<!<br>|<br />|</li>|</dd>|</dt>)\n(?![\s|])@",
             $this->isLineWrapEnabled() ? '$1<br />' : '$1 ',
             $m['content']
         );

@@ -1,0 +1,21 @@
+List followed by strong:
+  input: |
+    # Red
+    # Green
+    *Blue*
+
+    # Red
+    # Green
+    %Blue%
+  expect: |
+    <ol>
+    	<li>Red</li>
+    	<li>Green<br />
+    <strong>Blue</strong></li>
+    </ol>
+
+    <ol>
+    	<li>Red</li>
+    	<li>Green<br />
+    <span>Blue</span></li>
+    </ol>
