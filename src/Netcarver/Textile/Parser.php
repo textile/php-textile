@@ -321,22 +321,44 @@ namespace Netcarver\Textile;
 /**
  * Textile parser.
  *
- * The Parser class takes Textile input and
- * converts it to well formatted HTML. This is
- * the library's main class, hosting the parsing
- * functionality and exposing a simple
- * public interface for you to use.
+ * The Parser class takes Textile input and converts it to well formatted HTML.
+ * This is the library's main class, hosting the parsing functionality and
+ * exposing a simple public interface for you to use.
  *
- * The most basic use case would involve initialising
- * a instance of the class and calling the Parser::parse()
- * method:
+ * The most basic use case would involve initialising a instance of the class
+ * and calling the Parser::parse() method:
  *
  * bc. $parser = new \Netcarver\Textile\Parser();
  * echo $parser->parse('h1. Hello World!');
  *
- * Generates:
+ * The above generates:
  *
  * bc. <h1>Hello World!</h1>
+ *
+ * The functionality of the parser can be customized with the setters:
+ *
+ * bc. $parser = new \Netcarver\Textile\Parser();
+ * $parser->setImages(false)->parse('!no-image.jpg!');
+ *
+ * The Parser class can also be extended to create pre-configured classes:
+ *
+ * bc.. namespace MyApp;
+ *
+ * use \Netcarver\Textile\Parser;
+ *
+ * class CommentParser extends Parser
+ * {
+ *     public function __construct($doctype = 'xhtml')
+ *     {
+ *         parent::__construct($doctype);
+ *         $this->setRestricted(true);
+ *     }
+ * }
+ *
+ * p. Keep in mind that the classes' protected methods and properties should be
+ * considered part of the private API and depending on them should be avoided.
+ * Instead try to only use the public methods marked as being part of the
+ * public API.
  *
  * @see Parser::__construct()
  * @see Parser::parse()
@@ -1867,7 +1889,7 @@ class Parser
      * bc. <h1>Hello World!</h1>
      *
      * Additinally the parser can be run in safe, restricted mode using the
-     * Parser::setRetricted() method.
+     * Parser::setRestricted() method.
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
      * echo $parser
