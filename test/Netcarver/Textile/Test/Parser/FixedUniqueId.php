@@ -50,9 +50,8 @@ class FixedUniqueId extends Parser
      * {@inheritdoc}
      */
 
-    public function __construct($doctype = 'xhtml')
+    protected function configure()
     {
-        parent::__construct($doctype);
         $this->uid = 'textileRef:0000:';
     }
 

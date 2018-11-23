@@ -348,10 +348,9 @@ namespace Netcarver\Textile;
  *
  * class CommentParser extends Parser
  * {
- *     public function __construct($doctype = 'xhtml')
+ *     protected function configure()
  *     {
- *         parent::__construct($doctype);
- *         $this->setRestricted(true);
+ *         $this->setImages(false)->setRestricted(true)->setLite(true);
  *     }
  * }
  *
@@ -1183,6 +1182,33 @@ class Parser
         } elseif (!empty($_SERVER['PATH_TRANSLATED'])) {
             $this->setDocumentRootDirectory($_SERVER['PATH_TRANSLATED']);
         }
+
+        $this->configure();
+    }
+
+    /**
+     * Configure the current parser.
+     *
+     * This method can be extended to create a pre-configured parser class.
+     *
+     * bc.. namespace MyApp;
+     *
+     * use Netcarver\Textile\Parser;
+     *
+     * class CommentParser extends Parser
+     * {
+     *     protected function configure()
+     *     {
+     *         $this->setImages(false)->setRestricted(true)->setLite(true);
+     *     }
+     * }
+     *
+     * @since 3.7.0
+     * @api
+     */
+
+    protected function configure()
+    {
     }
 
     /**
