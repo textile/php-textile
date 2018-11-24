@@ -3492,12 +3492,13 @@ class Parser
 
     protected function replaceMarkers($text, $replacements)
     {
-        if ($replacements) {
-            foreach ($replacements as $k => $r) {
-                $text = str_replace('{'.$k.'}', $r, $text);
-            }
+        $map = array();
+
+        foreach ($replacements as $from => $to) {
+            $map['{'.$from.'}'] = $to;
         }
-        return $text;
+
+        return strtr($text, $map);
     }
 
     /**
@@ -3963,7 +3964,10 @@ class Parser
         }
 
         // Build the reference.
-        return $this->replaceMarkers($this->symbols['nl_ref_pattern'], array('atts' => $atts, 'marker' => $out));
+        return $this->replaceMarkers($this->symbols['nl_ref_pattern'], array(
+            'atts' => $atts,
+            'marker' => $out,
+        ));
     }
 
     /**
