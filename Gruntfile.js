@@ -9,7 +9,6 @@ module.exports = function (grunt)
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-shell');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -75,7 +74,7 @@ module.exports = function (grunt)
 
             sculpin: {
                 files: ['source/**/*'],
-                tasks: ['shell:sculpingenerate', 'htmlmin', 'copy:html']
+                tasks: ['htmlmin', 'copy:html']
             }
         },
 
@@ -137,28 +136,6 @@ module.exports = function (grunt)
             }
         },
 
-        shell: {
-            sculpingenerate: {
-                command: [
-                    './vendor/bin/sculpin generate'
-                ].join('&&'),
-                options: {
-                    stdout: true
-                }
-            },
-            phpdoc: {
-                command: [
-                    '[ -d tmp ] || mkdir tmp',
-                    'rm -rf ./tmp/php-textile',
-                    'git clone git@github.com:textile/php-textile ./tmp/php-textile',
-                    './vendor/bin/phpdoc --directory="./tmp/php-textile/src/" --target="./tmp/phpdoc/" --template="xml"'
-                ].join('&&'),
-                options: {
-                    stdout: true
-                }
-            }
-        },
-
         htmlmin: {
             main: {
                 options: {
@@ -174,6 +151,6 @@ module.exports = function (grunt)
 
     grunt.registerTask('test', ['jshint']);
     grunt.registerTask('default', ['watch']);
-    grunt.registerTask('build', ['shell:sculpingenerate', 'htmlmin', 'copy:html', 'jshint', 'uglify', 'less', 'cssmin', 'copy:img']);
+    grunt.registerTask('build', ['htmlmin', 'copy:html', 'jshint', 'uglify', 'less', 'cssmin', 'copy:img']);
     grunt.registerTask('travis', ['jshint']);
 };

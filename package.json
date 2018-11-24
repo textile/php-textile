@@ -17,10 +17,12 @@
         "grunt-contrib-less": "2.0.*",
         "grunt-contrib-uglify": "4.0.*",
         "grunt-contrib-watch": "1.1.*",
-        "grunt-shell": "2.1.*",
         "normalize.css": "8.0.*",
-        "requirejs": "2.3.*",
-        "preboot": "mdo/preboot#v2.1.0"
+        "preboot": "github:mdo/preboot#v2.1.0",
+        "requirejs": "2.3.*"
+    },
+    "scripts": {
+        "build": "grunt build"
     },
     "private": true
 }

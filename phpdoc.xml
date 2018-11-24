@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+    <parser>
+        <target>build/phpdoc</target>
+    </parser>
+    <transformer>
+        <target>build/phpdoc</target>
+    </transformer>
+    <transformations>
+        <template name="xml" />
+    </transformations>
+    <files>
+        <directory>.php-textile/src</directory>
+    </files>
+</phpdoc>

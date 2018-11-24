@@ -1,6 +1,11 @@
+.*
+!.editorconfig
+!.gitignore
+!.travis.yml
 /build/
 /vendor/
 /output_*/
 /node_modules/
 /npm-debug.log
+/source/docs/api/
 /tmp/

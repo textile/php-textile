@@ -22,6 +22,30 @@
         "jms/serializer": ">=0.12 < 1.8.0"
     },
     "scripts": {
-        "generate-docs": "@php scripts/generate-docs.php"
+        "post-install-cmd": [
+            "npm install",
+            "@docs-download",
+            "@build"
+        ],
+        "post-update-cmd": [
+            "npm update",
+            "@docs-download",
+            "@build"
+        ],
+        "docs-download": [
+            "rm -rf .php-textile && git clone https://github.com/textile/php-textile.git .php-textile"
+        ],
+        "docs-generate": [
+            "./vendor/bin/phpdoc",
+            "@php scripts/generate-docs.php"
+        ],
+        "sculpin-generate": [
+            "./vendor/bin/sculpin generate"
+        ],
+        "build": [
+            "@docs-generate",
+            "@sculpin-generate",
+            "npm run-script build"
+        ]
     }
 }
