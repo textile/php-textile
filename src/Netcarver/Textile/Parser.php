@@ -1653,6 +1653,11 @@ class Parser
      *
      * bc. <p>Hello 1&#⁄2 World!</p>
      *
+     * Symbol can be set to FALSE to disable it:
+     *
+     * bc. $parser = new \Netcarver\Textile\Parser();
+     * $parser->setSymbol('dimension', false);
+     *
      * See Parser::getSymbol() to find out all available symbols.
      *
      * @param  string $name  Name of the symbol to assign a new value to
@@ -1664,9 +1669,7 @@ class Parser
 
     public function setSymbol($name, $value)
     {
-        if ($value === false || $value === null) {
-            $value = false;
-        } else {
+        if ($value !== false) {
             $value = (string) $value;
         }
 
