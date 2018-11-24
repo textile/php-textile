@@ -2200,9 +2200,9 @@ class Parser
         if ($acronym !== false) {
             $this->glyph_search[] = '/\b(['.$this->regex_snippets['abr'].']['.
                 $this->regex_snippets['acr'].']{2,})\b(?:[(]([^)]*)[)])/'.$this->regex_snippets['mod'];
-            $this->glyph_replace[] = strtr($acronym, array(
-                '{title}' => '$2',
-                '{content}' => '$1',
+            $this->glyph_replace[] = $this->replaceMarkers($acronym, array(
+                'title' => '$2',
+                'content' => '$1',
             ));
         }
 
@@ -2213,8 +2213,8 @@ class Parser
                 '(['.$this->regex_snippets['nab'].']*)(?='.
                 $this->regex_snippets['space'].'|'.$pnc.'|<|$)'.
                 '(?=[^">]*?(<|$))/'.$this->regex_snippets['mod'];
-            $this->glyph_replace[] = strtr('$1'.$this->symbols['caps'].'$3', array(
-                '{content}' => $this->uid.':glyph:$2',
+            $this->glyph_replace[] = $this->replaceMarkers('$1'.$this->symbols['caps'].'$3', array(
+                'content' => $this->uid.':glyph:$2',
             ));
         }
 
