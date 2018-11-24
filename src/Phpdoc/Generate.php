@@ -1,6 +1,7 @@
 <?php
 
-namespace Netcarver\Phpdoc;
+namespace Netcarver\Textile\Website\Phpdoc;
+
 use SimpleXMLElement;
 
 class Generate
@@ -28,6 +29,10 @@ class Generate
             $paragraphs = explode("\n\n", (string) $description);
 
             foreach ($paragraphs as &$paragraph) {
+                if (strpos($paragraph, 'bc. ') === 0) {
+                    continue;
+                }
+
                 if (strpos($paragraph, '<code>') === 0) {
                     $paragraph = 'bc(language-php). ' . trim(substr($paragraph, 6, -7));
                 } else {
@@ -104,6 +109,10 @@ class Generate
             $contents = array();
 
             foreach ($class->xpath('method') as $method) {
+                if (!$method->xpath('docblock/tag[@name="api"]')) {
+                    continue;
+                }
+
                 $methodpage = array();
                 $methodpage[] = $header;
                 $methodpage[] = 'h1. ' . $class->name . '::' . $method->name;
@@ -164,12 +173,16 @@ class Generate
                     $methodpage[] = implode("\n", $params);
                 }
 
-                $contents[] = '"' . (string) $method->name . '":' . $this->encodeLink((string) $method->name);
+                $contents[(string) $method->name] = '"' . (string) $method->name . '":' . $this->encodeLink((string) $method->name);
 
                 file_put_contents(
                     $this->dir . '/' . $this->formatPath($method) . '.textile',
                     implode("\n\n", $methodpage)."\n"
                 );
+            }
+
+            if (!$contents) {
+                continue;
             }
 
             $classpage[] = $header;
@@ -180,10 +193,9 @@ class Generate
                 $classpage[] = $description;
             }
 
-            if ($contents) {
-                $classpage[] = 'h2. Methods';
-                $classpage[] = '* '.implode("\n* ", $contents);
-            }
+            $classpage[] = 'h2. Methods';
+            ksort($contents);
+            $classpage[] = '* '.implode("\n* ", $contents);
 
             file_put_contents(
                 $this->dir . '/' . $this->formatPath($class) . '.textile',
@@ -226,5 +238,3 @@ class Generate
         }
     }
 }
-
-new Generate('./tmp/phpdoc/structure.xml', './source/docs/api');

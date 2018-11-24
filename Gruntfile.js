@@ -36,13 +36,23 @@ module.exports = function (grunt)
         copy: {
             img: {
                 files: [
-                    {expand: true, cwd: 'lib/assets/img/', src: ['**'], dest: 'output_dev/assets/img/'}
+                    {
+                        expand: true,
+                        cwd: 'lib/assets/img/',
+                        src: ['**'],
+                        dest: 'output_dev/assets/img/'
+                    }
                 ]
             },
 
             html: {
                 files: [
-                    {expand: true, cwd: 'tmp/output_dev/', src: ['**'], dest: 'output_dev/'}
+                    {
+                        expand: true,
+                        cwd: 'tmp/output_dev/',
+                        src: ['**'],
+                        dest: 'output_dev/'
+                    }
                 ]
             }
         },
@@ -114,9 +124,8 @@ module.exports = function (grunt)
                 files: [
                     {
                         'output_dev/assets/js/main.js': ['lib/assets/js/main.js'],
-                        'output_dev/assets/js/prettify.js': ['bower_components/google-code-prettify/src/prettify.js'],
-                        'output_dev/assets/js/require.js': ['bower_components/requirejs/require.js'],
-                        'output_dev/assets/js/spin.js': ['bower_components/spin.js/spin.js']
+                        'output_dev/assets/js/prettify.js': ['node_modules/google-code-prettify/src/prettify.js'],
+                        'output_dev/assets/js/require.js': ['node_modules/requirejs/require.js']
                     },
                     {
                         expand: true,
@@ -139,10 +148,10 @@ module.exports = function (grunt)
             },
             phpdoc: {
                 command: [
-                    'mkdir -f tmp',
-                    'rm -fR php-textile',
-                    'git clone git@github.com:textile/php-textile.php ./tmp/php-textile',
-                    './vendor/bin/phpdoc.php --directory="./tmp/php-textile/src/" --target="./tmp/phpdoc/" --template="xml"'
+                    '[ -d tmp ] || mkdir tmp',
+                    'rm -rf ./tmp/php-textile',
+                    'git clone git@github.com:textile/php-textile ./tmp/php-textile',
+                    './vendor/bin/phpdoc --directory="./tmp/php-textile/src/" --target="./tmp/phpdoc/" --template="xml"'
                 ].join('&&'),
                 options: {
                     stdout: true

@@ -8,9 +8,8 @@ Building this repository requires:
 
 * "Node.js":http://nodejs.org/ >=0.8.0
 * "Grunt":http://gruntjs.com/ ~0.4.0
-* "Bower":http://bower.io/ >=0.10.0
 * "Composer":http://getcomposer.org/
-* PHP >=5.4.0.
+* PHP >=5.6.0.
 
 h2. Setup
 
@@ -19,17 +18,13 @@ h3. Installing required tools
 The project uses "Grunt":http://gruntjs.com/ to run tasks and "LESS":http://lesscss.org/ for CSS pre-processing. This creates few dependencies in addition to your normal PHP. First make sure you have base dependencies installed: "Node.js":http://nodejs.org/, "Bundler":http://bundler.io/, "Grunt":http://gruntjs.com/, "Bower":http://bower.io/ and "Composer":http://getcomposer.org/. Grunt and Bower can be installed using npm:
 
 bc. $ npm install -g grunt-cli
-$ npm install -g bower
 
 h3. Installing dependencies
 
 After you have the base dependencies taken care of, you can install the project's dependencies. Navigate to the project's directory, and run the dependency managers:
 
 bc. $ npm install
-$ bower install
 $ composer install
-
-*npm* installs Node modules for Grunt, *bower* manages client-side scripts and *composer* installs PHP libraries.
 
 h2. Building
 

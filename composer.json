@@ -1,9 +1,27 @@
 {
+    "name": "netcarver/textile-website",
+    "description": "Textile markup language parser",
+    "license": "BSD-3-Clause",
+    "type": "project",
+    "homepage": "https://github.com/textile/php-textile",
+    "keywords": ["php-textile", "website"],
+    "support": {
+        "issues": "https://github.com/textile/php-textile/issues",
+        "source": "https://github.com/textile/php-textile/tree/website"
+    },
+    "autoload": {
+        "psr-4": {
+            "Netcarver\\Textile\\Website\\": "src/"
+        }
+    },
     "require": {
-        "sculpin/sculpin": "2.*@dev",
-        "dflydev/embedded-composer-console": "@dev",
-        "dflydev/embedded-composer-core": "@dev",
+        "sculpin/sculpin": "2.1.*@dev",
+        "dflydev/embedded-composer": "@dev",
         "composer/composer": "@dev",
-        "phpdocumentor/phpdocumentor": "2.1.0"
+        "phpdocumentor/phpdocumentor": "2.9.*",
+        "jms/serializer": ">=0.12 < 1.8.0"
+    },
+    "scripts": {
+        "generate-docs": "@php scripts/generate-docs.php"
     }
 }
