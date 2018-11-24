@@ -493,19 +493,6 @@ class Parser
     protected $rawBlocksEnabled = false;
 
     /**
-     * An array of patterns used for matching raw blocks.
-     *
-     * @var   array
-     * @since 3.7.0
-     */
-
-    protected $rawContent = array(
-        'code',
-        'notextile',
-        'pre',
-    );
-
-    /**
      * An array of patterns used for matching phrasing tags.
      *
      * Phrasing tags, unline others, are wrapped in a paragraph even if they
@@ -2363,14 +2350,12 @@ class Parser
             $block = implode('|', $this->blockContent);
             $divider = implode('|', $this->dividerContent);
             $phrasing = implode('|', $this->phrasingContent);
-            $raw = implode('|', $this->rawContent);
 
             $this->patterns = array(
                 'block' => '/^(?:'.$block.')$/i',
                 'contained' => '/^<\/?(?P<open>[^\s>]+)(?:\s.*|\/?>.*|)>$/smi',
                 'divider' => '/^(?:<\/?('.$divider.')(?:\s[^>]*?|\/?)>(?:<\/\1\s*?>)?)+$/smi',
                 'phrasing' => '/^(?:'.$phrasing.')$/i',
-                'raw' => '/^(?:'.$raw.')$/i',
                 'wrapped' => '/^<\/?(?P<open>[^\s>]+)[^>]*?>.*<\/\1>$/smi',
                 'unwrappable' => '/<\/?(?:'.$block.')(?:\s[^>]*?|\/?)>/smi',
             );
@@ -3449,10 +3434,6 @@ class Parser
     protected function isRawBlock($text)
     {
         if (preg_match($this->patterns['contained'], $text, $m)) {
-            if (preg_match($this->patterns['raw'], $m['open'])) {
-                return true;
-            }
-
             if (preg_match($this->patterns['phrasing'], $m['open'])) {
                 return false;
             }
