@@ -115,12 +115,16 @@ Normal HTML phrasing and block tags are not raw-blocks:
     <p>Paragraph *with* _some_ Textile-like syntax.</p>
 
     <a href="#">Paragraph *with* _some_ Textile-like syntax.</a>
+
+    <figure>Paragraph *with* _some_ Textile-like syntax.</figure>
   expect: |
     <pfx:tag>Paragraph *with* _some_ Textile-like syntax.</pfx:tag>
 
     <p>Paragraph <strong>with</strong> <em>some</em> Textile-like syntax.</p>
 
     <p><a href="#">Paragraph <strong>with</strong> <em>some</em> Textile-like syntax.</a></p>
+
+    <figure>Paragraph <strong>with</strong> <em>some</em> Textile-like syntax.</figure>
 
 Escaped and encoded tag instances are not matched:
   setup:
