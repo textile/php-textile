@@ -1080,17 +1080,18 @@ class Parser
     /**
      * Constructor.
      *
-     * The constructor allows setting options that affect the
-     * class instance as a whole, such as the output doctype.
-     * To instruct the parser to return HTML5 markup instead of
-     * XHTML, set $doctype argument to 'html5'.
+     * The constructor allows setting options that affect the class instance as
+     * a whole, such as the output doctype. To instruct the parser to return
+     * HTML5 markup instead of XHTML, set $doctype argument to 'html5'.
      *
      * bc. $parser = new \Netcarver\Textile\Parser('html5');
      * echo $parser->parse('HTML(HyperText Markup Language)");
      *
      * @param  string $doctype The output document type, either 'xhtml' or 'html5'
      * @throws \InvalidArgumentException
+     * @see    Parser::configure()
      * @see    Parser::parse()
+     * @see    Parser::setDocumentType()
      * @api
      */
 
@@ -1177,7 +1178,8 @@ class Parser
      *     }
      * }
      *
-     * @since 3.7.0
+     * @since  3.7.0
+     * @return void Return value is ignored
      * @api
      */
 
@@ -1194,7 +1196,7 @@ class Parser
      *     ->parse('HTML(HyperText Markup Language)");
      *
      * @param  string $doctype Either 'xhtml' or 'html5'
-     * @return Parser
+     * @return Parser This instance
      * @since  3.6.0
      * @see    Parser::getDocumentType()
      * @api
@@ -1234,20 +1236,19 @@ class Parser
     /**
      * Sets the document root directory path.
      *
-     * This method sets the path that is used to resolve relative
-     * file paths within local filesystem. This is used to fetch
-     * image dimensions, for instance.
+     * This method sets the path that is used to resolve relative file paths
+     * within local filesystem. This is used to fetch image dimensions, for
+     * instance.
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
      * $parser->setDocumentRootDirectory('/path/to/document/root/dir');
      *
-     * If not set, document root defaults to the current working
-     * directory if PHP-Textile is used via CLI. On server
-     * environment, DOCUMENT_ROOT or PATH_TRANSLATED server
-     * variable is used based on which ever is available.
+     * If not set, document root defaults to the current working directory if
+     * PHP-Textile is used via CLI. On server environment, DOCUMENT_ROOT or
+     * PATH_TRANSLATED server variable is used based on which ever is available.
      *
      * @param  string $path The root path
-     * @return Parser
+     * @return Parser This instance
      * @since  3.6.0
      * @see    Parser::getDocumentRootDirectory()
      * @api
@@ -1279,10 +1280,9 @@ class Parser
     /**
      * Enables lite mode.
      *
-     * If enabled, allowed tags are limited. Parser will
-     * prevent the use extra Textile formatting,
-     * accepting only paragraphs and blockquotes as valid block
-     * tags.
+     * If enabled, allowed tags are limited. Parser will prevent the use extra
+     * Textile formatting, accepting only paragraphs and blockquotes as valid
+     * block tags.
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
      * $parser
@@ -1293,9 +1293,9 @@ class Parser
      *
      * bc. <p>h1. Headings are disabled too</p>
      *
-     * This doesn't prevent unsafe input values. If you wish to
-     * parse user-defined Textile input, also enable the
-     * restricted parser mode with Parser::setRestricted().
+     * This doesn't prevent unsafe input values. If you wish to parse untrusted
+     * user-given Textile input, also enable the restricted parser mode with
+     * Parser::setRestricted().
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
      * echo $parser
@@ -1303,8 +1303,8 @@ class Parser
      *     ->setLite(true)
      *     ->parse('h1. Hello World!');
      *
-     * @param  bool $lite TRUE to enable
-     * @return Parser
+     * @param  bool   $lite TRUE to enable
+     * @return Parser This instance
      * @since  3.6.0
      * @see    Parser::isLiteModeEnabled()
      * @see    Parser::setRestricted()
@@ -1339,9 +1339,8 @@ class Parser
     /**
      * Disables and enables images.
      *
-     * If disabled, image tags are not generated. This
-     * option is ideal for minimalist output such
-     * as text-only comments.
+     * If disabled, image tags are not generated. This option is ideal for
+     * minimalist output such as text-only comments.
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
      * echo $parser
@@ -1352,8 +1351,8 @@ class Parser
      *
      * bc. <p>!image.png!</p>
      *
-     * @param  bool  $enabled TRUE to enable, FALSE to disable
-     * @return Parser
+     * @param  bool   $enabled TRUE to enable, FALSE to disable
+     * @return Parser This instance
      * @since  3.6.0
      * @see    Parser::isImageTagEnabled()
      * @api
@@ -1367,6 +1366,11 @@ class Parser
 
     /**
      * Whether images are enabled.
+     *
+     * bc. $parser = new \Netcarver\Textile\Parser();
+     * if ($parser->isImageTagEnabled() === true) {
+     *     echo 'Images are enabled.';
+     * }
      *
      * @return bool TRUE if enabled, FALSE otherwise
      * @since  3.6.0
@@ -1382,8 +1386,8 @@ class Parser
     /**
      * Sets link relationship status value.
      *
-     * This method sets the HTML relationship tokens that
-     * are applied to links generated by PHP-Textile.
+     * This method sets the HTML relationship tokens that are applied to links
+     * generated by PHP-Textile.
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
      * echo $parser
@@ -1395,7 +1399,7 @@ class Parser
      * bc. <p><a href="http://example.com/" rel="nofollow">Link</a></p>
      *
      * @param  string|array $relationship The HTML rel attribute value
-     * @return Parser
+     * @return Parser       This instance
      * @since  3.6.0
      * @see    Parser::getLinkRelationShip()
      * @api
@@ -1449,11 +1453,11 @@ class Parser
      *
      * If left disabled, the parser allows users to mix raw HTML and Textile.
      * Using the parser in non-restricted on untrusted input, like comments
-     * and forum posts, will lead to XSS issues, as users will be able to use any HTML code,
-     * JavaScript links and Textile attributes in their input.
+     * and forum posts, will lead to XSS issues, as users will be able to use
+     * any HTML code, JavaScript links and Textile attributes in their input.
      *
      * @param  bool   $enabled TRUE to enable, FALSE to disable
-     * @return Parser
+     * @return Parser This instance
      * @since  3.6.0
      * @see    Parser::isRestrictedModeEnabled()
      * @api
@@ -1507,8 +1511,8 @@ class Parser
      *
      * bc. <div>A *raw* block.</div>
      *
-     * @param  bool $enabled TRUE to enable, FALSE to disable
-     * @return Parser
+     * @param  bool   $enabled TRUE to enable, FALSE to disable
+     * @return Parser This instance
      * @since  3.7.0
      * @see    Parser::isRawBlocksEnabled()
      * @see    Parser::isRawBlock()
@@ -1543,8 +1547,8 @@ class Parser
     /**
      * Enables and disables block-level tags and formatting features.
      *
-     * When disabled, block-level tags aren't rendered. This allows PHP-Textile to
-     * operate on a single line of text, rather than blocks of text and does
+     * When disabled, block-level tags aren't rendered. This allows PHP-Textile
+     * to operate on a single line of text, rather than blocks of text and does
      * not wrap the output in paragraph tags.
      *
      * bc. $parser = new \Netcarving\Textile\Parser();
@@ -1557,7 +1561,7 @@ class Parser
      * bc. h1. Hello <strong>strong</strong> world!
      *
      * @param  bool   $enabled TRUE to enable, FALSE to disable
-     * @return Parser
+     * @return Parser This instance
      * @since  3.6.0
      * @see    Parser::isBlockTagEnabled()
      * @api
@@ -1591,15 +1595,22 @@ class Parser
     /**
      * Enables and disables line-wrapping.
      *
-     * If enabled, line-breaks are replaced by target
-     * document's break tag. If disabled, input document's
-     * line-breaks are ignored. This setting can be
-     * used if the the input document's lines are pre-wrapped.
-     * For instance, in case the input is from CLI content, or
-     * source code documentation.
+     * If enabled, line-breaks are replaced by target document's break tag. If
+     * disabled, input document's line-breaks are ignored. This setting can be
+     * used if the the input document's lines are pre-wrapped. For instance,
+     * in case the input is from CLI content, or source code documentation.
      *
-     * @param  bool TRUE to enable, FALSE to disable
-     * @return Parser
+     * bc. $parser = new \Netcarving\Textile\Parser();
+     * echo $parser
+     *     ->setLineWrap(false)
+     *     ->parse("Hello\nworld!");
+     *
+     * The above generates:
+     *
+     * bc. <p>Hello world!</p>
+     *
+     * @param  bool   TRUE to enable, FALSE to disable
+     * @return Parser This instance
      * @since  3.6.0
      * @see    Parser::isLineWrapEnabled()
      * @api
@@ -1613,6 +1624,11 @@ class Parser
 
     /**
      * Whether line-wrapping is enabled.
+     *
+     * bc. $parser = new \Netcarving\Textile\Parser();
+     * if ($parser->isLineWrapEnabled() === true) {
+     *     echo 'Line-wrapping is enabled.';
+     * }
      *
      * @return bool TRUE if enabled, FALSE otherwise
      * @see    Parser::setLineWrap()
@@ -1628,8 +1644,8 @@ class Parser
     /**
      * Sets a substitution symbol.
      *
-     * This method lets you to redefine a substitution symbol.
-     * The following sets the 'half' glyph:
+     * This method lets you to redefine a substitution symbol. The following
+     * sets the 'half' glyph:
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
      * echo $parser
@@ -1647,9 +1663,9 @@ class Parser
      *
      * See Parser::getSymbol() to find out all available symbols.
      *
-     * @param  string $name  Name of the symbol to assign a new value to
+     * @param  string      $name  Name of the symbol to assign a new value to
      * @param  string|bool $value New value for the symbol, or FALSE to disable
-     * @return Parser
+     * @return Parser      This instance
      * @see    Parser::getSymbol()
      * @api
      */
@@ -1668,13 +1684,16 @@ class Parser
     /**
      * Gets a symbol definitions.
      *
-     * This method get a symbol definition by name, or an
-     * array containing the full symbol table.
+     * This method gets a symbol definition by name, or the full symbol table
+     * as an array.
+     *
+     * bc. $parser = new \Netcarver\Textile\Parser();
+     * echo $parser->getSymbol('dimension');
+     *
+     * To get all available symbol definitions:
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
      * print_r($parser->getSymbol());
-     *
-     * The above outputs all available symbol definitions.
      *
      * @param  string|null  $name The name of the symbol, or NULL if requesting the symbol table
      * @return array|string The symbol table or the requested symbol
@@ -1707,7 +1726,7 @@ class Parser
      * $parser->setImagePrefix('https://static.example.com/images/');
      *
      * @param  string $prefix The prefix
-     * @return Parser
+     * @return Parser This instance
      * @since  3.7.0
      * @see    Parser::getImagePrefix()
      * @api
@@ -1746,7 +1765,7 @@ class Parser
      * $parser->setLinkPrefix('https://example.com/');
      *
      * @param  string $prefix The prefix
-     * @return Parser
+     * @return Parser This instance
      * @since  3.7.0
      * @see    Parser::getLinkPrefix()
      * @api
@@ -1787,8 +1806,8 @@ class Parser
      * bc. $parser = new \Netcarver\Textile\Parser();
      * $parser->setRelativeImagePrefix('https://example.com/');
      *
-     * @param  string $prefix  The string to prefix all relative image paths with
-     * @return Parser
+     * @param  string $prefix The string to prefix all relative image paths with
+     * @return Parser This instance
      * @deprecated in 3.7.0
      * @see Parser::setImagePrefix
      * @see Parser::setLinkPrefix
@@ -1808,20 +1827,20 @@ class Parser
     }
 
     /**
-     * Toggles image dimension attributes.
+     * Enables dimensionless images.
      *
-     * If $dimensionless is set to TRUE, image width and height attributes
-     * will not be included in rendered image tags. Normally, Textile will add
-     * dimensions height images that specify a relative path, as long
-     * as the image file can be accessed.
+     * If enabled, image width and height attributes will not be included in
+     * rendered image tags. Normally, PHP-Textile will add width and height
+     * to images linked with a local relative path, as long as the image file
+     * can be accessed.
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
      * echo $parser
-     *     ->setDimensionlessImages(false)
-     *     ->parse('Hello World!');
+     *     ->setDimensionlessImages(true)
+     *     ->parse('!image.jpg!');
      *
      * @param  bool   $dimensionless TRUE to disable image dimensions, FALSE to enable
-     * @return Parser
+     * @return Parser This instance
      * @see    Parser::getDimensionlessImages()
      * @api
      */
@@ -1833,10 +1852,7 @@ class Parser
     }
 
     /**
-     * Whether images will get dimensions or not.
-     *
-     * This method will return the state of
-     * the state of the $dimensionless_images property.
+     * Whether dimensionless images are enabled.
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
      * if ($parser->getDimensionlessImages() === true) {
@@ -1859,7 +1875,7 @@ class Parser
      * bc. $parser = new \Netcarver\Textile\Parser();
      * echo $parser->getVersion();
      *
-     * @return string Version
+     * @return string Version number
      * @api
      */
 
@@ -1887,8 +1903,8 @@ class Parser
     /**
      * Parses the given Textile input according to the previously set options.
      *
-     * The parser's features can be changed by using the various
-     * public setter methods this class has. The most basic use case is:
+     * The parser's features can be changed by using the various public setter
+     * methods this class has. The most basic use case is:
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
      * echo $parser->parse('h1. Hello World!');
@@ -1907,7 +1923,8 @@ class Parser
      *
      * This enables restricted mode and allows safe parsing of untrusted input.
      * PHP-Textile will disable unsafe attributes, links and escapes any raw
-     * HTML input. This option should be enabled when parsing untrusted user input.
+     * HTML input. This option should be enabled when parsing untrusted user
+     * input.
      *
      * If restricted mode is disabled, the parser allows users to mix raw HTML
      * and Textile.
