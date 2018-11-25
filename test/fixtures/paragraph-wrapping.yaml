@@ -1,102 +1,159 @@
-Blocks are wrapped if they are not already wrapped with a non-phrasing tag:
+Anonymous blocks are automatically wrapped in paragraphs:
   input: |
-    This is a normal wrapped paragraph, but the following...
+    This *is* a _paragraph_.
+  expect: |
+    <p>This <strong>is</strong> a <em>paragraph</em>.</p>
+
+Paragraph wrapping can be escaped by starting the block with white-space:
+  input: |
+    This *is* a _paragraph_.
+
+     Not wrapped, but Textile is *still* parsed.
+  expect: |
+    <p>This <strong>is</strong> a <em>paragraph</em>.</p>
+
+     Not wrapped, but Textile is <strong>still</strong> parsed.
+
+Paragraphs are not wrapped if the block is already wrapped in a non-phrasing tag:
+  input: |
+    This *is* a _paragraph_.
+
+    <div>Not wrapped, but *Textile* is still _parsed_.</div>
+
+    <ul>
+      <li>*red*</li>
+      <li>*green*</li>
+      <li>*blue*</li>
+    </ul>
 
     <figure class="roses">
-      <div>
-        Is not, but *Textile* is still _parsed_.
-      </div>
+      !image.jpg!
     </figure>
+  expect: |
+    <p>This <strong>is</strong> a <em>paragraph</em>.</p>
+
+    <div>Not wrapped, but <strong>Textile</strong> is still <em>parsed</em>.</div>
+
+    <ul>
+      <li><strong>red</strong></li>
+      <li><strong>green</strong></li>
+      <li><strong>blue</strong></li>
+    </ul>
+
+    <figure class="roses">
+      <img alt="" src="image.jpg" />
+    </figure>
+
+Non-standard non-phrasing tags are not wrapped either:
+  input: |
+    This *is* a _paragraph_.
 
     <pfx:priv>
       Even applies no matter *what* the tag is.
     </pfx:priv>
-
-    <div title="or if it is self closing"/>
-
-    <a href="#">Phrasing content on the other hand...</a>
-
-    <span>...is wrapped *and* parsed</span>
-
-    Exception are self-closing dividers:
-
-    <img src="1.jpg" />
-
-    <hr/>
-
-    <hr>
-
-    <hr></hr><hr></hr>
-
-    <img src="1.jpg" /> but not when it is not the only
-    item.
-
-     <div>Leading whitespace does not matter.</div>
-
-    <div>Neither does if the HTML is valid</a></div>
-
-    <div>It does not</div> wrap content that is *not* entirely wrapped either,
-    if the tag is specifically *block* type.
-
-    This will also allow using custom HTML:
-
-    <section>
-
-    Paragraph.
-
-    <div>
-      *Hello there.*
-    </div>
-
-    </section>
-
   expect: |
-    <p>This is a normal wrapped paragraph, but the following&#8230;</p>
-
-    <figure class="roses">
-      <div>
-        Is not, but <strong>Textile</strong> is still <em>parsed</em>.
-      </div>
-    </figure>
+    <p>This <strong>is</strong> a <em>paragraph</em>.</p>
 
     <pfx:priv>
       Even applies no matter <strong>what</strong> the tag is.
     </pfx:priv>
 
-    <div title="or if it is self closing"/>
+Block tags are not wrapped no matter where they appear within the block:
+  input: |
+    This <div>block tag</div> will prevent *wrapping* to avoid invalid markup.
 
-    <p><a href="#">Phrasing content on the other hand&#8230;</a></p>
+    *colors*
+    <ul>
+      <li>red</li>
+      <li>green</li>
+      <li>blue</li>
+    </ul>
+  expect: |
+    This <div>block tag</div> will prevent <strong>wrapping</strong> to avoid invalid markup.
 
-    <p><span>&#8230;is wrapped <strong>and</strong> parsed</span></p>
+    <strong>colors</strong>
+    <ul>
+      <li>red</li>
+      <li>green</li>
+      <li>blue</li>
+    </ul>
 
-    <p>Exception are self-closing dividers:</p>
+Block end tags are not wrapped:
+  input: |
+    </section>
 
+    </div>
+  expect: |
+    </section>
+
+    </div>
+
+Blocks wrapped in phrasing tags are wrapped:
+  input: |
+    <a href="#">[!image.jpg!]</a>
+
+    <span>Wrapped *and* parsed</span>
+  expect: |
+    <p><a href="#"><img alt="" src="image.jpg" /></a></p>
+
+    <p><span>Wrapped <strong>and</strong> parsed</span></p>
+
+Exception are blocks only containing special dividers:
+  input: |
     <img src="1.jpg" />
 
-    <hr/>
+    <hr>
+  expect: |
+    <img src="1.jpg" />
 
     <hr>
 
-    <hr></hr><hr></hr>
+Dividers must truly be the only content in the block:
+  input: |
+    <img src="1.jpg" /> but not when it is not the
+    only *item*.
+  expect: |
+    <p><img src="1.jpg" /> but not when it is not the<br />
+    only <strong>item</strong>.</p>
 
-    <p><img src="1.jpg" /> but not when it is not the only<br />
-    item.</p>
+Starting a block wrapped in a non-phrasing tag with white-space would just escape wrapping:
+  input: |
+    Paragraph.
 
-     <div>Leading whitespace does not matter.</div>
-
-    <div>Neither does if the <span class="caps">HTML</span> is valid</a></div>
-
-    <div>It does not</div> wrap content that is <strong>not</strong> entirely wrapped either,
-    if the tag is specifically <strong>block</strong> type.
-
-    <p>This will also allow using custom <span class="caps">HTML</span>:</p>
-
-    <section>
-
+     <div>Escaped *but* does not really do anything.</div>
+  expect: |
     <p>Paragraph.</p>
 
-    <div>
-      <strong>Hello there.</strong>
-    </div>
+     <div>Escaped <strong>but</strong> does not really do anything.</div>
+
+Block being wrapped in non-phrasing tags only affects the current block:
+  input: |
+    <section id="intro">
+
+    h1. Heading
+
+    Allowing you to wrap blocks and paragraphs of Textile in custom markup.
 
     </section>
+  expect: |
+    <section id="intro">
+
+    <h1>Heading</h1>
+
+    <p>Allowing you to wrap blocks and paragraphs of Textile in custom markup.</p>
+
+    </section>
+
+The validity of the contents does not matter:
+  input: |
+    <div>Some *invalid* </a></div> markup.</div>
+  expect: |
+    <div>Some <strong>invalid</strong> </a></div> markup.</div>
+
+Wrapping is enforced in restricted mode:
+  setup:
+    - setRestricted: true
+  input: |
+    <div>Wrapped and *parsed*.</div>
+  expect: |
+    <p>&lt;div&gt;Wrapped and <strong>parsed</strong>.&lt;/div&gt;</p>
