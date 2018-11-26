@@ -65,12 +65,28 @@ Self-closing non-phrasing tags are not wrapped:
     <pfx:tag/>
 
     <pfx:tag>
+
+    <pfx:tag />
+
+    <pfx:tag >
+
+    <pfx:tag attribute="value">
+
+    <pfx:tag attribute="value"/>
   expect: |
     <section/>
 
     <pfx:tag/>
 
     <pfx:tag>
+
+    <pfx:tag />
+
+    <pfx:tag >
+
+    <pfx:tag attribute="value">
+
+    <pfx:tag attribute="value"/>
 
 Non-phrasing end tags are not wrapped:
   input: |
