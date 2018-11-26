@@ -883,13 +883,13 @@ HTML Comments :
   expect: |
     <p>Here is some text with a <!-- Commented out[1] --> block.</p>
 
-    <p><!-- Here is a single <span>line</span> comment block --></p>
+    <!-- Here is a single <span>line</span> comment block -->
 
-    <p><!-- Here is a whole
+    <!-- Here is a whole
     multiline
     <span>HTML</span>
     Comment
-    --></p>
+    -->
 
     <pre><code>&lt;!-- Here is a comment block in a code block. --&gt;</code></pre>
 

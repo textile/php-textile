@@ -58,6 +58,30 @@ Non-standard non-phrasing tags are not wrapped either:
       Even applies no matter <strong>what</strong> the tag is.
     </pfx:priv>
 
+Self-closing non-phrasing tags are not wrapped:
+  input: |
+    <section/>
+
+    <pfx:tag/>
+
+    <pfx:tag>
+  expect: |
+    <section/>
+
+    <pfx:tag/>
+
+    <pfx:tag>
+
+Non-phrasing end tags are not wrapped:
+  input: |
+    </pfx:tag>
+
+    </section>
+  expect: |
+    </pfx:tag>
+
+    </section>
+
 Block tags are not wrapped no matter where they appear within the block:
   input: |
     This <div>block tag</div> will prevent *wrapping* to avoid invalid markup.
@@ -78,15 +102,23 @@ Block tags are not wrapped no matter where they appear within the block:
       <li>blue</li>
     </ul>
 
-Block end tags are not wrapped:
+Block end tags are not wrapped no matter where they appear within the block:
   input: |
     </section>
 
     </div>
+
+    *Section* ends here.</section>
+
+    </div> *content does not matter*
   expect: |
     </section>
 
     </div>
+
+    <strong>Section</strong> ends here.</section>
+
+    </div> <strong>content does not matter</strong>
 
 Blocks wrapped in phrasing tags are wrapped:
   input: |
