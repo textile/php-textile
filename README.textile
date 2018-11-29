@@ -46,10 +46,12 @@ bc. Hello <strong>strong</strong> world!
 
 h3. Doctypes
 
-Currently, PHP-Textile can target either XHTML or HTML5 output with XHTML being the default for backward compatibility. The targeted doctype can be changed via the constructor:
+Currently, PHP-Textile can target either XHTML or HTML5 output with XHTML being the default for backward compatibility. The targeted doctype can be changed via the @setDocumentType@ method:
 
-bc. $parser = new \Netcarver\Textile\Parser('html5');
-echo $parser->parse('HTML(HyperText Markup Language)');
+bc. $parser = new \Netcarver\Textile\Parser();
+echo $parser
+    ->setDocumentType('html5')
+    ->parse('HTML(HyperText Markup Language)');
 
 h3. Setting alternate glyphs
 
