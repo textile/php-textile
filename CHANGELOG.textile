@@ -2,7 +2,7 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
-h2. Version 3.7.0 - upcoming
+h2. "Version 3.7.0 - 2018/12/15":https://github.com/textile/php-textile/releases/tag/v3.7.0
 
 * Fix problems with list parsing; no longer matches inline-syntax, such as strongs, as list item markers (closes "#172":https://github.com/textile/php-textile/issues/172).
 * Add option to disable specific substitution symbols by setting them to FALSE (see "#158":https://github.com/textile/php-textile/issues/158).
