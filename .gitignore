@@ -1,4 +1,8 @@
+.*
+!.editorconfig
+!.gitattributes
+!.gitignore
+!.travis.yml
 /build
 /vendor
-/.coveralls.yml
 /composer.lock
