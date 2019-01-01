@@ -9,7 +9,7 @@
 /*
  * Textile - A Humane Web Text Generator
  *
- * Copyright (c) 2003-2004, Dean Allen <dean@textism.com>
+ * Copyright (c) 2003-2004, Dean Allen
  * All rights reserved.
  *
  * Thanks to Carlo Zottmann <carlo@g-blog.net> for refactoring
