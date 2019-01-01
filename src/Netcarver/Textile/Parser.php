@@ -65,8 +65,8 @@ Block modifier syntax:
     Example: bq. Block quotation... -> <blockquote>Block quotation...</blockquote>
 
     Blockquote with citation: bq.:http://citation.url
-    Example: bq.:http://textism.com/ Text...
-    ->    <blockquote cite="http://textism.com">Text...</blockquote>
+    Example: bq.:http://example.com/ Text...
+    ->    <blockquote cite="http://example.com">Text...</blockquote>
 
     Footnote: fn(1-100).
     Example: fn1. Footnote... -> <p id="fn1">Footnote...</p>
