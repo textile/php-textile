@@ -1,0 +1,16 @@
+Anchors should be consired absolute and not prefixed with link prefix:
+  setup:
+    - setLinkPrefix: https://example.test/
+  input: |
+    "Text":/absolute
+
+    "Text":#anchor
+
+    "Text":relative
+
+  expect: |
+    <p><a href="/absolute">Text</a></p>
+
+    <p><a href="#anchor">Text</a></p>
+
+    <p><a href="https://example.test/relative">Text</a></p>
