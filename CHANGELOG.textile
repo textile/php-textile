@@ -4,6 +4,8 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 3.7.1 - upcoming
 
+* Fix and omit anchor links being prefixing (closes "#190":https://github.com/textile/php-textile/issues/190).
+
 h2. "Version 3.7.0 - 2018/12/15":https://github.com/textile/php-textile/releases/tag/v3.7.0
 
 * Fix problems with list parsing; no longer matches inline-syntax, such as strongs, as list item markers (closes "#172":https://github.com/textile/php-textile/issues/172).
