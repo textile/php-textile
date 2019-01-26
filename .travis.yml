@@ -1,10 +1,12 @@
 language: php
 php:
+  - 7.3
   - 7.2
   - 7.1
   - 7.0
   - 5.6
   - hhvm
+  - nightly
 
 before_script:
   - composer install
@@ -15,3 +17,6 @@ script:
 
 after_script:
   - ./vendor/bin/php-coveralls -v
+
+allow_failures:
+  - php: nightly
