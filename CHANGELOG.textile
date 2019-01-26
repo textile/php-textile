@@ -2,7 +2,7 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
-h2. Version 3.7.1 - upcoming
+h2. "Version 3.7.1 - 2019/01/26":https://github.com/textile/php-textile/releases/tag/v3.7.1
 
 * Fix and omit anchor links prefixing (closes "#190":https://github.com/textile/php-textile/issues/190).
 * Alignment attribute can be specified last within a block tag definition (closes "#189":https://github.com/textile/php-textile/issues/190)
