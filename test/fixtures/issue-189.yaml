@@ -1,0 +1,33 @@
+Alignment can also be the last attribute within a block definition:
+  input: |
+    p<(class). Text.
+
+    p=(class). Text.
+
+    p>(class). Text.
+
+    p<>(class). Text.
+
+    p(class)<. Text.
+
+    p(class)=. Text.
+
+    p(class)>. Text.
+
+    p(class)<>. Text.
+  expect: |
+    <p class="class" style="text-align:left;">Text.</p>
+
+    <p class="class" style="text-align:center;">Text.</p>
+
+    <p class="class" style="text-align:right;">Text.</p>
+
+    <p class="class" style="text-align:justify;">Text.</p>
+
+    <p class="class" style="text-align:left;">Text.</p>
+
+    <p class="class" style="text-align:center;">Text.</p>
+
+    <p class="class" style="text-align:right;">Text.</p>
+
+    <p class="class" style="text-align:justify;">Text.</p>
