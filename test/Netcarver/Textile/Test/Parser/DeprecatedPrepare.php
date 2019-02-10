@@ -48,6 +48,6 @@ class DeprecatedPrepare extends Parser
 {
     protected function prepare($lite = null, $noimage = null, $rel = null)
     {
-        return parent::prepare(true, true, true);
+        return parent::prepare(true, true, 'nofollow');
     }
 }

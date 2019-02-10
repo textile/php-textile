@@ -52,7 +52,7 @@ class DisableSymbols extends Parser
 
     protected function configure()
     {
-        foreach ($this->getSymbol() as $name => $value) {
+        foreach ((array)$this->getSymbol() as $name => $value) {
             $this->setSymbol($name, false);
         }
     }
