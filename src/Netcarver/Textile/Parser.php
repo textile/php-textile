@@ -777,6 +777,17 @@ class Parser
     );
 
     /**
+     * Span wrappers.
+     *
+     * @var   array
+     * @since 3.7.2
+     */
+
+    protected $spanWrappers = array(
+        '[' => ']',
+    );
+
+    /**
      * Patterns for finding glyphs.
      *
      * An array of regex patterns used to find text features
@@ -3620,7 +3631,7 @@ class Parser
                 $tag = preg_quote($tag);
                 $text = (string)preg_replace_callback(
                     "/
-                    (?P<pre>^|(?<=[\s>$pnct\(])|[{[])
+                    (?P<before>^|(?<=[\s>$pnct\(])|[{[])
                     (?P<tag>$tag)(?!$tag)
                     (?P<atts>{$this->cls})
                     (?!$tag)
@@ -3628,7 +3639,7 @@ class Parser
                     (?P<content>[^{$this->regex_snippets['space']}$tag]+|\S.*?[^\s$tag\n])
                     (?P<end>[$pnct]*)
                     $tag
-                    (?P<tail>$|[\[\]}<]|(?=[$pnct]{1,2}[^0-9]|\s|\)))
+                    (?P<after>$|[\[\]}<]|(?=[$pnct]{1,2}[^0-9]|\s|\)))
                     /x".$this->regex_snippets['mod'],
                     array($this, "fSpan"),
                     $text
@@ -3649,6 +3660,7 @@ class Parser
 
     protected function fSpan($m)
     {
+        $m = $this->getSpecialOptions($m);
         $tag = $this->span_tags[$m['tag']];
         $atts = $this->parseAttribsToArray($m['atts']);
 
@@ -3664,11 +3676,7 @@ class Parser
         $tags = $this->storeTags($opentag, $closetag);
         $out = "{$tags['open']}{$content}{$m['end']}{$tags['close']}";
 
-        if (($m['pre'] && !$m['tail']) || ($m['tail'] && !$m['pre'])) {
-            $out = $m['pre'].$out.$m['tail'];
-        }
-
-        return $out;
+        return $m['before'].$out.$m['after'];
     }
 
     /**
@@ -4801,7 +4809,9 @@ class Parser
 
     protected function fCode($m)
     {
-        return $m['before'].$this->shelve('<code>'.$this->rEncodeHTML($m['content']).'</code>');
+        $m = $this->getSpecialOptions($m);
+
+        return $m['before'].$this->shelve('<code>'.$this->rEncodeHTML($m['content']).'</code>').$m['after'];
     }
 
     /**
@@ -4813,7 +4823,9 @@ class Parser
 
     protected function fPre($m)
     {
-        return $m['before'].'<pre>'.$this->shelve($this->rEncodeHTML($m['content'])).'</pre>';
+        $m = $this->getSpecialOptions($m);
+
+        return $m['before'].'<pre>'.$this->shelve($this->rEncodeHTML($m['content'])).'</pre>'.$m['after'];
     }
 
     /**
@@ -4903,10 +4915,33 @@ class Parser
     protected function doSpecial($text, $start, $end, $method)
     {
         return (string)preg_replace_callback(
-            '/(?P<before>^|\s|[|[({>])'.preg_quote($start, '/').'(?P<content>.*?)'.preg_quote($end, '/').'/ms',
+            '/(?P<before>^|\s|[|[({>])'.
+            preg_quote($start, '/').'(?P<content>.*?)'.preg_quote($end, '/').
+            '(?<after>\]?)/ms',
             array($this, $method),
             $text
         );
+    }
+
+    /**
+     * Gets an array of processed special options.
+     *
+     * @param  array $m Options
+     * @return array
+     * @since  3.7.2
+     */
+
+    protected function getSpecialOptions($m)
+    {
+        foreach ($this->spanWrappers as $before => $after) {
+            if ($m['before'] === $before && $m['after'] === $after) {
+                $m['before'] = '';
+                $m['after'] = '';
+                break;
+            }
+        }
+
+        return $m;
     }
 
     /**
@@ -4931,7 +4966,9 @@ class Parser
 
     protected function fTextile($m)
     {
-        return $m['before'].$this->shelve($m['content']);
+        $m = $this->getSpecialOptions($m);
+
+        return $m['before'].$this->shelve($m['content']).$m['after'];
     }
 
     /**

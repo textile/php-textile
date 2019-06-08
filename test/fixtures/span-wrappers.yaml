@@ -1,0 +1,34 @@
+Span tags within square brackets wrappers should be parsed:
+  input: |
+    [==This *will* not be Textiled.==]
+
+    This is [*strong*] and [_em_].
+
+    Makes possible to have [*span*]tags mid-word.
+
+    Or to *omit* processing mid[==abc *escaped*==]word.
+
+    But otherwise *span*-tags work as normal and are ignored mid-word.
+
+    Quotes work similarly to wrappers, but only wrappers are [*eaten*], {*quotes*} are kept.
+
+    But also quotes{*can*}be used to render spans mid-word.
+
+    bc. Code [==context==] is [*ignored*].
+
+  expect: |
+    <p>This *will* not be Textiled.</p>
+
+    <p>This is <strong>strong</strong> and <em>em</em>.</p>
+
+    <p>Makes possible to have <strong>span</strong>tags mid-word.</p>
+
+    <p>Or to <strong>omit</strong> processing midabc *escaped*word.</p>
+
+    <p>But otherwise *span*-tags work as normal and are ignored mid-word.</p>
+
+    <p>Quotes work similarly to wrappers, but only wrappers are <strong>eaten</strong>, {<strong>quotes</strong>} are kept.</p>
+
+    <p>But also quotes{<strong>can</strong>}be used to render spans mid-word.</p>
+
+    <pre><code>Code [==context==] is [*ignored*].</code></pre>
