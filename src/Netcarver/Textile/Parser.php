@@ -4671,7 +4671,7 @@ class Parser
             '/
             (?:[[{])?                       # pre
             \!                              # opening !
-            (?P<align>\<|\=|\>|&lt;|&gt;)?        # optional alignment
+            (?P<align>\<|\=|\>|&lt;|&gt;)?  # optional alignment
             (?P<atts>'.$this->cls.')        # optional attributes
             (?:\.\s)?                       # optional dot-space
             (?P<url>[^\s(!]+)               # presume this is the src
