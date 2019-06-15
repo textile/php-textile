@@ -1,0 +1,23 @@
+Linebreaks within table cells:
+  input: |
+    |foo|bar
+    baz|
+
+    |foo|bar
+      baz|
+  expect: |
+    <table>
+    		<tr>
+    			<td>foo</td>
+    			<td>bar<br />
+    baz</td>
+    		</tr>
+    </table>
+
+    <table>
+    		<tr>
+    			<td>foo</td>
+    			<td>bar
+      baz</td>
+    		</tr>
+    </table>
