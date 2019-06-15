@@ -1,0 +1,18 @@
+Square bracket wrapping can be used to enforce code tag rendering with span tags:
+  input: |
+    %(classname)[@generic *code* statement;@]%
+
+    %(classname)[@[someObject someMethod]; // Objective C code statement 1@]%
+
+    %(classname)[@int result = [someObject someMethod]; // Objective C code statement 2@]%
+
+    %(classname)[@NSObject *newObject = [[NSObject alloc] init]; // Objective C code statement 3@]%
+
+  expect: |
+    <p><span class="classname"><code>generic *code* statement;</code></span></p>
+
+    <p><span class="classname"><code>[someObject someMethod]; // Objective C code statement 1</code></span></p>
+
+    <p><span class="classname"><code>int result = [someObject someMethod]; // Objective C code statement 2</code></span></p>
+
+    <p><span class="classname"><code>NSObject *newObject = [[NSObject alloc] init]; // Objective C code statement 3</code></span></p>
