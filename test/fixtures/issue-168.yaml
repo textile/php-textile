@@ -1,0 +1,8 @@
+Multiline links:
+  input: |
+    "This is a multiline
+    link text":test
+
+  expect: |
+    <p><a href="test">This is a multiline<br />
+    link text</a></p>
