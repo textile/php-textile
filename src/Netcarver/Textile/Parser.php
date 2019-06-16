@@ -1926,7 +1926,7 @@ class Parser
      *
      * bc. <h1>Hello World!</h1>
      *
-     * Additinally the parser can be run in safe, restricted mode using the
+     * Additionally the parser can be run in safe, restricted mode using the
      * Parser::setRestricted() method.
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
