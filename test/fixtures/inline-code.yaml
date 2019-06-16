@@ -1,0 +1,59 @@
+Inline code can be used to embed code to a paragraph:
+  input: |
+    @This is some code@.
+
+    Textile syntax @will *not* _be_ parsed@ within code tags.
+
+    Inline code tags can not have attributes as the content should be displayed as a code:
+
+    @(classname)mitts _*off*_ *_me_*@
+    @{text-align:right;}My text@
+
+    Inline code @can spawn across
+    *multiple* lines@, but will not generate line break tags.
+
+    Code tags can be wrapped in some glyphs, (@this *is* code@)
+
+    In instances where code tags aren't matched, *[@this _is_ code@]*,
+    ==[@square bracket@]== syntax can be used to enforce rendering.
+
+    Instances such as email addresses should tried to be avoided,
+    (firstname.lastname)@email.tld (firstname.lastname)@(hostname).tld,
+    so that false positives aren't generated.
+
+    In instances where parsing needs to be avoided, textile espacing syntax can be used,
+    ==@this is *not* _code_@==, or [==@==]this is *not* [_code_][==@==].
+
+  expect: |
+    <p><code>This is some code</code>.</p>
+
+    <p>Textile syntax <code>will *not* _be_ parsed</code> within code tags.</p>
+
+    <p>Inline code tags can not have attributes as the content should be displayed as a code:</p>
+
+    <p><code>(classname)mitts _*off*_ *_me_*</code><br />
+    <code>{text-align:right;}My text</code></p>
+
+    <p>Inline code <code>can spawn across
+    *multiple* lines</code>, but will not generate line break tags.</p>
+
+    <p>Code tags can be wrapped in some glyphs, (<code>this *is* code</code>)</p>
+
+    <p>In instances where code tags aren&#8217;t matched, <strong><code>this _is_ code</code></strong>,<br />
+    [@square bracket@] syntax can be used to enforce rendering.</p>
+
+    <p>Instances such as email addresses should tried to be avoided,<br />
+    (firstname.lastname)@email.tld (firstname.lastname)@(hostname).tld,<br />
+    so that false positives aren&#8217;t generated.</p>
+
+    <p>In instances where parsing needs to be avoided, textile espacing syntax can be used,<br />
+    @this is *not* _code_@, or @this is <strong>not</strong> <em>code</em>@.</p>
+
+Inline code isn't processed in lite mode:
+  setup:
+    - setLite: true
+  input:  |
+    @This would be *some* code@
+
+  expect: |
+    <p>@This would be <strong>some</strong> code@</p>
