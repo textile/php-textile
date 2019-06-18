@@ -1,6 +1,6 @@
 h1. PHP-Textile
 
-"Downloads":https://github.com/textile/php-textile/releases | "Textile reference":https://www.textile-lang.com/ | "Live editor":https://www.textile-lang.com/
+"Downloads":https://github.com/textile/php-textile/releases | "Textile reference":https://textile-lang.com/ | "Live editor":https://textile-lang.com/doc
 
 !https://img.shields.io/travis/textile/php-textile/master.svg!:https://travis-ci.org/textile/php-textile !https://img.shields.io/coveralls/github/textile/php-textile/master.svg!:https://coveralls.io/r/textile/php-textile?branch=master !https://img.shields.io/packagist/v/netcarver/textile.svg!:https://packagist.org/packages/netcarver/textile !https://img.shields.io/packagist/dt/netcarver/textile.svg!:https://packagist.org/packages/netcarver/textile
 
