@@ -4,6 +4,8 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 3.7.3 - upcoming
 
+* Fix issues where divider tags placed on their own line within a paragraph, would disable Textile processing for that paragraph block (closes "#194":https://github.com/textile/php-textile/issues/194).
+
 h2. "Version 3.7.2 - 2019/06/08":https://github.com/textile/php-textile/releases/tag/v3.7.2
 
 * Fix quote and bracket processing around span and other inline tags (closes "#191":https://github.com/textile/php-textile/issues/191 and "#192":https://github.com/textile/php-textile/issues/192).
