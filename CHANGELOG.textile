@@ -2,6 +2,8 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
+h2. Version 3.7.4 - upcoming
+
 h2. "Version 3.7.3 - 2019/08/30":https://github.com/textile/php-textile/releases/tag/v3.7.3
 
 * Fix issues where divider tags placed on their own line within a paragraph, would disable Textile processing for that paragraph block (closes "#194":https://github.com/textile/php-textile/issues/194).
