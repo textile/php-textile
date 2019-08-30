@@ -1,0 +1,12 @@
+Dividers tags on their own line within a paragraph block should not be treated as raw dividers:
+  setup:
+    - setRawBlocks: true
+  input: |
+    First _line_ of paragraph.
+    <br /><br />
+    Third *line* of paragraph.
+  expect: |
+    <p>First <em>line</em> of paragraph.<br />
+    <br />
+    <br />
+    Third <strong>line</strong> of paragraph.</p>
