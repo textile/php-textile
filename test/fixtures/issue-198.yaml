@@ -1,0 +1,13 @@
+Inline tag before the last question mark in the input document should be rendered when block tags are disabled:
+  setup:
+    - setBlockTags: false
+  input  : |
+    _hello_ *there*?
+  expect : |
+    <em>hello</em> <strong>there</strong>?
+
+Output should be similar with block tags enabled:
+  input  : |
+    _hello_ *there*?
+  expect : |
+    <p><em>hello</em> <strong>there</strong>?</p>

@@ -1980,6 +1980,8 @@ class Parser
                 $text = $this->placeNoteLists($text);
             }
         } else {
+            $text .= "\n\n";
+
             // Treat quoted quote as a special glyph.
             $text = $this->glyphQuotedQuote($text);
 

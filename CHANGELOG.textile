@@ -4,6 +4,8 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 3.7.4 - upcoming
 
+* Fix issue where an inline tag preceding the last character, that is a glyph, is not rendered if the block tags are disabled with @Parser::setBlockTags@ (closes "#198":https://github.com/textile/php-textile/issues/198).
+
 h2. "Version 3.7.3 - 2019/08/30":https://github.com/textile/php-textile/releases/tag/v3.7.3
 
 * Fix issues where divider tags placed on their own line within a paragraph, would disable Textile processing for that paragraph block (closes "#194":https://github.com/textile/php-textile/issues/194).
