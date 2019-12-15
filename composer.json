@@ -12,12 +12,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Netcarver\\Textile\\": "src/Netcarver/Textile/"
+            "Netcarver\\Textile\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Netcarver\\Textile\\Test\\": "test/Netcarver/Textile/Test/"
+            "Netcarver\\Textile\\Test\\": "test/"
         }
     },
     "require": {
@@ -36,8 +36,6 @@
     },
     "scripts": {
         "test": "./vendor/bin/phpunit",
-        "cs": "./vendor/bin/phpcs",
-        "bump": "@php ./scripts/release.php",
-        "bump-dev": "@php ./scripts/release.php --dev"
+        "cs": "./vendor/bin/phpcs"
     }
 }

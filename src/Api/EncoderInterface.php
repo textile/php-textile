@@ -1,15 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Textile - A Humane Web Text Generator.
  *
  * @link https://github.com/textile/php-textile
  */
 
-namespace Netcarver\Textile\Test\Parser;
-
 /*
- * Copyright (c) 2013, Netcarver https://github.com/netcarver
+ * Copyright (c) 2019, PHP-Textile Team
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,29 +38,21 @@ namespace Netcarver\Textile\Test\Parser;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-use Netcarver\Textile\Parser;
+namespace Netcarver\Textile\Api;
 
 /**
- * Test parser with unicode support forced off.
+ * Textile encoder.
  */
-
-class NoUnicode extends Parser
+interface EncoderInterface
 {
     /**
-     * {@inheritdoc}
+     * Encodes the given text.
+     *
+     * bc. $parser = new \Netcarver\Textile\Parser();
+     * $parser->textileEncode('Some content to encode.');
+     *
+     * @param  string $text The text to be encoded
+     * @return string The encoded text
      */
-
-    protected function isMultiByteStringSupported()
-    {
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-
-    protected function isUnicodePcreSupported()
-    {
-        return false;
-    }
+    public function textileEncode(string $text): string;
 }

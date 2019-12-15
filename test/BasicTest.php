@@ -11,7 +11,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provider
      */
-
     public function testAdd($file, $name, $test)
     {
         if (isset($test['class'])) {
@@ -76,19 +75,9 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $public, 'Leaking public class properties.');
     }
 
-    public function testGetVersion()
-    {
-        $textile = new Textile();
-        $this->assertRegExp(
-            '/^[0-9]+\.[0-9]+\.[0-9]+(:?-[A-Za-z0-9.]+)?(?:\+[A-Za-z0-9.]+)?$/',
-            $textile->getVersion()
-        );
-    }
-
     /**
      * @expectedException \InvalidArgumentException
      */
-
     public function testInvalidSymbol()
     {
         $textile = new Textile();
@@ -100,17 +89,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         $textile = new Textile();
         $this->assertEquals('TestValue', $textile->setSymbol('test', 'TestValue')->getSymbol('test'));
         $this->assertArrayHasKey('test', $textile->getSymbol());
-    }
-
-    /**
-     * @expectedException \PHPUnit_Framework_Error
-     */
-
-    public function testSetRelativeImagePrefixChaining()
-    {
-        $textile = new Textile();
-        $symbol = $textile->setRelativeImagePrefix('abc')->setSymbol('test', 'TestValue')->getSymbol('test');
-        $this->assertEquals('TestValue', $symbol);
     }
 
     public function testSetGetDimensionlessImage()
@@ -129,7 +107,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 
     public function provider()
     {
-        chdir(dirname(dirname(dirname(__DIR__))));
+        \chdir(__DIR__);
         $out = array();
 
         if ($files = glob('*/*.yaml')) {
@@ -160,81 +138,8 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \PHPUnit_Framework_Error
-     */
-
-    public function testDeprecatedEncodingArgument()
-    {
-        $parser = new Textile();
-        $this->assertEquals('content', @$parser->textileThis('content', false, true));
-        $this->assertEquals('content', $parser->textileEncode('content'));
-        $parser->textileThis('content', false, true);
-    }
-
-    /**
-     * @expectedException \PHPUnit_Framework_Error
-     */
-
-    public function testDeprecatedTextileCommon()
-    {
-        $parser = new Parser\DeprecatedTextileCommon();
-        $this->assertEquals(' content', @$parser->testTextileCommon(' content', false));
-        $this->assertEquals(' content', @$parser->testTextileCommon(' content', true));
-        $parser->testTextileCommon('content', false);
-    }
-
-    /**
-     * @expectedException \PHPUnit_Framework_Error
-     */
-
-    public function testDeprecatedPrepare()
-    {
-        $parser = new Parser\DeprecatedPrepare();
-        $this->assertEquals(' content', @$parser->parse(' content'));
-        $parser->parse('content');
-    }
-
-    /**
-     * @expectedException \PHPUnit_Framework_Error
-     */
-
-    public function testDeprecatedTextileRestricted()
-    {
-        $parser = new Textile();
-        $this->assertEquals(' content', @$parser->textileRestricted(' content'));
-        $parser->textileRestricted('content');
-    }
-
-    /**
-     * @expectedException \PHPUnit_Framework_Error
-     */
-
-    public function testDeprecatedTextileThis()
-    {
-        $parser = new Textile();
-        $this->assertEquals(' content', @$parser->textileThis(' content'));
-        $parser->textileThis('content');
-    }
-
-    /**
-     * @expectedException \PHPUnit_Framework_Error
-     */
-
-    public function testDeprecatedSetRelativeImagePrefix()
-    {
-        $parser = new Textile();
-        @$parser->setRelativeImagePrefix('/1/');
-        $this->assertEquals(
-            ' <img alt="" src="/1/2.jpg" /> <a href="/1/2">1</a>',
-            $parser->parse(' !2.jpg! "1":2')
-        );
-        $parser->setRelativeImagePrefix('/1/');
-    }
-
-    /**
      * @expectedException \InvalidArgumentException
      */
-
     public function testInvalidDocumentType()
     {
         new Textile('InvalidDocumentType');

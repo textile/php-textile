@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Textile - A Humane Web Text Generator.
  *
@@ -7,7 +9,7 @@
  */
 
 /*
- * Copyright (c) 2016-2017, Netcarver https://github.com/netcarver
+ * Copyright (c) 2019, PHP-Textile Team
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,63 +38,46 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Netcarver\Textile;
+namespace Netcarver\Textile\Api;
 
 /**
- * Simple data storage.
- *
- * This class allows storing assignments in an internal
- * data array.
- *
- * bc. use Netcarver\Textile\DataBag;
- * $plant = new DataBag(array('key' => 'value'));
- * $plant->flower('rose')->color('red');
- *
- * @internal
+ * Textile parser.
  */
-
-class DataBag
+interface ParserInterface
 {
     /**
-     * The data array stored in the bag.
+     * Parses the given Textile input according to the previously set options.
      *
-     * @var array
+     * The parser's features can be changed by using the various public setter
+     * methods this class has. The most basic use case is:
+     *
+     * bc. $parser = new \Netcarver\Textile\Parser();
+     * echo $parser->parse('h1. Hello World!');
+     *
+     * The above parses trusted input in full-feature mode, generating:
+     *
+     * bc. <h1>Hello World!</h1>
+     *
+     * Additionally the parser can be run in safe, restricted mode using the
+     * Parser::setRestricted() method.
+     *
+     * bc. $parser = new \Netcarver\Textile\Parser();
+     * echo $parser
+     *     ->setRestricted(true)
+     *     ->parse('h1. Hello World!');
+     *
+     * This enables restricted mode and allows safe parsing of untrusted input.
+     * PHP-Textile will disable unsafe attributes, links and escapes any raw
+     * HTML input. This option should be enabled when parsing untrusted user
+     * input.
+     *
+     * If restricted mode is disabled, the parser allows users to mix raw HTML
+     * and Textile.
+     *
+     * @param  string $text The Textile input to parse
+     * @return string Parsed Textile input
+     * @since  3.6.0
+     * @api
      */
-
-    protected $data;
-
-    /**
-     * Constructor.
-     *
-     * @param array|null $data The initial data array stored in the bag
-     */
-
-    public function __construct(array $data = null)
-    {
-        $this->data = (array) $data;
-    }
-
-    /**
-     * Adds a value to the bag.
-     *
-     * Empty values are rejected, unless the
-     * second argument is set TRUE.
-     *
-     * bc. use Netcarver\Textile\DataBag;
-     * $plant = new DataBag(array('key' => 'value'));
-     * $plant->flower('rose')->color('red')->emptyValue(false, true);
-     *
-     * @param   string $name   The name
-     * @param   array  $params Arguments
-     * @return  DataBag
-     */
-
-    public function __call($name, array $params)
-    {
-        if (!empty($params[1]) || !empty($params[0])) {
-            $this->data[$name] = $params[0];
-        }
-
-        return $this;
-    }
+    public function parse(string $text): string;
 }

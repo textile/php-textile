@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Textile - A Humane Web Text Generator.
  *
@@ -57,24 +59,21 @@ namespace Netcarver\Textile;
  * @method Tag title(string $title)
  * @internal
  */
-
-class Tag extends DataBag
+final class Tag extends DataBag
 {
     /**
      * The name of the tag.
      *
      * @var string|null
      */
-
-    protected $tag;
+    private $tag;
 
     /**
      * Whether the tag is self-closing.
      *
      * @var bool
      */
-
-    protected $selfclose;
+    private $selfclose;
 
     /**
      * Constructor.
@@ -83,10 +82,13 @@ class Tag extends DataBag
      * @param array       $attributes  An array of attributes
      * @param bool        $selfclosing Whether the tag is self-closing
      */
-
-    public function __construct($name, array $attributes = null, $selfclosing = true)
-    {
+    public function __construct(
+        ?string $name,
+        ?array $attributes = null,
+        bool $selfclosing = true
+    ) {
         parent::__construct($attributes);
+
         $this->tag = $name;
         $this->selfclose = $selfclosing;
     }
@@ -100,8 +102,7 @@ class Tag extends DataBag
      *
      * @return string A HTML element
      */
-
-    public function __toString()
+    public function __toString(): string
     {
         $attributes = '';
 

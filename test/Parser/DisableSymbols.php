@@ -43,13 +43,11 @@ use Netcarver\Textile\Parser;
 /**
  * Test parser with fixed unique token.
  */
-
 class DisableSymbols extends Parser
 {
     /**
      * {@inheritdoc}
      */
-
     protected function configure()
     {
         foreach ((array)$this->getSymbol() as $name => $value) {

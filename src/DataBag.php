@@ -1,15 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Textile - A Humane Web Text Generator.
  *
  * @link https://github.com/textile/php-textile
  */
 
-namespace Netcarver\Textile\Test\Parser;
-
 /*
- * Copyright (c) 2013, Netcarver https://github.com/netcarver
+ * Copyright (c) 2016-2017, Netcarver https://github.com/netcarver
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,20 +38,59 @@ namespace Netcarver\Textile\Test\Parser;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-use Netcarver\Textile\Parser;
+namespace Netcarver\Textile;
 
 /**
- * Test parser with a low max link index limit.
+ * Simple data storage.
+ *
+ * This class allows storing assignments in an internal
+ * data array.
+ *
+ * bc. use Netcarver\Textile\DataBag;
+ * $plant = new DataBag(array('key' => 'value'));
+ * $plant->flower('rose')->color('red');
+ *
+ * @internal
  */
-
-class MaxLinkIndex extends Parser
+class DataBag
 {
     /**
-     * {@inheritdoc}
+     * The data array stored in the bag.
+     *
+     * @var array
      */
+    protected $data;
 
-    protected function getMaxLinkIndex()
+    /**
+     * Constructor.
+     *
+     * @param array|null $data The initial data array stored in the bag
+     */
+    public function __construct(?array $data = null)
     {
-        return 0;
+        $this->data = (array) $data;
+    }
+
+    /**
+     * Adds a value to the bag.
+     *
+     * Empty values are rejected, unless the
+     * second argument is set TRUE.
+     *
+     * bc. use Netcarver\Textile\DataBag;
+     * $plant = new DataBag(array('key' => 'value'));
+     * $plant->flower('rose')->color('red')->emptyValue(false, true);
+     *
+     * @param   string $name   The name
+     * @param   array  $params Arguments
+     * @return  DataBag
+     */
+    public function __call(string $name, array $params): self
+    {
+        if (!empty($params[1]) || !empty($params[0])) {
+            $this->data[$name] = $params[0];
+        }
+
+        return $this;
     }
 }

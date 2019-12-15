@@ -2,7 +2,7 @@
 <phpunit bootstrap="test/bootstrap.php">
     <testsuites>
         <testsuite name="Textile Test Suite">
-            <directory>./test/Netcarver/Textile/Test/</directory>
+            <directory>./test/</directory>
         </testsuite>
     </testsuites>
     <filter>
