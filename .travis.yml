@@ -1,5 +1,6 @@
 language: php
 php:
+  - 7.4
   - 7.3
   - 7.2
   - 7.1
@@ -21,4 +22,5 @@ after_script:
 matrix:
   allow_failures:
     - php: hhvm-3.30
+    - php: 7.4
     - php: nightly
