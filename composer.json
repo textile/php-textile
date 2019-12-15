@@ -29,11 +29,6 @@
         "squizlabs/php_codesniffer": "3.*",
         "php-coveralls/php-coveralls": "2.1.*"
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "3.7-dev"
-        }
-    },
     "scripts": {
         "test": "./vendor/bin/phpunit",
         "cs": "./vendor/bin/phpcs"
