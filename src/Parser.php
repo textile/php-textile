@@ -3619,8 +3619,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         }
 
         if ($prefix) {
-            if (
-                \strpos($url, '/') === 0 ||
+            if (\strpos($url, '/') === 0 ||
                 \strpos($url, './') === 0 ||
                 \strpos($url, '../') === 0 ||
                 \strpos($url, '#') === 0
