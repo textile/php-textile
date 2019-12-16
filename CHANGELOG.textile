@@ -4,6 +4,8 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 3.7.5 - upcoming
 
+* Fix PHP 7.4 compatibility issues (closes "#199":https://github.com/textile/php-textile/issues/199).
+
 h2. "Version 3.7.4 - 2019/12/15":https://github.com/textile/php-textile/releases/tag/v3.7.4
 
 * Fix issue where an inline tag preceding the last character, that is a glyph, is not rendered if the block tags are disabled with @Parser::setBlockTags@ (closes "#198":https://github.com/textile/php-textile/issues/198).
