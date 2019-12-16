@@ -2,6 +2,8 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
+h2. Version 3.7.6 - upcoming
+
 h2. "Version 3.7.5 - 2019/12/16":https://github.com/textile/php-textile/releases/tag/v3.7.5
 
 * Fix PHP 7.4 compatibility issues (closes "#199":https://github.com/textile/php-textile/issues/199).
