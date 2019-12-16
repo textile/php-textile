@@ -2101,7 +2101,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                     }
                 }
 
-                if ($m['level'] > $prev['level'] && $m['st'] !== '') {
+                if ((!$prev || $m['level'] > $prev['level']) && $m['st'] !== '') {
                     $start = ' start="' . $this->olstarts[$m['tl']] . '"';
                 }
 
