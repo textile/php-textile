@@ -1,24 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Netcarver\Textile\Test;
 
-use Symfony\Component\Yaml\Yaml;
+use InvalidArgumentException;
 use Netcarver\Textile\Parser as Textile;
 use Netcarver\Textile\Tag;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Yaml\Yaml;
 
-class BasicTest extends \PHPUnit_Framework_TestCase
+final class BasicTest extends TestCase
 {
     /**
-     * @dataProvider provider
+     * @dataProvider dataProvider
      */
-    public function testAdd($file, $name, $test)
+    public function testFixtures(string $file, string $name, array $test): void
     {
-        if (isset($test['class'])) {
-            $class = $test['class'];
-        } else {
-            $class = '\Netcarver\Textile\Parser';
-        }
-
+        $class = $test['class'] ?? Textile::class;
         $textile = new $class;
 
         if (isset($test['doctype'])) {
@@ -33,89 +32,80 @@ class BasicTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        if (isset($test['method'])) {
-            $method = trim($test['method']);
-        } else {
-            $method = 'parse';
-        }
+        $args = [];
 
-        $args = array();
-
-        if (isset($test['arguments'])) {
-            foreach ($test['arguments'] as $argument) {
-                foreach ($argument as $value) {
-                    $args[] = $value;
-                }
+        foreach ($test['arguments'] ?? [] as $argument) {
+            foreach ($argument as $value) {
+                $args[] = $value;
             }
         }
 
-        foreach (array('expect', 'input') as $field) {
-            $test[$field] = strtr($test[$field], array(
+        foreach (['expect', 'input'] as $field) {
+            $test[$field] = \strtr($test[$field], [
                 '\x20' => ' ',
-            ));
+            ]);
         }
 
-        $expect = rtrim($test['expect']);
-        array_unshift($args, $test['input']);
-        $input = rtrim(call_user_func_array(array($textile, $method), $args));
+        $method = isset($test['method']) ? \trim($test['method']) : 'parse';
+        $expect = \rtrim($test['expect']);
+        \array_unshift($args, $test['input']);
+        $input = \rtrim(\call_user_func_array([$textile, $method], $args));
 
-        foreach (array('expect', 'input') as $variable) {
-            $$variable = preg_replace(
-                array(
+        foreach (['expect', 'input'] as $variable) {
+            $$variable = \preg_replace(
+                [
                     '/ id="(fn|note)[a-z0-9\-]*"/',
                     '/ href="#(fn|note)[a-z0-9\-]*"/',
-                ),
+                ],
                 '',
                 $$variable
             );
         }
 
         $this->assertEquals($expect, $input, $name . ' in ' . $file);
-        $public = implode(', ', array_keys(get_object_vars($textile)));
+        $public = \implode(', ', \array_keys(\get_object_vars($textile)));
         $this->assertEquals('', $public, 'Leaking public class properties.');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testInvalidSymbol()
+    public function testInvalidSymbol(): void
     {
+        $this->expectException(InvalidArgumentException::class);
         $textile = new Textile();
         $textile->getSymbol('invalidSymbolName');
     }
 
-    public function testSetGetSymbol()
+    public function testSetGetSymbol(): void
     {
         $textile = new Textile();
         $this->assertEquals('TestValue', $textile->setSymbol('test', 'TestValue')->getSymbol('test'));
         $this->assertArrayHasKey('test', $textile->getSymbol());
     }
 
-    public function testSetGetDimensionlessImage()
+    public function testSetGetDimensionlessImage(): void
     {
         $textile = new Textile();
         $this->assertFalse($textile->getDimensionlessImages());
         $this->assertTrue($textile->setDimensionlessImages(true)->getDimensionlessImages());
     }
 
-    public function testEncode()
+    public function testEncode(): void
     {
         $textile = new Textile();
         $encoded = $textile->textileEncode('& &amp; &#124; &#x0022 &#x0022;');
         $this->assertEquals('&amp; &amp; &#124; &amp;#x0022 &#x0022;', $encoded);
     }
 
-    public function provider()
+    public function dataProvider(): array
     {
         \chdir(__DIR__);
-        $out = array();
+        $out = [];
 
-        if ($files = glob('*/*.yaml')) {
+        if ($files = \glob('*/*.yaml')) {
             foreach ($files as $file) {
-                $yaml = Yaml::parse($file);
+                $yaml = Yaml::parseFile($file);
 
                 foreach ($yaml as $name => $test) {
-                    if (!is_array($test) || !isset($test['input']) || !isset($test['expect'])) {
+                    if (!\is_array($test) || !isset($test['input']) || !isset($test['expect'])) {
                         continue;
                     }
 
@@ -123,7 +113,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
                         continue;
                     }
 
-                    $out[] = array($file, $name, $test);
+                    $out[] = [$file, $name, $test];
                 }
             }
         }
@@ -131,24 +121,22 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         return $out;
     }
 
-    public function testTagAttributesGenerator()
+    public function testTagAttributesGenerator(): void
     {
-        $attributes = new Tag(null, array('name' => 'value'));
+        $attributes = new Tag(null, ['name' => 'value']);
         $this->assertEquals(' name="value"', (string) $attributes);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testInvalidDocumentType()
+    public function testInvalidDocumentType(): void
     {
+        $this->expectException(InvalidArgumentException::class);
         new Textile('InvalidDocumentType');
     }
 
-    public function testInstanceSharingAndFootnoteIndex()
+    public function testInstanceSharingAndFootnoteIndex(): void
     {
         $parser = new Textile();
-        $previous = array('', '<p><strong>strong</strong></p>');
+        $previous = ['', '<p><strong>strong</strong></p>'];
 
         for ($i = 1; $i <= 100; $i++) {
             $content = "Note[1]\n\nfn1. Footnote";
@@ -161,7 +149,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testLineSpaceEscaping()
+    public function testLineSpaceEscaping(): void
     {
         $parser = new Textile();
         $this->assertEquals(' <strong>line</strong>', $parser->parse(' *line*'));
@@ -174,33 +162,33 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(__DIR__, rtrim($parser->getDocumentRootDirectory(), '\\/'));
     }
 
-    public function testDisallowImages()
+    public function testDisallowImages(): void
     {
         $parser = new Textile();
         $this->assertFalse($parser->setImages(false)->isImageTagEnabled());
         $this->assertTrue($parser->setImages(true)->isImageTagEnabled());
     }
 
-    public function testLinkRelationShip()
+    public function testLinkRelationShip(): void
     {
         $parser = new Textile();
         $this->assertEquals('test', $parser->setLinkRelationShip('test')->getLinkRelationShip());
     }
 
-    public function testEnableRestrictedMode()
+    public function testEnableRestrictedMode(): void
     {
         $parser = new Textile();
         $this->assertTrue($parser->setRestricted(true)->isRestrictedModeEnabled());
         $this->assertFalse($parser->setRestricted(false)->isRestrictedModeEnabled());
     }
 
-    public function testImagePrefix()
+    public function testImagePrefix(): void
     {
         $parser = new Textile();
         $this->assertEquals('test', $parser->setLinkPrefix('test')->getLinkPrefix());
     }
 
-    public function testLinkPrefix()
+    public function testLinkPrefix(): void
     {
         $parser = new Textile();
         $this->assertEquals('test', $parser->setImagePrefix('test')->getImagePrefix());

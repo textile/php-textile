@@ -11,7 +11,7 @@ Multiline Link using HTML br tags:
 
 Multiline Link using spaces:
   setup:
-    - setLineWrap: 0
+    - setLineWrap: false
   input : |
     First "link":/test/ and now a second link with newline in it: "line 1
     line 2":/test/. Even "Telephone
