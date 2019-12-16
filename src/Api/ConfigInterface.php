@@ -54,7 +54,7 @@ interface ConfigInterface
      *     ->parse('HTML(HyperText Markup Language)");
      *
      * @param  string $doctype Either 'xhtml' or 'html5'
-     * @return Parser This instance
+     * @return self   This instance
      * @since  3.6.0
      * @see    Parser::getDocumentType()
      */
@@ -87,7 +87,7 @@ interface ConfigInterface
      * PATH_TRANSLATED server variable is used based on which ever is available.
      *
      * @param  string $path The root path
-     * @return Parser This instance
+     * @return self   This instance
      * @since  3.6.0
      * @see    Parser::getDocumentRootDirectory()
      */
@@ -132,7 +132,7 @@ interface ConfigInterface
      *     ->parse('h1. Hello World!');
      *
      * @param  bool   $lite TRUE to enable
-     * @return Parser This instance
+     * @return self   This instance
      * @since  3.6.0
      * @see    Parser::isLiteModeEnabled()
      * @see    Parser::setRestricted()
@@ -169,7 +169,7 @@ interface ConfigInterface
      * bc. <p>!image.png!</p>
      *
      * @param  bool   $enabled TRUE to enable, FALSE to disable
-     * @return Parser This instance
+     * @return self   This instance
      * @since  3.6.0
      * @see    Parser::isImageTagEnabled()
      */
@@ -204,8 +204,8 @@ interface ConfigInterface
      *
      * bc. <p><a href="http://example.com/" rel="nofollow">Link</a></p>
      *
-     * @param  string|array $relationship The HTML rel attribute value
-     * @return Parser       This instance
+     * @param  string|string[] $relationship The HTML rel attribute value
+     * @return self         This instance
      * @since  3.6.0
      * @see    Parser::getLinkRelationShip()
      */
@@ -252,7 +252,7 @@ interface ConfigInterface
      * any HTML code, JavaScript links and Textile attributes in their input.
      *
      * @param  bool   $enabled TRUE to enable, FALSE to disable
-     * @return Parser This instance
+     * @return self   This instance
      * @since  3.6.0
      * @see    Parser::isRestrictedModeEnabled()
      */
@@ -289,7 +289,7 @@ interface ConfigInterface
      * bc. <div>A *raw* block.</div>
      *
      * @param  bool   $enabled TRUE to enable, FALSE to disable
-     * @return Parser This instance
+     * @return self   This instance
      * @since  3.7.0
      * @see    Parser::isRawBlocksEnabled()
      * @see    Parser::isRawBlock()
@@ -327,7 +327,7 @@ interface ConfigInterface
      * bc. h1. Hello <strong>strong</strong> world!
      *
      * @param  bool   $enabled TRUE to enable, FALSE to disable
-     * @return Parser This instance
+     * @return self   This instance
      * @since  3.6.0
      * @see    Parser::isBlockTagEnabled()
      */
@@ -365,7 +365,7 @@ interface ConfigInterface
      * bc. <p>Hello world!</p>
      *
      * @param  bool   $enabled TRUE to enable, FALSE to disable
-     * @return Parser This instance
+     * @return self   This instance
      * @since  3.6.0
      * @see    Parser::isLineWrapEnabled()
      */
@@ -409,7 +409,7 @@ interface ConfigInterface
      *
      * @param  string      $name  Name of the symbol to assign a new value to
      * @param  string|bool $value New value for the symbol, or FALSE to disable
-     * @return Parser      This instance
+     * @return self        This instance
      * @see    Parser::getSymbol()
      */
     public function setSymbol(string $name, $value): self;
@@ -428,8 +428,8 @@ interface ConfigInterface
      * bc. $parser = new \Netcarver\Textile\Parser();
      * print_r($parser->getSymbol());
      *
-     * @param  string|null  $name The name of the symbol, or NULL if requesting the symbol table
-     * @return array|string The symbol table or the requested symbol
+     * @param  string|null $name The name of the symbol, or NULL if requesting the symbol table
+     * @return string[]|false[]|null[]|string The symbol table or the requested symbol
      * @throws \InvalidArgumentException
      * @see    Parser::setSymbol()
      */
@@ -446,7 +446,7 @@ interface ConfigInterface
      * $parser->setImagePrefix('https://static.example.com/images/');
      *
      * @param  string $prefix The prefix
-     * @return Parser This instance
+     * @return self   This instance
      * @since  3.7.0
      * @see    Parser::getImagePrefix()
      */
@@ -474,7 +474,7 @@ interface ConfigInterface
      * $parser->setLinkPrefix('https://example.com/');
      *
      * @param  string $prefix The prefix
-     * @return Parser This instance
+     * @return self   This instance
      * @since  3.7.0
      * @see    Parser::getLinkPrefix()
      */
@@ -506,7 +506,7 @@ interface ConfigInterface
      *     ->parse('!image.jpg!');
      *
      * @param  bool   $dimensionless TRUE to disable image dimensions, FALSE to enable
-     * @return Parser This instance
+     * @return self   This instance
      * @see    Parser::getDimensionlessImages()
      */
     public function setDimensionlessImages(bool $dimensionless = true): self;

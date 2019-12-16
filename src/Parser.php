@@ -101,7 +101,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Regular expression snippets.
      *
-     * @var array
+     * @var string[]
      */
     private $regex_snippets;
 
@@ -382,7 +382,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Array of footnotes.
      *
-     * @var array
+     * @var string[]
      */
     private $fn;
 
@@ -392,7 +392,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * Stores fragments of the source text that have been parsed
      * and require no more processing.
      *
-     * @var array
+     * @var string[]
      */
     private $shelf = [];
 
@@ -420,7 +420,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Accepted link protocols.
      *
-     * @var array
+     * @var string[]
      */
     private $url_schemes = [];
 
@@ -488,7 +488,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * entry in this array must have a corresponding entry in
      * the $glyph_replace array.
      *
-     * @var array
+     * @var string[]
      * @see Parser::$glyph_replace
      */
     private $glyph_search = [];
@@ -626,7 +626,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Multi-byte conversion map.
      *
-     * @var array
+     * @var string[]|int[]
      */
     private $cmap = [
         0x0080,
@@ -645,7 +645,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Stores unreferenced notes.
      *
-     * @var string[]
+     * @var array[]
      */
     private $unreferencedNotes = [];
 
@@ -659,7 +659,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Stores notes.
      *
-     * @var string[]
+     * @var array[]
      */
     private $notes = [];
 
@@ -727,9 +727,9 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private $quote_starts;
 
     /**
-     * Ordered list starts.
+     * Ordered list starting offsets.
      *
-     * @var string[]
+     * @var int[]
      */
     private $olstarts = [];
 
@@ -1464,9 +1464,9 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * This is a helper method that creates a new
      * instance of \Netcarver\Textile\Tag.
      *
-     * @param  string $name        The HTML element name
-     * @param  array  $atts        HTML attributes applied to the tag
-     * @param  bool   $selfclosing Determines if the tag should be selfclosing
+     * @param  string          $name        The HTML element name
+     * @param  string[]|int[]  $atts        HTML attributes applied to the tag
+     * @param  bool            $selfclosing Determines if the tag should be selfclosing
      * @return Tag
      */
     private function newTag(string $name, array $atts, bool $selfclosing = true): Tag
@@ -1498,7 +1498,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Converts an array of named attribute => value mappings to a string.
      *
-     * @param array $attribute_array
+     * @param string[] $attribute_array
      * @return string
      */
     private function formatAttributeString(array $attribute_array): string
@@ -1521,7 +1521,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $element    Focus the routine to interpret the attributes as applying to a specific HTML tag
      * @param  bool   $include_id If FALSE, IDs are not included in the attribute list
      * @param  string $autoclass  An additional classes applied to the output
-     * @return array  HTML attributes as key => value mappings
+     * @return string[]|int[]  HTML attributes as key => value mappings
      * @see    Parser::parseAttribs()
      */
     private function parseAttribsToArray(
@@ -1752,7 +1752,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * This method is used by Parser::tables() to process
      * found table structures.
      *
-     * @param  array  $matches
+     * @param  string[] $matches
      * @return string HTML table
      * @see    Parser::tables()
      */
@@ -1922,7 +1922,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     {
         return (string) \preg_replace_callback(
             "/^([-]+$this->cls[ .].*:=.*)$(?![^-])/smU",
-            [$this, "fRedclothList"],
+            [$this, 'fRedclothList'],
             $text
         );
     }
@@ -1933,7 +1933,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * This method is used by Parser::redclothLists() to process
      * found definition list structures.
      *
-     * @param  array  $m
+     * @param  string[] $m
      * @return string HTML definition list
      * @see    Parser::redclothLists()
      */
@@ -2029,7 +2029,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * This method is used by Parser::textileLists() to process
      * found list structures.
      *
-     * @param  array  $m
+     * @param  string[]  $m
      * @return string HTML list
      * @see    Parser::textileLists()
      */
@@ -2212,7 +2212,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * start with a smiley or perhaps something like '#8 bolt...'
      * or '*** stars...'.
      *
-     * @param  array $m The input
+     * @param  string[] $m The input
      * @return string
      */
     private function fPBr(array $m): string
@@ -2240,7 +2240,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Formats line breaks.
      *
-     * @param  array  $m The input
+     * @param  string[] $m The input
      * @return string
      */
     private function fBr(array $m): string
@@ -2279,6 +2279,10 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $whitespace = '';
         $ext = '';
         $out = [];
+        $tag = '';
+        $atts = '';
+        $cite = '';
+        $eat = false;
 
         foreach ($textblocks as $block) {
             // Line is just whitespace, keep it for the next block.
@@ -2302,11 +2306,15 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             if (!$anonymous_block) {
                 // Last block was extended, so close it
                 if ($ext) {
-                    $out[\count($out)-1] .= $c1;
+                    $out[\count($out)-1] .= $c1 ?? null;
                 }
 
-                // Extract the new block's parts
-                \extract($m);
+                $tag = $m['tag'];
+                $atts = $m['atts'];
+                $ext = $m['ext'];
+                $cite = $m['cite'];
+                $graf = $m['graf'];
+
                 list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock($m);
 
                 // Leave off c1 if this block is extended, we'll close it at the start of the next block
@@ -2360,7 +2368,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         }
 
         if ($ext) {
-            $out[\count($out)-1] .= $c1;
+            $out[\count($out)-1] .= $c1 ?? null;
         }
 
         return \implode('', $out);
@@ -2372,8 +2380,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * Adds block tags and formats the text content inside
      * the block.
      *
-     * @param  array $m The block content to format
-     * @return array
+     * @param  mixed[] $m The block content to format
+     * @return mixed[]
      */
     private function fBlock(array $m): array
     {
@@ -2526,8 +2534,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Replaces markers with replacements in the given input.
      *
-     * @param  string $text         The input
-     * @param  array  $replacements Marker replacement pairs
+     * @param  string    $text         The input
+     * @param  string[]  $replacements Marker replacement pairs
      * @return string
      */
     private function replaceMarkers(string $text, array $replacements): string
@@ -2565,7 +2573,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * Stores the comment on the shelf and returns
      * a reference token wrapped in to a HTML comment.
      *
-     * @param  array  $m Options
+     * @param  string[] $m Options
      * @return string Reference token wrapped to a HTML comment tags
      */
     private function fParseHTMLComments(array $m): string
@@ -2671,7 +2679,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Formats a span tag and stores it on the shelf.
      *
-     * @param  array  $m Options
+     * @param  string[] $m Options
      * @return string Content wrapped to reference tokens
      * @see    Parser::spans()
      */
@@ -2701,7 +2709,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      *
      * @param  string $opentag  Opening tag
      * @param  string $closetag Closing tag
-     * @return array  Reference tokens for both opening and closing tag
+     * @return string[]  Reference tokens for both opening and closing tag
      */
     private function storeTags(string $opentag, string $closetag = ''): array
     {
@@ -2748,7 +2756,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Retrieves a tag from the tag cache.
      *
-     * @param  array $m Options
+     * @param  string[] $m Options
      * @return string
      * @see    Parser::retrieveTags()
      */
@@ -2805,7 +2813,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Formats a note list.
      *
-     * @param  array  $m Options
+     * @param  string[] $m Options
      * @return string Processed note list
      */
     private function fNoteLists(array $m): string
@@ -2859,9 +2867,9 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * This method renders an array of back reference
      * links for notes.
      *
-     * @param  array  $info    Options
-     * @param  string $g_links Reference type
-     * @param  string $i       Instance count
+     * @param  array[] $info    Options
+     * @param  string   $g_links Reference type
+     * @param  string   $i       Instance count
      * @return string Processed input
      */
     private function makeBackrefLink(array $info, string $g_links, string $i): string
@@ -2898,7 +2906,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * note cache for later use and to build reference
      * links.
      *
-     * @param  array  $m Options
+     * @param  string[] $m Options
      * @return string Empty string
      */
     private function fParseNoteDefs(array $m): string
@@ -2950,7 +2958,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * processed into the notes array, and we can resolve the link numbers in
      * the order we process the references.
      *
-     * @param  array  $m Options
+     * @param  string[]  $m Options
      * @return string Note reference
      */
     private function fParseNoteRefs(array $m): string
@@ -2999,8 +3007,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * This method splits a URI-like string apart into component parts, while
      * also providing validation.
      *
-     * @param  string      $uri The string to pick apart (if possible)
-     * @param  array|null  $m   Reference to an array the URI component parts are assigned to
+     * @param  string        $uri The string to pick apart (if possible)
+     * @param  mixed[]|null  $m   Reference to an array the URI component parts are assigned to
      * @return bool   TRUE if the string validates as a URI
      * @link   http://tools.ietf.org/html/rfc3986#appendix-B
      */
@@ -3018,10 +3026,10 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Checks whether a component part can be added to a URI.
      *
-     * @param  array  $mask  An array of allowed component parts
-     * @param  string $name  The component to add
-     * @param  array  $parts An array of existing components to modify
-     * @return bool   TRUE if the component can be added
+     * @param  string[] $mask  An array of allowed component parts
+     * @param  string   $name  The component to add
+     * @param  string[] $parts An array of existing components to modify
+     * @return bool     TRUE if the component can be added
      */
     private function addPart(array $mask, string $name, array $parts): bool
     {
@@ -3031,9 +3039,9 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Rebuild a URI from parsed parts and a mask.
      *
-     * @param  array  $parts  Full array of URI parts
-     * @param  string $mask   Comma separated list of URI parts to include in the rebuilt URI
-     * @param  bool   $encode Flag to control encoding of the path part of the rebuilt URI
+     * @param  string[] $parts  Full array of URI parts
+     * @param  string   $mask   Comma separated list of URI parts to include in the rebuilt URI
+     * @param  bool     $encode Flag to control encoding of the path part of the rebuilt URI
      * @return string         The rebuilt URI
      * @link   http://tools.ietf.org/html/rfc3986#section-5.3
      */
@@ -3243,7 +3251,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Formats a link and stores it on the shelf.
      *
-     * @param  array  $m Options
+     * @param  string[] $m Options
      * @return string Reference token for the shelved content
      * @see    Parser::replaceLinks()
      */
@@ -3490,7 +3498,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Parses, encodes and shelves the current URI alias.
      *
-     * @param  array $m Options
+     * @param  string[] $m Options
      * @return string Empty string
      * @see    Parser::getRefs()
      */
@@ -3552,7 +3560,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Retrieves an URL from the shelve.
      *
-     * @param  array  $m Options
+     * @param  string[] $m Options
      * @return string The URL
      */
     private function retrieveURL(array $m): string
@@ -3721,7 +3729,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Formats an image and stores it on the shelf.
      *
-     * @param  array  $m Options
+     * @param  string[]  $m Options
      * @return string Reference token for the shelved content
      * @see    Parser::images()
      */
@@ -3809,7 +3817,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Formats inline code tags.
      *
-     * @param  array  $m
+     * @param  string[] $m
      * @return string
      */
     private function fCode(array $m): string
@@ -3822,7 +3830,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Formats pre tags.
      *
-     * @param  array  $m Options
+     * @param  string[] $m Options
      * @return string
      */
     private function fPre(array $m): string
@@ -3927,8 +3935,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Gets an array of processed special options.
      *
-     * @param  array $m Options
-     * @return array
+     * @param  string[] $m Options
+     * @return string[]
      * @since  3.7.2
      */
     private function getSpecialOptions(array $m): array
@@ -3960,7 +3968,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Format notextile blocks.
      *
-     * @param  array $m Options
+     * @param  string[] $m Options
      * @return string
      */
     private function fTextile(array $m): string
@@ -3992,7 +4000,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Renders a footnote reference link or ID.
      *
-     * @param  array  $m Options
+     * @param  string[] $m Options
      * @return string Footnote link, or ID
      */
     private function footnoteID(array $m): string
@@ -4031,8 +4039,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Formats quoted quotes and stores it on the shelf.
      *
-     * @param  array  $m Named regular expression parts
-     * @return string Input with quoted quotes removed and replaced with tokens
+     * @param  string[] $m Named regular expression parts
+     * @return string   Input with quoted quotes removed and replaced with tokens
      * @see    Parser::glyphQuotedQuote()
      */
     private function fGlyphQuotedQuote(array $m): string

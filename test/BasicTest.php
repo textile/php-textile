@@ -13,6 +13,9 @@ use Symfony\Component\Yaml\Yaml;
 final class BasicTest extends TestCase
 {
     /**
+     * @param string $file
+     * @param string $name
+     * @param mixed[] $test
      * @dataProvider dataProvider
      */
     public function testFixtures(string $file, string $name, array $test): void
@@ -95,6 +98,9 @@ final class BasicTest extends TestCase
         $this->assertEquals('&amp; &amp; &#124; &amp;#x0022 &#x0022;', $encoded);
     }
 
+    /**
+     * @return array[]
+     */
     public function dataProvider(): array
     {
         \chdir(__DIR__);
@@ -155,7 +161,7 @@ final class BasicTest extends TestCase
         $this->assertEquals(' <strong>line</strong>', $parser->parse(' *line*'));
     }
 
-    public function testDocumentRoot()
+    public function testDocumentRoot(): void
     {
         $parser = new Textile();
         $parser->setDocumentRootDirectory(__DIR__);

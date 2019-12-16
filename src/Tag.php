@@ -52,11 +52,14 @@ namespace Netcarver\Textile;
  * $img = new Tag('img');
  * echo (string) $img->class('big blue')->src('images/elephant.jpg');
  *
- * @method Tag alt(string $text)
- * @method Tag align(string $alignment)
+ * @method Tag alt(string $text, bool $allowEmpty = false)
+ * @method Tag align(string $alignment, bool $allowEmpty = false)
+ * @method Tag height(int $height, bool $allowZero = false)
  * @method Tag href(string $url, bool $allowEmpty = false)
- * @method Tag rel(string $relationship)
- * @method Tag title(string $title)
+ * @method Tag rel(string $relationship, bool $allowEmpty = false)
+ * @method Tag src(string $src, bool $allowEmpty = false)
+ * @method Tag title(string $title, bool $allowEmpty = false)
+ * @method Tag width(int $width, bool $allowZero = false)
  * @internal
  */
 final class Tag extends DataBag
@@ -78,9 +81,9 @@ final class Tag extends DataBag
     /**
      * Constructor.
      *
-     * @param string|null $name        The tag name
-     * @param array       $attributes  An array of attributes
-     * @param bool        $selfclosing Whether the tag is self-closing
+     * @param string|null         $name        The tag name
+     * @param string[]|int[]|null $attributes  An array of attributes
+     * @param bool                $selfclosing Whether the tag is self-closing
      */
     public function __construct(
         ?string $name,

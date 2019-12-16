@@ -57,14 +57,14 @@ class DataBag
     /**
      * The data array stored in the bag.
      *
-     * @var array
+     * @var string[]|int[]
      */
     protected $data;
 
     /**
      * Constructor.
      *
-     * @param array|null $data The initial data array stored in the bag
+     * @param string[]|int[]|null $data The initial data array stored in the bag
      */
     public function __construct(?array $data = null)
     {
@@ -81,8 +81,8 @@ class DataBag
      * $plant = new DataBag(array('key' => 'value'));
      * $plant->flower('rose')->color('red')->emptyValue(false, true);
      *
-     * @param   string $name   The name
-     * @param   array  $params Arguments
+     * @param   string                       $name   The name
+     * @param   string[]|int[]|bool[]|null[] $params Arguments
      * @return  DataBag
      */
     public function __call(string $name, array $params): self

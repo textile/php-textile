@@ -31,7 +31,8 @@
         "phpstan/phpstan": "^0.12.3"
     },
     "scripts": {
-        "test": "./vendor/bin/phpunit",
-        "cs": "./vendor/bin/phpcs"
+        "test": "phpunit",
+        "cs": "phpcs",
+        "phpstan": "phpstan analyse --level 6 src test"
     }
 }
