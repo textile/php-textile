@@ -920,7 +920,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * {@inheritdoc}
      */
-    public function setImages($enabled): ConfigInterface
+    public function setImages(bool $enabled): ConfigInterface
     {
         $this->noimage = !$enabled;
 
@@ -930,7 +930,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * {@inheritdoc}
      */
-
     public function isImageTagEnabled(): bool
     {
         return !$this->noimage;
@@ -939,7 +938,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * {@inheritdoc}
      */
-
     public function setLinkRelationShip($relationship): ConfigInterface
     {
         $this->rel = (string) implode(' ', (array) $relationship);
@@ -1189,8 +1187,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @see Parser::setSymbol()
      * @see Parser::getSymbol()
      */
-
-    private function prepGlyphs()
+    private function prepGlyphs(): void
     {
         if ($this->rebuild_glyphs === false) {
             return;
@@ -1375,8 +1372,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return int Maximum link index
      * @since  3.5.5
      */
-
-    private function getMaxLinkIndex()
+    private function getMaxLinkIndex(): int
     {
         return 1000000;
     }
@@ -1387,7 +1383,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * This method prepares the transient internal state of
      * Textile parser in preparation for parsing a new document.
      */
-    private function prepare()
+    private function prepare(): void
     {
         if ($this->linkIndex >= $this->getMaxLinkIndex()) {
             $this->linkPrefix .= '-';
@@ -1438,7 +1434,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $in The input string
      * @return string Cleaned string
      */
-    private function cleanAttribs($in)
+    private function cleanAttribs(string $in): string
     {
         $tmp = $in;
         $before = -1;
@@ -1474,8 +1470,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  bool   $selfclosing Determines if the tag should be selfclosing
      * @return Tag
      */
-
-    private function newTag($name, $atts, $selfclosing = true)
+    private function newTag(string $name, array $atts, bool $selfclosing = true): Tag
     {
         return new Tag($name, $atts, $selfclosing);
     }
@@ -1490,8 +1485,12 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string HTML attribute list
      * @see    Parser::parseAttribsTo[]
      */
-    private function parseAttribs($in, $element = '', $include_id = true, $autoclass = '')
-    {
+    private function parseAttribs(
+        string $in,
+        string $element = '',
+        bool $include_id = true,
+        string $autoclass = ''
+    ): string {
         $o = $this->parseAttribsToArray($in, $element, $include_id, $autoclass);
 
         return $this->formatAttributeString($o);
@@ -1503,7 +1502,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param array $attribute_array
      * @return string
      */
-    private function formatAttributeString(array $attribute_array)
+    private function formatAttributeString(array $attribute_array): string
     {
         $out = '';
 
@@ -1526,8 +1525,12 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return array  HTML attributes as key => value mappings
      * @see    Parser::parseAttribs()
      */
-    private function parseAttribsToArray($in, $element = '', $include_id = true, $autoclass = '')
-    {
+    private function parseAttribsToArray(
+        string $in,
+        string $element = '',
+        bool $include_id = true,
+        string $autoclass = ''
+    ): array {
         $style = [];
         $class = '';
         $lang = '';
@@ -1704,7 +1707,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text The input string
      * @return bool   TRUE if the text can be wrapped, FALSE otherwise
      */
-    private function hasRawText($text)
+    private function hasRawText(string $text): bool
     {
         if (preg_match($this->patterns['unwrappable'], $text)) {
             return false;
@@ -1731,7 +1734,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text The textile input
      * @return string The parsed text
      */
-    private function tables($text)
+    private function tables(string $text): string
     {
         $text = $text . "\n\n";
         return (string)preg_replace_callback(
@@ -1752,7 +1755,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string HTML table
      * @see    Parser::tables()
      */
-    private function fTable($matches)
+    private function fTable(array $matches): string
     {
         $tatts = $this->parseAttribs($matches['tatts'], 'table');
         $space = $this->regex_snippets['space'];
@@ -1913,7 +1916,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text The textile input
      * @return string The parsed text
      */
-    private function redclothLists($text)
+    private function redclothLists(string $text): string
     {
         return (string)preg_replace_callback(
             "/^([-]+$this->cls[ .].*:=.*)$(?![^-])/smU",
@@ -1932,7 +1935,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string HTML definition list
      * @see    Parser::redclothLists()
      */
-    private function fRedclothList($m)
+    private function fRedclothList(array $m): string
     {
         $in = $m[0];
         $out = [];
@@ -2008,7 +2011,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text The input
      * @return string The parsed text
      */
-    private function textileLists($text)
+    private function textileLists(string $text): string
     {
         return (string)preg_replace_callback(
             "/^((?:[*;:]+|[*;:#]*#(?:_|\d+)?)$this->cls[ .].*)$(?![^#*;:])/smU",
@@ -2027,7 +2030,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string HTML list
      * @see    Parser::textileLists()
      */
-    private function fTextileList($m)
+    private function fTextileList(array $m): string
     {
         $text = $m[0];
         $lines = preg_split('/\n(?=[*#;:])/m', $m[0]);
@@ -2158,7 +2161,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $in Textile input containing the possible list marker
      * @return string Either 'd', 'o', 'u'
      */
-    private function liType($in)
+    private function liType(string $in): string
     {
         $m = [];
         $type = 'd';
@@ -2175,7 +2178,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $in  The input
      * @return string
      */
-    private function doTagBr($tag, $in)
+    private function doTagBr(string $tag, string $in): string
     {
         return (string)preg_replace_callback(
             '@<(?P<tag>'.preg_quote($tag).')(?P<atts>[^>]*?)>(?P<content>.*)(?P<closetag></\1>)@s',
@@ -2190,7 +2193,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $in The input
      * @return string
      */
-    private function doPBr($in)
+    private function doPBr(string $in): string
     {
         return (string)preg_replace_callback(
             '@<(?P<tag>p|h[1-6])(?P<atts>[^>]*?)>(?P<content>.*)(?P<closetag></\1>)@s',
@@ -2209,7 +2212,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  array $m The input
      * @return string
      */
-    private function fPBr($m)
+    private function fPBr(array $m): string
     {
         if ($this->isLineWrapEnabled()) {
             // Replaces <br/>\n instances that are not followed by white-space,
@@ -2237,7 +2240,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  array  $m The input
      * @return string
      */
-    private function fBr($m)
+    private function fBr(array $m): string
     {
         $content = preg_replace(
             "@(.+)(?<!<br>|<br />|</li>|</dd>|</dt>)\n(?![\s|])@",
@@ -2257,7 +2260,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text Textile source text
      * @return string Input text with blocks processed
      */
-    private function blocks($text)
+    private function blocks(string $text): string
     {
         $regex = '/^(?P<tag>'.\implode('|', $this->blocktag_whitelist).')'.
             '(?P<atts>'.$this->a.$this->cls.$this->a.')\.(?P<ext>\.?)(?::(?P<cite>\S+))? (?P<graf>.*)$/Ss'.
@@ -2369,7 +2372,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  array $m The block content to format
      * @return array
      */
-    private function fBlock($m)
+    private function fBlock(array $m): array
     {
         list(, $tag, $att, $ext, $cite, $content) = $m;
         $atts = $this->parseAttribs($att);
@@ -2479,7 +2482,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return bool   TRUE if the block is raw, FALSE otherwise
      * @since  3.7.0
      */
-    private function isRawBlock($text)
+    private function isRawBlock(string $text): bool
     {
         if (preg_match($this->patterns['contained'], $text, $m)) {
             if (preg_match($this->patterns['phrasing'], $m['open'])) {
@@ -2504,7 +2507,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  bool   $anchor TRUE, if its a reference link
      * @return string Processed footnote
      */
-    private function formatFootnote($marker, $atts = '', $anchor = true)
+    private function formatFootnote(string $marker, string $atts = '', bool $anchor = true): string
     {
         $pattern = ($anchor) ? $this->symbols['fn_foot_pattern'] : $this->symbols['fn_ref_pattern'];
         return $this->replaceMarkers($pattern, array('atts' => $atts, 'marker' => $marker));
@@ -2517,7 +2520,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  array  $replacements Marker replacement pairs
      * @return string
      */
-    private function replaceMarkers($text, $replacements)
+    private function replaceMarkers(string $text, array $replacements): string
     {
         $map = [];
 
@@ -2537,7 +2540,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text Textile input
      * @return string $text Processed input
      */
-    private function getHTMLComments($text)
+    private function getHTMLComments(string $text): string
     {
         return (string)preg_replace_callback(
             "/\<!--(?P<content>.*?)-->/sx",
@@ -2555,7 +2558,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  array  $m Options
      * @return string Reference token wrapped to a HTML comment tags
      */
-    private function fParseHTMLComments($m)
+    private function fParseHTMLComments(array $m): string
     {
         return '<!--'.$this->shelve($m['content']).'-->';
     }
@@ -2566,7 +2569,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text Textile input
      * @return string Processed input
      */
-    private function graf($text)
+    private function graf(string $text): string
     {
         // Handle normal paragraph text
         if (!$this->isLiteModeEnabled()) {
@@ -2624,7 +2627,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text The Textile document to perform the replacements in
      * @return string The Textile document with spans replaced by their HTML inline equivalents
      */
-    private function spans($text)
+    private function spans(string $text): string
     {
         $span_tags = array_keys($this->span_tags);
         $pnct = ".,\"'?!;:‹›«»„“”‚‘’";
@@ -2661,7 +2664,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string Content wrapped to reference tokens
      * @see    Parser::spans()
      */
-    private function fSpan($m)
+    private function fSpan(array $m): string
     {
         $m = $this->getSpecialOptions($m);
         $tag = $this->span_tags[$m['tag']];
@@ -2689,7 +2692,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $closetag Closing tag
      * @return array  Reference tokens for both opening and closing tag
      */
-    private function storeTags($opentag, $closetag = '')
+    private function storeTags(string $opentag, string $closetag = ''): array
     {
         $tags = [];
 
@@ -2714,7 +2717,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string Processed text
      * @see    Parser::storeTags()
      */
-    private function retrieveTags($text)
+    private function retrieveTags(string $text): string
     {
         $text = (string)preg_replace_callback(
             '/'.$this->uid.'(?P<token>[0-9]+):ospan /',
@@ -2738,7 +2741,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string
      * @see    Parser::retrieveTags()
      */
-    private function fRetrieveTags($m)
+    private function fRetrieveTags(array $m): string
     {
         return $this->refCache[$m['token']];
     }
@@ -2753,7 +2756,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text Textile input
      * @return string Processed input
      */
-    private function placeNoteLists($text)
+    private function placeNoteLists(string $text): string
     {
         // Sequence all referenced definitions.
         if ($this->notes) {
@@ -2793,7 +2796,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  array  $m Options
      * @return string Processed note list
      */
-    private function fNoteLists($m)
+    private function fNoteLists(array $m): string
     {
         if (!$m['startchar']) {
             $m['startchar'] = 'a';
@@ -2848,7 +2851,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $i       Instance count
      * @return string Processed input
      */
-    private function makeBackrefLink($info, $g_links, $i)
+    private function makeBackrefLink(array $info, string $g_links, string $i): string
     {
         $backlink_type = !empty($info['def']) && $info['def']['link'] ? $info['def']['link'] : $g_links;
         $allow_inc = (false === strpos($this->syms, $i));
@@ -2884,7 +2887,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  array  $m Options
      * @return string Empty string
      */
-    private function fParseNoteDefs($m)
+    private function fParseNoteDefs(array $m): string
     {
         $label = $m['label'];
         $link = $m['link'];
@@ -2904,6 +2907,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 'link'    => $link,
             );
         }
+
         return '';
     }
 
@@ -2916,7 +2920,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text Textile input
      * @return string
      */
-    private function noteRefs($text)
+    private function noteRefs(string $text): string
     {
         return (string)preg_replace_callback(
             "/\[(?P<atts>{$this->c})\#(?P<label>[^\]!]+?)(?P<nolink>[!]?)\]/Ux",
@@ -2935,7 +2939,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  array  $m Options
      * @return string Note reference
      */
-    private function fParseNoteRefs($m)
+    private function fParseNoteRefs(array $m): string
     {
         $atts = $this->parseAttribs($m['atts']);
         $nolink = ($m['nolink'] === '!');
@@ -2981,12 +2985,12 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * This method splits a URI-like string apart into component parts, while
      * also providing validation.
      *
-     * @param  string $uri The string to pick apart (if possible)
-     * @param  array  $m   Reference to an array the URI component parts are assigned to
+     * @param  string      $uri The string to pick apart (if possible)
+     * @param  array|null  $m   Reference to an array the URI component parts are assigned to
      * @return bool   TRUE if the string validates as a URI
      * @link   http://tools.ietf.org/html/rfc3986#appendix-B
      */
-    private function parseURI($uri, &$m)
+    private function parseURI(string $uri, ?array &$m): bool
     {
         $r = "@^((?P<scheme>[^:/?#]+):)?".
             "(//(?P<authority>[^/?#]*))?".
@@ -3005,8 +3009,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  array  $parts An array of existing components to modify
      * @return bool   TRUE if the component can be added
      */
-
-    private function addPart($mask, $name, $parts)
+    private function addPart(array $mask, string $name, array $parts): bool
     {
         return (in_array($name, $mask) && isset($parts[$name]) && '' !== $parts[$name]);
     }
@@ -3020,8 +3023,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string         The rebuilt URI
      * @link   http://tools.ietf.org/html/rfc3986#section-5.3
      */
-    private function rebuildURI($parts, $mask = 'scheme,authority,path,query,fragment', $encode = true)
-    {
+    private function rebuildURI(
+        array $parts,
+        string $mask = 'scheme,authority,path,query,fragment',
+        bool $encode = true
+    ) {
         $mask = explode(',', $mask);
         $out = '';
 
@@ -3071,9 +3077,10 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text Textile input
      * @return string The input document with link pulled out and replaced with tokens
      */
-    private function links($text)
+    private function links(string $text): string
     {
         $text = $this->markStartOfLinks($text);
+
         return $this->replaceLinks($text);
     }
 
@@ -3084,7 +3091,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string Text with links marked
      * @see    Parser::links()
      */
-    private function markStartOfLinks($text)
+    private function markStartOfLinks(string $text): string
     {
         // Slice text on '":<not space>' boundaries. These always occur in inline
         // links between the link text and the url part and are much more
@@ -3201,7 +3208,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string Processed input
      * @see    Parser::links()
      */
-    private function replaceLinks($text)
+    private function replaceLinks(string $text): string
     {
         $stopchars = "\s|^'\"*";
 
@@ -3226,7 +3233,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string Reference token for the shelved content
      * @see    Parser::replaceLinks()
      */
-    private function fLink($m)
+    private function fLink(array $m): string
     {
         $in = $m[0];
         $pre = $m['pre'];
@@ -3260,6 +3267,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $inner,
             $m
         );
+
         $atts = isset($m['atts']) ? $m['atts'] : '';
         $text = isset($m['text']) ? trim($m['text']) : $inner;
         $title = isset($m['title']) ? $m['title'] : '';
@@ -3437,7 +3445,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text Textile input
      * @return string The Textile document with any URI aliases removed
      */
-    private function getRefs($text)
+    private function getRefs(string $text): string
     {
         $pattern = [];
 
@@ -3464,7 +3472,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string Empty string
      * @see    Parser::getRefs()
      */
-    private function refs($m)
+    private function refs(array $m): string
     {
         $uri_parts = [];
         $this->parseURI($m['url'], $uri_parts);
@@ -3479,12 +3487,12 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * Stores away a URL fragments that have been parsed
      * and requires no more processing.
      *
-     * @param  string $text  The URL
-     * @param  string $type  The type
+     * @param  string      $text  The URL
+     * @param  string|null $type  The type
      * @return string The fragment's unique reference ID
      * @see    Parser::retrieveURLs()
      */
-    private function shelveURL($text, $type = null)
+    private function shelveURL(string $text, ?string $type = null)
     {
         if ('' === $text) {
             return '';
@@ -3508,7 +3516,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string Processed text
      * @see    Parser::shelveURL()
      */
-    private function retrieveURLs($text)
+    private function retrieveURLs(string $text): string
     {
         return (string)preg_replace_callback(
             '/'.$this->uid.'(?P<token>[0-9]+):(?P<type>url|image)/',
@@ -3523,7 +3531,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  array  $m Options
      * @return string The URL
      */
-    private function retrieveURL($m)
+    private function retrieveURL(array $m): string
     {
         if (!isset($this->refCache[$m['token']])) {
             return '';
@@ -3549,7 +3557,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return bool   TRUE if valid, FALSE otherwise
      * @since  3.6.0
      */
-    private function isValidUrl($url)
+    private function isValidUrl(string $url): bool
     {
         if ($this->parseURI($url, $component)) {
             if (!isset($component['scheme']) || $component['scheme'] === '') {
@@ -3574,11 +3582,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * or the URL starts with one of $this->url_schemes. Otherwise
      * the URL is prefixed.
      *
-     * @param  string $url  The URL
-     * @param  string $type The type
+     * @param  string      $url  The URL
+     * @param  string|null $type The type
      * @return string Absolute URL
      */
-    private function relURL($url, $type = null)
+    private function relURL(string $url, ?string $type = null): string
     {
         if ($type === null || $type === 'image') {
             $prefix = $this->relImagePrefix;
@@ -3615,7 +3623,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $url The URL
      * @return bool   TRUE if relative, FALSE otherwise
      */
-    private function isRelURL($url)
+    private function isRelURL(string $url): bool
     {
         if (strpos($url, '//') === 0) {
             return false;
@@ -3641,7 +3649,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text Textile input
      * @return string The input document with images pulled out and replaced with tokens
      */
-    private function images($text)
+    private function images(string $text): string
     {
         return (string)preg_replace_callback(
             '/
@@ -3670,7 +3678,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @see    Parser::images()
      * @since  3.6.0
      */
-    private function isInDocumentRootDirectory($path)
+    private function isInDocumentRootDirectory(string $path): bool
     {
         $realpath = realpath($path);
 
@@ -3690,7 +3698,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string Reference token for the shelved content
      * @see    Parser::images()
      */
-    private function fImage($m)
+    private function fImage(array $m): string
     {
         if (!$this->isValidUrl($m['url'])) {
             return $m[0];
@@ -3760,11 +3768,12 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text The input
      * @return string Processed text
      */
-    private function code($text)
+    private function code(string $text): string
     {
         $text = $this->doSpecial($text, '<code>', '</code>', 'fCode');
         $text = $this->doSpecial($text, '@', '@', 'fCode');
         $text = $this->doSpecial($text, '<pre>', '</pre>', 'fPre');
+
         return $text;
     }
 
@@ -3774,7 +3783,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  array  $m
      * @return string
      */
-    private function fCode($m)
+    private function fCode(array $m): string
     {
         $m = $this->getSpecialOptions($m);
 
@@ -3787,7 +3796,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  array  $m Options
      * @return string
      */
-    private function fPre($m)
+    private function fPre(array $m): string
     {
         $m = $this->getSpecialOptions($m);
 
@@ -3804,7 +3813,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string The fragment's unique reference ID
      * @see    Parser::retrieve()
      */
-    private function shelve($val)
+    private function shelve(string $val): string
     {
         $i = $this->uid.($this->refIndex++).':shelve';
         $this->shelf[$i] = $val;
@@ -3821,7 +3830,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string Processed text
      * @see    Parser::shelve()
      */
-    private function retrieve($text)
+    private function retrieve(string $text): string
     {
         if ($this->shelf) {
             do {
@@ -3839,7 +3848,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text Input Textile
      * @return string Cleaned version of the input
      */
-    private function cleanWhiteSpace($text)
+    private function cleanWhiteSpace(string $text): string
     {
         // Removes byte order mark.
         $out = (string)preg_replace("/^\xEF\xBB\xBF|\x1A/", '', $text);
@@ -3859,9 +3868,9 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string Cleaned input
      * @since  3.5.5
      */
-    private function cleanUniqueTokens($text)
+    private function cleanUniqueTokens(string $text): string
     {
-        return str_replace($this->uid, '', $text);
+        return \str_replace($this->uid, '', $text);
     }
 
     /**
@@ -3873,7 +3882,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $method The callback method
      * @return string Processed input
      */
-    private function doSpecial($text, $start, $end, $method)
+    private function doSpecial(string $text, string $start, string $end, string $method): string
     {
         return (string)preg_replace_callback(
             '/(?P<before>^|\s|[|[({>])'.
@@ -3891,7 +3900,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return array
      * @since  3.7.2
      */
-    private function getSpecialOptions($m)
+    private function getSpecialOptions(array $m): array
     {
         foreach ($this->spanWrappers as $before => $after) {
             if ($m['before'] === $before && $m['after'] === $after) {
@@ -3910,9 +3919,10 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text The input
      * @return string Processed input
      */
-    private function noTextile($text)
+    private function noTextile(string $text): string
     {
         $text = $this->doSpecial($text, '<notextile>', '</notextile>', 'fTextile');
+
         return $this->doSpecial($text, '==', '==', 'fTextile');
     }
 
@@ -3922,7 +3932,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  array $m Options
      * @return string
      */
-    private function fTextile($m)
+    private function fTextile(array $m): string
     {
         $m = $this->getSpecialOptions($m);
 
@@ -3938,13 +3948,12 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string $text Processed input
      * @see    Parser::footnoteID()
      */
-
-    private function footnoteRefs($text)
+    private function footnoteRefs(string $text): string
     {
-        return (string)preg_replace_callback(
+        return (string) \preg_replace_callback(
             '/(?<=\S)\[(?P<id>'.$this->regex_snippets['digit'].'+)'.
             '(?P<nolink>!?)\]'.$this->regex_snippets['space'].'?/U'.$this->regex_snippets['mod'],
-            array($this, 'footnoteID'),
+            [$this, 'footnoteID'],
             $text
         );
     }
@@ -3955,7 +3964,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  array  $m Options
      * @return string Footnote link, or ID
      */
-    private function footnoteID($m)
+    private function footnoteID(array $m): string
     {
         $backref = ' class="footnote"';
 
@@ -3979,11 +3988,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string
      * @since  3.5.4
      */
-    private function glyphQuotedQuote($text, $find = '"?|"[^"]+"')
+    private function glyphQuotedQuote(string $text, string $find = '"?|"[^"]+"'): string
     {
-        return (string)preg_replace_callback(
+        return (string) \preg_replace_callback(
             "/ (?P<pre>{$this->quote_starts})(?P<quoted>$find)(?P<post>.) /".$this->regex_snippets['mod'],
-            array($this, "fGlyphQuotedQuote"),
+            [$this, 'fGlyphQuotedQuote'],
             $text
         );
     }
@@ -3995,29 +4004,29 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string Input with quoted quotes removed and replaced with tokens
      * @see    Parser::glyphQuotedQuote()
      */
-    private function fGlyphQuotedQuote($m)
+    private function fGlyphQuotedQuote(array $m): string
     {
         // Check the correct closing character was found.
         if (!isset($this->quotes[$m['pre']]) || $m['post'] !== $this->quotes[$m['pre']]) {
             return $m[0];
         }
 
-        $pre = strtr($m['pre'], array(
+        $pre = strtr($m['pre'], [
             '"' => '&#8220;',
             "'" => '&#8216;',
             ' ' => '&nbsp;',
-        ));
+        ]);
 
-        $post = strtr($m['post'], array(
+        $post = strtr($m['post'], [
             '"' => '&#8221;',
             "'" => '&#8217;',
             ' ' => '&nbsp;',
-        ));
+        ]);
 
         $found = $m['quoted'];
 
-        if (strlen($found) > 1) {
-            $found = rtrim($this->glyphs($m['quoted']));
+        if (\strlen($found) > 1) {
+            $found = \rtrim($this->glyphs($m['quoted']));
         } elseif ('"' === $found) {
             $found = "&quot;";
         }
@@ -4035,7 +4044,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text Input Textile
      * @return string
      */
-    private function glyphs($text)
+    private function glyphs(string $text): string
     {
         if (!$this->glyph_search) {
             return $text;
@@ -4087,9 +4096,9 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $text The input
      * @return string Processed input
      */
-    private function replaceGlyphs($text)
+    private function replaceGlyphs(string $text): string
     {
-        return str_replace($this->uid.':glyph:', '', $text);
+        return \str_replace($this->uid.':glyph:', '', $text);
     }
 
     /**
@@ -4098,9 +4107,9 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $in The Textile alignment tag
      * @return string CSS text-align value
      */
-    private function hAlign($in)
+    private function hAlign(string $in): string
     {
-        $vals = array(
+        $vals = [
             '&lt;'     => 'left',
             '&gt;'     => 'right',
             '&lt;&gt;' => 'justify',
@@ -4108,26 +4117,27 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             '='        => 'center',
             '>'        => 'right',
             '<>'       => 'justify',
-        );
+        ];
 
-        return (isset($vals[$in])) ? $vals[$in] : '';
+        return $vals[$in] ?? '';
     }
 
     /**
      * Translates vertical alignment tag into corresponding CSS vertical-align property value.
      *
      * @param  string $in The Textile alignment tag
+     *
      * @return string CSS vertical-align value
      */
-    private function vAlign($in)
+    private function vAlign(string $in): string
     {
-        $vals = array(
+        $vals = [
             '^' => 'top',
             '-' => 'middle',
             '~' => 'bottom',
-        );
+        ];
 
-        return (isset($vals[$in])) ? $vals[$in] : '';
+        return $vals[$in] ?? '';
     }
 
     /**
@@ -4137,9 +4147,10 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      *
      * @param  string $text    The input
      * @param  string $charset The character set
+     *
      * @return string Processed input
      */
-    private function encodeHigh($text, $charset = 'UTF-8')
+    private function encodeHigh(string $text, string $charset = 'UTF-8'): string
     {
         if ($this->isMultiByteStringSupported()) {
             return mb_encode_numericentity($text, $this->cmap, $charset);
@@ -4155,7 +4166,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param  string $charset The character set
      * @return string Processed input
      */
-    private function decodeHigh($text, $charset = 'UTF-8')
+    private function decodeHigh(string $text, string $charset = 'UTF-8'): string
     {
         $text = (string) intval($text) === (string) $text ? "&#$text;" : "&$text;";
 
@@ -4178,22 +4189,22 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string Encoded string
      * @see    htmlspecialchars()
      */
-    private function encodeHTML($str, $quotes = true)
+    private function encodeHTML(string $str, bool $quotes = true): string
     {
-        $a = array(
+        $a = [
             '&' => '&amp;',
             '<' => '&lt;',
             '>' => '&gt;',
-        );
+        ];
 
         if ($quotes) {
-            $a = $a + array(
+            $a = $a + [
                 "'" => '&#39;', // Numeric, as in htmlspecialchars
                 '"' => '&quot;',
-            );
+            ];
         }
 
-        return str_replace(array_keys($a), $a, $str);
+        return \str_replace(\array_keys($a), $a, $str);
     }
 
     /**
@@ -4208,11 +4219,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return string Encoded string
      * @see    Parser::encodeHTML()
      */
-    private function rEncodeHTML($str, $quotes = true)
+    private function rEncodeHTML(string $str, bool $quotes = true): string
     {
         // In restricted mode, all input but quotes has already been escaped
         if ($this->isRestrictedModeEnabled()) {
-            return str_replace('"', '&quot;', $str);
+            return \str_replace('"', '&quot;', $str);
         }
 
         return $this->encodeHTML($str, $quotes);
@@ -4224,10 +4235,10 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return bool
      * @since  3.5.5
      */
-    private function isMultiByteStringSupported()
+    private function isMultiByteStringSupported(): bool
     {
         if ($this->mb === null) {
-            $this->mb = is_callable('mb_strlen');
+            $this->mb = \is_callable('mb_strlen');
         }
 
         return $this->mb;
@@ -4239,7 +4250,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @return bool
      * @since  3.5.5
      */
-    private function isUnicodePcreSupported()
+    private function isUnicodePcreSupported(): bool
     {
         return (bool) @preg_match('/\pL/u', 'a');
     }
