@@ -3079,7 +3079,7 @@ class Parser
                     }
                 }
 
-                if ($m['level'] > $prev['level'] && $m['st'] !== '') {
+                if ((!$prev || $m['level'] > $prev['level']) && $m['st'] !== '') {
                     $start = ' start="' . $this->olstarts[$m['tl']] . '"';
                 }
 
@@ -3088,7 +3088,7 @@ class Parser
                 }
             }
 
-            if (strpos($prev['tl'], ';') !== false && strpos($m['tl'], ':') !== false) {
+            if ($prev && $prev['tl'] && strpos($prev['tl'], ';') !== false && strpos($m['tl'], ':') !== false) {
                 $lists[$m['tl']] = 2;
             }
 
