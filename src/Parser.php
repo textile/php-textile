@@ -2110,7 +2110,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 }
             }
 
-            if ($prev['tl'] && \strpos($prev['tl'], ';') !== false && \strpos($m['tl'], ':') !== false) {
+            if ($prev && $prev['tl'] && \strpos($prev['tl'], ';') !== false && \strpos($m['tl'], ':') !== false) {
                 $lists[$m['tl']] = 2;
             }
 
