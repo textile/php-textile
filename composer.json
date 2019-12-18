@@ -30,10 +30,24 @@
         "php-coveralls/php-coveralls": "2.1.*",
         "phpstan/phpstan": "^0.12.3"
     },
+    "suggest": {
+        "ext-mbstring": "Allows full Unicode support"
+    },
     "scripts": {
-        "test": "@composer phpstan && phpunit",
+        "test": [
+            "@composer test:static",
+            "@composer test:unit"
+        ],
         "cs": "phpcs",
         "csfix": "phpcbf",
-        "phpstan": "phpstan analyse --level 8 src test"
+        "test:static": "phpstan analyse --level 8 src test",
+        "test:unit": "phpunit"
+    },
+    "scripts-descriptions": {
+        "test": "Run unit tests and static analysis.",
+        "cs": "Check coding style.",
+        "csfix": "Fix coding style issues.",
+        "test:static": "Run static analysis.",
+        "test:unit": "Run unit tests."
     }
 }
