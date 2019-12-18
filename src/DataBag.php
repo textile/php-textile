@@ -57,7 +57,7 @@ class DataBag
     /**
      * The data array stored in the bag.
      *
-     * @var string[]|int[]
+     * @var string[]|int[]|bool[]|null[]
      */
     protected $data;
 

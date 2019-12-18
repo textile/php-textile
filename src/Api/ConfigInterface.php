@@ -429,7 +429,7 @@ interface ConfigInterface
      * print_r($parser->getSymbol());
      *
      * @param  string|null $name The name of the symbol, or NULL if requesting the symbol table
-     * @return string[]|false[]|null[]|string The symbol table or the requested symbol
+     * @return string[]|false[]|null[]|string|false|null The symbol table or the requested symbol
      * @throws \InvalidArgumentException
      * @see    Parser::setSymbol()
      */

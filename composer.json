@@ -31,8 +31,9 @@
         "phpstan/phpstan": "^0.12.3"
     },
     "scripts": {
-        "test": "phpunit",
+        "test": "@composer phpstan && phpunit",
         "cs": "phpcs",
-        "phpstan": "phpstan analyse --level 6 src test"
+        "csfix": "phpcbf",
+        "phpstan": "phpstan analyse --level 8 src test"
     }
 }

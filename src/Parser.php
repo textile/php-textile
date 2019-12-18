@@ -571,7 +571,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * Basic symbols used in textile glyph replacements. To override these, call
      * setSymbol method before calling Parser::parse().
      *
-     * @var string[]|null[]
+     * @var string[]|null[]|false[]
      * @see Parser::setSymbol()
      * @see Parser::parse()
      */
@@ -1202,14 +1202,14 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $this->glyph_replace = [];
 
         // Dimension sign
-        if ($this->symbols['dimension'] !== false) {
+        if ($this->symbols['dimension'] !== false && $this->symbols['dimension'] !== null) {
             $this->glyph_search[] = '/(?<=\b|x)([0-9]++[\])]?[\'"]? ?)[x]( ?[\[(]?)(?=[+-]?'.$cur.'[0-9]*\.?[0-9]++)/i'.
             $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1'.$this->symbols['dimension'].'$2';
         }
 
         // Apostrophe
-        if ($this->symbols['apostrophe'] !== false) {
+        if ($this->symbols['apostrophe'] !== false && $this->symbols['apostrophe'] !== null) {
             $this->glyph_search[] = '/('.$this->regex_snippets['wrd'].'|\))\''.
             '('.$this->regex_snippets['wrd'].')/'.$this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1'.$this->symbols['apostrophe'].'$2';
@@ -1222,39 +1222,39 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         }
 
         // Single open following open bracket
-        if ($this->symbols['quote_single_open'] !== false) {
+        if ($this->symbols['quote_single_open'] !== false && $this->symbols['quote_single_open'] !== null) {
             $this->glyph_search[] = "/([([{])'(?=\S)/".$this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1'.$this->symbols['quote_single_open'];
         }
 
         // Single closing
-        if ($this->symbols['quote_single_close'] !== false) {
+        if ($this->symbols['quote_single_close'] !== false && $this->symbols['quote_single_close'] !== null) {
             $this->glyph_search[] = '/(\S)\'(?='.$this->regex_snippets['space'].'|'.$pnc.'|<|$)/'.
                 $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1'.$this->symbols['quote_single_close'];
         }
 
         // Default single opening
-        if ($this->symbols['quote_single_open'] !== false) {
+        if ($this->symbols['quote_single_open'] !== false && $this->symbols['quote_single_open'] !== null) {
             $this->glyph_search[] = "/'/";
             $this->glyph_replace[] = $this->symbols['quote_single_open'];
         }
 
         // Double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
-        if ($this->symbols['quote_double_open'] !== false) {
+        if ($this->symbols['quote_double_open'] !== false && $this->symbols['quote_double_open'] !== null) {
             $this->glyph_search[] = '/([([{])"(?=\S)/'.$this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1'.$this->symbols['quote_double_open'];
         }
 
         // Double closing
-        if ($this->symbols['quote_double_close'] !== false) {
+        if ($this->symbols['quote_double_close'] !== false && $this->symbols['quote_double_close'] !== null) {
             $this->glyph_search[] = '/(\S)"(?='.$this->regex_snippets['space'].'|'.$pnc.'|<|$)/'.
                 $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1'.$this->symbols['quote_double_close'];
         }
 
         // Default double opening
-        if ($this->symbols['quote_double_open'] !== false) {
+        if ($this->symbols['quote_double_open'] !== false && $this->symbols['quote_double_open'] !== null) {
             $this->glyph_search[] = '/"/';
             $this->glyph_replace[] = $this->symbols['quote_double_open'];
         }
@@ -1280,7 +1280,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         }
 
         // 3+ uppercase
-        if ($this->symbols['caps'] !== false) {
+        if ($this->symbols['caps'] !== false && $this->symbols['caps'] !== null) {
             $this->glyph_search[] = '/('.$this->regex_snippets['space'].'|^|[>(;-])'.
                 '(['.$this->regex_snippets['abr'].']{3,})'.
                 '(['.$this->regex_snippets['nab'].']*)(?='.
@@ -1293,70 +1293,70 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         }
 
         // Ellipsis
-        if ($this->symbols['ellipsis'] !== false) {
+        if ($this->symbols['ellipsis'] !== false && $this->symbols['ellipsis'] !== null) {
             $this->glyph_search[] = '/([^.]?)\.{3}/';
             $this->glyph_replace[] = '$1'.$this->symbols['ellipsis'];
         }
 
         // em dash
-        if ($this->symbols['emdash'] !== false) {
+        if ($this->symbols['emdash'] !== false && $this->symbols['emdash'] !== null) {
             $this->glyph_search[] = '/--/';
             $this->glyph_replace[] = $this->symbols['emdash'];
         }
 
         // en dash
-        if ($this->symbols['endash'] !== false) {
+        if ($this->symbols['endash'] !== false && $this->symbols['endash'] !== null) {
             $this->glyph_search[] = '/ - /';
             $this->glyph_replace[] = ' '.$this->symbols['endash'].' ';
         }
 
         // Trademark
-        if ($this->symbols['trademark'] !== false) {
+        if ($this->symbols['trademark'] !== false && $this->symbols['trademark'] !== null) {
             $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]TM[])]/i'.
                 $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1'.$this->symbols['trademark'];
         }
 
         // Registered
-        if ($this->symbols['registered'] !== false) {
+        if ($this->symbols['registered'] !== false && $this->symbols['registered'] !== null) {
             $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]R[])]/i'.
                 $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1'.$this->symbols['registered'];
         }
 
         // Copyright
-        if ($this->symbols['copyright'] !== false) {
+        if ($this->symbols['copyright'] !== false && $this->symbols['copyright'] !== null) {
             $this->glyph_search[] = '/(\b ?|'.$this->regex_snippets['space'].'|^)[([]C[])]/i'.
                 $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1'.$this->symbols['copyright'];
         }
 
         // 1/4
-        if ($this->symbols['quarter'] !== false) {
+        if ($this->symbols['quarter'] !== false && $this->symbols['quarter'] !== null) {
             $this->glyph_search[] = '/[([]1\/4[])]/';
             $this->glyph_replace[] = $this->symbols['quarter'];
         }
 
         // 1/2
-        if ($this->symbols['half'] !== false) {
+        if ($this->symbols['half'] !== false && $this->symbols['half'] !== null) {
             $this->glyph_search[] = '/[([]1\/2[])]/';
             $this->glyph_replace[] = $this->symbols['half'];
         }
 
         // 3/4
-        if ($this->symbols['threequarters'] !== false) {
+        if ($this->symbols['threequarters'] !== false && $this->symbols['threequarters'] !== null) {
             $this->glyph_search[] = '/[([]3\/4[])]/';
             $this->glyph_replace[] = $this->symbols['threequarters'];
         }
 
         // Degrees -- that's a small 'oh'
-        if ($this->symbols['degrees'] !== false) {
+        if ($this->symbols['degrees'] !== false && $this->symbols['degrees'] !== null) {
             $this->glyph_search[] = '/[([]o[])]/';
             $this->glyph_replace[] = $this->symbols['degrees'];
         }
 
         // Plus minus
-        if ($this->symbols['plusminus'] !== false) {
+        if ($this->symbols['plusminus'] !== false && $this->symbols['plusminus'] !== null) {
             $this->glyph_search[] = '/[([]\+\/-[])]/';
             $this->glyph_replace[] = $this->symbols['plusminus'];
         }
@@ -1498,7 +1498,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Converts an array of named attribute => value mappings to a string.
      *
-     * @param string[] $attribute_array
+     * @param string[]|int[] $attribute_array
      * @return string
      */
     private function formatAttributeString(array $attribute_array): string
@@ -1771,10 +1771,12 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $summary = \trim($matches['summary']);
 
         if ($summary !== '') {
-            $sum = ' summary="'.\htmlspecialchars($summary, ENT_QUOTES, 'UTF-8').'"';
+            $sum = ' summary="'.\htmlspecialchars($summary, \ENT_QUOTES, 'UTF-8').'"';
         }
 
-        foreach (\preg_split("/\|{$space}*?$/m", $matches['rows'], -1, PREG_SPLIT_NO_EMPTY) as $row) {
+        $matches = \preg_split("/\|{$space}*?$/m", $matches['rows'], -1, \PREG_SPLIT_NO_EMPTY) ?: [];
+
+        foreach ($matches as $row) {
             $row = \ltrim($row);
 
             // Caption -- can only occur on row 1, otherwise treat '|=. foo |...'
@@ -1941,7 +1943,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     {
         $in = $m[0];
         $out = [];
-        $text = \preg_split('/\n(?=[-])/m', $in);
+        $text = \preg_split('/\n(?=[-])/m', $in) ?: [];
 
         foreach ($text as $line) {
             $m = [];
@@ -2135,11 +2137,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             }
 
             foreach (\array_reverse($lists) as $k => $v) {
-                $indent = \strlen($k);
+                $indent = \strlen((string) $k);
 
                 if (!$next || $indent > $next['level']) {
                     if ($v !== 2) {
-                        $line .= "\n$tabs</" . $this->liType($k) . "l>";
+                        $line .= "\n$tabs</" . $this->liType((string) $k) . "l>";
                     }
 
                     if ($v !== 2 && $indent > 1) {
@@ -2223,7 +2225,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $m['content'] = \preg_replace(
                 "~<br[ ]*/?>{$this->regex_snippets['space']}*\n(?![{$this->regex_snippets['space']}|])~i",
                 "\n",
-                $m['content']
+                $m['content'] ?? ''
             );
         }
 
@@ -2231,7 +2233,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $m['content'] = \preg_replace(
             "/\n(?![\s|])/",
             $this->isLineWrapEnabled() ? '<br />' : ' ',
-            $m['content']
+            $m['content'] ?? ''
         );
 
         return '<'.$m['tag'].$m['atts'].'>'.$m['content'].$m['closetag'];
@@ -2525,7 +2527,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     {
         $pattern = $anchor ? $this->symbols['fn_foot_pattern'] : $this->symbols['fn_ref_pattern'];
 
-        return $this->replaceMarkers($pattern, [
+        if (!$pattern) {
+            return '';
+        }
+
+        return $this->replaceMarkers((string) $pattern, [
             'atts' => $atts,
             'marker' => $marker,
         ]);
@@ -2994,8 +3000,12 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $out = '<a href="#note'.$id.'">'.$out.'</a>';
         }
 
+        if (!$this->symbols['nl_ref_pattern']) {
+            return '';
+        }
+
         // Build the reference.
-        return $this->replaceMarkers($this->symbols['nl_ref_pattern'], [
+        return $this->replaceMarkers((string) $this->symbols['nl_ref_pattern'], [
             'atts' => $atts,
             'marker' => $out,
         ]);
@@ -3144,7 +3154,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 
                 // Start our search for the start of the link with the closest prior
                 // quote mark.
-                $possibility = \rtrim(\array_pop($possible_start_quotes));
+                $possibility = \rtrim((string) \array_pop($possible_start_quotes));
 
                 // Init the balanced count. If this is still zero at the end
                 // of our do loop we'll mark the " that caused it to balance
@@ -3923,11 +3933,14 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     private function doSpecial(string $text, string $start, string $end, string $method): string
     {
+        /** @var callable $callback */
+        $callback = [$this, $method];
+
         return (string) \preg_replace_callback(
             '/(?P<before>^|\s|[|[({>])'.
             \preg_quote($start, '/').'(?P<content>.*?)'.\preg_quote($end, '/').
             '(?<after>\]?)/ms',
-            [$this, $method],
+            $callback,
             $text
         );
     }

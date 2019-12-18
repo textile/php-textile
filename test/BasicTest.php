@@ -51,8 +51,13 @@ final class BasicTest extends TestCase
 
         $method = isset($test['method']) ? \trim($test['method']) : 'parse';
         $expect = \rtrim($test['expect']);
+
         \array_unshift($args, $test['input']);
-        $input = \rtrim(\call_user_func_array([$textile, $method], $args));
+
+        /** @var callable $callback */
+        $callback = [$textile, $method];
+
+        $input = \rtrim(\call_user_func_array($callback, $args));
 
         foreach (['expect', 'input'] as $variable) {
             $$variable = \preg_replace(
@@ -81,7 +86,7 @@ final class BasicTest extends TestCase
     {
         $textile = new Textile();
         $this->assertEquals('TestValue', $textile->setSymbol('test', 'TestValue')->getSymbol('test'));
-        $this->assertArrayHasKey('test', $textile->getSymbol());
+        $this->assertArrayHasKey('test', (array) $textile->getSymbol());
     }
 
     public function testSetGetDimensionlessImage(): void
