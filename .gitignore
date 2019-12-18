@@ -1,6 +1,7 @@
 .*
 !.editorconfig
 !.gitattributes
+!.github
 !.gitignore
 !.travis.yml
 /build
