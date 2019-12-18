@@ -11,6 +11,10 @@ RUN apt-get update && apt-get install -y \
 
 RUN docker-php-ext-install zip
 
+RUN pecl install xdebug
+
+RUN docker-php-ext-enable xdebug
+
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
