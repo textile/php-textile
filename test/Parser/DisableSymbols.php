@@ -6,7 +6,7 @@
  * @link https://github.com/textile/php-textile
  */
 
-namespace Netcarver\Textile\Test\Parser;
+declare(strict_types=1);
 
 /*
  * Copyright (c) 2013, Netcarver https://github.com/netcarver
@@ -38,6 +38,8 @@ namespace Netcarver\Textile\Test\Parser;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+namespace Netcarver\Textile\Test\Parser;
+
 use Netcarver\Textile\Parser;
 
 /**
@@ -50,7 +52,7 @@ class DisableSymbols extends Parser
      */
     protected function configure()
     {
-        foreach ((array)$this->getSymbol() as $name => $value) {
+        foreach ((array) $this->getSymbol() as $name => $value) {
             $this->setSymbol($name, false);
         }
     }

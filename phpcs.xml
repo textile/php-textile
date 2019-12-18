@@ -4,4 +4,18 @@
     <file>test</file>
     <rule ref="PSR1"/>
     <rule ref="PSR12"/>
+    <rule ref="Generic.PHP.RequireStrictTypes"/>
+
+    <rule ref="Generic.Formatting.SpaceAfterCast">
+        <properties>
+            <property name="spacing" value="1"/>
+        </properties>
+    </rule>
+
+    <rule ref="Generic.Formatting.SpaceAfterNot">
+        <properties>
+            <property name="spacing" value="0"/>
+            <property name="ignoreNewlines" value="false"/>
+        </properties>
+    </rule>
 </ruleset>

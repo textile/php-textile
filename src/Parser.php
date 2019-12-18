@@ -1118,7 +1118,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function textileEncode(string $text): string
     {
-        return (string)preg_replace('/&(?!(?:[a-z][a-z\d]*|#(?:\d+|x[a-f\d]+));)/i', '&amp;', $text);
+        return (string) \preg_replace('/&(?!(?:[a-z][a-z\d]*|#(?:\d+|x[a-f\d]+));)/i', '&amp;', $text);
     }
 
     /**
@@ -1174,7 +1174,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $text = $this->retrieveTags($text);
         $text = $this->retrieveURLs($text);
 
-        $text = str_replace("<br />", "<br />\n", $text);
+        $text = \str_replace("<br />", "<br />\n", $text);
 
         return $text;
     }
@@ -1739,7 +1739,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private function tables(string $text): string
     {
         $text = $text . "\n\n";
-        return (string)preg_replace_callback(
+        return (string) \preg_replace_callback(
             "/^(?:table(?P<tatts>_?{$this->s}{$this->a}{$this->cls})\." .
             "(?P<summary>.*)?\n)?^(?P<rows>{$this->a}{$this->cls}\.? ?\|.*\|){$this->regex_snippets['space']}*\n\n/smU",
             [$this, 'fTable'],
@@ -2668,7 +2668,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         if ($this->span_depth <= $this->max_span_depth) {
             foreach ($span_tags as $tag) {
                 $tag = \preg_quote($tag);
-                $text = (string)\preg_replace_callback(
+                $text = (string) \preg_replace_callback(
                     "/
                     (?P<before>^|(?<=[\s>$pnct\(])|[{[])
                     (?P<tag>$tag)(?!$tag)
@@ -4139,7 +4139,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 // Raw < > & chars are already entity encoded in restricted mode
                 if (!$this->isRestrictedModeEnabled()) {
                     $line = \preg_replace('/&(?!#?[a-z0-9]+;)/i', '&amp;', $line);
-                    $line = \str_replace(['<', '>'], ['&lt;', '&gt;'], (string)$line);
+                    $line = \str_replace(['<', '>'], ['&lt;', '&gt;'], (string) $line);
                 }
 
                 $line = \preg_replace($this->glyph_search, $this->glyph_replace, $line);
