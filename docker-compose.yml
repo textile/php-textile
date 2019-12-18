@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  latest:
+    build: ./docker/latest
+    volumes:
+      - .:/app
+    working_dir: /app
+
+  php_7_3:
+    build:
+      context: .
+      dockerfile: ./docker/php_7_3/Dockerfile
+
+  php_7_2:
+    build:
+      context: .
+      dockerfile: ./docker/php_7_2/Dockerfile
