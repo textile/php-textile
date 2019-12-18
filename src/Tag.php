@@ -1,12 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Textile - A Humane Web Text Generator.
  *
  * @link https://github.com/textile/php-textile
  */
+
+declare(strict_types=1);
 
 /*
  * Copyright (c) 2016-2017, Netcarver https://github.com/netcarver

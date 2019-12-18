@@ -21,7 +21,7 @@ final class BasicTest extends TestCase
     public function testFixtures(string $file, string $name, array $test): void
     {
         $class = $test['class'] ?? Textile::class;
-        $textile = new $class;
+        $textile = new $class();
 
         if (isset($test['doctype'])) {
             $textile->setDocumentType($test['doctype']);
