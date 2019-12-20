@@ -883,7 +883,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function setDocumentRootDirectory(string $path): ConfigInterface
     {
-        $this->doc_root = rtrim($path, '\\/') . $this->ds;
+        $this->doc_root = \rtrim($path, '\\/') . $this->ds;
 
         return $this;
     }
@@ -937,7 +937,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function setLinkRelationShip($relationship): ConfigInterface
     {
-        $this->rel = (string) implode(' ', (array) $relationship);
+        $this->rel = (string) \implode(' ', (array) $relationship);
 
         return $this;
     }
@@ -969,7 +969,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * {@inheritdoc}
      */
-
     public function isRestrictedModeEnabled(): bool
     {
         return (bool) $this->restricted;
@@ -1102,6 +1101,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     public function setDimensionlessImages(bool $dimensionless = true): ConfigInterface
     {
         $this->dimensionless_images = $dimensionless;
+
         return $this;
     }
 
@@ -1442,7 +1442,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $max = 3;
         $i = 0;
 
-        while (($after != $before) && ($i < $max)) {
+        while ($after !== $before && $i < $max) {
             $before = \strlen($tmp);
             $tmp = \rawurldecode($tmp);
             $after = \strlen($tmp);
@@ -1506,10 +1506,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     {
         $out = '';
 
-        if (count($attribute_array)) {
-            foreach ($attribute_array as $k => $v) {
-                $out .= " $k=\"$v\"";
-            }
+        foreach ($attribute_array as $k => $v) {
+            $out .= " $k=\"$v\"";
         }
 
         return $out;
@@ -1541,7 +1539,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $id = '';
         $matched = $in;
 
-        if ($element == 'td') {
+        if ($element === 'td') {
             if (\preg_match("/\\\\([0-9]+)/", $matched, $csp)) {
                 $colspan = $csp[1];
             }
@@ -1551,7 +1549,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             }
         }
 
-        if ($element == 'td' or $element == 'tr') {
+        if ($element === 'td' or $element === 'tr') {
             if (\preg_match("/^($this->vlgn)/", $matched, $vert)) {
                 $style[] = "vertical-align:" . $this->vAlign($vert[1]);
             }
@@ -1568,7 +1566,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         if (\preg_match("/\[([^]]+)\]/U", $matched, $lng)) {
             // Consume entire lang block -- valid or invalid.
             $matched = \str_replace($lng[0], '', $matched);
-            if ($element === 'code' && preg_match("/\[([a-zA-Z0-9_-]+)\]/U", $lng[0], $lng1)) {
+            if ($element === 'code' && \preg_match("/\[([a-zA-Z0-9_-]+)\]/U", $lng[0], $lng1)) {
                 $lang = $lng1[1];
             } elseif (\preg_match("/\[([a-zA-Z]{2}(?:[\-\_][a-zA-Z]{2})?)\]/U", $lng[0], $lng2)) {
                 $lang = $lng2[1];
@@ -1587,12 +1585,12 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 $hashpos = \strpos($cls[1], '#');
                 // If a textile class block attribute was found with a '#' in it
                 // split it into the css class and css id...
-                if (false !== $hashpos) {
+                if ($hashpos !== false) {
                     if (\preg_match("/#([-a-zA-Z0-9_\.\:]*)$/", \substr($cls[1], $hashpos), $ids)) {
                         $id = $ids[1];
                     }
 
-                    if (\preg_match($class_regex, substr($cls[1], 0, $hashpos), $ids)) {
+                    if (\preg_match($class_regex, \substr($cls[1], 0, $hashpos), $ids)) {
                         $class = $ids[1];
                     }
                 } else {
@@ -1609,7 +1607,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         }
 
         if (\preg_match("/([)]+)/", $matched, $pr)) {
-            $style[] = "padding-right:" . strlen($pr[1]) . "em";
+            $style[] = "padding-right:" . \strlen($pr[1]) . "em";
             $matched = \str_replace($pr[0], '', $matched);
         }
 
@@ -1617,7 +1615,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $style[] = "text-align:" . $this->hAlign($horiz[1]);
         }
 
-        if ($element == 'col') {
+        if ($element === 'col') {
             if (\preg_match("/(?:\\\\([0-9]+))?{$this->regex_snippets['space']}*([0-9]+)?/", $matched, $csp)) {
                 $span = $csp[1] ?? '';
                 $width = $csp[2] ?? '';
@@ -1640,7 +1638,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 
             return $o;
         } else {
-            $class = trim($class . ' ' . $autoclass);
+            $class = \trim($class . ' ' . $autoclass);
         }
 
         $o = [];
@@ -1674,10 +1672,10 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $tmps = [];
 
             foreach ($style as $s) {
-                $parts = explode(';', $s);
+                $parts = \explode(';', $s);
 
                 foreach ($parts as $p) {
-                    if ($p = trim(trim($p), ":")) {
+                    if ($p = \trim(\trim($p), ":")) {
                         $tmps[] = $p;
                     }
                 }
@@ -1739,6 +1737,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private function tables(string $text): string
     {
         $text = $text . "\n\n";
+
         return (string) \preg_replace_callback(
             "/^(?:table(?P<tatts>_?{$this->s}{$this->a}{$this->cls})\." .
             "(?P<summary>.*)?\n)?^(?P<rows>{$this->a}{$this->cls}\.? ?\|.*\|){$this->regex_snippets['space']}*\n\n/smU",
@@ -1790,8 +1789,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 )
             ) {
                 $capts = $this->parseAttribs($cmtch['capts']);
-                $cap = "\t<caption" . $capts . ">" . trim($cmtch['cap']) . "</caption>\n";
-                $row = ltrim($cmtch['row']);
+                $cap = "\t<caption" . $capts . ">" . \trim($cmtch['cap']) . "</caption>\n";
+                $row = \ltrim($cmtch['row']);
 
                 if (!$row) {
                     continue;
@@ -1808,8 +1807,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 $idx = 0;
 
                 foreach (\explode('|', \str_replace('.', '', $gmtch['cols'])) as $col) {
-                    $gatts = $this->parseAttribs(trim($col), 'col');
-                    $colgrp .= "\t<col" . (($idx == 0) ? "group" . $gatts . ">" : $gatts . " />") . "\n";
+                    $gatts = $this->parseAttribs(\trim($col), 'col');
+                    $colgrp .= "\t<col" . ($idx === 0 ? "group" . $gatts . ">" : $gatts . " />") . "\n";
                     $idx++;
                 }
 
@@ -1972,7 +1971,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                     $xm = [$content, $content, ''];
                 }
 
-                list(, $term, $def,) = $xm;
+                [, $term, $def,] = $xm;
                 $term = \trim($term);
                 $def = \trim($def, ' ');
 
@@ -1989,7 +1988,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                     $def = \trim($def);
 
                     if ($this->isLineWrapEnabled()) {
-                        $def = str_replace("\n", "<br />", $def);
+                        $def = \str_replace("\n", "<br />", $def);
                     }
 
                     if ($pos === 0) {
@@ -2100,7 +2099,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 
             $showitem = ($content !== '');
 
-            if ('o' === $ltype) {
+            if ($ltype === 'o') {
                 if (!isset($this->olstarts[$m['tl']])) {
                     $this->olstarts[$m['tl']] = 1;
                 }
@@ -2167,6 +2166,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         }
 
         $out = \implode("\n", $out);
+
         return $this->doTagBr($litem, $out);
     }
 
@@ -2180,9 +2180,13 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     {
         $m = [];
         $type = 'd';
+
         if (\preg_match('/^(?P<type>[#*]+)/', $in, $m)) {
-            $type = ('#' === \substr($m['type'], -1)) ? 'o' : 'u';
+            $type = \substr($m['type'], -1) === '#'
+                ? 'o'
+                : 'u';
         }
+
         return $type;
     }
 
@@ -2327,10 +2331,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 $cite = $m['cite'];
                 $graf = $m['graf'];
 
-                list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock($m);
+                [$o1, $o2, $content, $c2, $c1, $eat] = $this->fBlock($m);
 
                 // Leave off c1 if this block is extended, we'll close it at the start of the next block
                 $block = $o1 . $o2 . $content . $c2;
+
                 if (!$ext) {
                     $block .= $c1;
                 }
@@ -2339,7 +2344,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                     ($this->isRawBlocksEnabled() && $this->isRawBlock($block));
 
                 if ($ext || (\strpos($block, ' ') !== 0 && !$rawBlock)) {
-                    list($o1, $o2, $content, $c2, $c1, $eat) = $this->fBlock([
+                    [$o1, $o2, $content, $c2, $c1, $eat] = $this->fBlock([
                         0,
                         $tag,
                         $atts,
@@ -2349,7 +2354,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                     ]);
 
                     // Skip $o1/$c1 because this is part of a continuing extended block
-                    if ($tag == 'p' && !$this->hasRawText($content)) {
+                    if ($tag === 'p' && !$this->hasRawText($content)) {
                         $block = $content;
                     } else {
                         $block = $o2 . $content . $c2;
@@ -2397,7 +2402,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     private function fBlock(array $m): array
     {
-        list(, $tag, $att, $ext, $cite, $content) = $m;
+        [, $tag, $att, $ext, $cite, $content] = $m;
         $atts = $this->parseAttribs($att);
         $space = $this->regex_snippets['space'];
 
@@ -2455,14 +2460,14 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $content = $sup . ' ' . $content;
         }
 
-        if ($tag == "bq") {
+        if ($tag === "bq") {
             $cite = $this->shelveURL($cite);
-            $cite = ($cite != '') ? ' cite="' . $cite . '"' : '';
+            $cite = $cite !== '' ? ' cite="' . $cite . '"' : '';
             $o1 = "<blockquote$cite$atts>\n";
             $o2 = "\t<p" . $this->parseAttribs($att, '', false) . ">";
             $c2 = "</p>";
             $c1 = "\n</blockquote>";
-        } elseif ($tag == 'bc') {
+        } elseif ($tag === 'bc') {
             $attrib_array = $this->parseAttribsToArray($att, 'code');
             $code_class   = '';
             if (isset($attrib_array['lang'])) {
@@ -2473,19 +2478,19 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $o1 = "<pre$atts><code$code_class>";
             $c1 = "</code></pre>";
             $content = $this->shelve($this->rEncodeHTML($content));
-        } elseif ($tag == 'notextile') {
+        } elseif ($tag === 'notextile') {
             $content = $this->shelve($content);
             $o1 = '';
             $o2 = '';
             $c1 = '';
             $c2 = '';
-        } elseif ($tag == 'pre') {
+        } elseif ($tag === 'pre') {
             $content = $this->shelve($this->rEncodeHTML($content));
             $o1 = "<pre$atts>";
             $o2 = '';
             $c2 = '';
             $c1 = "</pre>";
-        } elseif ($tag == '###') {
+        } elseif ($tag === '###') {
             $eat = true;
         } else {
             $o2 = "<$tag$atts>";
@@ -2687,6 +2692,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         }
 
         $this->span_depth--;
+
         return $text;
     }
 
@@ -2703,8 +2709,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $tag = $this->span_tags[$m['tag']];
         $atts = $this->parseAttribsToArray($m['atts']);
 
-        if ($m['cite'] != '') {
-            $atts['cite'] = trim($m['cite']);
+        if ($m['cite'] !== '') {
+            $atts['cite'] = \trim($m['cite']);
             \ksort($atts);
         }
 
@@ -2855,7 +2861,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 }
             }
 
-            if ('+' == $m['extras'] && $this->unreferencedNotes) {
+            if ($m['extras'] === '+' && $this->unreferencedNotes) {
                 foreach ($this->unreferencedNotes as $info) {
                     if (!empty($info['def'])) {
                         $out[] = "\t" . '<li' . $info['def']['atts'] . '>' . $info['def']['content'] . '</li>';
@@ -2863,7 +2869,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 }
             }
 
-            $this->notelist_cache[$index] = implode("\n", $out);
+            $this->notelist_cache[$index] = \implode("\n", $out);
         }
 
         if ($this->notelist_cache[$index]) {
@@ -3052,7 +3058,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     private function addPart(array $mask, string $name, array $parts): bool
     {
-        return (\in_array($name, $mask) && isset($parts[$name]) && '' !== $parts[$name]);
+        return \in_array($name, $mask) && isset($parts[$name]) && $parts[$name] !== '';
     }
 
     /**
@@ -3331,7 +3337,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         //     "text":url?q[]=x][123]    will have "[123]" popped off the back, the remaining closing square brackets
         //                               will later be tested for balance
         if ($counts[']']) {
-            if (1 === \preg_match('@(?P<url>^.*\])(?P<tight>\[.*?)$@' . $this->regex_snippets['mod'], $url, $m)) {
+            if (\preg_match('@(?P<url>^.*\])(?P<tight>\[.*?)$@' . $this->regex_snippets['mod'], $url, $m) === 1) {
                 $url = $m['url'];
                 $tight = $m['tight'];
                 $m = [];
@@ -3344,7 +3350,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         // popped back out and the remaining square bracket
         // will later be tested for balance
         if ($counts[']']) {
-            if (1 === \preg_match('@(?P<url>^.*\])(?!=)(?P<end>.*?)$@' . $this->regex_snippets['mod'], $url, $m)) {
+            if (\preg_match('@(?P<url>^.*\])(?!=)(?P<end>.*?)$@' . $this->regex_snippets['mod'], $url, $m) === 1) {
                 $url = $m['url'];
                 $tight = $m['end'] . $tight;
                 $m = [];
@@ -3391,7 +3397,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                     // If we find a closing square bracket we are going to see if it is balanced.
                     // If it is balanced with matching opening bracket then it is part of the URL
                     // else we spit it back out of the URL.
-                    if (null === $counts['[']) {
+                    if ($counts['['] === null) {
                         $counts['['] = \substr_count($url, '[');
                     }
 
@@ -3409,7 +3415,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                     break;
 
                 case ')':
-                    if (null === $counts[')']) {
+                    if ($counts[')'] === null) {
                         $counts['('] = \substr_count($url, '(');
                         $counts[')'] = \substr_count($url, ')');
                     }
@@ -3445,7 +3451,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $scheme = $uri_parts['scheme'];
         $scheme_in_list = \in_array($scheme, $this->url_schemes);
 
-        if ('$' === $text) {
+        if ($text === '$') {
             if ($scheme_in_list) {
                 $text = \ltrim($this->rebuildURI($uri_parts, 'authority,path,query,fragment', false), '/');
             } else {
@@ -3479,7 +3485,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             ->rel($this->rel);
 
         $tags = $this->storeTags((string) $a, '</a>');
-        $out = $this->shelve($tags['open'] . trim($text) . $tags['close']);
+        $out = $this->shelve($tags['open'] . \trim($text) . $tags['close']);
 
         return $pre . $out . $pop . $tight;
     }
@@ -3546,7 +3552,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     private function shelveURL(string $text, ?string $type = null)
     {
-        if ('' === $text) {
+        if ($text === '') {
             return '';
         }
 
@@ -3798,7 +3804,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             ->title($title);
 
         if (!$this->dimensionless_images && $this->isRelUrl($url)) {
-            $location = $this->getDocumentRootDirectory() . ltrim($url, '\\/');
+            $location = $this->getDocumentRootDirectory() . \ltrim($url, '\\/');
             $location_ok = $this->isInDocumentRootDirectory($location);
 
             if ($location_ok) {
@@ -3896,7 +3902,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             do {
                 $old = $text;
                 $text = \str_replace(\array_keys($this->shelf), $this->shelf, $text);
-            } while ($text != $old);
+            } while ($text !== $old);
         }
 
         return $text;
@@ -4038,7 +4044,9 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         }
 
         $fnid = $this->fn[$m['id']];
-        $footref = ('!' == $m['nolink']) ? $m['id'] : '<a href="#fn' . $fnid . '">' . $m['id'] . '</a>';
+        $footref = $m['nolink'] === '!'
+            ? $m['id']
+            : '<a href="#fn' . $fnid . '">' . $m['id'] . '</a>';
         $footref = $this->formatFootnote($footref, $backref, false);
 
         return $footref;
@@ -4091,7 +4099,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 
         if (\strlen($found) > 1) {
             $found = \rtrim($this->glyphs($m['quoted']));
-        } elseif ('"' === $found) {
+        } elseif ($found === '"') {
             $found = "&quot;";
         }
 
@@ -4190,7 +4198,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * Translates vertical alignment tag into corresponding CSS vertical-align property value.
      *
      * @param  string $in The Textile alignment tag
-     *
      * @return string CSS vertical-align value
      */
     private function vAlign(string $in): string
@@ -4211,7 +4218,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      *
      * @param  string $text    The input
      * @param  string $charset The character set
-     *
      * @return string Processed input
      */
     private function encodeHigh(string $text, string $charset = 'UTF-8'): string
@@ -4238,7 +4244,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             return \mb_decode_numericentity($text, $this->cmap, $charset);
         }
 
-        return \html_entity_decode($text, ENT_NOQUOTES, $charset);
+        return \html_entity_decode($text, \ENT_NOQUOTES, $charset);
     }
 
     /**

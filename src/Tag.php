@@ -110,7 +110,8 @@ final class Tag extends DataBag
         $attributes = '';
 
         if ($this->data) {
-            ksort($this->data);
+            \ksort($this->data);
+
             foreach ($this->data as $name => $value) {
                 $attributes .= " $name=\"$value\"";
             }

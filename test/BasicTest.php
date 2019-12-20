@@ -170,7 +170,7 @@ final class BasicTest extends TestCase
     {
         $parser = new Textile();
         $parser->setDocumentRootDirectory(__DIR__);
-        $this->assertEquals(__DIR__, rtrim($parser->getDocumentRootDirectory(), '\\/'));
+        $this->assertEquals(__DIR__, \rtrim($parser->getDocumentRootDirectory(), '\\/'));
     }
 
     public function testDisallowImages(): void
