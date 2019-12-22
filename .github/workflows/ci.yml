@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
     - name: Build
       run: make build
 
@@ -25,6 +28,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
     - name: Build
       run: make build IMAGE=php_7_3
 
@@ -42,6 +48,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
     - name: Build
       run: make build IMAGE=php_7_2
 
