@@ -52,7 +52,7 @@ namespace Netcarver\Textile;
  *
  * @internal
  */
-class DataBag
+abstract class DataBag
 {
     /**
      * The data array stored in the bag.
