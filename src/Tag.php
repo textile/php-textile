@@ -118,12 +118,12 @@ final class Tag extends DataBag
             \ksort($this->data);
 
             foreach ($this->data as $name => $value) {
-                $attributes .= " $name=\"$value\"";
+                $attributes .= ' ' . $name . '="' . $value . '"';
             }
         }
 
         if ($this->tag) {
-            return '<' . $this->tag . $attributes . (($this->selfclose) ? " />" : '>');
+            return '<' . $this->tag . $attributes . ($this->selfclose ? ' />' : '>');
         }
 
         return $attributes;

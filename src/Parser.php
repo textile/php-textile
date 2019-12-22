@@ -118,14 +118,14 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      *
      * @var string
      */
-    private $hlgn = "(?:\<(?!>)|&lt;&gt;|&gt;|&lt;|(?<!<)\>|\<\>|\=|[()]+(?! ))";
+    private $hlgn = '(?:\<(?!>)|&lt;&gt;|&gt;|&lt;|(?<!<)\>|\<\>|\=|[()]+(?! ))';
 
     /**
      * Pattern for vertical align.
      *
      * @var string
      */
-    private $vlgn = "[\-^~]";
+    private $vlgn = '[\-^~]';
 
     /**
      * Pattern for HTML classes and IDs.
@@ -156,14 +156,14 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      *
      * @var string
      */
-    private $cspn = "(?:\\\\[0-9]+)";
+    private $cspn = '(?:\\\\[0-9]+)';
 
     /**
      * Regular expression for row spans in tables.
      *
      * @var string
      */
-    private $rspn = "(?:\/[0-9]+)";
+    private $rspn = '(?:\/[0-9]+)';
 
     /**
      * Regular expression for horizontal or vertical alignment.
@@ -796,19 +796,19 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $uid = \uniqid((string) \rand());
         $this->uid = 'textileRef:' . $uid . ':';
         $this->linkPrefix = $uid . '-';
-        $this->a = "(?:$this->hlgn|$this->vlgn)*";
-        $this->s = "(?:$this->cspn|$this->rspn)*";
-        $this->c = "(?:$this->clas|$this->styl|$this->lnge|$this->hlgn)*";
+        $this->a = '(?:' . $this->hlgn . '|' . $this->vlgn . ')*';
+        $this->s = '(?:' . $this->cspn . '|' . $this->rspn . ')*';
+        $this->c = '(?:' . $this->clas . '|' . $this->styl . '|' . $this->lnge . '|' . $this->hlgn . ')*';
 
         $this->cls = '(?:' .
-            "$this->clas(?:" .
-                "$this->lnge(?:$this->styl)?|$this->styl(?:$this->lnge)?" .
+            $this->clas . '(?:' .
+                $this->lnge . '(?:' . $this->styl . ')?|' . $this->styl . '(?:' . $this->lnge . ')?' .
                 ')?|' .
-            "$this->lnge(?:" .
-                "$this->clas(?:$this->styl)?|$this->styl(?:$this->clas)?" .
+            $this->lnge . '(?:' .
+                $this->clas . '(?:' . $this->styl . ')?|' . $this->styl . '(?: ' . $this->clas . ')?' .
                 ')?|' .
-            "$this->styl(?:" .
-                "$this->clas(?:$this->lnge)?|$this->lnge(?:$this->clas)?" .
+            $this->styl . '(?:' .
+                $this->clas . '(?:' . $this->lnge . ')?|' . $this->lnge . '(?:' . $this->clas . ')?' .
                 ')?' .
             ')?';
 
@@ -818,7 +818,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 'abr'   => '\p{Lu}',
                 'nab'   => '\p{Ll}',
                 'wrd'   => '(?:\p{L}|\p{M}|\p{N}|\p{Pc})',
-                'mod'   => 'u', // Make sure to mark the unicode patterns as such, Some servers seem to need this.
+                // Make sure to mark the unicode patterns as such, Some servers seem to need this.
+                'mod'   => 'u',
                 'cur'   => '\p{Sc}',
                 'digit' => '\p{N}',
                 'space' => '(?:\p{Zs}|\h|\v)',
@@ -1205,7 +1206,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $text = $this->retrieveTags($text);
         $text = $this->retrieveUrls($text);
 
-        $text = \str_replace("<br />", "<br />\n", $text);
+        $text = \str_replace('<br />', '<br />' . "\n", $text);
 
         return $text;
     }
@@ -1232,7 +1233,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $this->glyph_search = [];
         $this->glyph_replace = [];
 
-        // Dimension sign
+        // Dimension sign.
         if ($this->symbols['dimension'] !== false && $this->symbols['dimension'] !== null) {
             $this->glyph_search[] = '/(?<=\b|x)([0-9]++[\])]?[\'"]? ?)' .
                 '[x]( ?[\[(]?)(?=[+-]?' . $cur .
@@ -1240,52 +1241,52 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $this->glyph_replace[] = '$1' . $this->symbols['dimension'] . '$2';
         }
 
-        // Apostrophe
+        // Apostrophe.
         if ($this->symbols['apostrophe'] !== false && $this->symbols['apostrophe'] !== null) {
             $this->glyph_search[] = '/(' . $this->regex_snippets['wrd'] . '|\))\'' .
                 '(' . $this->regex_snippets['wrd'] . ')/' . $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1' . $this->symbols['apostrophe'] . '$2';
 
-            // Back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'
+            // Back in '88/the '90s but not in his '90s', '1', '1.' '10m' or '5.png'.
             $this->glyph_search[] = '/(' . $this->regex_snippets['space'] . ')\'' .
                 '(\d+' . $this->regex_snippets['wrd'] . '?)' .
                 '\b(?![.]?[' . $this->regex_snippets['wrd'] . ']*?\')/' . $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1' . $this->symbols['apostrophe'] . '$2';
         }
 
-        // Single open following open bracket
+        // Single open following open bracket.
         if ($this->symbols['quote_single_open'] !== false && $this->symbols['quote_single_open'] !== null) {
             $this->glyph_search[] = "/([([{])'(?=\S)/" . $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1' . $this->symbols['quote_single_open'];
         }
 
-        // Single closing
+        // Single closing.
         if ($this->symbols['quote_single_close'] !== false && $this->symbols['quote_single_close'] !== null) {
             $this->glyph_search[] = '/(\S)\'(?=' . $this->regex_snippets['space'] . '|' . $pnc . '|<|$)/' .
                 $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1' . $this->symbols['quote_single_close'];
         }
 
-        // Default single opening
+        // Default single opening.
         if ($this->symbols['quote_single_open'] !== false && $this->symbols['quote_single_open'] !== null) {
             $this->glyph_search[] = "/'/";
             $this->glyph_replace[] = $this->symbols['quote_single_open'];
         }
 
-        // Double open following an open bracket. Allows things like Hello ["(Mum) & dad"]
+        // Double open following an open bracket. Allows things like Hello ["(Mum) & dad"].
         if ($this->symbols['quote_double_open'] !== false && $this->symbols['quote_double_open'] !== null) {
             $this->glyph_search[] = '/([([{])"(?=\S)/' . $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1' . $this->symbols['quote_double_open'];
         }
 
-        // Double closing
+        // Double closing.
         if ($this->symbols['quote_double_close'] !== false && $this->symbols['quote_double_close'] !== null) {
             $this->glyph_search[] = '/(\S)"(?=' . $this->regex_snippets['space'] . '|' . $pnc . '|<|$)/' .
                 $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1' . $this->symbols['quote_double_close'];
         }
 
-        // Default double opening
+        // Default double opening.
         if ($this->symbols['quote_double_open'] !== false && $this->symbols['quote_double_open'] !== null) {
             $this->glyph_search[] = '/"/';
             $this->glyph_replace[] = $this->symbols['quote_double_open'];
@@ -1301,7 +1302,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $acronym = $this->symbols['acronym'];
         }
 
-        // 3+ uppercase acronym
+        // 3+ uppercase acronym.
         if ($acronym !== false) {
             $this->glyph_search[] = '/\b([' . $this->regex_snippets['abr'] . '][' .
                 $this->regex_snippets['acr'] . ']{2,})\b(?:[(]([^)]*)[)])/' . $this->regex_snippets['mod'];
@@ -1311,7 +1312,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             ]);
         }
 
-        // 3+ uppercase
+        // 3+ uppercase.
         if ($this->symbols['caps'] !== false && $this->symbols['caps'] !== null) {
             $this->glyph_search[] = '/(' . $this->regex_snippets['space'] . '|^|[>(;-])' .
                 '([' . $this->regex_snippets['abr'] . ']{3,})' .
@@ -1324,76 +1325,76 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             ]);
         }
 
-        // Ellipsis
+        // Ellipsis.
         if ($this->symbols['ellipsis'] !== false && $this->symbols['ellipsis'] !== null) {
             $this->glyph_search[] = '/([^.]?)\.{3}/';
             $this->glyph_replace[] = '$1' . $this->symbols['ellipsis'];
         }
 
-        // em dash
+        // Em dash.
         if ($this->symbols['emdash'] !== false && $this->symbols['emdash'] !== null) {
             $this->glyph_search[] = '/--/';
             $this->glyph_replace[] = $this->symbols['emdash'];
         }
 
-        // en dash
+        // En dash.
         if ($this->symbols['endash'] !== false && $this->symbols['endash'] !== null) {
             $this->glyph_search[] = '/ - /';
             $this->glyph_replace[] = ' ' . $this->symbols['endash'] . ' ';
         }
 
-        // Trademark
+        // Trademark.
         if ($this->symbols['trademark'] !== false && $this->symbols['trademark'] !== null) {
             $this->glyph_search[] = '/(\b ?|' . $this->regex_snippets['space'] . '|^)[([]TM[])]/i' .
                 $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1' . $this->symbols['trademark'];
         }
 
-        // Registered
+        // Registered.
         if ($this->symbols['registered'] !== false && $this->symbols['registered'] !== null) {
             $this->glyph_search[] = '/(\b ?|' . $this->regex_snippets['space'] . '|^)[([]R[])]/i' .
                 $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1' . $this->symbols['registered'];
         }
 
-        // Copyright
+        // Copyright.
         if ($this->symbols['copyright'] !== false && $this->symbols['copyright'] !== null) {
             $this->glyph_search[] = '/(\b ?|' . $this->regex_snippets['space'] . '|^)[([]C[])]/i' .
                 $this->regex_snippets['mod'];
             $this->glyph_replace[] = '$1' . $this->symbols['copyright'];
         }
 
-        // 1/4
+        // 1/4.
         if ($this->symbols['quarter'] !== false && $this->symbols['quarter'] !== null) {
             $this->glyph_search[] = '/[([]1\/4[])]/';
             $this->glyph_replace[] = $this->symbols['quarter'];
         }
 
-        // 1/2
+        // 1/2.
         if ($this->symbols['half'] !== false && $this->symbols['half'] !== null) {
             $this->glyph_search[] = '/[([]1\/2[])]/';
             $this->glyph_replace[] = $this->symbols['half'];
         }
 
-        // 3/4
+        // 3/4.
         if ($this->symbols['threequarters'] !== false && $this->symbols['threequarters'] !== null) {
             $this->glyph_search[] = '/[([]3\/4[])]/';
             $this->glyph_replace[] = $this->symbols['threequarters'];
         }
 
-        // Degrees -- that's a small 'oh'
+        // Degrees -- that's a small 'oh'.
         if ($this->symbols['degrees'] !== false && $this->symbols['degrees'] !== null) {
             $this->glyph_search[] = '/[([]o[])]/';
             $this->glyph_replace[] = $this->symbols['degrees'];
         }
 
-        // Plus minus
+        // Plus minus.
         if ($this->symbols['plusminus'] !== false && $this->symbols['plusminus'] !== null) {
             $this->glyph_search[] = '/[([]\+\/-[])]/';
             $this->glyph_replace[] = $this->symbols['plusminus'];
         }
 
-        // No need to rebuild next run unless a symbol is redefined
+        // No need to rebuild next run unless a symbol is redefined.
         $this->rebuild_glyphs = false;
     }
 
@@ -1544,7 +1545,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $out = '';
 
         foreach ($attribute_array as $k => $v) {
-            $out .= " $k=\"$v\"";
+            $out .= ' ' . $k . '="' . $v . '"';
         }
 
         return $out;
@@ -1579,22 +1580,22 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $matched = $in;
 
         if ($element === 'td') {
-            if (\preg_match("/\\\\([0-9]+)/", $matched, $csp)) {
+            if (\preg_match('/\\\\([0-9]+)/', $matched, $csp)) {
                 $colspan = $csp[1];
             }
 
-            if (\preg_match("/\/([0-9]+)/", $matched, $rsp)) {
+            if (\preg_match('/\/([0-9]+)/', $matched, $rsp)) {
                 $rowspan = $rsp[1];
             }
         }
 
-        if ($element === 'td' or $element === 'tr') {
-            if (\preg_match("/^($this->vlgn)/", $matched, $vert)) {
-                $style[] = "vertical-align:" . $this->vAlign($vert[1]);
+        if ($element === 'td' || $element === 'tr') {
+            if (\preg_match('/^(' . $this->vlgn . ')/', $matched, $vert)) {
+                $style[] = 'vertical-align:' . $this->vAlign($vert[1]);
             }
         }
 
-        if (\preg_match("/\{([^}]*)\}/", $matched, $sty)) {
+        if (\preg_match('/\{([^}]*)\}/', $matched, $sty)) {
             $sty[1] = $this->cleanAttribs($sty[1]);
 
             if ($sty[1]) {
@@ -1604,31 +1605,31 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $matched = \str_replace($sty[0], '', $matched);
         }
 
-        if (\preg_match("/\[([^]]+)\]/U", $matched, $lng)) {
+        if (\preg_match('/\[([^]]+)\]/U', $matched, $lng)) {
             // Consume entire lang block -- valid or invalid.
             $matched = \str_replace($lng[0], '', $matched);
 
-            if ($element === 'code' && \preg_match("/\[([a-zA-Z0-9_-]+)\]/U", $lng[0], $lng1)) {
+            if ($element === 'code' && \preg_match('/\[([a-zA-Z0-9_-]+)\]/U', $lng[0], $lng1)) {
                 $lang = $lng1[1];
-            } elseif (\preg_match("/\[([a-zA-Z]{2}(?:[\-\_][a-zA-Z]{2})?)\]/U", $lng[0], $lng2)) {
+            } elseif (\preg_match('/\[([a-zA-Z]{2}(?:[\-\_][a-zA-Z]{2})?)\]/U', $lng[0], $lng2)) {
                 $lang = $lng2[1];
             }
         }
 
-        if (\preg_match("/\(([^()]+)\)/U", $matched, $cls)) {
-            $class_regex = "/^([-a-zA-Z 0-9_\.]*)$/";
+        if (\preg_match('/\(([^()]+)\)/U', $matched, $cls)) {
+            $class_regex = '/^([-a-zA-Z 0-9_\.]*)$/';
 
             // Consume entire class block -- valid or invalid.
             $matched = \str_replace($cls[0], '', $matched);
 
             // Only allow a restricted subset of the CSS standard characters for classes/ids.
             // No encoding markers allowed.
-            if (\preg_match("/\(([-a-zA-Z 0-9_\.\:\#]+)\)/U", $cls[0], $cls)) {
+            if (\preg_match('/\(([-a-zA-Z 0-9_\.\:\#]+)\)/U', $cls[0], $cls)) {
                 $hashpos = \strpos($cls[1], '#');
                 // If a textile class block attribute was found with a '#' in it
                 // split it into the css class and css id...
                 if ($hashpos !== false) {
-                    if (\preg_match("/#([-a-zA-Z0-9_\.\:]*)$/", \substr($cls[1], $hashpos), $ids)) {
+                    if (\preg_match('/#([-a-zA-Z0-9_\.\:]*)$/', \substr($cls[1], $hashpos), $ids)) {
                         $id = $ids[1];
                     }
 
@@ -1643,22 +1644,22 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             }
         }
 
-        if (\preg_match("/([(]+)/", $matched, $pl)) {
-            $style[] = "padding-left:" . \strlen($pl[1]) . "em";
+        if (\preg_match('/([(]+)/', $matched, $pl)) {
+            $style[] = 'padding-left:' . \strlen($pl[1]) . 'em';
             $matched = \str_replace($pl[0], '', $matched);
         }
 
-        if (\preg_match("/([)]+)/", $matched, $pr)) {
-            $style[] = "padding-right:" . \strlen($pr[1]) . "em";
+        if (\preg_match('/([)]+)/', $matched, $pr)) {
+            $style[] = 'padding-right:' . \strlen($pr[1]) . 'em';
             $matched = \str_replace($pr[0], '', $matched);
         }
 
-        if (\preg_match("/($this->hlgn)/", $matched, $horiz)) {
-            $style[] = "text-align:" . $this->hAlign($horiz[1]);
+        if (\preg_match('/(' . $this->hlgn . ')/', $matched, $horiz)) {
+            $style[] = 'text-align:' . $this->hAlign($horiz[1]);
         }
 
         if ($element === 'col') {
-            if (\preg_match("/(?:\\\\([0-9]+))?{$this->regex_snippets['space']}*([0-9]+)?/", $matched, $csp)) {
+            if (\preg_match('/(?:\\\\([0-9]+))?' . $this->regex_snippets['space'] . '*([0-9]+)?/', $matched, $csp)) {
                 $span = $csp[1] ?? '';
                 $width = $csp[2] ?? '';
             }
@@ -1785,8 +1786,9 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $text = $text . "\n\n";
 
         return (string) \preg_replace_callback(
-            "/^(?:table(?P<tatts>_?{$this->s}{$this->a}{$this->cls})\." .
-            "(?P<summary>.*)?\n)?^(?P<rows>{$this->a}{$this->cls}\.? ?\|.*\|){$this->regex_snippets['space']}*\n\n/smU",
+            '/^(?:table(?P<tatts>_?' . $this->s . $this->a . $this->cls . ')\.' .
+            '(?P<summary>.*)?\n)?^(?P<rows>' . $this->a . $this->cls . '\.? ?\|.*\|)' .
+            $this->regex_snippets['space'] . '*\n\n/smU',
             [$this, 'fTable'],
             $text
         );
@@ -1822,7 +1824,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $sum = ' summary="' . \htmlspecialchars($summary, \ENT_QUOTES, 'UTF-8') . '"';
         }
 
-        $matches = \preg_split("/\|{$space}*?$/m", $matches['rows'], -1, \PREG_SPLIT_NO_EMPTY) ?: [];
+        $matches = \preg_split('/\|' . $space . '*?$/m', $matches['rows'], -1, \PREG_SPLIT_NO_EMPTY) ?: [];
 
         foreach ($matches as $row) {
             $row = \ltrim($row);
@@ -1831,13 +1833,13 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             // as a normal center-aligned cell.
             if (
                 $c_row <= 1 && \preg_match(
-                    "/^\|\=(?P<capts>$this->s$this->a$this->cls)\. (?P<cap>[^\n]*)(?P<row>.*)/s",
+                    '/^\|\=(?P<capts>' . $this->s . $this->a . $this->cls . ')\. (?P<cap>[^\n]*)(?P<row>.*)/s',
                     \ltrim($row),
                     $cmtch
                 )
             ) {
                 $capts = $this->parseAttribs($cmtch['capts']);
-                $cap = "\t<caption" . $capts . ">" . \trim($cmtch['cap']) . "</caption>\n";
+                $cap = "\t" . '<caption' . $capts . '>' . \trim($cmtch['cap']) . '</caption>' . "\n";
                 $row = \ltrim($cmtch['row']);
 
                 if (!$row) {
@@ -1847,8 +1849,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 
             $c_row += 1;
 
-            // Colgroup
-            if (\preg_match("/^\|:(?P<cols>$this->s$this->a$this->cls\. .*)/m", \ltrim($row), $gmtch)) {
+            // Colgroup.
+            if (\preg_match('/^\|:(?P<cols>' . $this->s . $this->a . $this->cls . '\. .*)/m', \ltrim($row), $gmtch)) {
                 // Is this colgroup def missing a closing pipe? If so, there
                 // will be a newline in the middle of $row somewhere.
                 $nl = \strpos($row, "\n");
@@ -1856,11 +1858,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 
                 foreach (\explode('|', \str_replace('.', '', $gmtch['cols'])) as $col) {
                     $gatts = $this->parseAttribs(\trim($col), 'col');
-                    $colgrp .= "\t<col" . ($idx === 0 ? "group" . $gatts . ">" : $gatts . " />") . "\n";
+                    $colgrp .= "\t" . '<col' . ($idx === 0 ? 'group' . $gatts . '>' : $gatts . ' />') . "\n";
                     $idx++;
                 }
 
-                $colgrp .= "\t</colgroup>\n";
+                $colgrp .= "\t" . '</colgroup>' . "\n";
 
                 if ($nl === false) {
                     continue;
@@ -1870,15 +1872,15 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 }
             }
 
-            // Row group
+            // Row group.
             $rgrpatts = $rgrp = '';
 
             if (
                 \preg_match(
-                    "/(:?^\|" .
-                    "(?P<part>$this->vlgn)" .
-                    "(?P<rgrpatts>$this->s$this->a$this->cls)" .
-                    "\.{$space}*$\n)?^(?P<row>.*)/sm",
+                    '/(:?^\|' .
+                    '(?P<part>' . $this->vlgn . ')' .
+                    '(?P<rgrpatts>' . $this->s . $this->a . $this->cls . ')' .
+                    '\.' . $space . '*$\n)?^(?P<row>.*)/sm',
                     \ltrim($row),
                     $grpmatch
                 )
@@ -1902,7 +1904,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 }
             }
 
-            if (\preg_match("/^(?P<ratts>$this->a$this->cls\. )(?P<row>.*)/m", \ltrim($row), $rmtch)) {
+            if (\preg_match('/^(?P<ratts>' . $this->a . $this->cls . '\. )(?P<row>.*)/m', \ltrim($row), $rmtch)) {
                 $ratts = $this->parseAttribs($rmtch['ratts'], 'tr');
                 $row = $rmtch['row'];
             } else {
@@ -1913,13 +1915,19 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $cellctr = 0;
 
             foreach (\explode('|', $row) as $cell) {
-                $ctyp = "d";
+                $ctyp = 'd';
 
-                if (\preg_match("/^_(?=[{$this->regex_snippets['space']}[:punct:]])/", $cell)) {
-                    $ctyp = "h";
+                if (\preg_match('/^_(?=[' . $this->regex_snippets['space'] . '[:punct:]])/', $cell)) {
+                    $ctyp = 'h';
                 }
 
-                if (\preg_match("/^(?P<catts>_?$this->s$this->a$this->cls\. )(?P<cell>.*)/s", $cell, $cmtch)) {
+                if (
+                    \preg_match(
+                        '/^(?P<catts>_?' . $this->s . $this->a . $this->cls . '\. )(?P<cell>.*)/s',
+                        $cell,
+                        $cmtch
+                    )
+                ) {
                     $catts = $this->parseAttribs($cmtch['catts'], 'td');
                     $cell = $cmtch['cell'];
                 } else {
@@ -1937,8 +1945,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 }
 
                 if ($cellctr > 0) {
-                    // Ignore first 'cell': it precedes the opening pipe
-                    $cells[] = $this->doTagBr("t$ctyp", "\t\t\t<t$ctyp$catts>$cell</t$ctyp>");
+                    // Ignore first 'cell': it precedes the opening pipe.
+                    $cells[] = $this->doTagBr(
+                        't' . $ctyp,
+                        "\t\t\t" . '<t' . $ctyp . $catts . '>' . $cell . '</t' . $ctyp . '>'
+                    );
                 }
 
                 $cellctr++;
@@ -1947,15 +1958,17 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $grp = '';
 
             if ($rgrp && $last_rgrp) {
-                $grp .= "\t</t" . $last_rgrp . ">\n";
+                $grp .= "\t" . '</t' . $last_rgrp . '>' . "\n";
             }
 
             if ($rgrp) {
-                $grp .= "\t<t" . $rgrp . $rgrpatts . ">\n";
+                $grp .= "\t" . '<t' . $rgrp . $rgrpatts . '>' . "\n";
             }
 
-            $last_rgrp = ($rgrp) ? $rgrp : $last_rgrp;
-            $rows[] = $grp . "\t\t<tr$ratts>\n" . \implode("\n", $cells) . ($cells ? "\n" : "") . "\t\t</tr>";
+            $last_rgrp = $rgrp ? $rgrp : $last_rgrp;
+            $rows[] = $grp . "\t\t" . '<tr' . $ratts . '>' . "\n" . \implode("\n", $cells) .
+                ($cells ? "\n" : '') . "\t\t" . '</tr>';
+
             unset($cells, $catts);
         }
 
@@ -1963,10 +1976,10 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $close = '';
 
         if ($last_rgrp) {
-            $close = "\t</t" . $last_rgrp . ">\n";
+            $close = "\t" . '</t' . $last_rgrp . '>' . "\n";
         }
 
-        return "<table{$tatts}{$sum}>\n" . $cap . $colgrp . $rows . $close . "</table>\n\n";
+        return '<table' . $tatts . $sum . '>' . "\n" . $cap . $colgrp . $rows . $close . '</table>' . "\n\n";
     }
 
     /**
@@ -1979,7 +1992,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private function redclothLists(string $text): string
     {
         return (string) \preg_replace_callback(
-            "/^([-]+$this->cls[ .].*:=.*)$(?![^-])/smU",
+            '/^([-]+' . $this->cls . '[ .].*:=.*)$(?![^-])/smU',
             [$this, 'fRedclothList'],
             $text
         );
@@ -2006,15 +2019,15 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         foreach ($text as $line) {
             $m = [];
 
-            if (\preg_match("/^[-]+(?P<atts>$this->cls)\.? (?P<content>.*)$/s", $line, $m)) {
+            if (\preg_match('/^[-]+(?P<atts>' . $this->cls . ')\.? (?P<content>.*)$/s', $line, $m)) {
                 $content = \trim($m['content']);
                 $atts = $this->parseAttribs($m['atts']);
 
                 if (
                     !\preg_match(
-                        "/^(.*?){$this->regex_snippets['space']}*:=(.*?)" .
-                        "{$this->regex_snippets['space']}*(=:|:=)?" .
-                        "{$this->regex_snippets['space']}*$/s",
+                        '/^(.*?)' . $this->regex_snippets['space'] . '*:=(.*?)' .
+                        $this->regex_snippets['space'] . '*(=:|:=)?' .
+                        $this->regex_snippets['space'] . '*$/s',
                         $content,
                         $xm
                     )
@@ -2028,7 +2041,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 
                 if (!$out) {
                     if ($def === '') {
-                        $out[] = "<dl$atts>";
+                        $out[] = '<dl' . $atts . '>';
                     } else {
                         $out[] = '<dl>';
                     }
@@ -2039,7 +2052,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                     $def = \trim($def);
 
                     if ($this->isLineWrapEnabled()) {
-                        $def = \str_replace("\n", "<br />", $def);
+                        $def = \str_replace("\n", '<br />', $def);
                     }
 
                     if ($pos === 0) {
@@ -2053,10 +2066,10 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                     $term = $this->graf($term);
                     $def = $this->graf($def);
 
-                    $out[] = "\t<dt$atts>$term</dt>";
+                    $out[] = "\t" . '<dt' . $atts . '>' . $term . '</dt>';
 
                     if ($def !== '') {
-                        $out[] = "\t<dd>$def</dd>";
+                        $out[] = "\t" . '<dd>' . $def . '</dd>';
                     }
                 }
             }
@@ -2080,7 +2093,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private function textileLists(string $text): string
     {
         return (string) \preg_replace_callback(
-            "/^((?:[*;:]+|[*;:#]*#(?:_|\d+)?)$this->cls[ .].*)$(?![^#*;:])/smU",
+            '/^((?:[*;:]+|[*;:#]*#(?:_|\d+)?)' . $this->cls . '[ .].*)$(?![^#*;:])/smU',
             [$this, 'fTextileList'],
             $text
         );
@@ -2114,7 +2127,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 
         foreach ($lines as $line) {
             $match = \preg_match(
-                "/^(?P<tl>[#*;:]+)(?P<st>_|\d+)?(?P<atts>$this->cls)[ .](?P<content>.*)$/s",
+                '/^(?P<tl>[#*;:]+)(?P<st>_|\d+)?(?P<atts>' . $this->cls . ')[ .](?P<content>.*)$/s',
                 $line,
                 $m
             );
@@ -2187,16 +2200,16 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 $line = $tabs . '<' . $ltype . 'l' . $atts . $start . '>';
 
                 if ($showitem) {
-                    $line .= "\n$tabs\t<$litem>$content";
+                    $line .= "\n" . $tabs . "\t" . '<' . $litem . '>' . $content;
                 }
             } elseif ($showitem) {
-                $line = "$tabs\t<$litem$atts>$content";
+                $line = $tabs . "\t" . '<' . $litem . $atts . '>' . $content;
             } else {
                 $line = '';
             }
 
             if ((!$next || $next['level'] <= $m['level']) && $showitem) {
-                $line .= "</$litem>";
+                $line .= '</' . $litem . '>';
             }
 
             foreach (\array_reverse($lists) as $k => $v) {
@@ -2204,11 +2217,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 
                 if (!$next || $indent > $next['level']) {
                     if ($v !== 2) {
-                        $line .= "\n$tabs</" . $this->liType((string) $k) . "l>";
+                        $line .= "\n" . $tabs . '</' . $this->liType((string) $k) . 'l>';
                     }
 
                     if ($v !== 2 && $indent > 1) {
-                        $line .= "</" . $litem . ">";
+                        $line .= '</' . $litem . '>';
                     }
 
                     unset($lists[$k]);
@@ -2295,7 +2308,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             // Replaces <br/>\n instances that are not followed by white-space,
             // or at end, with single LF.
             $m['content'] = \preg_replace(
-                "~<br[ ]*/?>{$this->regex_snippets['space']}*\n(?![{$this->regex_snippets['space']}|])~i",
+                '~<br[ ]*/?>' . $this->regex_snippets['space'] . '*' . "\n" .
+                '(?![' . $this->regex_snippets['space'] . '|])~i',
                 "\n",
                 $m['content'] ?? ''
             );
@@ -2341,8 +2355,10 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     private function blocks(string $text): string
     {
-        $regex = '/^(?P<tag>' . \implode('|', $this->blocktag_whitelist) . ')' .
-            '(?P<atts>' . $this->a . $this->cls . $this->a . ')\.(?P<ext>\.?)(?::(?P<cite>\S+))? (?P<graf>.*)$/Ss' .
+        $regex = '/^' .
+            '(?P<tag>' . \implode('|', $this->blocktag_whitelist) . ')' .
+            '(?P<atts>' . $this->a . $this->cls . $this->a . ')\.' .
+            '(?P<ext>\.?)(?::(?P<cite>\S+))? (?P<graf>.*)$/Ss' .
             $this->regex_snippets['mod'];
 
         $textblocks = \preg_split('/(\n{2,})/', $text, -1, \PREG_SPLIT_DELIM_CAPTURE);
@@ -2380,7 +2396,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $anonymous_block = !\preg_match($regex, $block, $m);
 
             if (!$anonymous_block) {
-                // Last block was extended, so close it
+                // Last block was extended, so close it.
                 if ($ext) {
                     $out[\count($out) - 1] .= $c1 ?? null;
                 }
@@ -2393,7 +2409,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 
                 [$o1, $o2, $content, $c2, $c1, $eat] = $this->fBlock($m);
 
-                // Leave off c1 if this block is extended, we'll close it at the start of the next block
+                // Leave off c1 if this block is extended, we'll close it at the start of the next block.
                 $block = $o1 . $o2 . $content . $c2;
 
                 if (!$ext) {
@@ -2413,7 +2429,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                         $block,
                     ]);
 
-                    // Skip $o1/$c1 because this is part of a continuing extended block
+                    // Skip $o1/$c1 because this is part of a continuing extended block.
                     if ($tag === 'p' && !$this->hasRawText($content)) {
                         $block = $content;
                     } else {
@@ -2476,15 +2492,14 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         if ($tag === 'p') {
             // Is this an anonymous block with a note definition?
             $notedef = \preg_replace_callback(
-                "/
-                    ^note\#                              # start of note def marker
-                    (?P<label>[^%<*!@#^([{ {$space}.]+)  # label
-                    (?P<link>[*!^]?)                     # link
-                    (?P<att>{$this->cls})                # att
-                    \.?                                  # optional period.
-                    {$space}+                            # whitespace ends def marker
-                    (?P<content>.*)$                     # content
-                /x" . $this->regex_snippets['mod'],
+                '/' .
+                '^note\#' .
+                '(?P<label>[^%<*!@#^([{ ' . $space . '.]+)' .
+                '(?P<link>[*!^]?)' .
+                '(?P<att>' . $this->cls . ')' .
+                '\.?' . $space . '+' .
+                '(?P<content>.*)$' .
+                '/x' . $this->regex_snippets['mod'],
                 [$this, 'fParseNoteDefs'],
                 $content
             );
@@ -2495,11 +2510,17 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             }
         }
 
-        if (\preg_match("/fn(?P<fnid>{$this->regex_snippets['digit']}+)/" . $this->regex_snippets['mod'], $tag, $fns)) {
+        if (
+            \preg_match(
+                '/fn(?P<fnid>' . $this->regex_snippets['digit'] . '+)/' . $this->regex_snippets['mod'],
+                $tag,
+                $fns
+            )
+        ) {
             $tag = 'p';
             $fnid = $this->fn[$fns['fnid']] ?? $this->linkPrefix . ($this->linkIndex++);
 
-            // If there is an author-specified ID goes on the wrapper & the auto-id gets pushed to the <sup>
+            // If there is an author-specified ID goes on the wrapper & the auto-id gets pushed to the <sup>.
             $supp_id = '';
 
             if (\strpos($atts, 'class=') === false) {
@@ -2521,13 +2542,13 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $content = $sup . ' ' . $content;
         }
 
-        if ($tag === "bq") {
+        if ($tag === 'bq') {
             $cite = $this->shelveUrl($cite);
             $cite = $cite !== '' ? ' cite="' . $cite . '"' : '';
-            $o1 = "<blockquote$cite$atts>\n";
-            $o2 = "\t<p" . $this->parseAttribs($att, '', false) . ">";
-            $c2 = "</p>";
-            $c1 = "\n</blockquote>";
+            $o1 = '<blockquote' . $cite . $atts . '>' . "\n";
+            $o2 = "\t" . '<p' . $this->parseAttribs($att, '', false) . '>';
+            $c2 = '</p>';
+            $c1 = "\n" . '</blockquote>';
         } elseif ($tag === 'bc') {
             $attrib_array = $this->parseAttribsToArray($att, 'code');
             $code_class   = '';
@@ -2536,8 +2557,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 unset($attrib_array['lang']);
                 $atts = $this->formatAttributeString($attrib_array);
             }
-            $o1 = "<pre$atts><code$code_class>";
-            $c1 = "</code></pre>";
+            $o1 = '<pre' . $atts . '><code' . $code_class . '>';
+            $c1 = '</code></pre>';
             $content = $this->shelve($this->rEncodeHtml($content));
         } elseif ($tag === 'notextile') {
             $content = $this->shelve($content);
@@ -2547,15 +2568,15 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $c2 = '';
         } elseif ($tag === 'pre') {
             $content = $this->shelve($this->rEncodeHtml($content));
-            $o1 = "<pre$atts>";
+            $o1 = '<pre' . $atts . '>';
             $o2 = '';
             $c2 = '';
-            $c1 = "</pre>";
+            $c1 = '</pre>';
         } elseif ($tag === '###') {
             $eat = true;
         } else {
-            $o2 = "<$tag$atts>";
-            $c2 = "</$tag>";
+            $o2 = '<' . $tag . $atts . '>';
+            $c2 = '</' . $tag . '>';
         }
 
         $content = $eat ? '' : $this->graf($content);
@@ -2646,7 +2667,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private function getHtmlComments(string $text): string
     {
         return (string) \preg_replace_callback(
-            "/\<!--(?P<content>.*?)-->/sx",
+            '/\<!--(?P<content>.*?)-->/sx',
             [$this, 'fParseHtmlComments'],
             $text
         );
@@ -2676,38 +2697,38 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     private function graf(string $text): string
     {
-        // Handle normal paragraph text
+        // Handle normal paragraph text.
         if (!$this->isLiteModeEnabled()) {
-            // Notextile blocks and inlines
+            // Notextile blocks and inlines.
             $text = $this->noTextile($text);
-            // Handle code
+            // Handle code.
             $text = $this->code($text);
         }
 
-        // HTML comments --
+        // HTML comments --.
         $text = $this->getHtmlComments($text);
-        // Consume link aliases
+        // Consume link aliases.
         $text = $this->getRefs($text);
         // Treat quoted quote as a special glyph.
         $text = $this->glyphQuotedQuote($text);
-        // Generate links
+        // Generate links.
         $text = $this->links($text);
 
-        // Handle images (if permitted)
+        // Handle images (if permitted).
         if ($this->isImageTagEnabled()) {
             $text = $this->images($text);
         }
 
         if (!$this->isLiteModeEnabled()) {
-            // Handle tables
+            // Handle tables.
             $text = $this->tables($text);
-            // Handle redcloth-style definition lists
+            // Handle redcloth-style definition lists.
             $text = $this->redclothLists($text);
-            // Handle ordered & unordered lists plus txp-style definition lists
+            // Handle ordered & unordered lists plus txp-style definition lists.
             $text = $this->textileLists($text);
         }
 
-        // Inline markup (em, strong, sup, sub, del etc)
+        // Inline markup (em, strong, sup, sub, del etc).
         $text = $this->spans($text);
 
         if (!$this->isLiteModeEnabled()) {
@@ -2716,7 +2737,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             // generating links for them.
             $text = $this->footnoteRefs($text);
 
-            // Turn note references into links
+            // Turn note references into links.
             $text = $this->noteRefs($text);
         }
 
@@ -2736,24 +2757,24 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private function spans(string $text): string
     {
         $span_tags = \array_keys($this->span_tags);
-        $pnct = ".,\"'?!;:‹›«»„“”‚‘’";
+        $pnct = '.,"\'?!;:‹›«»„“”‚‘’';
         $this->span_depth++;
 
         if ($this->span_depth <= $this->max_span_depth) {
             foreach ($span_tags as $tag) {
                 $tag = \preg_quote($tag);
                 $text = (string) \preg_replace_callback(
-                    "/
-                    (?P<before>^|(?<=[\s>$pnct\(])|[{[])
-                    (?P<tag>$tag)(?!$tag)
-                    (?P<atts>{$this->cls})
-                    (?!$tag)
-                    (?::(?P<cite>\S+[^$tag]{$this->regex_snippets['space']}))?
-                    (?P<content>[^{$this->regex_snippets['space']}$tag]+|\S.*?[^\s$tag\n])
-                    (?P<end>[$pnct]*)
-                    $tag
-                    (?P<after>$|[\[\]}<]|(?=[$pnct]{1,2}[^0-9]|\s|\)))
-                    /x" . $this->regex_snippets['mod'],
+                    '/' .
+                    '(?P<before>^|(?<=[\s>' . $pnct . '\(])|[{[])' .
+                    '(?P<tag>' . $tag . ')(?!' . $tag . ')' .
+                    '(?P<atts>' . $this->cls . ')' .
+                    '(?!' . $tag . ')' .
+                    '(?::(?P<cite>\S+[^' . $tag . ']' . $this->regex_snippets['space'] . '))?' .
+                    '(?P<content>[^' . $this->regex_snippets['space'] . $tag . ']+|\S.*?[^\s' . $tag . '\n])' .
+                    '(?P<end>[' . $pnct . ']*)' .
+                    $tag .
+                    '(?P<after>$|[\[\]}<]|(?=[' . $pnct . ']{1,2}[^0-9]|\s|\)))' .
+                    '/x' . $this->regex_snippets['mod'],
                     [$this, 'fSpan'],
                     $text
                 );
@@ -2790,7 +2811,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $opentag = '<' . $tag . $atts . '>';
         $closetag = '</' . $tag . '>';
         $tags = $this->storeTags($opentag, $closetag);
-        $out = "{$tags['open']}{$content}{$m['end']}{$tags['close']}";
+        $out = $tags['open'] . $content . $m['end'] . $tags['close'];
 
         return $m['before'] . $out . $m['after'];
     }
@@ -2883,7 +2904,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                     $o[$info['seq']] = $info;
                     $info['seq'] = $label;
                 } else {
-                    $this->unreferencedNotes[] = $info;    // Unreferenced definitions go here for possible future use.
+                    // Unreferenced definitions go here for possible future use.
+                    $this->unreferencedNotes[] = $info;
                 }
             }
 
@@ -2900,7 +2922,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             '(?:\:(?P<startchar>[' . $this->regex_snippets['wrd'] . '|' . $this->syms . ']))?' .
             '(?P<links>[\^!]?)(?P<extras>\+?)\.?' . $this->regex_snippets['space'] . '*</p>@U' .
             $this->regex_snippets['mod'],
-            [$this, "fNoteLists"],
+            [$this, 'fNoteLists'],
             $text
         );
 
@@ -2923,7 +2945,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $index = $m['links'] . $m['extras'] . $m['startchar'];
 
         if (empty($this->notelist_cache[$index])) {
-            // If not in cache, build the entry...
+            // If not in cache, build the entry.
             $out = [];
 
             if ($this->notes) {
@@ -2953,7 +2975,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         if ($this->notelist_cache[$index]) {
             $atts = $this->parseAttribs($m['atts']);
 
-            return "<ol$atts>\n{$this->notelist_cache[$index]}\n</ol>";
+            return '<ol' . $atts . '>' . "\n" . $this->notelist_cache[$index] . "\n" . '</ol>';
         }
 
         return '';
@@ -3022,7 +3044,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $this->notes[$label]['id'] = $this->linkPrefix . ($this->linkIndex++);
         }
 
-        // Ignores subsequent defs using the same label
+        // Ignores subsequent defs using the same label.
         if (empty($this->notes[$label]['def'])) {
             $this->notes[$label]['def'] = [
                 'atts'    => $this->parseAttribs($att),
@@ -3047,7 +3069,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private function noteRefs(string $text): string
     {
         return (string) \preg_replace_callback(
-            "/\[(?P<atts>{$this->c})\#(?P<label>[^\]!]+?)(?P<nolink>[!]?)\]/Ux",
+            '/\[(?P<atts>' . $this->c . ')\#(?P<label>[^\]!]+?)(?P<nolink>[!]?)\]/Ux',
             [$this, 'fParseNoteRefs'],
             $text
         );
@@ -3070,7 +3092,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $nolink = ($m['nolink'] === '!');
 
         // Assign a sequence number to this reference if there isn't one already.
-
         if (empty($this->notes[$m['label']]['seq'])) {
             $num = $this->notes[$m['label']]['seq'] = ($this->note_index++);
         } else {
@@ -3083,7 +3104,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $this->notes[$m['label']]['refids'][] = $refid;
 
         // If we are referencing a note that hasn't had the definition parsed yet, then assign it an ID.
-
         if (empty($this->notes[$m['label']]['id'])) {
             $id = $this->notes[$m['label']]['id'] = $this->linkPrefix . ($this->linkIndex++);
         } else {
@@ -3123,11 +3143,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     private function parseUri(string $uri, ?array &$m): bool
     {
-        $r = "@^((?P<scheme>[^:/?#]+):)?" .
-            "(//(?P<authority>[^/?#]*))?" .
-            "(?P<path>[^?#]*)" .
-            "(\?(?P<query>[^#]*))?" .
-            "(#(?P<fragment>.*))?@";
+        $r = '@^((?P<scheme>[^:/?#]+):)?' .
+            '(//(?P<authority>[^/?#]*))?' .
+            '(?P<path>[^?#]*)' .
+            '(\?(?P<query>[^#]*))?' .
+            '(#(?P<fragment>.*))?@';
 
         return \preg_match($r, $uri, $m) === 1;
     }
@@ -3247,7 +3267,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $last_slice = \array_pop($slices);
 
             foreach ($slices as &$slice) {
-                // If there is no possible start quote then this slice is not a link
+                // If there is no possible start quote then this slice is not a link.
                 if (\strpos($slice, '"') === false) {
                     continue;
                 }
@@ -3271,12 +3291,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 while ($possibility !== null) {
                     // Starting at the end, pop off the previous part of the
                     // slice's fragments.
-
                     // Add this part to those parts that make up the link text.
                     $linkparts[] = $possibility;
 
                     if ($possibility !== '') {
-                        // did this part inc or dec the balanced count?
+                        // Did this part inc or dec the balanced count?
                         if (\preg_match('/^\S|=$/' . $mod, $possibility)) {
                             $balanced--;
                         }
@@ -3296,7 +3315,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                         $possibility = \array_pop($possible_start_quotes);
 
                         // If out of possible starting segments we back the last one
-                        // from the linkparts array
+                        // from the linkparts array.
                         if ($possibility === null) {
                             \array_pop($linkparts);
                             break;
@@ -3306,9 +3325,10 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                         // closing ".
                         if (
                             $possibility === '' ||
-                            \preg_match("~{$this->regex_snippets['space']}$~" . $mod, $possibility)
+                            \preg_match('/' . $this->regex_snippets['space'] . '$/' . $mod, $possibility)
                         ) {
-                            $balanced = 0; // force search exit
+                            // Force search exit.
+                            $balanced = 0;
                         }
                     }
 
@@ -3330,11 +3350,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 $slice = $pre_link . $this->uid . 'linkStartMarker:"' . $link_content;
             }
 
-            // Add the last part back
+            // Add the last part back.
             $slices[] = $last_slice;
         }
 
-        // Re-assemble the full text with the start and end markers
+        // Re-assemble the full text with the start and end markers.
         $text = \implode('":', $slices);
 
         return $text;
@@ -3355,12 +3375,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 
         return (string) \preg_replace_callback(
             '/
-            (?P<pre>\[)?                    # Optionally open with a square bracket eg. Look ["here":url]
-            ' . $this->uid . 'linkStartMarker:" # marks start of the link
-            (?P<inner>(?:.|\n)*?)           # grab the content of the inner "..." part of the link, can be anything but
-                                            # do not worry about matching class, id, lang or title yet
-            ":                              # literal ": marks end of atts + text + title block
-            (?P<urlx>[^' . $stopchars . ']*)    # url upto a stopchar
+            (?P<pre>\[)?
+            ' . $this->uid . 'linkStartMarker:"
+            (?P<inner>(?:.|\n)*?)
+            ":
+            (?P<urlx>[^' . $stopchars . ']*)
             /x' . $this->regex_snippets['mod'],
             [$this, 'fLink'],
             $text
@@ -3395,18 +3414,14 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             return $pre . '"' . $inner . '":' . $url;
         }
 
-        // Split inner into $atts, $text and $title..
+        // Split inner into $atts, $text and $title.
         \preg_match(
             '/
             ^
-            (?P<atts>' . $this->cls . ')            # $atts (if any)
-            ' . $this->regex_snippets['space'] . '* # any optional spaces
-            (?P<text>                               # $text is...
-                (!.+!)                              #     an image
-            |                                       #   else...
-                .+?                                 #     link text
-            )                                       # end of $text
-            (?:\((?P<title>[^)]+?)\))?              # $title (if any)
+            (?P<atts>' . $this->cls . ')
+            ' . $this->regex_snippets['space'] . '*
+            (?P<text>(!.+!)|.+?)
+            (?:\((?P<title>[^)]+?)\))?
             $
             /x' . $this->regex_snippets['mod'],
             $inner,
@@ -3421,15 +3436,16 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $pop = $tight = '';
         $counts = [
             '[' => null,
-            ']' => \substr_count($url, ']'), # We need to know how many closing square brackets we have
+            // We need to know how many closing square brackets we have.
+            ']' => \substr_count($url, ']'),
             '(' => null,
             ')' => null,
         ];
 
         // Look for footnotes or other square-bracket delimieted stuff at the end of the url...
         // eg. "text":url][otherstuff... will have "[otherstuff" popped back out.
-        //     "text":url?q[]=x][123]    will have "[123]" popped off the back, the remaining closing square brackets
-        //                               will later be tested for balance
+        // "text":url?q[]=x][123] will have "[123]" popped off the back, the remaining closing square brackets
+        // will later be tested for balance.
         if ($counts[']']) {
             if (\preg_match('@(?P<url>^.*\])(?P<tight>\[.*?)$@' . $this->regex_snippets['mod'], $url, $m) === 1) {
                 $url = $m['url'];
@@ -3442,7 +3458,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         // eg. "text":...?q[]=value1&q[]=value2 ... is ok
         // "text":...?q[]=value1]following  ... would have "following"
         // popped back out and the remaining square bracket
-        // will later be tested for balance
+        // will later be tested for balance.
         if ($counts[']']) {
             if (\preg_match('@(?P<url>^.*\])(?!=)(?P<end>.*?)$@' . $this->regex_snippets['mod'], $url, $m) === 1) {
                 $url = $m['url'];
@@ -3453,12 +3469,12 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 
         // Does this need to be mb_ enabled? We are only searching for text in the ASCII charset anyway
         // Create an array of (possibly) multi-byte characters.
-        // This is going to allow us to pop off any non-matched or nonsense chars from the url
+        // This is going to allow us to pop off any non-matched or nonsense chars from the url.
         $url_chars = \str_split($url);
 
         // Now we have the array of all the multi-byte chars in the url we will parse the
-        // uri backwards and pop off
-        // any chars that don't belong there (like . or , or unmatched brackets of various kinds).
+        // uri backwards and pop off. Any chars that don't belong there
+        // (like . or , or unmatched brackets of various kinds).
         $first = true;
         do {
             $c = \array_pop($url_chars);
@@ -3496,10 +3512,10 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                     }
 
                     if ($counts['['] === $counts[']']) {
-                        // It is balanced, so keep it
+                        // It is balanced, so keep it.
                         $url_chars[] = $c;
                     } else {
-                        // In the case of un-matched closing square brackets we just eat it
+                        // In the case of un-matched closing square brackets we just eat it.
                         $popped = true;
                         $counts[']'] -= 1;
                         if ($first) {
@@ -3515,10 +3531,10 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                     }
 
                     if ($counts['('] === $counts[')']) {
-                        // It is balanced, so keep it
+                        // It is balanced, so keep it.
                         $url_chars[] = $c;
                     } else {
-                        // Unbalanced so spit it out the back end
+                        // Unbalanced so spit it out the back end.
                         $pop = $c . $pop;
                         $counts[')'] -= 1;
                         $popped = true;
@@ -3527,7 +3543,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 
                 default:
                     // We have an acceptable character for the end of the url so put it back and
-                    // exit the character popping loop
+                    // exit the character popping loop.
                     $url_chars[] = $c;
                     break;
             }
@@ -3937,7 +3953,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         if ($href) {
             $href = $this->shelveUrl($href);
             $link = $this->newTag('a', [], false)->href($href)->rel($this->rel);
-            $out = (string) $link . "$img</a>";
+            $out = (string) $link . $img . '</a>';
         }
 
         return $this->shelve($out);
@@ -4175,7 +4191,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 
         if (empty($this->fn[$m['id']])) {
             $this->fn[$m['id']] = $id = $this->linkPrefix . ($this->linkIndex++);
-            $backref .= " id=\"fnrev$id\"";
+            $backref .= ' id="fnrev' . $id . '"';
         }
 
         $fnid = $this->fn[$m['id']];
@@ -4200,7 +4216,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private function glyphQuotedQuote(string $text, string $find = '"?|"[^"]+"'): string
     {
         return (string) \preg_replace_callback(
-            "/ (?P<pre>{$this->quote_starts})(?P<quoted>$find)(?P<post>.) /" . $this->regex_snippets['mod'],
+            '/ ' .
+            '(?P<pre>' . $this->quote_starts . ')' .
+            '(?P<quoted>' . $find . ')' .
+            '(?P<post>.)' .
+            ' /' . $this->regex_snippets['mod'],
             [$this, 'fGlyphQuotedQuote'],
             $text
         );
@@ -4239,7 +4259,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         if (\strlen($found) > 1) {
             $found = \rtrim($this->glyphs($m['quoted']));
         } elseif ($found === '"') {
-            $found = "&quot;";
+            $found = '&quot;';
         }
 
         return $this->shelve(' ' . $pre . $found . $post . ' ');
@@ -4284,9 +4304,9 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $glyph_out = [];
 
         foreach ($text as $line) {
-            // Text tag text tag text ...
+            // Text tag text tag text.
             if (++$i % 2) {
-                // Raw < > & chars are already entity encoded in restricted mode
+                // Raw < > & chars are already entity encoded in restricted mode.
                 if (!$this->isRestrictedModeEnabled()) {
                     $line = \preg_replace('/&(?!#?[a-z0-9]+;)/i', '&amp;', $line);
                     $line = \str_replace(['<', '>'], ['&lt;', '&gt;'], (string) $line);
@@ -4385,7 +4405,9 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     private function decodeHigh(string $text, string $charset = 'UTF-8'): string
     {
-        $text = (string) \intval($text) === (string) $text ? "&#$text;" : "&$text;";
+        $text = (string) \intval($text) === (string) $text
+            ? '&#' . $text . ';'
+            : '&' . $text . ';';
 
         if ($this->isMultiByteStringSupported()) {
             return \mb_decode_numericentity($text, $this->cmap, $charset);
@@ -4418,7 +4440,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 
         if ($quotes) {
             $a = $a + [
-                "'" => '&#39;', // Numeric, as in htmlspecialchars
+                // Numeric, as in htmlspecialchars.
+                "'" => '&#39;',
                 '"' => '&quot;',
             ];
         }
@@ -4442,7 +4465,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     private function rEncodeHtml(string $str, bool $quotes = true): string
     {
-        // In restricted mode, all input but quotes has already been escaped
+        // In restricted mode, all input but quotes has already been escaped.
         if ($this->isRestrictedModeEnabled()) {
             return \str_replace('"', '&quot;', $str);
         }
