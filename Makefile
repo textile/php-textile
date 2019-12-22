@@ -39,3 +39,8 @@ static:
 clean:
 	rm -rf vendor
 	rm -f composer.lock
+
+testall:
+	$(MAKE) test IMAGE=latest
+	$(MAKE) test IMAGE=php_7_3
+	$(MAKE) test IMAGE=php_7_2
