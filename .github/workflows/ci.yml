@@ -1,0 +1,55 @@
+name: CI
+
+on: [push]
+
+jobs:
+  latest:
+    name: PHP 7.4
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Build
+      run: make build
+
+    - name: Install
+      run: make install
+
+    - name: Lint
+      run: make cs
+
+    - name: Test
+      run: make test
+
+  php_7_3:
+    name: PHP 7.3
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Build
+      run: make build IMAGE=php_7_3
+
+    - name: Install
+      run: make install IMAGE=php_7_3
+
+    - name: Lint
+      run: make cs IMAGE=php_7_3
+
+    - name: Test
+      run: make test IMAGE=php_7_3
+
+  php_7_2:
+    name: PHP 7.2
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Build
+      run: make build IMAGE=php_7_2
+
+    - name: Install
+      run: make install IMAGE=php_7_2
+
+    - name: Lint
+      run: make cs IMAGE=php_7_2
+
+    - name: Test
+      run: make test IMAGE=php_7_2
