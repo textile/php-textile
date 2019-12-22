@@ -51,20 +51,26 @@ interface ParserInterface
      * The parser's features can be changed by using the various public setter
      * methods this class has. The most basic use case is:
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser->parse('h1. Hello World!');
+     * ```
      *
      * The above parses trusted input in full-feature mode, generating:
      *
-     * bc. <h1>Hello World!</h1>
+     * ```html
+     * <h1>Hello World!</h1>
+     * ```
      *
      * Additionally the parser can be run in safe, restricted mode using the
      * Parser::setRestricted() method.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser
      *     ->setRestricted(true)
      *     ->parse('h1. Hello World!');
+     * ```
      *
      * This enables restricted mode and allows safe parsing of untrusted input.
      * PHP-Textile will disable unsafe attributes, links and escapes any raw
@@ -74,9 +80,12 @@ interface ParserInterface
      * If restricted mode is disabled, the parser allows users to mix raw HTML
      * and Textile.
      *
-     * @param  string $text The Textile input to parse
+     * @param string $text The Textile input to parse
+     *
      * @return string Parsed Textile input
-     * @since  3.6.0
+     *
+     * @since 3.6.0
+     *
      * @api
      */
     public function parse(string $text): string;

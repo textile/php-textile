@@ -48,27 +48,36 @@ interface ConfigInterface
     /**
      * Sets the output document type.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser
      *     ->setDocumentType('html5')
      *     ->parse('HTML(HyperText Markup Language)");
+     * ```
      *
-     * @param  string $doctype Either 'xhtml' or 'html5'
-     * @return self   This instance
-     * @since  3.6.0
-     * @see    Parser::getDocumentType()
+     * @param string $doctype Either 'xhtml' or 'html5'
+     *
+     * @return self This instance
+     *
+     * @since 3.6.0
+     *
+     * @see ConfigInterface::getDocumentType()
      */
     public function setDocumentType(string $doctype): self;
 
     /**
      * Gets the current output document type.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser->getDocumentType();
+     * ```
      *
      * @return string The document type
-     * @since  3.6.0
-     * @see    Parser::setDocumentType()
+     *
+     * @since 3.6.0
+     *
+     * @see ConfigInterface::setDocumentType()
      */
     public function getDocumentType(): string;
 
@@ -79,29 +88,38 @@ interface ConfigInterface
      * within local filesystem. This is used to fetch image dimensions, for
      * instance.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * $parser->setDocumentRootDirectory('/path/to/document/root/dir');
+     * ```
      *
      * If not set, document root defaults to the current working directory if
      * PHP-Textile is used via CLI. On server environment, DOCUMENT_ROOT or
      * PATH_TRANSLATED server variable is used based on which ever is available.
      *
-     * @param  string $path The root path
-     * @return self   This instance
-     * @since  3.6.0
-     * @see    Parser::getDocumentRootDirectory()
+     * @param string $path The root path
+     *
+     * @return self This instance
+     *
+     * @since 3.6.0
+     *
+     * @see ConfigInterface::getDocumentRootDirectory()
      */
     public function setDocumentRootDirectory(string $path): self;
 
     /**
      * Gets the current document root directory path.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser->getDocumentRootDirectory();
+     * ```
      *
      * @return string Path to the document root directory
-     * @since  3.6.0
-     * @see    Parser::setDocumentRootDirectory()
+     *
+     * @since 3.6.0
+     *
+     * @see ConfigInterface::setDocumentRootDirectory()
      */
     public function getDocumentRootDirectory(): string;
 
@@ -112,44 +130,57 @@ interface ConfigInterface
      * Textile formatting, accepting only paragraphs and blockquotes as valid
      * block tags.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * $parser
      *     ->setLite(true)
      *     ->parse('h1. Headings are disabled too');
+     * ```
      *
      * Generates:
      *
-     * bc. <p>h1. Headings are disabled too</p>
+     * ```html
+     * <p>h1. Headings are disabled too</p>
+     * ```
      *
      * This doesn't prevent unsafe input values. If you wish to parse untrusted
      * user-given Textile input, also enable the restricted parser mode with
      * Parser::setRestricted().
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser
      *     ->setRestricted(true)
      *     ->setLite(true)
      *     ->parse('h1. Hello World!');
+     * ```
      *
-     * @param  bool   $lite TRUE to enable
-     * @return self   This instance
-     * @since  3.6.0
-     * @see    Parser::isLiteModeEnabled()
-     * @see    Parser::setRestricted()
+     * @param bool $lite TRUE to enable
+     *
+     * @return self This instance
+     *
+     * @since 3.6.0
+     *
+     * @see ConfigInterface::isLiteModeEnabled()
+     * @see ConfigInterface::setRestricted()
      */
     public function setLite(bool $lite): self;
 
     /**
      * Gets the lite mode status.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * if ($parser->isLiteModeEnabled() === true) {
      *     echo 'Lite mode is enabled.';
      * }
+     * ```
      *
      * @return bool TRUE if enabled, FALSE otherwise
-     * @since  3.6.0
-     * @see    Parser::setLite()
+     *
+     * @since 3.6.0
+     *
+     * @see ConfigInterface::setLite()
      */
     public function isLiteModeEnabled(): bool;
 
@@ -159,33 +190,44 @@ interface ConfigInterface
      * If disabled, image tags are not generated. This option is ideal for
      * minimalist output such as text-only comments.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser
      *     ->setImages(true)
      *     ->parse('!image.png!');
+     * ```
      *
      * Generates:
      *
-     * bc. <p>!image.png!</p>
+     * ```html
+     * <p>!image.png!</p>
+     * ```
      *
-     * @param  bool   $enabled TRUE to enable, FALSE to disable
-     * @return self   This instance
-     * @since  3.6.0
-     * @see    Parser::isImageTagEnabled()
+     * @param bool $enabled TRUE to enable, FALSE to disable
+     *
+     * @return self This instance
+     *
+     * @since 3.6.0
+     *
+     * @see ConfigInterface::isImageTagEnabled()
      */
     public function setImages(bool $enabled): self;
 
     /**
      * Whether images are enabled.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * if ($parser->isImageTagEnabled() === true) {
      *     echo 'Images are enabled.';
      * }
+     * ```
      *
      * @return bool TRUE if enabled, FALSE otherwise
-     * @since  3.6.0
-     * @see    Parser::setImages()
+     *
+     * @since 3.6.0
+     *
+     * @see ConfigInterface::setImages()
      */
     public function isImageTagEnabled(): bool;
 
@@ -195,35 +237,46 @@ interface ConfigInterface
      * This method sets the HTML relationship tokens that are applied to links
      * generated by PHP-Textile.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser
      *     ->setLinkRelationShip('nofollow')
      *     ->parse('"Link":http://example.com/');
+     * ```
      *
      * Generates:
      *
-     * bc. <p><a href="http://example.com/" rel="nofollow">Link</a></p>
+     * ```html
+     * <p><a href="http://example.com/" rel="nofollow">Link</a></p>
+     * ```
      *
-     * @param  string|string[] $relationship The HTML rel attribute value
-     * @return self         This instance
-     * @since  3.6.0
-     * @see    Parser::getLinkRelationShip()
+     * @param string|string[] $relationship The HTML rel attribute value
+     *
+     * @return self This instance
+     *
+     * @since 3.6.0
+     *
+     * @see ConfigInterface::getLinkRelationShip()
      */
     public function setLinkRelationShip($relationship): self;
 
     /**
      * Gets the link relationship status value.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parse
      *     ->setLinkRelationShip('nofollow')
      *     ->getLinkRelationShip();
+     * ```
      *
-     * The above outputs "nofollow".
+     * The above outputs `nofollow`.
      *
      * @return string The value
-     * @since  3.6.0
-     * @see    Parser::setLinkRelationShip()
+     *
+     * @since 3.6.0
+     *
+     * @see ConfigInterface::setLinkRelationShip()
      */
     public function getLinkRelationShip(): string;
 
@@ -237,38 +290,49 @@ interface ConfigInterface
      *
      * For instance the following malicious input:
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser
      *     ->setRestricted(true)
      *     ->parse('Innocent _looking_ "link":javacript:window.alert().');
+     * ```
      *
      * Returns safe, sanitized HTML with valid Textile input still parsed:
      *
-     * bc. <p>Innocent <em>looking</em> &#8220;link&#8221;:javacript:window.alert().</p>
+     * ```php
+     * <p>Innocent <em>looking</em> &#8220;link&#8221;:javacript:window.alert().</p>
+     * ```
      *
      * If left disabled, the parser allows users to mix raw HTML and Textile.
      * Using the parser in non-restricted on untrusted input, like comments
      * and forum posts, will lead to XSS issues, as users will be able to use
      * any HTML code, JavaScript links and Textile attributes in their input.
      *
-     * @param  bool   $enabled TRUE to enable, FALSE to disable
-     * @return self   This instance
-     * @since  3.6.0
-     * @see    Parser::isRestrictedModeEnabled()
+     * @param bool $enabled TRUE to enable, FALSE to disable
+     *
+     * @return self This instance
+     *
+     * @since 3.6.0
+     *
+     * @see ConfigInterface::isRestrictedModeEnabled()
      */
     public function setRestricted(bool $enabled): self;
 
     /**
      * Whether restricted parser mode is enabled.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * if ($parser->isRestrictedModeEnabled() === true) {
      *     echo 'PHP-Textile is in restricted mode.';
      * }
+     * ```
      *
-     * @return bool   TRUE if enabled, FALSE otherwise
-     * @since  3.6.0
-     * @see    Parser::setRestricted()
+     * @return bool TRUE if enabled, FALSE otherwise
+     *
+     * @since 3.6.0
+     *
+     * @see ConfigInterface::setRestricted()
      */
     public function isRestrictedModeEnabled(): bool;
 
@@ -279,34 +343,45 @@ interface ConfigInterface
      * not matching Parser::$blockContent or Parser::$phrasingContent will not
      * be parsed, and instead is left as is.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser
      *     ->setRawBlocks(true)
      *     ->parse('<div>A *raw* block.</div>');
+     * ```
      *
      * The above generates:
      *
-     * bc. <div>A *raw* block.</div>
+     * ```html
+     * <div>A *raw* block.</div>
+     * ```
      *
-     * @param  bool   $enabled TRUE to enable, FALSE to disable
-     * @return self   This instance
-     * @since  3.7.0
-     * @see    Parser::isRawBlocksEnabled()
-     * @see    Parser::isRawBlock()
+     * @param bool $enabled TRUE to enable, FALSE to disable
+     *
+     * @return self This instance
+     *
+     * @since 3.7.0
+     *
+     * @see ConfigInterface::isRawBlocksEnabled()
+     * @see ConfigInterface::isRawBlock()
      */
     public function setRawBlocks(bool $enabled): self;
 
     /**
      * Whether raw blocks are enabled.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * if ($parser->isRawBlocksEnabled() === true) {
      *     echo 'Raw blocks are enabled';
      * }
+     * ```
      *
      * @return bool TRUE if enabled, FALSE otherwise
-     * @since  3.7.0
-     * @see    Parser::setRawBlocks()
+     *
+     * @since 3.7.0
+     *
+     * @see ConfigInterface::setRawBlocks()
      */
     public function isRawBlocksEnabled(): bool;
 
@@ -317,33 +392,44 @@ interface ConfigInterface
      * to operate on a single line of text, rather than blocks of text and does
      * not wrap the output in paragraph tags.
      *
-     * bc. $parser = new \Netcarving\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarving\Textile\Parser();
      * echo $parser
      *     ->setBlockTags(false)
      *     ->parse('h1. Hello *strong* world!');
+     * ```
      *
      * The above generates:
      *
-     * bc. h1. Hello <strong>strong</strong> world!
+     * ```html
+     * h1. Hello <strong>strong</strong> world!
+     * ```
      *
-     * @param  bool   $enabled TRUE to enable, FALSE to disable
-     * @return self   This instance
-     * @since  3.6.0
-     * @see    Parser::isBlockTagEnabled()
+     * @param bool $enabled TRUE to enable, FALSE to disable
+     *
+     * @return self This instance
+     *
+     * @since 3.6.0
+     *
+     * @see ConfigInterface::isBlockTagEnabled()
      */
     public function setBlockTags(bool $enabled): self;
 
     /**
      * Whether block-level tags are enabled and parsed.
      *
-     * bc. $parser = new \Netcarving\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarving\Textile\Parser();
      * if ($parser->isBlockTagAllowed() === true) {
      *     echo 'Block tags are enabled.';
      * }
+     * ```
      *
      * @return bool TRUE if enabled, FALSE otherwise
-     * @since  3.6.0
-     * @see    Parser::setBlockTags()
+     *
+     * @since 3.6.0
+     *
+     * @see ConfigInterface::setBlockTags()
      */
     public function isBlockTagEnabled(): bool;
 
@@ -355,33 +441,44 @@ interface ConfigInterface
      * used if the the input document's lines are pre-wrapped. For instance,
      * in case the input is from CLI content, or source code documentation.
      *
-     * bc. $parser = new \Netcarving\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarving\Textile\Parser();
      * echo $parser
      *     ->setLineWrap(false)
      *     ->parse("Hello\nworld!");
+     * ```
      *
      * The above generates:
      *
-     * bc. <p>Hello world!</p>
+     * ```html
+     * <p>Hello world!</p>
+     * ```
      *
-     * @param  bool   $enabled TRUE to enable, FALSE to disable
-     * @return self   This instance
-     * @since  3.6.0
-     * @see    Parser::isLineWrapEnabled()
+     * @param bool $enabled TRUE to enable, FALSE to disable
+     *
+     * @return self This instance
+     *
+     * @since 3.6.0
+     *
+     * @see ConfigInterface::isLineWrapEnabled()
      */
     public function setLineWrap(bool $enabled): self;
 
     /**
      * Whether line-wrapping is enabled.
      *
-     * bc. $parser = new \Netcarving\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarving\Textile\Parser();
      * if ($parser->isLineWrapEnabled() === true) {
      *     echo 'Line-wrapping is enabled.';
      * }
+     * ```
      *
      * @return bool TRUE if enabled, FALSE otherwise
-     * @see    Parser::setLineWrap()
-     * @since  3.6.0
+     *
+     * @see ConfigInterface::setLineWrap()
+     *
+     * @since 3.6.0
      */
     public function isLineWrapEnabled(): bool;
 
@@ -391,26 +488,34 @@ interface ConfigInterface
      * This method lets you to redefine a substitution symbol. The following
      * sets the 'half' glyph:
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser
      *     ->setSymbol('half', '1&#8260;2')
      *     ->parse('Hello [1/2] World!');
+     * ```
      *
      * Generates:
      *
-     * bc. <p>Hello 1&#⁄2 World!</p>
+     * ```html
+     * <p>Hello 1&#⁄2 World!</p>
+     * ```
      *
      * Symbol can be set to FALSE to disable it:
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * $parser->setSymbol('dimension', false);
+     * ```
      *
-     * See Parser::getSymbol() to find out all available symbols.
+     * See `Parser::getSymbol()` to find out all available symbols.
      *
-     * @param  string      $name  Name of the symbol to assign a new value to
-     * @param  string|bool $value New value for the symbol, or FALSE to disable
-     * @return self        This instance
-     * @see    Parser::getSymbol()
+     * @param string $name Name of the symbol to assign a new value to
+     * @param string|bool $value New value for the symbol, or FALSE to disable
+     *
+     * @return self This instance
+     *
+     * @see ConfigInterface::getSymbol()
      */
     public function setSymbol(string $name, $value): self;
 
@@ -420,18 +525,25 @@ interface ConfigInterface
      * This method gets a symbol definition by name, or the full symbol table
      * as an array.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser->getSymbol('dimension');
+     * ```
      *
      * To get all available symbol definitions:
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * print_r($parser->getSymbol());
+     * ```
      *
-     * @param  string|null $name The name of the symbol, or NULL if requesting the symbol table
+     * @param string|null $name The name of the symbol, or NULL if requesting the symbol table
+     *
      * @return string[]|false[]|null[]|string|false|null The symbol table or the requested symbol
+     *
      * @throws \InvalidArgumentException
-     * @see    Parser::setSymbol()
+     *
+     * @see ConfigInterface::setSymbol()
      */
     public function getSymbol(?string $name = null);
 
@@ -442,25 +554,34 @@ interface ConfigInterface
      * absolute HTTP address pointing a the site's image, or upload, directory.
      * PHP-Textile to convert relative paths to absolute, or prefixed paths.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * $parser->setImagePrefix('https://static.example.com/images/');
+     * ```
      *
-     * @param  string $prefix The prefix
-     * @return self   This instance
-     * @since  3.7.0
-     * @see    Parser::getImagePrefix()
+     * @param string $prefix The prefix
+     *
+     * @return self This instance
+     *
+     * @since 3.7.0
+     *
+     * @see ConfigInterface::getImagePrefix()
      */
     public function setImagePrefix(string $prefix): self;
 
     /**
      * Gets base relative image prefix.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser->getImagePrefix();
+     * ```
      *
      * @return string The prefix
-     * @since  3.7.0
-     * @see    Parser::setImagePrefix()
+     *
+     * @since 3.7.0
+     *
+     * @see ConfigInterface::setImagePrefix()
      */
     public function getImagePrefix(): string;
 
@@ -470,25 +591,34 @@ interface ConfigInterface
      * The given string is used to prefix relative link paths. This allows
      * PHP-Textile convert relative paths to absolute, or prefixed, links.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * $parser->setLinkPrefix('https://example.com/');
+     * ```
      *
-     * @param  string $prefix The prefix
-     * @return self   This instance
-     * @since  3.7.0
-     * @see    Parser::getLinkPrefix()
+     * @param string $prefix The prefix
+     *
+     * @return self This instance
+     *
+     * @since 3.7.0
+     *
+     * @see ConfigInterface::getLinkPrefix()
      */
     public function setLinkPrefix(string $prefix): self;
 
     /**
      * Gets base relative link prefix.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser->getLinkPrefix();
+     * ```
      *
      * @return string The prefix
-     * @since  3.7.0
-     * @see    Parser::setLinkPrefix()
+     *
+     * @since 3.7.0
+     *
+     * @see ConfigInterface::setLinkPrefix()
      */
     public function getLinkPrefix(): string;
 
@@ -500,27 +630,34 @@ interface ConfigInterface
      * to images linked with a local relative path, as long as the image file
      * can be accessed.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * echo $parser
      *     ->setDimensionlessImages(true)
      *     ->parse('!image.jpg!');
+     * ```
      *
-     * @param  bool   $dimensionless TRUE to disable image dimensions, FALSE to enable
-     * @return self   This instance
-     * @see    Parser::getDimensionlessImages()
+     * @param bool $dimensionless TRUE to disable image dimensions, FALSE to enable
+     *
+     * @return self This instance
+     *
+     * @see ConfigInterface::getDimensionlessImages()
      */
     public function setDimensionlessImages(bool $dimensionless = true): self;
 
     /**
      * Whether dimensionless images are enabled.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```php
+     * $parser = new \Netcarver\Textile\Parser();
      * if ($parser->getDimensionlessImages() === true) {
      *     echo 'Images do not get dimensions.';
      * }
+     * ```
      *
      * @return bool TRUE if images will not get dimensions, FALSE otherwise
-     * @see    Parser::setDimensionlessImages()
+     *
+     * @see ConfigInterface::setDimensionlessImages()
      */
     public function getDimensionlessImages(): bool;
 }

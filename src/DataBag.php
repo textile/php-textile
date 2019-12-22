@@ -46,9 +46,15 @@ namespace Netcarver\Textile;
  * This class allows storing assignments in an internal
  * data array.
  *
- * bc. use Netcarver\Textile\DataBag;
- * $plant = new DataBag(array('key' => 'value'));
+ * ```php
+ * class MyDataBag extends \Netcarver\Textile\DataBag
+ * {
+ *    // ...
+ * }
+ * // ...
+ * $plant = new MyDataBag(['key' => 'value']);
  * $plant->flower('rose')->color('red');
+ * ```
  *
  * @internal
  */
@@ -74,16 +80,22 @@ abstract class DataBag
     /**
      * Adds a value to the bag.
      *
-     * Empty values are rejected, unless the
-     * second argument is set TRUE.
+     * Empty values are rejected, unless the second argument is set TRUE.
      *
-     * bc. use Netcarver\Textile\DataBag;
-     * $plant = new DataBag(array('key' => 'value'));
+     * ```
+     * class MyDataBag extends \Netcarver\Textile\DataBag
+     * {
+     *    // ...
+     * }
+     * // ...
+     * $plant = new MyDataBag(array('key' => 'value'));
      * $plant->flower('rose')->color('red')->emptyValue(false, true);
+     * ```
      *
-     * @param   string                       $name   The name
-     * @param   string[]|int[]|bool[]|null[] $params Arguments
-     * @return  DataBag
+     * @param string $name The name
+     * @param string[]|int[]|bool[]|null[] $params Arguments
+     *
+     * @return DataBag
      */
     public function __call(string $name, array $params): self
     {

@@ -11,9 +11,12 @@ use Symfony\Component\Yaml\Yaml;
 final class FixtureTest extends TestCase
 {
     /**
+     * Run fixture tests.
+     *
      * @param string $file
      * @param string $name
      * @param mixed[] $test
+     *
      * @dataProvider dataProvider
      */
     public function testFixtures(string $file, string $name, array $test): void
@@ -52,6 +55,7 @@ final class FixtureTest extends TestCase
 
         \array_unshift($args, $test['input']);
 
+        // phpcs:ignore
         /** @var callable $callback */
         $callback = [$textile, $method];
 
@@ -74,6 +78,8 @@ final class FixtureTest extends TestCase
     }
 
     /**
+     * Fixture provider.
+     *
      * @return array[]
      */
     public function dataProvider(): array
@@ -82,7 +88,9 @@ final class FixtureTest extends TestCase
 
         $out = [];
 
-        if ($files = \glob('*/*.yaml')) {
+        $files = \glob('*/*.yaml');
+
+        if ($files) {
             foreach ($files as $file) {
                 $yaml = Yaml::parseFile($file);
 

@@ -48,10 +48,13 @@ interface EncoderInterface
     /**
      * Encodes the given text.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * ```
+     * $parser = new \Netcarver\Textile\Parser();
      * $parser->textileEncode('Some content to encode.');
+     * ```
      *
-     * @param  string $text The text to be encoded
+     * @param string $text The text to be encoded
+     *
      * @return string The encoded text
      */
     public function textileEncode(string $text): string;

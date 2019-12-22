@@ -48,9 +48,11 @@ namespace Netcarver\Textile;
  * used to construct tags with nice object oriented
  * syntax.
  *
- * bc. use Netcarver\Textile\Tag;
+ * ```php
+ * use Netcarver\Textile\Tag;
  * $img = new Tag('img');
  * echo (string) $img->class('big blue')->src('images/elephant.jpg');
+ * ```
  *
  * @method Tag alt(string $text, bool $allowEmpty = false)
  * @method Tag align(string $alignment, bool $allowEmpty = false)
@@ -60,6 +62,7 @@ namespace Netcarver\Textile;
  * @method Tag src(string $src, bool $allowEmpty = false)
  * @method Tag title(string $title, bool $allowEmpty = false)
  * @method Tag width(int $width, bool $allowZero = false)
+ *
  * @internal
  */
 final class Tag extends DataBag
@@ -81,9 +84,9 @@ final class Tag extends DataBag
     /**
      * Constructor.
      *
-     * @param string|null         $name        The tag name
-     * @param string[]|int[]|null $attributes  An array of attributes
-     * @param bool                $selfclosing Whether the tag is self-closing
+     * @param string|null $name The tag name
+     * @param string[]|int[]|null $attributes An array of attributes
+     * @param bool $selfclosing Whether the tag is self-closing
      */
     public function __construct(
         ?string $name,
@@ -99,9 +102,11 @@ final class Tag extends DataBag
     /**
      * Returns the tag as HTML.
      *
-     * bc. $img = new Tag('img');
+     * ```php
+     * $img = new Tag('img');
      * $img->src('images/example.jpg')->alt('Example image');
      * echo (string) $img;
+     * ```
      *
      * @return string A HTML element
      */
