@@ -1,19 +1,43 @@
 name: CI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   test:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        image: [latest, php_7_3, php_7_2]
-
-    name: ${{ matrix.image }}
-    runs-on: ubuntu-latest
-
+        php: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4']
+    name: PHP ${{ matrix.php }}
     steps:
+
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: All
-      run: make IMAGE=${{ matrix.image }}
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v1
+      with:
+        php-version: ${{ matrix.php }}
+        extensions: mbstring, intl
+        coverage: xdebug
+        pecl: false
+
+    - name: Get Composer Cache Directory
+      id: composer-cache
+      run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+    - name: Cache Dependencies
+      uses: actions/cache@v1
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ runner.os }}-composer-
+
+    - name: Install Dependencies
+      run: composer install --prefer-dist
+
+    - name: Lint
+      run: composer cs
+
+    - name: Test
+      run: composer test
