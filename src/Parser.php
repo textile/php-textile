@@ -67,7 +67,7 @@ use Netcarver\Textile\Api\ParserInterface;
  * The most basic use case would involve initialising a instance of the class
  * and calling the Parser::parse() method:
  *
- * ```
+ * ```php
  * $parser = new \Netcarver\Textile\Parser();
  * echo $parser->parse('h1. *Hello* _World!_');
  * ```
@@ -775,7 +775,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * a whole, such as the output doctype. To instruct the parser to return
      * HTML5 markup instead of XHTML, set $doctype argument to 'html5'.
      *
-     * ```
+     * ```php
      * $parser = new \Netcarver\Textile\Parser('html5');
      * echo $parser->parse('HTML(HyperText Markup Language)");
      * ```

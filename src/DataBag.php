@@ -82,7 +82,7 @@ abstract class DataBag
      *
      * Empty values are rejected, unless the second argument is set TRUE.
      *
-     * ```
+     * ```php
      * class MyDataBag extends \Netcarver\Textile\DataBag
      * {
      *    // ...
