@@ -17,5 +17,4 @@ after_script:
 
 matrix:
   allow_failures:
-    - php: hhvm-3.30
     - php: nightly
