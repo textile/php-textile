@@ -3,7 +3,6 @@ php:
   - 7.4
   - 7.3
   - 7.2
-  - hhvm-3.30
   - nightly
 
 before_script:
