@@ -49,4 +49,4 @@ testall:
 	$(MAKE) test IMAGE=php_7_2
 
 docs:
-	docker-compose run phpdoc -d src/ -t build/docs
+	docker-compose run phpdoc
