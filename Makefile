@@ -3,6 +3,7 @@
 IMAGE?=latest
 
 all:
+	$(MAKE) clean
 	$(MAKE) build
 	$(MAKE) install
 	$(MAKE) cs
@@ -11,12 +12,11 @@ all:
 build:
 	docker-compose build $(IMAGE)
 
-ifeq ($(IMAGE),latest)
-		$(MAKE) clean
-endif
-
 install:
+
+ifeq ($(IMAGE),latest)
 	docker-compose run $(IMAGE) composer install
+endif
 
 update:
 	docker-compose run $(IMAGE) composer update
@@ -37,8 +37,11 @@ static:
 	docker-compose run $(IMAGE) composer test:static
 
 clean:
+
+ifeq ($(IMAGE),latest)
 	rm -rf vendor
 	rm -f composer.lock
+endif
 
 testall:
 	$(MAKE) test IMAGE=latest

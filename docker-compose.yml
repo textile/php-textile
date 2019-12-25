@@ -5,7 +5,10 @@ services:
     build: ./docker/latest
     volumes:
       - .:/app
+      - ~/.composer:/tmp
     working_dir: /app
+    environment:
+      - COMPOSER_HOME=/tmp
 
   php_7_3:
     build:

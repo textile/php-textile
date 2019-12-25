@@ -8,26 +8,29 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.2', '7.3', '7.4']
-    name: PHP ${{ matrix.php }}
+        image: [latest, php_7_3, php_7_2]
+
+    name: ${{ matrix.image }}
+
+    env:
+      IMAGE: ${{ matrix.image }}
+
     steps:
 
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v1
-      with:
-        php-version: ${{ matrix.php }}
-        extensions: mbstring, intl
-        coverage: xdebug
-        pecl: false
+    - name: Clean
+      run: make clean
 
-    - name: Install Dependencies
-      run: composer install --prefer-dist
+    - name: Build
+      run: make build
+
+    - name: Install
+      run: make install
 
     - name: Lint
-      run: composer cs
+      run: make cs
 
     - name: Test
-      run: composer test
+      run: make test

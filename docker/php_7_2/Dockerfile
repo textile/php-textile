@@ -17,6 +17,9 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 
 ADD . /app
 
-RUN rm -rf /app/vendor && rm -f /app/composer.lock
+RUN cd /app && \
+    rm -rf vendor composer.lock && \
+    composer install && \
+    cd -
 
 WORKDIR /app
