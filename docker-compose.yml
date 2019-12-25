@@ -19,3 +19,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/php_7_2/Dockerfile
+
+  phpdoc:
+    image: phpdoc/phpdoc:v3.0.0-alpha.3
+    volumes:
+      - .:/data

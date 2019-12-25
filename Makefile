@@ -1,4 +1,4 @@
-.PHONY: all build install cs csfix test unit static clean
+.PHONY: all build install cs csfix test unit static clean testall docs
 
 IMAGE?=latest
 
@@ -47,3 +47,6 @@ testall:
 	$(MAKE) test IMAGE=latest
 	$(MAKE) test IMAGE=php_7_3
 	$(MAKE) test IMAGE=php_7_2
+
+docs:
+	docker-compose run phpdoc -d src/ -t build/docs
