@@ -1520,7 +1520,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      *
      * @return string HTML attribute list
      *
-     * @see Parser::parseAttribsToArray
+     * @see Parser::parseAttribsToArray()
      */
     private function parseAttribs(
         string $in,
