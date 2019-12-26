@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpdocumentor>
+    <title>PHP-Textile</title>
     <parser>
         <default-package-name>php-textile</default-package-name>
         <target>build/api-cache</target>

@@ -1,0 +1,33 @@
+### `{{ method.name }}`
+
+{% if method.deprecated %}**Deprecated**{% endif %}
+
+{{ method.summary|raw }}
+
+```php
+{% if method.static %}[static] {% endif %}{{ class.name }}::{{ method.name }}({% for argument in method.arguments %}{{- argument.types is not empty ? argument.types|join('|')~' ' }}
+{{- argument.byReference ? '&' }}${{- argument.name }}{{ argument.default ? ' = '~argument.default }}
+{%- if not loop.last %}, {% endif %}
+{%- endfor %})
+{{- method.response.types ? ': '~method.response.types|join('|') }}
+```
+
+{{ method.description|raw }}
+
+{% if method.arguments is not empty %}
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+{% for argument in method.arguments %}
+| `{{ argument.name }}` | {% if argument.types is not empty %}**{{ argument.types|join('&#124;')|raw }}**{% else %}-{% endif %} | {{ argument.description|replace({'|': '&#124;'})|raw }} |
+{% endfor %}
+
+{% endif %}
+
+{% if method.response.description %}
+#### Returns
+
+{{ method.response.description|raw }}
+
+{% endif %}

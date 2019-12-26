@@ -1,0 +1,16 @@
+## {{ class.name }}
+
+{% if class.deprecated %}**Deprecated**{% endif %}
+
+{{ class.summary|raw }}
+
+```php
+class {{ class.FullyQualifiedStructuralElementName }}{% if class.parent is not empty %} extends {{ class.parent.FullyQualifiedStructuralElementName }}{% endif %}{% if class.interfaces is not empty %} implements {{ class.interfaces|join(', ')|raw }}{% endif %}
+
+```
+
+{{ class.description|raw }}
+
+{% for method in class.methods %}
+{% include 'method.md.twig' %}
+{% endfor %}

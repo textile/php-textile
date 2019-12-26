@@ -1,0 +1,8 @@
+{{ project.name|raw }}
+=====
+
+{% for class in project.indexes.classes|sort_asc %}
+{% for tagName,tags in class.tags if tagName in ['api'] %}
+{% include 'class.md.twig' %}
+{% endfor %}
+{% endfor %}

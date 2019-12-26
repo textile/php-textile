@@ -103,6 +103,8 @@ use Netcarver\Textile\Api\ParserInterface;
  *
  * @see Parser::__construct()
  * @see Parser::parse()
+ *
+ * @api
  */
 class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 {
