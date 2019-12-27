@@ -6,20 +6,33 @@ namespace Netcarver\Textile\Test\Unit;
 
 use Netcarver\Textile\Parser;
 use PHPUnit\Framework\TestCase;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
 use Symfony\Component\Yaml\Yaml;
 
 final class FixtureTest extends TestCase
 {
     /**
+     * Change the working directory to the test directory.
+     *
+     * This jails the parser to it.
+     */
+    public function setUp(): void
+    {
+        \chdir(\dirname(__DIR__));
+    }
+
+    /**
      * Run fixture tests.
      *
-     * @param string $file
+     * @param SplFileInfo $file
      * @param string $name
      * @param mixed[] $test
      *
      * @dataProvider dataProvider
      */
-    public function testFixtures(string $file, string $name, array $test): void
+    public function testFixtures(SplFileInfo $file, string $name, array $test): void
     {
         $class = $test['class'] ?? Parser::class;
         $textile = new $class();
@@ -72,7 +85,7 @@ final class FixtureTest extends TestCase
             );
         }
 
-        $this->assertEquals($expect, $input, $name . ' in ' . $file);
+        $this->assertEquals($expect, $input, $name . ' in ' . $file->getPathname());
         $public = \implode(', ', \array_keys(\get_object_vars($textile)));
         $this->assertEquals('', $public, 'Leaking public class properties.');
     }
@@ -84,27 +97,31 @@ final class FixtureTest extends TestCase
      */
     public function dataProvider(): array
     {
-        \chdir(\dirname(__DIR__));
+        $path = \dirname(__DIR__) . '/fixtures';
+
+        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
 
         $out = [];
 
-        $files = \glob('*/*.yaml');
+        // phpcs:ignore
+        /** @var SplFileInfo $file */
+        foreach ($iterator as $file) {
+            if (!$file->isFile() || !in_array($file->getExtension(), ['yml', 'yaml'], true)) {
+                continue;
+            }
 
-        if ($files) {
-            foreach ($files as $file) {
-                $yaml = Yaml::parseFile($file);
+            $yaml = Yaml::parseFile($file->getPathname());
 
-                foreach ($yaml as $name => $test) {
-                    if (!\is_array($test) || !isset($test['input']) || !isset($test['expect'])) {
-                        continue;
-                    }
-
-                    if (isset($test['assert']) && $test['assert'] === 'skip') {
-                        continue;
-                    }
-
-                    $out[] = [$file, $name, $test];
+            foreach ($yaml as $name => $test) {
+                if (!\is_array($test) || !isset($test['input']) || !isset($test['expect'])) {
+                    continue;
                 }
+
+                if (isset($test['assert']) && $test['assert'] === 'skip') {
+                    continue;
+                }
+
+                $out[] = [$file, $name, $test];
             }
         }
 
