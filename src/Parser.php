@@ -789,8 +789,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @see Parser::configure()
      * @see Parser::parse()
      * @see Parser::setDocumentType()
-     *
-     * @api
      */
     public function __construct(string $doctype = 'xhtml')
     {

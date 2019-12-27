@@ -85,8 +85,6 @@ interface ParserInterface
      * @return string Parsed Textile input
      *
      * @since 3.6.0
-     *
-     * @api
      */
     public function parse(string $text): string;
 }
