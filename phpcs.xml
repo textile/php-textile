@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PHP_CodeSniffer">
+    <config name="installed_paths" value="vendor/phpcompatibility/php-compatibility"/>
+    <config name="testVersion" value="7.2-"/>
     <ini name="error_reporting" value="-1"/>
     <file>src</file>
     <file>test</file>
@@ -81,4 +83,5 @@
     <rule ref="Squiz.Scope.MethodScope"/>
     <rule ref="Squiz.Scope.StaticThisUsage"/>
     <rule ref="Squiz.Strings.DoubleQuoteUsage"/>
+    <rule ref="PHPCompatibility"/>
 </ruleset>
