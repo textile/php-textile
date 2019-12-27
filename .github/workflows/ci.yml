@@ -37,7 +37,6 @@ jobs:
 
   docs:
     runs-on: ubuntu-latest
-    needs: [test]
     name: Generate Documentation
 
     steps:
@@ -48,7 +47,9 @@ jobs:
         run: |
           pwd
           make docs
-          ls build/docs/
+          ls -l .
+          ls -l build
+          ls -l build/docs/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@master
