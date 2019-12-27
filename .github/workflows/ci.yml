@@ -45,11 +45,8 @@ jobs:
 
       - name: Build
         run: |
-          pwd
           make docs
-          ls -l .
-          ls -l build
-          ls -l build/docs/
+          sudo chmod 775 build/docs/README.md
 
       - name: Upload Artifact
         uses: actions/upload-artifact@master
