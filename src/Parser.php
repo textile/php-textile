@@ -369,13 +369,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private $lineWrapEnabled = true;
 
     /**
-     * Pattern for punctation.
-     *
-     * @var string
-     */
-    private $pnct = '[\!"#\$%&\'()\*\+,\-\./:;<=>\?@\[\\\]\^_`{\|}\~]';
-
-    /**
      * Pattern for URL.
      *
      * @var string
