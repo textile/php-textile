@@ -4216,7 +4216,7 @@ class Parser
 
     protected function replaceLinks($text)
     {
-        $stopchars = "\s|^'\"*";
+        $stopchars = "\s|^'\"*[";
 
         return (string)preg_replace_callback(
             '/
