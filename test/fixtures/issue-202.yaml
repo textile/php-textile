@@ -1,0 +1,10 @@
+Link with square brackets directly followed by words or link will be broken at the second link:
+  input: |
+    ["Wikipedia":https://en.wikipedia.org/]["Github":https://www.github.com/]
+
+    我爱["Textile":https://textile-lang.com/]和["TextPattern":https://textpattern.com/]
+
+  expect: |
+    <p><a href="https://en.wikipedia.org/">Wikipedia</a><a href="https://www.github.com/">Github</a></p>
+
+    <p>我爱<a href="https://textile-lang.com/">Textile</a>和<a href="https://textpattern.com/">TextPattern</a></p>
