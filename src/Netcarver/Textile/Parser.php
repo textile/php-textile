@@ -4217,7 +4217,7 @@ class Parser
     protected function replaceLinks($text)
     {
         $stopchars = "\s|^'\"*";
-        $result = preg_replace_callback(
+        $text = preg_replace_callback(
             '/
             (?P<pre>\[)                     # Optionally open with a square bracket eg. Look ["here":url]
             '.$this->uid.'linkStartMarker:" # marks start of the link
@@ -4229,9 +4229,6 @@ class Parser
             array($this, "fLink"),
             $text
         );
-        if ($result !== $text) {
-            return $result;
-        }
         return (string)preg_replace_callback(
             '/
             (?P<pre>\[)?                    # Optionally open with a square bracket eg. Look ["here":url]
