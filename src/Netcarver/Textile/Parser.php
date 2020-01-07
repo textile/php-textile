@@ -4216,8 +4216,22 @@ class Parser
 
     protected function replaceLinks($text)
     {
-        $stopchars = "\s|^'\"*[";
-
+        $stopchars = "\s|^'\"*";
+        $result = preg_replace_callback(
+            '/
+            (?P<pre>\[)                     # Optionally open with a square bracket eg. Look ["here":url]
+            '.$this->uid.'linkStartMarker:" # marks start of the link
+            (?P<inner>(?:.|\n)*?)           # grab the content of the inner "..." part of the link, can be anything but
+                                            # do not worry about matching class, id, lang or title yet
+            ":                              # literal ": marks end of atts + text + title block
+            (?P<urlx>[^'.$stopchars.']*])    # url upto a stopchar
+            /x'.$this->regex_snippets['mod'],
+            array($this, "fLink"),
+            $text
+        );
+        if ($result !== $text) {
+            return $result;
+        }
         return (string)preg_replace_callback(
             '/
             (?P<pre>\[)?                    # Optionally open with a square bracket eg. Look ["here":url]
