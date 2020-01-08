@@ -3365,18 +3365,30 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private function replaceLinks(string $text): string
     {
         $stopchars = "\s|^'\"*";
+        $needle = $this->uid . 'linkStartMarker:';
+        $prev = null;
 
-        return (string) \preg_replace_callback(
-            '/
-            (?P<pre>\[)?
-            ' . $this->uid . 'linkStartMarker:"
-            (?P<inner>(?:.|\n)*?)
-            ":
-            (?P<urlx>[^' . $stopchars . ']*)
-            /x' . $this->regex_snippets['mod'],
-            [$this, 'fLink'],
-            $text
-        );
+        while (\strpos($text, $needle) !== false) {
+            $text = (string) \preg_replace_callback(
+                '/
+                (?P<pre>\[)?
+                ' . $needle . '"
+                (?P<inner>(?:.|\n)*?)
+                ":
+                (?P<urlx>[^' . $stopchars . ']*)
+                /x' . $this->regex_snippets['mod'],
+                [$this, 'fLink'],
+                $text
+            );
+
+            if ($prev === $text) {
+                break;
+            }
+
+            $prev = $text;
+        }
+
+        return $text;
     }
 
     /**
