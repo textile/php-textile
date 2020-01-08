@@ -1,0 +1,20 @@
+Links placed one after other should be parsed:
+  input: |
+    ["1":https://example.tld]["2":https://example.tld]["3":https://example.tld]
+
+  expect: |
+    <p><a href="https://example.tld">1</a><a href="https://example.tld">2</a><a href="https://example.tld">3</a></p>
+
+Continous non-breaking content between links should be allowed:
+  input: |
+    ["1":https://example.tld]|["2":https://example.tld]|["3":https://example.tld]
+
+  expect: |
+    <p><a href="https://example.tld">1</a>|<a href="https://example.tld">2</a>|<a href="https://example.tld">3</a></p>
+
+Same applies for continuous multi-byte characters between links:
+  input: |
+    我["1":https://example.tld/]和["2":https://example.tld/]和["3":https://example.tld/]
+
+  expect: |
+    <p>我<a href="https://example.tld/">1</a>和<a href="https://example.tld/">2</a>和<a href="https://example.tld/">3</a></p>
