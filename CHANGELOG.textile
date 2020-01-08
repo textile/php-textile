@@ -4,6 +4,8 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 3.7.6 - upcoming
 
+* Support consecutive links without whitespace between using bracket syntax (closes "#202":https://github.com/textile/php-textile/issues/202, "#205":https://github.com/textile/php-textile/pull/205 and "#206":https://github.com/textile/php-textile/pull/206).
+
 h2. "Version 3.7.5 - 2019/12/16":https://github.com/textile/php-textile/releases/tag/v3.7.5
 
 * Fix PHP 7.4 compatibility issues (closes "#199":https://github.com/textile/php-textile/issues/199).
