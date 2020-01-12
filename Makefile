@@ -1,4 +1,4 @@
-.PHONY: all build install cs csfix test unit static clean testall docs
+.PHONY: all build install cs csfix test unit static clean testall docs help
 
 IMAGE?=latest
 
@@ -28,19 +28,21 @@ csfix:
 	docker-compose run $(IMAGE) composer csfix
 
 test:
+	@docker-compose run $(IMAGE) bash -c 'test -e vendor || composer install'
 	docker-compose run $(IMAGE) composer test
 
 unit:
+	@docker-compose run $(IMAGE) bash -c 'test -e vendor || composer install'
 	docker-compose run $(IMAGE) composer test:unit
 
 static:
+	@docker-compose run $(IMAGE) bash -c 'test -e vendor || composer install'
 	docker-compose run $(IMAGE) composer test:static
 
 clean:
 
 ifeq ($(IMAGE),latest)
-	rm -rf vendor
-	rm -f composer.lock
+	docker-compose run $(IMAGE) rm -rf vendor composer.lock
 endif
 
 testall:
@@ -50,3 +52,35 @@ testall:
 
 docs:
 	docker-compose run phpdoc --template markdown
+
+help:
+	@echo "Run PHP-Textile test suite"
+	@echo ""
+	@echo "Usage:"
+	@echo "  make [command] [IMAGE=<image>]"
+	@echo ""
+	@echo "Commands:"
+	@echo ""
+	@echo "  make all      Run all"
+	@echo ""
+	@echo "  make build    Build image"
+	@echo "  make clean    Reset Composer dependencies"
+	@echo "  make install  Install Composer dependencies"
+	@echo "  make update   Update Composer dependencies"
+	@echo ""
+	@echo "  make cs       Check code style"
+	@echo "  make csfix    Try to fix code style"
+	@echo ""
+	@echo "  make test     Run static and unit tests"
+	@echo "  make unit     Run only unit tests"
+	@echo "  make static   Run only static tests"
+	@echo ""
+	@echo "  make testall  Run tests against each image"
+	@echo ""
+	@echo "  make docs     Generate API documentation"
+	@echo ""
+	@echo "Images:"
+	@echo ""
+	@echo "  latest"
+	@echo "  php_7_2"
+	@echo "  php_7_3"
