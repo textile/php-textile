@@ -57,6 +57,7 @@ docs:
 
 githooks:
 	echo "make githooks-pre-push" > .git/hooks/pre-push
+	chmod +x .git/hooks/pre-push
 
 githooks-pre-push:
 	@$(MAKE) test
