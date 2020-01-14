@@ -17,8 +17,8 @@ jobs:
 
       - name: Build API docs
         run: |
-            make docs
-            sudo chmod -R 775 build
+          make docs
+          sudo chmod -R 775 build
 
       - name: Create Release
         id: create_release
@@ -33,11 +33,11 @@ jobs:
           prerelease: false
 
       - name: Upload API docs
-          uses: actions/upload-release-asset@v1.0.1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: ${{ github.workspace }}/build/docs/README.md
-            asset_name: API.md
-            asset_content_type: text/plain
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/build/docs/README.md
+          asset_name: API.md
+          asset_content_type: text/plain
