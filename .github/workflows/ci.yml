@@ -29,9 +29,6 @@ jobs:
     - name: Install
       run: make install
 
-    - name: Lint
-      run: make cs
-
     - name: Test
       run: make test
 
