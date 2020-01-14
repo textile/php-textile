@@ -36,6 +36,7 @@
     },
     "scripts": {
         "test": [
+            "@composer cs",
             "@composer test:static",
             "@composer test:unit"
         ],
@@ -45,7 +46,7 @@
         "test:unit": "phpunit"
     },
     "scripts-descriptions": {
-        "test": "Run unit tests and static analysis.",
+        "test": "Check coding style, and run unit tests and static analysis.",
         "cs": "Check coding style.",
         "csfix": "Fix coding style issues.",
         "test:static": "Run static analysis.",

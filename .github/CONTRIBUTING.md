@@ -52,7 +52,7 @@ process.
 Requirements depend on how the tools are ran. Development tools can either be ran within Docker containers, or natively
 on the host machine.
 
-#### Running inside containers
+#### Running inside container
 
 When ran with Docker:
 
@@ -111,11 +111,11 @@ $ make
 ```
 
 The above will setup the whole environment and reset and update dependencies if re-ran. If the container environment
-has already been set up, you can re-run specific step, such as just the linter or tests:
+has already been set up, you can re-run specific step, such as just the linter or unit tests:
 
 ```
 $ make cs
-$ make test
+$ make unit
 ```
 
 To see available steps:

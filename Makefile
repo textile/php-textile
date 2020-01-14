@@ -1,4 +1,4 @@
-.PHONY: all build install cs csfix test unit static clean testall docs help
+.PHONY: all build install cs csfix test unit static clean testall docs help githooks githooks-pre-push
 
 IMAGE?=latest
 
@@ -15,28 +15,30 @@ build:
 install:
 
 ifeq ($(IMAGE),latest)
-	docker-compose run $(IMAGE) composer install
+	docker-compose run $(IMAGE) bash -c 'test -e vendor || composer install'
 endif
 
 update:
 	docker-compose run $(IMAGE) composer update
 
 cs:
+	$(MAKE) install
 	docker-compose run $(IMAGE) composer cs
 
 csfix:
+	$(MAKE) install
 	docker-compose run $(IMAGE) composer csfix
 
 test:
-	@docker-compose run $(IMAGE) bash -c 'test -e vendor || composer install'
+	$(MAKE) install
 	docker-compose run $(IMAGE) composer test
 
 unit:
-	@docker-compose run $(IMAGE) bash -c 'test -e vendor || composer install'
+	$(MAKE) install
 	docker-compose run $(IMAGE) composer test:unit
 
 static:
-	@docker-compose run $(IMAGE) bash -c 'test -e vendor || composer install'
+	$(MAKE) install
 	docker-compose run $(IMAGE) composer test:static
 
 clean:
@@ -53,6 +55,12 @@ testall:
 docs:
 	docker-compose run phpdoc --template markdown
 
+githooks:
+	echo "make githooks-pre-push" > .git/hooks/pre-push
+
+githooks-pre-push:
+	@$(MAKE) test
+
 help:
 	@echo "Run PHP-Textile test suite"
 	@echo ""
@@ -61,23 +69,27 @@ help:
 	@echo ""
 	@echo "Commands:"
 	@echo ""
-	@echo "  make all      Run all"
+	@echo "  make help      Display this message"
 	@echo ""
-	@echo "  make build    Build image"
-	@echo "  make clean    Reset Composer dependencies"
-	@echo "  make install  Install Composer dependencies"
-	@echo "  make update   Update Composer dependencies"
+	@echo "  make all       Build and run tests"
 	@echo ""
-	@echo "  make cs       Check code style"
-	@echo "  make csfix    Try to fix code style"
+	@echo "  make build     Build image"
+	@echo "  make clean     Reset Composer dependencies"
+	@echo "  make install   Install Composer dependencies"
+	@echo "  make update    Update Composer dependencies"
 	@echo ""
-	@echo "  make test     Run static and unit tests"
-	@echo "  make unit     Run only unit tests"
-	@echo "  make static   Run only static tests"
+	@echo "  make cs        Check code style"
+	@echo "  make csfix     Try to fix code style"
 	@echo ""
-	@echo "  make testall  Run tests against each image"
+	@echo "  make test      Run linter, static and unit tests"
+	@echo "  make unit      Run only unit tests"
+	@echo "  make static    Run only static tests"
 	@echo ""
-	@echo "  make docs     Generate API documentation"
+	@echo "  make testall   Run tests against each image"
+	@echo ""
+	@echo "  make docs      Generate API documentation"
+	@echo ""
+	@echo "  make githooks  Install git hooks"
 	@echo ""
 	@echo "Images:"
 	@echo ""
