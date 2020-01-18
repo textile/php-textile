@@ -130,49 +130,10 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private $vlgn = '[\-^~]';
 
     /**
-     * Pattern for HTML classes and IDs.
-     *
-     * Does not allow classes/ids/languages/styles to span across
-     * newlines if used in a dotall regular expression.
-     *
-     * @var string
-     */
-    private $clas = "(?:\([^)\n]+\))";
-
-    /**
-     * Pattern for language attribute.
-     *
-     * @var string
-     */
-    private $lnge = "(?:\[[^]\n]+\])";
-
-    /**
-     * Pattern for style attribute.
-     *
-     * @var string
-     */
-    private $styl = "(?:\{[^}\n]+\})";
-
-    /**
-     * Regular expression pattern for column spans in tables.
-     *
-     * @var string
-     */
-    private $cspn = '(?:\\\\[0-9]+)';
-
-    /**
-     * Regular expression for row spans in tables.
-     *
-     * @var string
-     */
-    private $rspn = '(?:\/[0-9]+)';
-
-    /**
      * Regular expression for horizontal or vertical alignment.
      *
      * @var string
      */
-
     private $a;
 
     /**
@@ -180,7 +141,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      *
      * @var string
      */
-
     private $s;
 
     /**
@@ -369,13 +329,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private $lineWrapEnabled = true;
 
     /**
-     * Pattern for URL.
-     *
-     * @var string
-     */
-    private $urlch;
-
-    /**
      * Matched marker symbols.
      *
      * @var string
@@ -394,7 +347,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      *
      * @var string[]
      */
-    private $fn;
+    private $fn = [];
 
     /**
      * Shelved content.
@@ -596,26 +549,26 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         'quote_single_close' => '&#8217;',
         'quote_double_open'  => '&#8220;',
         'quote_double_close' => '&#8221;',
-        'apostrophe'         => '&#8217;',
-        'prime'              => '&#8242;',
-        'prime_double'       => '&#8243;',
-        'ellipsis'           => '&#8230;',
-        'emdash'             => '&#8212;',
-        'endash'             => '&#8211;',
-        'dimension'          => '&#215;',
-        'trademark'          => '&#8482;',
-        'registered'         => '&#174;',
-        'copyright'          => '&#169;',
-        'half'               => '&#189;',
-        'quarter'            => '&#188;',
-        'threequarters'      => '&#190;',
-        'degrees'            => '&#176;',
-        'plusminus'          => '&#177;',
-        'fn_ref_pattern'     => '<sup{atts}>{marker}</sup>',
-        'fn_foot_pattern'    => '<sup{atts}>{marker}</sup>',
-        'nl_ref_pattern'     => '<sup{atts}>{marker}</sup>',
-        'caps'               => '<span class="caps">{content}</span>',
-        'acronym'            => null,
+        'apostrophe' => '&#8217;',
+        'prime' => '&#8242;',
+        'prime_double' => '&#8243;',
+        'ellipsis' => '&#8230;',
+        'emdash' => '&#8212;',
+        'endash' => '&#8211;',
+        'dimension' => '&#215;',
+        'trademark' => '&#8482;',
+        'registered' => '&#174;',
+        'copyright' => '&#169;',
+        'half' => '&#189;',
+        'quarter' => '&#188;',
+        'threequarters' => '&#190;',
+        'degrees' => '&#176;',
+        'plusminus' => '&#177;',
+        'fn_ref_pattern' => '<sup{atts}>{marker}</sup>',
+        'fn_foot_pattern' => '<sup{atts}>{marker}</sup>',
+        'nl_ref_pattern' => '<sup{atts}>{marker}</sup>',
+        'caps' => '<span class="caps">{content}</span>',
+        'acronym' => null,
     ];
 
     /**
@@ -789,19 +742,24 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $uid = \uniqid((string) \rand());
         $this->uid = 'textileRef:' . $uid . ':';
         $this->linkPrefix = $uid . '-';
+
+        $class = '(?:\([^)\n]+\))';
+        $language = '(?:\[[^]\n]+\])';
+        $style = '(?:\{[^}\n]+\})';
+
         $this->a = '(?:' . $this->hlgn . '|' . $this->vlgn . ')*';
-        $this->s = '(?:' . $this->cspn . '|' . $this->rspn . ')*';
-        $this->c = '(?:' . $this->clas . '|' . $this->styl . '|' . $this->lnge . '|' . $this->hlgn . ')*';
+        $this->s = '(?:(?:\\\\[0-9]+)|(?:\/[0-9]+))*';
+        $this->c = '(?:' . $class . '|' . $style . '|' . $language . '|' . $this->hlgn . ')*';
 
         $this->cls = '(?:' .
-            $this->clas . '(?:' .
-                $this->lnge . '(?:' . $this->styl . ')?|' . $this->styl . '(?:' . $this->lnge . ')?' .
+            $class . '(?:' .
+                $language . '(?:' . $style . ')?|' . $style . '(?:' . $language . ')?' .
                 ')?|' .
-            $this->lnge . '(?:' .
-                $this->clas . '(?:' . $this->styl . ')?|' . $this->styl . '(?: ' . $this->clas . ')?' .
+            $language . '(?:' .
+                $class . '(?:' . $style . ')?|' . $style . '(?: ' . $class . ')?' .
                 ')?|' .
-            $this->styl . '(?:' .
-                $this->clas . '(?:' . $this->lnge . ')?|' . $this->lnge . '(?:' . $this->clas . ')?' .
+            $style . '(?:' .
+                $class . '(?:' . $language . ')?|' . $language . '(?:' . $class . ')?' .
                 ')?' .
             ')?';
 
@@ -832,7 +790,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             ];
         }
 
-        $this->urlch = '[' . $this->regex_snippets['wrd'] . '"$\-_.+!*\'(),";\/?:@=&%#{}|\\^~\[\]`]';
         $this->quote_starts = \implode('|', \array_map('preg_quote', \array_keys($this->quotes)));
         $this->ds = \DIRECTORY_SEPARATOR;
 
