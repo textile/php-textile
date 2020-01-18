@@ -54,11 +54,13 @@ declare(strict_types=1);
 namespace Netcarver\Textile;
 
 use Netcarver\Textile\Api\ConfigInterface;
+use Netcarver\Textile\Api\Document\BlockInterface;
 use Netcarver\Textile\Api\DocumentTypeInterface;
 use Netcarver\Textile\Api\DocumentTypePoolInterface;
 use Netcarver\Textile\Api\EncoderInterface;
 use Netcarver\Textile\Api\ParserInterface;
 use Netcarver\Textile\Api\Provider\UniqueIdentifierProviderInterface;
+use Netcarver\Textile\Document\Block;
 use Netcarver\Textile\Provider\UniqueIdentifierProvider;
 
 /**
@@ -2322,12 +2324,12 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $regex = '/^' .
             '(?P<tag>' . \implode('|', $this->blocktag_whitelist) . ')' .
             '(?P<atts>' . $this->a . $this->cls . $this->a . ')\.' .
-            '(?P<ext>\.?)(?::(?P<cite>\S+))? (?P<graf>.*)$/Ss' .
+            '(?P<ext>\.?)(?::(?P<cite>\S+))? (?P<content>.*)$/Ss' .
             $this->regex_snippets['mod'];
 
-        $textblocks = \preg_split('/(\n{2,})/', $text, -1, \PREG_SPLIT_DELIM_CAPTURE);
+        $blocks = \preg_split('/(\n{2,})/', $text, -1, \PREG_SPLIT_DELIM_CAPTURE);
 
-        if ($textblocks === false) {
+        if ($blocks === false) {
             return '';
         }
 
@@ -2340,12 +2342,13 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $cite = '';
         $eat = false;
 
-        foreach ($textblocks as $block) {
+        foreach ($blocks as $block) {
             // Line is just whitespace, keep it for the next block.
             if (\trim($block) === '') {
                 if ($eatWhitespace === false) {
                     $whitespace .= $block;
                 }
+
                 continue;
             }
 
@@ -2357,9 +2360,9 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             }
 
             $eatWhitespace = false;
-            $anonymous_block = !\preg_match($regex, $block, $m);
+            $anonymous = !\preg_match($regex, $block, $m);
 
-            if (!$anonymous_block) {
+            if (!$anonymous) {
                 // Last block was extended, so close it.
                 if ($ext) {
                     $out[\count($out) - 1] .= $c1 ?? null;
@@ -2369,9 +2372,15 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 $atts = $m['atts'];
                 $ext = $m['ext'];
                 $cite = $m['cite'];
-                $graf = $m['graf'];
 
-                [$o1, $o2, $content, $c2, $c1, $eat] = $this->fBlock($m);
+                $m = $this->fBlock($m);
+
+                $o1 = $m->getOuterOpen();
+                $o2 = $m->getInnerOpen();
+                $content = $m->getContent();
+                $c2 = $m->getInnerClose();
+                $c1 = $m->getOuterClose();
+                $eat = $m->isEaten();
 
                 // Leave off c1 if this block is extended, we'll close it at the start of the next block.
                 $block = $o1 . $o2 . $content . $c2;
@@ -2384,14 +2393,19 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                     ($this->isRawBlocksEnabled() && $this->isRawBlock($block));
 
                 if ($ext || (\strpos($block, ' ') !== 0 && !$rawBlock)) {
-                    [$o1, $o2, $content, $c2, $c1, $eat] = $this->fBlock([
-                        0,
-                        $tag,
-                        $atts,
-                        $ext,
-                        $cite,
-                        $block,
+                    $m = $this->fBlock([
+                        'tag' => $tag,
+                        'atts' => $atts,
+                        'ext' => $ext,
+                        'cite' => $cite,
+                        'content' => $block,
                     ]);
+
+                    $o2 = $m->getInnerOpen();
+                    $content = $m->getContent();
+                    $c2 = $m->getInnerClose();
+                    $c1 = $m->getOuterClose();
+                    $eat = $m->isEaten();
 
                     // Skip $o1/$c1 because this is part of a continuing extended block.
                     if ($tag === 'p' && !$this->hasRawText($content)) {
@@ -2411,7 +2425,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $block = $this->doPbr($block);
             $block = $whitespace . \str_replace('<br>', '<br />', $block);
 
-            if ($ext && $anonymous_block) {
+            if ($ext && $anonymous) {
                 $out[\count($out) - 1] .= $block;
             } elseif (!$eat) {
                 $out[] = $block;
@@ -2439,23 +2453,21 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      *
      * @param mixed[] $m The block content to format
      *
-     * @return mixed[]
+     * @return BlockInterface
      */
-    private function fBlock(array $m): array
+    private function fBlock(array $m): BlockInterface
     {
-        [, $tag, $att, $ext, $cite, $content] = $m;
-        $atts = $this->parseAttribs($att);
         $space = $this->regex_snippets['space'];
 
-        $o1 = '';
-        $o2 = '';
-        $c2 = '';
-        $c1 = '';
-        $eat = false;
+        $tag = $m['tag'];
+        $atts = $this->parseAttribs($m['atts']);
+        $cite = $m['cite'];
+        $content = $m['content'];
+
+        $block = new Block();
 
         if ($tag === 'p') {
-            // Is this an anonymous block with a note definition?
-            $notedef = \preg_replace_callback(
+            $noteDefinition = \preg_replace_callback(
                 '/' .
                 '^note\#' .
                 '(?P<label>[^%<*!@#^([{ ' . $space . '.]+)' .
@@ -2468,9 +2480,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 $content
             );
 
-            if ($notedef === '' || $notedef === null) {
-                // It will be empty if the regex matched and ate it.
-                return [$o1, $o2, $notedef, $c2, $c1, true];
+            if ($noteDefinition === '' || $noteDefinition === null) {
+                return $block->setEaten(true);
             }
         }
 
@@ -2481,71 +2492,86 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
                 $fns
             )
         ) {
-            $tag = 'p';
-            $fnid = $this->fn[$fns['fnid']] ?? $this->linkPrefix . ($this->linkIndex++);
-
-            // If there is an author-specified ID goes on the wrapper & the auto-id gets pushed to the <sup>.
-            $supp_id = '';
+            $fnId = $this->fn[$fns['fnid']] ?? $this->linkPrefix . ($this->linkIndex++);
 
             if (\strpos($atts, 'class=') === false) {
                 $atts .= ' class="footnote"';
             }
 
             if (\strpos($atts, ' id=') === false) {
-                $atts .= ' id="fn' . $fnid . '"';
+                $atts .= ' id="fn' . $fnId . '"';
+                $suppId = '';
             } else {
-                $supp_id = ' id="fn' . $fnid . '"';
+                $suppId = ' id="fn' . $fnId . '"';
             }
 
-            if (\strpos($att, '^') === false) {
-                $sup = $this->formatFootnote($fns['fnid'], $supp_id);
+            if (\strpos($m['atts'], '^') === false) {
+                $sup = $this->formatFootnote($fns['fnid'], $suppId);
             } else {
-                $sup = $this->formatFootnote('<a href="#fnrev' . $fnid . '">' . $fns['fnid'] . '</a>', $supp_id);
+                $sup = $this->formatFootnote(
+                    '<a href="#fnrev' . $fnId . '">' . $fns['fnid'] . '</a>',
+                    $suppId
+                );
             }
 
             $content = $sup . ' ' . $content;
+
+            return $block
+                ->setContent($this->graf($content))
+                ->setInnerOpen('<p' . $atts . '>')
+                ->setInnerClose('</p>');
         }
 
         if ($tag === 'bq') {
             $cite = $this->shelveUrl($cite);
+
             $cite = $cite !== '' ? ' cite="' . $cite . '"' : '';
-            $o1 = '<blockquote' . $cite . $atts . '>' . "\n";
-            $o2 = "\t" . '<p' . $this->parseAttribs($att, '', false) . '>';
-            $c2 = '</p>';
-            $c1 = "\n" . '</blockquote>';
-        } elseif ($tag === 'bc') {
-            $attrib_array = $this->parseAttribsToArray($att, 'code');
-            $code_class   = '';
-            if (isset($attrib_array['lang'])) {
-                $code_class = ' class="' . $attrib_array['lang'] . '"';
-                unset($attrib_array['lang']);
-                $atts = $this->formatAttributeString($attrib_array);
-            }
-            $o1 = '<pre' . $atts . '><code' . $code_class . '>';
-            $c1 = '</code></pre>';
-            $content = $this->shelve($this->rEncodeHtml($content));
-        } elseif ($tag === 'notextile') {
-            $content = $this->shelve($content);
-            $o1 = '';
-            $o2 = '';
-            $c1 = '';
-            $c2 = '';
-        } elseif ($tag === 'pre') {
-            $content = $this->shelve($this->rEncodeHtml($content));
-            $o1 = '<pre' . $atts . '>';
-            $o2 = '';
-            $c2 = '';
-            $c1 = '</pre>';
-        } elseif ($tag === '###') {
-            $eat = true;
-        } else {
-            $o2 = '<' . $tag . $atts . '>';
-            $c2 = '</' . $tag . '>';
+
+            $innerAttributes = $this->parseAttribs($m['atts'], '', false);
+
+            return $block
+                ->setContent($this->graf($content))
+                ->setOuterOpen("<blockquote${cite}${atts}>\n")
+                ->setInnerOpen("\t<p${innerAttributes}>")
+                ->setInnerClose('</p>')
+                ->setOuterClose("\n</blockquote>");
         }
 
-        $content = $eat ? '' : $this->graf($content);
+        if ($tag === 'bc') {
+            $attributeMap = $this->parseAttribsToArray($m['atts'], 'code');
+            $languageClass   = '';
 
-        return [$o1, $o2, $content, $c2, $c1, $eat];
+            if (isset($attributeMap['lang'])) {
+                $languageClass = ' class="' . $attributeMap['lang'] . '"';
+                unset($attributeMap['lang']);
+                $atts = $this->formatAttributeString($attributeMap);
+            }
+
+            return $block
+                ->setContent($this->shelve($this->rEncodeHtml($content)))
+                ->setOuterOpen('<pre' . $atts . '><code' . $languageClass . '>')
+                ->setOuterClose('</code></pre>');
+        }
+
+        if ($tag === 'notextile') {
+            return $block->setContent($this->shelve($content));
+        }
+
+        if ($tag === 'pre') {
+            return $block
+                ->setContent($this->shelve($this->rEncodeHtml($content)))
+                ->setOuterOpen('<pre' . $atts . '>')
+                ->setOuterClose('</pre>');
+        }
+
+        if ($tag === '###') {
+            return $block->setEaten(true);
+        }
+
+        return $block
+            ->setContent($this->graf($content))
+            ->setInnerOpen('<' . $tag . $atts . '>')
+            ->setInnerClose('</' . $tag . '>');
     }
 
     /**

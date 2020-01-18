@@ -1,0 +1,199 @@
+<?php
+
+/**
+ * Textile - A Humane Web Text Generator.
+ *
+ * @link https://github.com/textile/php-textile
+ */
+
+declare(strict_types=1);
+
+/*
+ * Copyright (c) 2019, PHP-Textile Team
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * * Neither the name Textile nor the names of its contributors may be used to
+ * endorse or promote products derived from this software without specific
+ * prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+namespace Netcarver\Textile\Document;
+
+use Netcarver\Textile\Api\Document\BlockInterface;
+
+/**
+ * Document block.
+ */
+class Block implements BlockInterface
+{
+    /**
+     * Content.
+     *
+     * @var string|null
+     */
+    private $content;
+
+    /**
+     * Whether the block is eaten.
+     *
+     * @var bool
+     */
+    private $isEaten = false;
+
+    /**
+     * Outer opening.
+     *
+     * @var string|null
+     */
+    private $outerOpen;
+
+    /**
+     * Inner opening.
+     *
+     * @var string|null
+     */
+    private $innerOpen;
+
+    /**
+     * Inner closing.
+     *
+     * @var string|null
+     */
+    private $innerClose;
+
+    /**
+     * Outer closing.
+     *
+     * @var string|null
+     */
+    private $outerClose;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContent(): string
+    {
+        return (string) $this->content;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setContent(string $content): BlockInterface
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isEaten(): bool
+    {
+        return (bool) $this->isEaten;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setEaten(bool $status): BlockInterface
+    {
+        $this->isEaten = $status;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOuterOpen(): string
+    {
+        return (string) $this->outerOpen;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOuterOpen(string $content): BlockInterface
+    {
+        $this->outerOpen = $content;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getInnerOpen(): string
+    {
+        return (string) $this->innerOpen;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setInnerOpen(string $content): BlockInterface
+    {
+        $this->innerOpen = $content;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getInnerClose(): string
+    {
+        return (string) $this->innerClose;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setInnerClose(string $content): BlockInterface
+    {
+        $this->innerClose = $content;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOuterClose(): string
+    {
+        return (string) $this->outerClose;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOuterClose(string $content): BlockInterface
+    {
+        $this->outerClose = $content;
+
+        return $this;
+    }
+}
