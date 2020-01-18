@@ -15,24 +15,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
-      - name: Build API docs
+      - name: Build API Docs
         run: |
           make docs
           sudo chmod -R 775 build
 
+      - name: Changelog
+        id: changelog
+        run: |
+          contents="$(sed -e '1,/##/d' -e '/##/,$d' CHANGELOG.md)"
+          contents="${contents//'%'/'%25'}"
+          contents="${contents//$'\n'/'%0A'}"
+          contents="${contents//$'\r'/'%0D'}"
+          echo "::set-output name=contents::$contents"
+
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1.0.0
+        uses: actions/create-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
-          body: 'changelog here'
+          body: ${{ steps.changelog.outputs.contents }}
           draft: false
           prerelease: false
 
-      - name: Upload API docs
+      - name: Upload API Docs
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
