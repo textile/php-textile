@@ -56,6 +56,8 @@ namespace Netcarver\Textile;
 use Netcarver\Textile\Api\ConfigInterface;
 use Netcarver\Textile\Api\EncoderInterface;
 use Netcarver\Textile\Api\ParserInterface;
+use Netcarver\Textile\Api\Provider\UniqueIdentifierProviderInterface;
+use Netcarver\Textile\Provider\UniqueIdentifierProvider;
 
 /**
  * Textile parser.
@@ -728,7 +730,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * echo $parser->parse('HTML(HyperText Markup Language)");
      * ```
      *
-     * @param string $doctype The output document type, either 'xhtml' or 'html5'
+     * @param string|null $doctype The output document type, either 'xhtml' or 'html5'
+     * @param UniqueIdentifierProviderInterface|null $uniqueIdentifierProvider
      *
      * @throws \InvalidArgumentException
      *
@@ -736,10 +739,17 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @see Parser::parse()
      * @see Parser::setDocumentType()
      */
-    public function __construct(string $doctype = 'xhtml')
-    {
-        $this->setDocumentType($doctype)->setRestricted(false);
-        $uid = \uniqid((string) \rand());
+    public function __construct(
+        ?string $doctype = null,
+        ?UniqueIdentifierProviderInterface $uniqueIdentifierProvider = null
+    ) {
+        $uniqueIdentifierProvider = $uniqueIdentifierProvider ?? new UniqueIdentifierProvider();
+
+        $this
+            ->setDocumentType($doctype ?? 'xhtml')
+            ->setRestricted(false);
+
+        $uid = $uniqueIdentifierProvider->getToken();
         $this->uid = 'textileRef:' . $uid . ':';
         $this->linkPrefix = $uid . '-';
 
