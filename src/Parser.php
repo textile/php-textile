@@ -54,6 +54,8 @@ declare(strict_types=1);
 namespace Netcarver\Textile;
 
 use Netcarver\Textile\Api\ConfigInterface;
+use Netcarver\Textile\Api\DocumentTypeInterface;
+use Netcarver\Textile\Api\DocumentTypePoolInterface;
 use Netcarver\Textile\Api\EncoderInterface;
 use Netcarver\Textile\Api\ParserInterface;
 use Netcarver\Textile\Api\Provider\UniqueIdentifierProviderInterface;
@@ -110,6 +112,13 @@ use Netcarver\Textile\Provider\UniqueIdentifierProvider;
  */
 class Parser implements ConfigInterface, EncoderInterface, ParserInterface
 {
+    /**
+     * Document type pool.
+     *
+     * @var DocumentTypePoolInterface
+     */
+    private $documentTypePool;
+
     /**
      * Regular expression snippets.
      *
@@ -519,21 +528,9 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Target document type.
      *
-     * @var string
+     * @var DocumentTypeInterface
      */
-    private $doctype;
-
-    /**
-     * An array of supported doctypes.
-     *
-     * @var string[]
-     *
-     * @since 3.6.0
-     */
-    private $doctypes = [
-        'xhtml',
-        'html5',
-    ];
+    private $documentType;
 
     /**
      * Substitution symbols.
@@ -741,9 +738,12 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function __construct(
         ?string $doctype = null,
-        ?UniqueIdentifierProviderInterface $uniqueIdentifierProvider = null
+        ?UniqueIdentifierProviderInterface $uniqueIdentifierProvider = null,
+        ?DocumentTypePoolInterface $documentTypePool = null
     ) {
         $uniqueIdentifierProvider = $uniqueIdentifierProvider ?? new UniqueIdentifierProvider();
+
+        $this->documentTypePool = $documentTypePool ?? new DocumentTypePool();
 
         $this
             ->setDocumentType($doctype ?? 'xhtml')
@@ -848,15 +848,19 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * {@inheritdoc}
      */
-    public function setDocumentType(string $doctype): ConfigInterface
+    public function setDocumentType(string $name): ConfigInterface
     {
-        if (\in_array($doctype, $this->doctypes, true)) {
-            if ($this->getDocumentType() !== $doctype) {
-                $this->doctype = $doctype;
-                $this->rebuild_glyphs = true;
-            }
+        foreach ($this->documentTypePool->getDocumentTypes() as $documentType) {
+            $documentTypeName = $documentType->getName();
 
-            return $this;
+            if ($documentTypeName === $name) {
+                if ($this->documentType === null || $documentTypeName !== $this->documentType->getName()) {
+                    $this->documentType = $documentType;
+                    $this->rebuild_glyphs = true;
+                }
+
+                return $this;
+            }
         }
 
         throw new \InvalidArgumentException('Invalid doctype given.');
@@ -867,7 +871,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function getDocumentType(): string
     {
-        return (string) $this->doctype;
+        return (string) $this->documentType->getName();
     }
 
     /**
