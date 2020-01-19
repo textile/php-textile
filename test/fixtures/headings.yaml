@@ -1,0 +1,5 @@
+Heading with class and id:
+  input: |
+    h2(heading#head). Hello!
+  expect: |
+    <h2 class="heading" id="head">Hello!</h2>

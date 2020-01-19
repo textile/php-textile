@@ -1,0 +1,303 @@
+Basic Ordered List:
+  input: |
+    # Ordered
+    # List
+    # Live
+    ## Including
+    some newline
+    ## And underlings
+    # ... aaaaand back out
+
+    p. And here we are with some _(alt)Other colours_
+
+    # red
+    ## greeny
+    browny
+    pinkish
+    ## black
+    # blue
+  expect: |
+    <ol>
+    	<li>Ordered</li>
+    	<li>List</li>
+    	<li>Live
+    	<ol>
+    		<li>Including<br />
+    some newline</li>
+    		<li>And underlings</li>
+    	</ol></li>
+    	<li>&#8230; aaaaand back out</li>
+    </ol>
+
+    <p>And here we are with some <em class="alt">Other colours</em></p>
+
+    <ol>
+    	<li>red
+    	<ol>
+    		<li>greeny<br />
+    browny<br />
+    pinkish</li>
+    		<li>black</li>
+    	</ol></li>
+    	<li>blue</li>
+    </ol>
+
+Ordered Lists:
+  input: |
+    test
+
+    #_(first#list) one
+    # two
+    # three
+
+    test
+
+    #(ordered#list2).
+    # one
+    # two
+    # three
+
+    test
+
+    #_(class_4).
+    # four
+    # five
+    # six
+
+    test
+
+    #_ seven
+    # eight
+    # nine
+
+    test
+
+    # one
+    # two
+    # three
+
+    test
+
+    #22 22
+    # 23
+    # 24
+
+  expect: |
+    <p>test</p>
+
+    <ol class="first" id="list" start="1">
+    	<li>one</li>
+    	<li>two</li>
+    	<li>three</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol class="ordered" id="list2">
+    	<li>one</li>
+    	<li>two</li>
+    	<li>three</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol class="class_4" start="4">
+    	<li>four</li>
+    	<li>five</li>
+    	<li>six</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol start="7">
+    	<li>seven</li>
+    	<li>eight</li>
+    	<li>nine</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol>
+    	<li>one</li>
+    	<li>two</li>
+    	<li>three</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol start="22">
+    	<li>22</li>
+    	<li>23</li>
+    	<li>24</li>
+    </ol>
+
+Multi-level ordered list with continuation:
+  input: |
+    test
+
+    # one
+    ##3 one.three
+    ## one.four
+    ## one.five
+    # two
+
+    test
+
+    #_(continuation#section2).
+    # three
+    # four
+    ##_ four.six
+    ## four.seven
+    # five
+
+    test
+
+    #21 twenty-one
+    # twenty-two
+
+  expect: |
+    <p>test</p>
+
+    <ol>
+    	<li>one
+    	<ol start="3">
+    		<li>one.three</li>
+    		<li>one.four</li>
+    		<li>one.five</li>
+    	</ol></li>
+    	<li>two</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol class="continuation" id="section2" start="3">
+    	<li>three</li>
+    	<li>four
+    	<ol start="6">
+    		<li>four.six</li>
+    		<li>four.seven</li>
+    	</ol></li>
+    	<li>five</li>
+    </ol>
+
+    <p>test</p>
+
+    <ol start="21">
+    	<li>twenty-one</li>
+    	<li>twenty-two</li>
+    </ol>
+
+Basic Unordered lists:
+  input: |
+    h3. How about some unordered goodness?
+
+    *(class) Bullet
+    * List
+    * Here
+    ** With
+    ** Subs
+    * and regulars
+
+    _colours_
+
+    * yellow
+    * cyan
+  expect: |
+    <h3>How about some unordered goodness?</h3>
+
+    <ul class="class">
+    	<li>Bullet</li>
+    	<li>List</li>
+    	<li>Here
+    	<ul>
+    		<li>With</li>
+    		<li>Subs</li>
+    	</ul></li>
+    	<li>and regulars</li>
+    </ul>
+
+    <p><em>colours</em></p>
+
+    <ul>
+    	<li>yellow</li>
+    	<li>cyan</li>
+    </ul>
+
+Mixed lists:
+  input: |
+    test
+
+    * bullet
+    *# number
+    *# number
+    *#* bullet
+    *# number
+    *# number with
+    a break
+    * bullet
+    ** okay
+
+  expect: |
+    <p>test</p>
+
+    <ul>
+    	<li>bullet
+    	<ol>
+    		<li>number</li>
+    		<li>number
+    		<ul>
+    			<li>bullet</li>
+    		</ul></li>
+    		<li>number</li>
+    		<li>number with<br />
+    a break</li>
+    	</ol></li>
+    	<li>bullet
+    	<ul>
+    		<li>okay</li>
+    	</ul></li>
+    	</ul>
+
+False-positive list markers:
+  input: |
+    *Here is a comment*
+
+    Here is *(class)a comment*
+
+    *(class)Here is a class* that is a little extended and is
+    *followed* by a strong word!
+
+    bc. ; Content-type: text/javascript
+    ; Cache-Control: no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0
+    ; Expires: Sat, 24 Jul 2003 05:00:00 GMT
+    ; Last-Modified: Wed, 1 Jan 2025 05:00:00 GMT
+    ; Pragma: no-cache
+
+    *123 test*
+
+    *test 123*
+
+    **123 test**
+
+    **test 123**
+  expect: |
+    <p><strong>Here is a comment</strong></p>
+
+    <p>Here is <strong class="class">a comment</strong></p>
+
+    <p><strong class="class">Here is a class</strong> that is a little extended and is<br />
+    <strong>followed</strong> by a strong word!</p>
+
+    <pre><code>; Content-type: text/javascript
+    ; Cache-Control: no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0
+    ; Expires: Sat, 24 Jul 2003 05:00:00 GMT
+    ; Last-Modified: Wed, 1 Jan 2025 05:00:00 GMT
+    ; Pragma: no-cache</code></pre>
+
+    <p><strong>123 test</strong></p>
+
+    <p><strong>test 123</strong></p>
+
+    <p><b>123 test</b></p>
+
+    <p><b>test 123</b></p>

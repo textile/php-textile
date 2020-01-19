@@ -131,3 +131,57 @@ Pre-formatted content including something that looks like inline code:
     <pre>sdada <a href="link">Link</a> @code@ dadsada</pre>
   expect : |
     <pre>sdada &lt;a href=&quot;link&quot;&gt;Link&lt;/a&gt; <code>code</code> dadsada</pre>
+
+Code blocks, pre and exclusions:
+  input: |
+    bc(input). You can't _*touch*_ *_this_*... Hammer time.
+
+    And keep your @(expect)mitts _*off*_ *_me_*@ as well. About the @<hr />@ tag.
+
+    bc(block).. As for the stuff in my *bold*, _emphasised_ & __italic__ codeblock, I think you'll find these tags entertaining:
+    <txp:linklist />
+    <txp:image_list category="squid">
+    <txp:image class="prawns" something="summat else" />
+    <br />
+    <txp:image_info type="caption" />
+    </txp:category>
+
+    bc.. Code block
+
+
+
+    with three empty lines
+
+    p(regular#somestuff). _Aaaand_, *__relax__*.
+
+    bc.. Paragraph 1
+
+    Paragraph 2
+
+    Paragraph 3
+  expect: |
+    <pre class="input"><code>You can&#39;t _*touch*_ *_this_*... Hammer time.</code></pre>
+
+    <p>And keep your <code>(expect)mitts _*off*_ *_me_*</code> as well. About the <code>&lt;hr /&gt;</code> tag.</p>
+
+    <pre class="block"><code>As for the stuff in my *bold*, _emphasised_ &amp; __italic__ codeblock, I think you&#39;ll find these tags entertaining:
+    &lt;txp:linklist /&gt;
+    &lt;txp:image_list category=&quot;squid&quot;&gt;
+    &lt;txp:image class=&quot;prawns&quot; something=&quot;summat else&quot; /&gt;
+    &lt;br /&gt;
+    &lt;txp:image_info type=&quot;caption&quot; /&gt;
+    &lt;/txp:category&gt;</code></pre>
+
+    <pre><code>Code block
+
+
+
+    with three empty lines</code></pre>
+
+    <p class="regular" id="somestuff"><em>Aaaand</em>, <strong><i>relax</i></strong>.</p>
+
+    <pre><code>Paragraph 1
+
+    Paragraph 2
+
+    Paragraph 3</code></pre>

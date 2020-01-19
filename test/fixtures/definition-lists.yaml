@@ -1,0 +1,140 @@
+Simple Definition lists:
+  input: |
+    ;(class#id) Term 1
+    : Def 1
+    : Def 2
+    : Def 3
+  expect: |
+    <dl class="class" id="id">
+    	<dt>Term 1</dt>
+    	<dd>Def 1</dd>
+    	<dd>Def 2</dd>
+    	<dd>Def 3</dd>
+    </dl>
+
+Redcloth Definition list:
+  input: |
+    -(hot) *coffee* := Hot _and_ black
+    -(hot#tea) tea := Also hot, but a little less black
+    -(cold) milk := Nourishing beverage for baby cows.
+    Cold drink that goes great with cookies. =:
+
+    -(hot) coffee := Hot and black
+    -(hot#tea) tea := Also hot, but a little less black
+    -(cold) milk :=\x20
+    Nourishing beverage for baby cows.
+    Cold drink that goes great with cookies. =:
+
+    - term := you can have line breaks
+    just like other lists
+    - line-spanning
+    term := hey, slick!
+
+    You can have multiple terms before a definition:
+
+    - textile
+    - fabric
+    - cloth := woven threads
+
+  expect: |
+    <dl>
+    	<dt class="hot"><strong>coffee</strong></dt>
+    	<dd>Hot <em>and</em> black</dd>
+    	<dt class="hot" id="tea">tea</dt>
+    	<dd>Also hot, but a little less black</dd>
+    	<dt class="cold">milk</dt>
+    	<dd>Nourishing beverage for baby cows.<br />
+    Cold drink that goes great with cookies.</dd>
+    </dl>
+
+    <dl>
+    	<dt class="hot">coffee</dt>
+    	<dd>Hot and black</dd>
+    	<dt class="hot" id="tea">tea</dt>
+    	<dd>Also hot, but a little less black</dd>
+    	<dt class="cold">milk</dt>
+    	<dd><p>Nourishing beverage for baby cows.<br />
+    Cold drink that goes great with cookies.</p></dd>
+    </dl>
+
+    <dl>
+    	<dt>term</dt>
+    	<dd>you can have line breaks<br />
+    just like other lists</dd>
+    	<dt>line-spanning<br />
+    term</dt>
+    	<dd>hey, slick!</dd>
+    </dl>
+
+    <p>You can have multiple terms before a definition:</p>
+
+    <dl>
+    	<dt>textile</dt>
+    	<dt>fabric</dt>
+    	<dt>cloth</dt>
+    	<dd>woven threads</dd>
+    </dl>
+
+Complex definition list:
+  input: |
+    h2. A definition list
+
+    ;(class#id) Term 1
+    : Def 1
+    : Def 2
+    : Def 3
+    ;; Center
+    ;;  NATO(Why Em Cee Ayy)
+    :: Subdef 1
+    :: Subdef 2
+    ;;; SubSub Term
+    ::: SubSub Def 1
+    ::: SubSub Def 2
+    ::: Subsub Def 3
+    With newline
+    ::: Subsub Def 4
+    :: Subdef 3
+    : DEF 4
+    ; Term 2
+    : Another def
+    : And another
+    : One more
+    :: A def without a term
+    :: More defness
+    ; Third term for good measure
+    : My definition of a boombastic jazz
+  expect: |
+    <h2>A definition list</h2>
+
+    <dl class="class" id="id">
+    	<dt>Term 1</dt>
+    	<dd>Def 1</dd>
+    	<dd>Def 2</dd>
+    	<dd>Def 3
+    	<dl>
+    		<dt>Center</dt>
+    		<dt><acronym title="Why Em Cee Ayy"><span class="caps">NATO</span></acronym></dt>
+    		<dd>Subdef 1</dd>
+    		<dd>Subdef 2
+    		<dl>
+    			<dt>SubSub Term</dt>
+    			<dd>SubSub Def 1</dd>
+    			<dd>SubSub Def 2</dd>
+    			<dd>Subsub Def 3<br />
+    With newline</dd>
+    			<dd>Subsub Def 4</dd>
+    		</dl></dd>
+    		<dd>Subdef 3</dd>
+    	</dl></dd>
+    	<dd><span class="caps">DEF</span> 4</dd>
+    	<dt>Term 2</dt>
+    	<dd>Another def</dd>
+    	<dd>And another</dd>
+    	<dd>One more
+    	<dl>
+    		<dd>A def without a term</dd>
+    		<dd>More defness</dd>
+    	</dl></dd>
+    	<dt>Third term for good measure</dt>
+    	<dd>My definition of a boombastic jazz</dd>
+    </dl>

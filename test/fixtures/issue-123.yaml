@@ -1,5 +1,6 @@
 HTM5 image alignment:
-  doctype : html5
+  setup:
+    - setDocumentType: html5
   input: |
     !>10x10.gif!
 
@@ -15,6 +16,8 @@ HTM5 image alignment:
     <p><img alt="" class="align-left" height="10" src="10x10.gif" width="10" /></p>
 
 XHTML image alignment:
+  setup:
+    - setDocumentType: xhtml
   input: |
     !>10x10.gif!
 

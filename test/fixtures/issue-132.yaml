@@ -4,7 +4,7 @@ Alignment is accepted in restricted mode when doctype is set to HTML5 :
     - setLite: false
     - setImages: true
     - setLinkRelationShip: nofollow
-  doctype: html5
+    - setDocumentType: html5
   input: |
     !=10x10.gif!
 
@@ -25,6 +25,7 @@ In XHTML same generates align attribute:
     - setLite: false
     - setImages: true
     - setLinkRelationShip: nofollow
+    - setDocumentType: xhtml
   input: |
     !=10x10.gif!
 
