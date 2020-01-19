@@ -155,7 +155,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Shelf factory.
      *
-     * @var ShelfFactory
+     * @var ShelfFactoryInterface
      */
     private $shelfFactory;
 
