@@ -55,6 +55,8 @@ namespace Netcarver\Textile;
 
 use Netcarver\Textile\Api\ConfigInterface;
 use Netcarver\Textile\Api\Document\BlockInterface;
+use Netcarver\Textile\Api\Document\ShelfFactoryInterface;
+use Netcarver\Textile\Api\Document\ShelfInterface;
 use Netcarver\Textile\Api\DocumentTypeInterface;
 use Netcarver\Textile\Api\DocumentTypePoolInterface;
 use Netcarver\Textile\Api\EncoderInterface;
@@ -64,6 +66,8 @@ use Netcarver\Textile\Api\Provider\MultiByteStringProviderInterface;
 use Netcarver\Textile\Api\Provider\PcreUnicodeProviderInterface;
 use Netcarver\Textile\Api\Provider\UniqueIdentifierProviderInterface;
 use Netcarver\Textile\Document\Block;
+use Netcarver\Textile\Document\Shelf;
+use Netcarver\Textile\Document\ShelfFactory;
 use Netcarver\Textile\Provider\DocumentRootProvider;
 use Netcarver\Textile\Provider\MultiByteStringProvider;
 use Netcarver\Textile\Provider\PcreUnicodeProvider;
@@ -147,6 +151,20 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @var DocumentRootProviderInterface
      */
     private $documentRootProvider;
+
+    /**
+     * Shelf factory.
+     *
+     * @var ShelfFactory
+     */
+    private $shelfFactory;
+
+    /**
+     * Shelved content.
+     *
+     * @var ShelfInterface
+     */
+    private $shelf;
 
     /**
      * Regular expression snippets.
@@ -388,16 +406,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @var string[]
      */
     private $fn = [];
-
-    /**
-     * Shelved content.
-     *
-     * Stores fragments of the source text that have been parsed
-     * and require no more processing.
-     *
-     * @var string[]
-     */
-    private $shelf = [];
 
     /**
      * Restricted mode.
@@ -745,6 +753,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param MultiByteStringProviderInterface|null $multiByteStringProvider
      * @param PcreUnicodeProviderInterface|null $pcreUnicodeProvider
      * @param DocumentRootProviderInterface|null $documentRootProvider
+     * @param ShelfFactoryInterface|null $shelfFactory
      *
      * @throws \InvalidArgumentException
      *
@@ -758,13 +767,15 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         ?DocumentTypePoolInterface $documentTypePool = null,
         ?MultiByteStringProviderInterface $multiByteStringProvider = null,
         ?PcreUnicodeProviderInterface $pcreUnicodeProvider = null,
-        ?DocumentRootProviderInterface $documentRootProvider = null
+        ?DocumentRootProviderInterface $documentRootProvider = null,
+        ?ShelfFactoryInterface $shelfFactory = null
     ) {
         $uniqueIdentifierProvider = $uniqueIdentifierProvider ?? new UniqueIdentifierProvider();
         $this->documentTypePool = $documentTypePool ?? new DocumentTypePool();
         $this->multiByteStringProvider = $multiByteStringProvider ?? new MultiByteStringProvider();
         $this->pcreUnicodeProvider = $pcreUnicodeProvider ?? new PcreUnicodeProvider();
         $this->documentRootProvider = $documentRootProvider ?? new DocumentRootProvider();
+        $this->shelfFactory = $shelfFactory ?? new ShelfFactory();
 
         $this
             ->setDocumentType($doctype ?? 'xhtml')
@@ -1179,7 +1190,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
             $text = $this->glyphs($text);
         }
 
-        $text = $this->retrieve($text);
+        $text = $this->shelf->replace($text);
         $text = $this->replaceGlyphs($text);
         $text = $this->retrieveTags($text);
         $text = $this->retrieveUrls($text);
@@ -1405,7 +1416,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $this->noteLists = [];
         $this->notes = [];
         $this->urlReferences = [];
-        $this->shelf = [];
+        $this->shelf = $this->shelfFactory->create();
         $this->fn = [];
         $this->spanDepth = 0;
         $this->refIndex = 1;
@@ -4038,42 +4049,13 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * Stores away a fragment of the source text that have been parsed
      * and requires no more processing.
      *
-     * @param string $val The content
+     * @param string $value The content
      *
-     * @return string The fragment's unique reference ID
-     *
-     * @see Parser::retrieve()
+     * @return string Unique reference token
      */
-    private function shelve(string $val): string
+    private function shelve(string $value): string
     {
-        $i = $this->uid . ($this->refIndex++) . ':shelve';
-        $this->shelf[$i] = $val;
-
-        return $i;
-    }
-
-    /**
-     * Replaces reference tokens with corresponding shelved content.
-     *
-     * This method puts all shelved content back to the final,
-     * parsed input.
-     *
-     * @param string $text The input
-     *
-     * @return string Processed text
-     *
-     * @see Parser::shelve()
-     */
-    private function retrieve(string $text): string
-    {
-        if ($this->shelf) {
-            do {
-                $old = $text;
-                $text = \str_replace(\array_keys($this->shelf), $this->shelf, $text);
-            } while ($text !== $old);
-        }
-
-        return $text;
+        return $this->shelf->shelve($value);
     }
 
     /**
