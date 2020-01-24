@@ -1034,7 +1034,7 @@ Non-whitelisted link schemes:
     <p>&#8220;I&#8217;m a bad link&#8221;:parp://parp.com</p>
 
 Mixed XHTML and Textile Links:
-  assert: skip
+  skip: true
   notes: >
     Reported here... http://forum.textpattern.com/viewtopic.php?pid=157506#p157506
   input: |

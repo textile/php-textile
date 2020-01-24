@@ -781,7 +781,7 @@ Partial HTML spans:
     <p><b>bold</b> and <i>italic</i>, the hard way.</p>
 
 Mixed HTML and Textile Links:
-  assert: skip
+  skip: true
   notes: |
     Reported here: http://forum.textpattern.com/viewtopic.php?pid=157506#p157506
   input: |
@@ -1043,7 +1043,7 @@ Square-brackets:
     A <a href="http://textpattern.com/">footnoted link</a><sup class="footnote" id="fnrev"><a href="#fn">182</a></sup>.</p>
 
 Issue 50 Bust-a-quotes:
-  assert: skip
+  skip: true
   notes: >
     This is issue 50 in the code tracker.
     However, I don't think this is valid textile as it's a mix of XHTML and textile smartquotes.

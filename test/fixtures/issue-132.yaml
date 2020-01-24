@@ -1,4 +1,4 @@
-Alignment is accepted in restricted mode when doctype is set to HTML5 :
+Alignment is accepted in restricted mode when document type is set to HTML5 :
   setup:
     - setRestricted: true
     - setLite: false

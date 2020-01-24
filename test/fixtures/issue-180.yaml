@@ -34,7 +34,7 @@ Text-alignment is stripped in restricted mode, but kept with images and such:
 Alignment uses classes with HTML5:
   setup:
     - setRestricted: true
-  doctype: html5
+    - setDocumentType: html5
   input: |
     p<. Left aligned paragraph.
 

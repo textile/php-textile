@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Netcarver\Textile\Test\Unit;
 
-use Netcarver\Textile\Parser;
+use Netcarver\Textile\Test\Helper\Fixture;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -24,70 +24,21 @@ final class FixtureTest extends TestCase
     }
 
     /**
-     * Run fixture tests.
+     * Runs fixture tests.
      *
-     * @param SplFileInfo $file
-     * @param string $name
-     * @param mixed[] $test
+     * @param Fixture $fixture
      *
      * @dataProvider dataProvider
      */
-    public function testFixtures(SplFileInfo $file, string $name, array $test): void
+    public function testFixture(Fixture $fixture): void
     {
-        $class = $test['class'] ?? Parser::class;
-        $textile = new $class();
+        $this->assertTrue($fixture->isValid(), 'Fixture is invalid.');
 
-        if (isset($test['doctype'])) {
-            $textile->setDocumentType($test['doctype']);
+        if ($fixture->isSkipped()) {
+            $this->markTestSkipped();
         }
 
-        if (isset($test['setup'])) {
-            foreach ($test['setup'] as $setup) {
-                foreach ($setup as $method => $value) {
-                    $textile = $textile->$method($value);
-                }
-            }
-        }
-
-        $args = [];
-
-        foreach ($test['arguments'] ?? [] as $argument) {
-            foreach ($argument as $value) {
-                $args[] = $value;
-            }
-        }
-
-        foreach (['expect', 'input'] as $field) {
-            $test[$field] = \strtr($test[$field], [
-                '\x20' => ' ',
-            ]);
-        }
-
-        $method = isset($test['method']) ? \trim($test['method']) : 'parse';
-        $expect = \rtrim($test['expect']);
-
-        \array_unshift($args, $test['input']);
-
-        // phpcs:ignore
-        /** @var callable $callback */
-        $callback = [$textile, $method];
-
-        $input = \rtrim(\call_user_func_array($callback, $args));
-
-        foreach (['expect', 'input'] as $variable) {
-            $$variable = \preg_replace(
-                [
-                    '/ id="(fn|note)[a-z0-9\-]*"/',
-                    '/ href="#(fn|note)[a-z0-9\-]*"/',
-                ],
-                '',
-                $$variable
-            );
-        }
-
-        $this->assertEquals($expect, $input, $name . ' in ' . $file->getPathname());
-        $public = \implode(', ', \array_keys(\get_object_vars($textile)));
-        $this->assertEquals('', $public, 'Leaking public class properties.');
+        $this->assertSame($fixture->getExpected(), $fixture->getParsed());
     }
 
     /**
@@ -99,29 +50,25 @@ final class FixtureTest extends TestCase
     {
         $path = \dirname(__DIR__) . '/fixtures';
 
-        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
 
         $out = [];
 
         // phpcs:ignore
         /** @var SplFileInfo $file */
         foreach ($iterator as $file) {
-            if (!$file->isFile() || !in_array($file->getExtension(), ['yml', 'yaml'], true)) {
+            if (!$file->isFile() || !\in_array($file->getExtension(), ['yml', 'yaml'], true)) {
                 continue;
             }
 
             $yaml = Yaml::parseFile($file->getPathname());
 
             foreach ($yaml as $name => $test) {
-                if (!\is_array($test) || !isset($test['input']) || !isset($test['expect'])) {
-                    continue;
-                }
+                $name = $file->getBasename() . ': ' . $name;
 
-                if (isset($test['assert']) && $test['assert'] === 'skip') {
-                    continue;
-                }
-
-                $out[] = [$file, $name, $test];
+                $out[$name] = [
+                    new Fixture(\is_array($test) ? $test : []),
+                ];
             }
         }
 
