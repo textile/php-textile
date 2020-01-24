@@ -38,7 +38,11 @@ final class FixtureTest extends TestCase
             $this->markTestSkipped();
         }
 
-        $this->assertSame($fixture->getExpected(), $fixture->getParsed());
+        $this->assertSame(
+            $fixture->getExpected(),
+            $fixture->getParsed(),
+            'Parser results were not as expected.'
+        );
     }
 
     /**

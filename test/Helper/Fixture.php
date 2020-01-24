@@ -15,16 +15,16 @@ use Netcarver\Textile\Parser;
 final class Fixture
 {
     /**
-     * Test data.
+     * Data.
      *
-     * @var array
+     * @var string[]|bool[]|int[]|string[][]|bool[][]|int[][]
      */
     private $data;
 
     /**
      * Constructor.
      *
-     * @param array $data
+     * @param string[]|bool[]|int[]|string[][]|bool[][]|int[][] $data
      */
     public function __construct(array $data)
     {
@@ -75,7 +75,7 @@ final class Fixture
      */
     public function isSkipped(): bool
     {
-        return $this->data['skip'] ?? false;
+        return ($this->data['skip'] ?? false) === true;
     }
 
     /**
@@ -88,6 +88,11 @@ final class Fixture
         return !empty($this->data);
     }
 
+    /**
+     * Gets parser instance.
+     *
+     * @return ParserInterface
+     */
     private function getParser(): ParserInterface
     {
         $class = $this->data['class'] ?? Parser::class;
@@ -95,15 +100,22 @@ final class Fixture
         // phpcs:ignore
         $object = new $class;
 
-        foreach ($this->data['setup'] ?? [] as $setup) {
-            foreach ($setup as $method => $value) {
-                $object->$method($value);
+        foreach ((array) ($this->data['setup'] ?? []) as $methods) {
+            foreach ((array) $methods as $name => $value) {
+                $object->$name($value);
             }
         }
 
         return $object;
     }
 
+    /**
+     * Normalizes the input.
+     *
+     * @param string $input
+     *
+     * @return string
+     */
     private function normalize(string $input): string
     {
         return \strtr($input, [
@@ -111,6 +123,13 @@ final class Fixture
         ]);
     }
 
+    /**
+     * Strips random tokens.
+     *
+     * @param string $input
+     *
+     * @return string
+     */
     private function strip(string $input): string
     {
         $strip = [
