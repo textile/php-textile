@@ -41,12 +41,22 @@ declare(strict_types=1);
 namespace Netcarver\Textile\Provider;
 
 use Netcarver\Textile\Api\Provider\DocumentRootProviderInterface;
+use Netcarver\Textile\Provider\DocumentRoot\CommandLineProvider;
+use Netcarver\Textile\Provider\DocumentRoot\PathTranslatedProvider;
+use Netcarver\Textile\Provider\DocumentRoot\ServerDocumentRootProvider;
 
 /**
  * Document root provider.
  */
 class DocumentRootProvider implements DocumentRootProviderInterface
 {
+    /**
+     * Document root providers.
+     *
+     * @var DocumentRootProviderInterface[]
+     */
+    private $providers;
+
     /**
      * Document root path.
      *
@@ -55,22 +65,53 @@ class DocumentRootProvider implements DocumentRootProviderInterface
     private $path;
 
     /**
+     * Constructor.
+     *
+     * @param DocumentRootProviderInterface[]|null $providers
+     */
+    public function __construct(
+        ?array $providers = null
+    ) {
+        $this->providers = $providers ?? [
+            new CommandLineProvider(),
+            new ServerDocumentRootProvider(),
+            new PathTranslatedProvider(),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isAvailable(): bool
+    {
+        return $this->getPath() !== '';
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getPath(): string
     {
-        if ($this->path !== null) {
-            return $this->path;
-        }
-
-        if (\PHP_SAPI === 'cli') {
-            $this->path = \getcwd() ?: '';
-        } elseif (!empty($_SERVER['DOCUMENT_ROOT'])) {
-            $this->path = $_SERVER['DOCUMENT_ROOT'];
-        } elseif (!empty($_SERVER['PATH_TRANSLATED'])) {
-            $this->path = $_SERVER['PATH_TRANSLATED'];
+        if ($this->path === null) {
+            $this->path = $this->getProvidedPath() ?? '';
         }
 
         return $this->path;
+    }
+
+    /**
+     * Gets a matching provided path.
+     *
+     * @return string|null
+     */
+    private function getProvidedPath(): ?string
+    {
+        foreach ($this->providers as $provider) {
+            if ($provider->isAvailable()) {
+                return $provider->getPath();
+            }
+        }
+
+        return null;
     }
 }

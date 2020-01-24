@@ -38,24 +38,28 @@ declare(strict_types=1);
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Netcarver\Textile\Api\Provider;
+namespace Netcarver\Textile\Provider\DocumentRoot;
+
+use Netcarver\Textile\Api\Provider\DocumentRootProviderInterface;
 
 /**
  * Document root provider.
  */
-interface DocumentRootProviderInterface
+class PathTranslatedProvider implements DocumentRootProviderInterface
 {
     /**
-     * Whether the provided document root is available.
-     *
-     * @return bool
+     * {@inheritdoc}
      */
-    public function isAvailable(): bool;
+    public function isAvailable(): bool
+    {
+        return !empty($_SERVER['PATH_TRANSLATED']);
+    }
 
     /**
-     * Gets document root path.
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getPath(): string;
+    public function getPath(): string
+    {
+        return $_SERVER['PATH_TRANSLATED'] ?? '';
+    }
 }
