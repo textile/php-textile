@@ -49,7 +49,15 @@ final class ParserTest extends TestCase
     public function testInvalidDocumentType(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        new Parser('InvalidDocumentType');
+        $this->parser->setDocumentType('invalid');
+        $this->parser->parse('Hello World!');
+    }
+
+    public function testInvalidDocumentTypeViaConstructor(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $parser = new Parser('invalid');
+        $parser->parse('Hello World!');
     }
 
     public function testInstanceSharingAndFootnoteIndex(): void

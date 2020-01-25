@@ -67,7 +67,6 @@ use Netcarver\Textile\Api\Provider\MultiByteStringProviderInterface;
 use Netcarver\Textile\Api\Provider\PcreUnicodeProviderInterface;
 use Netcarver\Textile\Api\Provider\UniqueIdentifierProviderInterface;
 use Netcarver\Textile\Document\Block;
-use Netcarver\Textile\Document\Shelf;
 use Netcarver\Textile\Document\ShelfFactory;
 use Netcarver\Textile\Provider\DocumentRootProvider;
 use Netcarver\Textile\Provider\MaximumLinkIndexProvider;
@@ -176,6 +175,13 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private $maximumLinkIndexProvider;
 
     /**
+     * Config.
+     *
+     * @var ConfigInterface
+     */
+    private $config;
+
+    /**
      * Regular expression snippets.
      *
      * @var string[]
@@ -233,15 +239,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @var string[]
      */
     private $blockTagWhiteList = [];
-
-    /**
-     * Whether raw blocks are enabled.
-     *
-     * @var bool
-     *
-     * @since 3.7.0
-     */
-    private $rawBlocksEnabled = false;
 
     /**
      * An array of patterns used for matching phrasing tags.
@@ -378,24 +375,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private $patterns;
 
     /**
-     * Whether block tags are enabled.
-     *
-     * @var bool
-     *
-     * @since 3.6.0
-     */
-    private $blockTagsEnabled = true;
-
-    /**
-     * Whether lines are wrapped.
-     *
-     * @var bool
-     *
-     * @since 3.6.0
-     */
-    private $lineWrapEnabled = true;
-
-    /**
      * Marker symbols.
      *
      * @var string
@@ -403,39 +382,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private $markerSymbols = '¤§µ¶†‡•∗∴◊♠♣♥♦';
 
     /**
-     * Link relationship.
-     *
-     * @var string
-     */
-    private $linkRelationShip;
-
-    /**
      * Array of footnotes.
      *
      * @var string[]
      */
     private $fn = [];
-
-    /**
-     * Restricted mode.
-     *
-     * @var bool
-     */
-    private $restricted = false;
-
-    /**
-     * Whether image tag is enabled.
-     *
-     * @var bool
-     */
-    private $isImageTagEnabled = true;
-
-    /**
-     * Lite mode.
-     *
-     * @var bool
-     */
-    private $lite = false;
 
     /**
      * Accepted link protocols.
@@ -537,24 +488,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private $rebuildGlyphs = true;
 
     /**
-     * Relative link prefix.
-     *
-     * @var string
-     *
-     * @since 3.7.0
-     */
-    private $relLinkPrefix = '';
-
-    /**
-     * Prefix applied to relative images.
-     *
-     * @var string
-     *
-     * @since 3.7.0
-     */
-    private $relImagePrefix = '';
-
-    /**
      * Maximum nesting level for inline elements.
      *
      * @var int
@@ -562,16 +495,9 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private $maximumSpanDepth = 5;
 
     /**
-     * Server document root.
-     *
-     * @var string
-     */
-    private $documentRoot;
-
-    /**
      * Target document type.
      *
-     * @var DocumentTypeInterface
+     * @var DocumentTypeInterface|null
      */
     private $documentType;
 
@@ -586,39 +512,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @see Parser::setSymbol()
      * @see Parser::parse()
      */
-    private $symbols = [
-        'quote_single_open'  => '&#8216;',
-        'quote_single_close' => '&#8217;',
-        'quote_double_open'  => '&#8220;',
-        'quote_double_close' => '&#8221;',
-        'apostrophe' => '&#8217;',
-        'prime' => '&#8242;',
-        'prime_double' => '&#8243;',
-        'ellipsis' => '&#8230;',
-        'emdash' => '&#8212;',
-        'endash' => '&#8211;',
-        'dimension' => '&#215;',
-        'trademark' => '&#8482;',
-        'registered' => '&#174;',
-        'copyright' => '&#169;',
-        'half' => '&#189;',
-        'quarter' => '&#188;',
-        'threequarters' => '&#190;',
-        'degrees' => '&#176;',
-        'plusminus' => '&#177;',
-        'fn_ref_pattern' => '<sup{atts}>{marker}</sup>',
-        'fn_foot_pattern' => '<sup{atts}>{marker}</sup>',
-        'nl_ref_pattern' => '<sup{atts}>{marker}</sup>',
-        'caps' => '<span class="caps">{content}</span>',
-        'acronym' => null,
-    ];
-
-    /**
-     * Whether images are rendered with dimensions.
-     *
-     * @var bool
-     */
-    private $dimensionlessImages = false;
+    private $symbols;
 
     /**
      * Multi-byte conversion map.
@@ -747,15 +641,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     /**
      * Constructor.
      *
-     * The constructor allows setting options that affect the class instance as
-     * a whole, such as the output doctype. To instruct the parser to return
-     * HTML5 markup instead of XHTML, set $doctype argument to 'html5'.
-     *
-     * ```php
-     * $parser = new \Netcarver\Textile\Parser('html5');
-     * echo $parser->parse('HTML(HyperText Markup Language)");
-     * ```
-     *
      * @param string|null $doctype The output document type, either 'xhtml' or 'html5'
      * @param UniqueIdentifierProviderInterface|null $uniqueIdentifierProvider
      * @param DocumentTypePoolInterface|null $documentTypePool
@@ -764,8 +649,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param DocumentRootProviderInterface|null $documentRootProvider
      * @param ShelfFactoryInterface|null $shelfFactory
      * @param MaximumLinkIndexProviderInterface|null $maximumLinkIndexProvider
-     *
-     * @throws \InvalidArgumentException
+     * @param ConfigInterface|null $config
      *
      * @see Parser::configure()
      * @see Parser::parse()
@@ -779,7 +663,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         ?PcreUnicodeProviderInterface $pcreUnicodeProvider = null,
         ?DocumentRootProviderInterface $documentRootProvider = null,
         ?ShelfFactoryInterface $shelfFactory = null,
-        ?MaximumLinkIndexProviderInterface $maximumLinkIndexProvider = null
+        ?MaximumLinkIndexProviderInterface $maximumLinkIndexProvider = null,
+        ?ConfigInterface $config = null
     ) {
         $uniqueIdentifierProvider = $uniqueIdentifierProvider ?? new UniqueIdentifierProvider();
         $this->documentTypePool = $documentTypePool ?? new DocumentTypePool();
@@ -788,10 +673,11 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $this->documentRootProvider = $documentRootProvider ?? new DocumentRootProvider();
         $this->shelfFactory = $shelfFactory ?? new ShelfFactory();
         $this->maximumLinkIndexProvider = $maximumLinkIndexProvider ?? new MaximumLinkIndexProvider();
+        $this->config = $config ?? new Config();
 
-        $this
-            ->setDocumentType($doctype ?? 'xhtml')
-            ->setRestricted(false);
+        if ($doctype !== null) {
+            $this->setDocumentType($doctype);
+        }
 
         $uid = $uniqueIdentifierProvider->getToken();
         $this->uid = 'textileRef:' . $uid . ':';
@@ -883,20 +769,9 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function setDocumentType(string $name): ConfigInterface
     {
-        foreach ($this->documentTypePool->getDocumentTypes() as $documentType) {
-            $documentTypeName = $documentType->getName();
+        $this->config->setDocumentType($name);
 
-            if ($documentTypeName === $name) {
-                if ($this->documentType === null || $documentTypeName !== $this->documentType->getName()) {
-                    $this->documentType = $documentType;
-                    $this->rebuildGlyphs = true;
-                }
-
-                return $this;
-            }
-        }
-
-        throw new \InvalidArgumentException('Invalid document type given.');
+        return $this;
     }
 
     /**
@@ -904,7 +779,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function getDocumentType(): string
     {
-        return (string) $this->documentType->getName();
+        return $this->config->getDocumentType();
     }
 
     /**
@@ -912,7 +787,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function setDocumentRootDirectory(string $path): ConfigInterface
     {
-        $this->documentRoot = \rtrim($path, '\\/') . \DIRECTORY_SEPARATOR;
+        $this->config->setDocumentRootDirectory($path);
 
         return $this;
     }
@@ -922,11 +797,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function getDocumentRootDirectory(): string
     {
-        if ($this->documentRoot === null) {
-            $this->setDocumentRootDirectory($this->documentRootProvider->getPath());
-        }
-
-        return $this->documentRoot;
+        return $this->config->getDocumentRootDirectory();
     }
 
     /**
@@ -934,7 +805,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function setLite(bool $lite): ConfigInterface
     {
-        $this->lite = $lite;
+        $this->config->setLite($lite);
 
         return $this;
     }
@@ -944,7 +815,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function isLiteModeEnabled(): bool
     {
-        return (bool) $this->lite;
+        return $this->config->isLiteModeEnabled();
     }
 
     /**
@@ -952,7 +823,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function setImages(bool $enabled): ConfigInterface
     {
-        $this->isImageTagEnabled = $enabled;
+        $this->config->setImages($enabled);
 
         return $this;
     }
@@ -962,7 +833,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function isImageTagEnabled(): bool
     {
-        return $this->isImageTagEnabled;
+        return $this->config->isImageTagEnabled();
     }
 
     /**
@@ -970,7 +841,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function setLinkRelationShip($relationship): ConfigInterface
     {
-        $this->linkRelationShip = (string) \implode(' ', (array) $relationship);
+        $this->config->setLinkRelationShip($relationship);
 
         return $this;
     }
@@ -980,7 +851,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function getLinkRelationShip(): string
     {
-        return (string) $this->linkRelationShip;
+        return $this->config->getLinkRelationShip();
     }
 
     /**
@@ -988,13 +859,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function setRestricted(bool $enabled): ConfigInterface
     {
-        if ($enabled) {
-            $this->urlSchemes = $this->restrictedUrlSchemes;
-            $this->restricted = true;
-        } else {
-            $this->urlSchemes = $this->unrestrictedUrlSchemes;
-            $this->restricted = false;
-        }
+        $this->config->setRestricted($enabled);
 
         return $this;
     }
@@ -1004,7 +869,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function isRestrictedModeEnabled(): bool
     {
-        return (bool) $this->restricted;
+        return $this->config->isRestrictedModeEnabled();
     }
 
     /**
@@ -1012,7 +877,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function setRawBlocks(bool $enabled): ConfigInterface
     {
-        $this->rawBlocksEnabled = $enabled;
+        $this->config->setRawBlocks($enabled);
 
         return $this;
     }
@@ -1022,7 +887,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function isRawBlocksEnabled(): bool
     {
-        return (bool) $this->rawBlocksEnabled;
+        return $this->config->isRawBlocksEnabled();
     }
 
     /**
@@ -1030,7 +895,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function setBlockTags(bool $enabled): ConfigInterface
     {
-        $this->blockTagsEnabled = $enabled;
+        $this->config->setBlockTags($enabled);
 
         return $this;
     }
@@ -1040,7 +905,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function isBlockTagEnabled(): bool
     {
-        return (bool) $this->blockTagsEnabled;
+        return $this->config->isBlockTagEnabled();
     }
 
     /**
@@ -1048,7 +913,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function setLineWrap(bool $enabled): ConfigInterface
     {
-        $this->lineWrapEnabled = (bool) $enabled;
+        $this->config->setLineWrap($enabled);
 
         return $this;
     }
@@ -1058,7 +923,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function isLineWrapEnabled(): bool
     {
-        return (bool) $this->lineWrapEnabled;
+        return $this->config->isLineWrapEnabled();
     }
 
     /**
@@ -1066,11 +931,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function setSymbol(string $name, $value): ConfigInterface
     {
-        if ($value !== false) {
-            $value = (string) $value;
-        }
+        $this->config->setSymbol($name, $value);
 
-        $this->symbols[(string) $name] = $value;
         $this->rebuildGlyphs = true;
 
         return $this;
@@ -1081,15 +943,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function getSymbol(?string $name = null)
     {
-        if ($name !== null) {
-            if (isset($this->symbols[$name])) {
-                return $this->symbols[$name];
-            }
-
-            throw new \InvalidArgumentException('The specified name does not match any symbols.');
-        }
-
-        return $this->symbols;
+        return $this->config->getSymbol($name);
     }
 
     /**
@@ -1097,7 +951,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function setImagePrefix(string $prefix): ConfigInterface
     {
-        $this->relImagePrefix = $prefix;
+        $this->config->setImagePrefix($prefix);
 
         return $this;
     }
@@ -1107,7 +961,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function getImagePrefix(): string
     {
-        return (string) $this->relImagePrefix;
+        return $this->config->getImagePrefix();
     }
 
     /**
@@ -1115,7 +969,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function setLinkPrefix(string $prefix): ConfigInterface
     {
-        $this->relLinkPrefix = $prefix;
+        $this->config->setLinkPrefix($prefix);
 
         return $this;
     }
@@ -1125,7 +979,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function getLinkPrefix(): string
     {
-        return (string) $this->relLinkPrefix;
+        return $this->config->getLinkPrefix();
     }
 
     /**
@@ -1133,7 +987,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function setDimensionlessImages(bool $dimensionless = true): ConfigInterface
     {
-        $this->dimensionlessImages = $dimensionless;
+        $this->config->setDimensionlessImages($dimensionless);
 
         return $this;
     }
@@ -1143,7 +997,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     public function getDimensionlessImages(): bool
     {
-        return (bool) $this->dimensionlessImages;
+        return $this->config->getDimensionlessImages();
     }
 
     /**
@@ -1160,7 +1014,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     public function parse(string $text): string
     {
         $this->prepare();
-        $text = (string) $text;
 
         if ($this->isRestrictedModeEnabled()) {
             // Escape any raw HTML.
@@ -1410,6 +1263,41 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         if ($this->linkIndex >= $this->maximumLinkIndexProvider->getMaximumLinkIndex()) {
             $this->linkPrefix .= '-';
             $this->linkIndex = 1;
+        }
+
+        $selectedDocumentType = $this->config->getDocumentType() ?: 'xhtml';
+
+        if ($this->documentType === null || $this->documentType->getName() !== $selectedDocumentType) {
+            $this->documentType = null;
+
+            foreach ($this->documentTypePool->getDocumentTypes() as $documentType) {
+                $documentTypeName = $documentType->getName();
+
+                if ($documentTypeName === $selectedDocumentType) {
+                    $this->config->setDocumentType($documentTypeName);
+                    $this->documentType = $documentType;
+                    $this->rebuildGlyphs = true;
+                }
+            }
+
+            if ($this->documentType === null) {
+                throw new \InvalidArgumentException('Invalid document type given.');
+            }
+        }
+
+        if ($this->config->isRestrictedModeEnabled()) {
+            $this->urlSchemes = $this->restrictedUrlSchemes;
+        } else {
+            $this->urlSchemes = $this->unrestrictedUrlSchemes;
+        }
+
+        if (!$this->config->getDocumentRootDirectory()) {
+            $root = $this->documentRootProvider->getPath();
+            $this->config->setDocumentRootDirectory($root);
+        }
+
+        if ($this->symbols === null) {
+            $this->symbols = (array) $this->config->getSymbol();
         }
 
         $this->unreferencedNotes = [];
@@ -3809,9 +3697,9 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     private function relUrl(string $url, ?string $type = null): string
     {
         if ($type === null || $type === 'image') {
-            $prefix = $this->relImagePrefix;
+            $prefix = $this->config->getImagePrefix();
         } else {
-            $prefix = $this->relLinkPrefix;
+            $prefix = $this->config->getLinkPrefix();
         }
 
         if ($prefix) {
