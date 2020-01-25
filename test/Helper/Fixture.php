@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Netcarver\Textile\Test\Helper;
 
+use Netcarver\Textile\Api\ConfigInterface;
 use Netcarver\Textile\Api\ParserInterface;
 use Netcarver\Textile\Parser;
 
@@ -20,6 +21,13 @@ final class Fixture
      * @var string[]|bool[]|int[]|string[][]|bool[][]|int[][]
      */
     private $data;
+
+    /**
+     * Parser.
+     *
+     * @var ParserInterface
+     */
+    private $parser;
 
     /**
      * Constructor.
@@ -63,6 +71,21 @@ final class Fixture
         return '';
     }
 
+    /**
+     * Sets the used parser.
+     *
+     * @param ParserInterface $parser
+     */
+    public function setParser(ParserInterface $parser): void
+    {
+        $this->parser = $parser;
+    }
+
+    /**
+     * Gets parsed contents.
+     *
+     * @return string
+     */
     public function getParsed(): string
     {
         return $this->strip($this->getParser()->parse($this->getInput()));
@@ -89,24 +112,40 @@ final class Fixture
     }
 
     /**
+     * Gets parser class.
+     *
+     * @return string
+     */
+    public function getClass(): string
+    {
+        return $this->data['class'] ?? Parser::class;
+    }
+
+    /**
      * Gets parser instance.
      *
      * @return ParserInterface
      */
     private function getParser(): ParserInterface
     {
-        $class = $this->data['class'] ?? Parser::class;
+        if ($this->parser === null) {
+            $class = $this->getClass();
 
-        // phpcs:ignore
-        $object = new $class;
+            // phpcs:ignore
+            $parser = new $class;
+        } else {
+            $parser = $this->parser;
+        }
 
-        foreach ((array) ($this->data['setup'] ?? []) as $methods) {
-            foreach ((array) $methods as $name => $value) {
-                $object->$name($value);
+        if ($parser instanceof ConfigInterface) {
+            foreach ((array) ($this->data['setup'] ?? []) as $methods) {
+                foreach ((array) $methods as $name => $value) {
+                    $parser->$name($value);
+                }
             }
         }
 
-        return $object;
+        return $parser;
     }
 
     /**
