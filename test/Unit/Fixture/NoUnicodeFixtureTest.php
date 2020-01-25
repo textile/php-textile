@@ -13,6 +13,8 @@ use Netcarver\Textile\Test\Helper\FixtureProvider;
 final class NoUnicodeFixtureTest extends AbstractFixtureTest
 {
     /**
+     * Test fixtures.
+     *
      * @param Fixture $fixture
      *
      * @dataProvider dataProvider

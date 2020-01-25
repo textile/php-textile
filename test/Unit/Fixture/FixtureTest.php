@@ -10,6 +10,8 @@ use Netcarver\Textile\Test\Helper\FixtureProvider;
 final class FixtureTest extends AbstractFixtureTest
 {
     /**
+     * Test fixtures.
+     *
      * @param Fixture $fixture
      *
      * @dataProvider dataProvider
