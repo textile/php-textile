@@ -21,6 +21,11 @@ final class FixtureTest extends AbstractFixtureTest
         $this->assertTextileFixture($fixture);
     }
 
+    /**
+     * Data provider.
+     *
+     * @return array[]
+     */
     public function dataProvider(): array
     {
         $provider = new FixtureProvider();

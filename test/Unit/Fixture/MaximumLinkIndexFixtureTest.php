@@ -41,6 +41,11 @@ final class MaximumLinkIndexFixtureTest extends AbstractFixtureTest
         $this->assertTextileFixture($fixture);
     }
 
+    /**
+     * Data provider.
+     *
+     * @return array[]
+     */
     public function dataProvider(): array
     {
         $provider = new FixtureProvider();
