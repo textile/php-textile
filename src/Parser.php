@@ -62,6 +62,7 @@ use Netcarver\Textile\Api\DocumentTypePoolInterface;
 use Netcarver\Textile\Api\EncoderInterface;
 use Netcarver\Textile\Api\ParserInterface;
 use Netcarver\Textile\Api\Provider\DocumentRootProviderInterface;
+use Netcarver\Textile\Api\Provider\MaximumLinkIndexProviderInterface;
 use Netcarver\Textile\Api\Provider\MultiByteStringProviderInterface;
 use Netcarver\Textile\Api\Provider\PcreUnicodeProviderInterface;
 use Netcarver\Textile\Api\Provider\UniqueIdentifierProviderInterface;
@@ -69,6 +70,7 @@ use Netcarver\Textile\Document\Block;
 use Netcarver\Textile\Document\Shelf;
 use Netcarver\Textile\Document\ShelfFactory;
 use Netcarver\Textile\Provider\DocumentRootProvider;
+use Netcarver\Textile\Provider\MaximumLinkIndexProvider;
 use Netcarver\Textile\Provider\MultiByteStringProvider;
 use Netcarver\Textile\Provider\PcreUnicodeProvider;
 use Netcarver\Textile\Provider\UniqueIdentifierProvider;
@@ -165,6 +167,13 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @var ShelfInterface
      */
     private $shelf;
+
+    /**
+     * Maximum link index provider.
+     *
+     * @var MaximumLinkIndexProviderInterface
+     */
+    private $maximumLinkIndexProvider;
 
     /**
      * Regular expression snippets.
@@ -754,6 +763,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      * @param PcreUnicodeProviderInterface|null $pcreUnicodeProvider
      * @param DocumentRootProviderInterface|null $documentRootProvider
      * @param ShelfFactoryInterface|null $shelfFactory
+     * @param MaximumLinkIndexProviderInterface|null $maximumLinkIndexProvider
      *
      * @throws \InvalidArgumentException
      *
@@ -768,7 +778,8 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         ?MultiByteStringProviderInterface $multiByteStringProvider = null,
         ?PcreUnicodeProviderInterface $pcreUnicodeProvider = null,
         ?DocumentRootProviderInterface $documentRootProvider = null,
-        ?ShelfFactoryInterface $shelfFactory = null
+        ?ShelfFactoryInterface $shelfFactory = null,
+        ?MaximumLinkIndexProviderInterface $maximumLinkIndexProvider = null
     ) {
         $uniqueIdentifierProvider = $uniqueIdentifierProvider ?? new UniqueIdentifierProvider();
         $this->documentTypePool = $documentTypePool ?? new DocumentTypePool();
@@ -776,6 +787,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
         $this->pcreUnicodeProvider = $pcreUnicodeProvider ?? new PcreUnicodeProvider();
         $this->documentRootProvider = $documentRootProvider ?? new DocumentRootProvider();
         $this->shelfFactory = $shelfFactory ?? new ShelfFactory();
+        $this->maximumLinkIndexProvider = $maximumLinkIndexProvider ?? new MaximumLinkIndexProvider();
 
         $this
             ->setDocumentType($doctype ?? 'xhtml')
@@ -1388,18 +1400,6 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
     }
 
     /**
-     * Gets the maximum allowed link index.
-     *
-     * @return int Maximum link index
-     *
-     * @since 3.5.5
-     */
-    private function getMaxLinkIndex(): int
-    {
-        return 1000000;
-    }
-
-    /**
      * Prepares the parser for parsing.
      *
      * This method prepares the transient internal state of
@@ -1407,7 +1407,7 @@ class Parser implements ConfigInterface, EncoderInterface, ParserInterface
      */
     private function prepare(): void
     {
-        if ($this->linkIndex >= $this->getMaxLinkIndex()) {
+        if ($this->linkIndex >= $this->maximumLinkIndexProvider->getMaximumLinkIndex()) {
             $this->linkPrefix .= '-';
             $this->linkIndex = 1;
         }
