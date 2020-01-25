@@ -112,16 +112,6 @@ final class Fixture
     }
 
     /**
-     * Gets parser class.
-     *
-     * @return string
-     */
-    public function getClass(): string
-    {
-        return $this->data['class'] ?? Parser::class;
-    }
-
-    /**
      * Gets parser instance.
      *
      * @return ParserInterface
@@ -129,7 +119,7 @@ final class Fixture
     private function getParser(): ParserInterface
     {
         if ($this->parser === null) {
-            $class = $this->getClass();
+            $class = $this->data['class'] ?? Parser::class;
 
             // phpcs:ignore
             $parser = new $class;
