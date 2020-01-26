@@ -79,24 +79,24 @@ final class Tag extends DataBag
      *
      * @var bool
      */
-    private $selfclose;
+    private $selfClosing;
 
     /**
      * Constructor.
      *
      * @param string|null $name The tag name
      * @param string[]|int[]|null $attributes An array of attributes
-     * @param bool $selfclosing Whether the tag is self-closing
+     * @param bool $selfClosing Whether the tag is self-closing
      */
     public function __construct(
         ?string $name,
         ?array $attributes = null,
-        bool $selfclosing = true
+        bool $selfClosing = true
     ) {
         parent::__construct($attributes);
 
         $this->tag = $name;
-        $this->selfclose = $selfclosing;
+        $this->selfClosing = $selfClosing;
     }
 
     /**
@@ -123,7 +123,7 @@ final class Tag extends DataBag
         }
 
         if ($this->tag) {
-            return '<' . $this->tag . $attributes . ($this->selfclose ? ' />' : '>');
+            return '<' . $this->tag . $attributes . ($this->selfClosing ? ' />' : '>');
         }
 
         return $attributes;
