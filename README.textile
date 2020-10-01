@@ -35,7 +35,7 @@ h3. Parsing single-line fields
 
 If you are using PHP-Textile as a field-level formatter to parse just inline spans and glyphs, use the @setBlockTags@ method to disable block tags:
 
-bc. $parser = new \Netcarving\Textile\Parser();
+bc. $parser = new \Netcarver\Textile\Parser();
 echo $parser
     ->setBlockTags(false)
     ->parse('Hello *strong* world!');
