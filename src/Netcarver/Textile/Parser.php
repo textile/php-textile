@@ -4764,7 +4764,18 @@ class Parser
             $title = $this->encodeHTML($title);
         }
 
-        $img = $this->newTag('img', $this->parseAttribsToArray($atts, '', true, $extras))
+        $atts_array = $this->parseAttribsToArray($atts, '', true, $extras);
+
+        if ($align === 'center') {
+          $align = '';
+          if (array_key_exists('style', $atts_array)) {
+              $atts_array['style'] = 'display: block; margin: 1em auto; ' . $atts_array['style'];
+          } else {
+            $atts_array['style'] = 'display: block; margin: 1em auto;';
+          }
+        }
+
+        $img = $this->newTag('img', $atts_array)
             ->align($align)
             ->alt($title, true)
             ->src($this->shelveURL($url, 'image'), true)
