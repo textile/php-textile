@@ -509,60 +509,6 @@ Dashes and ellipsis :
 
     <p>You know the Italian proverb&#8230;Chi ha compagno ha padrone.</p>
 
-Tricky Open Quotes... :
-  input :  |
-    citation ["(Berk.) Hilton"], see
-    [Papers "blah blah."]
-
-    Hello ("Mum")...
-
-    Hello ["(mum) & dad"], see...
-
-    Hello ("[mum] & dad"), see...
-
-    Hello {"(mum) & dad"}, see...
-
-    ["Well, well (well)"] ...
-
-    citation ['(Berk.) Hilton'], see
-    [Papers "blah blah."]
-
-    Hello ('Mum')...
-
-    Hello ['(mum) & dad'], see...
-
-    Hello ('[mum] & dad'), see...
-
-    Hello {'(mum) & dad'}, see...
-
-    ['Well, well (well)'] ...
-  expect:  |
-    <p>citation [&#8220;(Berk.) Hilton&#8221;], see<br />
-    [Papers &#8220;blah blah.&#8221;]</p>
-
-    <p>Hello (&#8220;Mum&#8221;)&#8230;</p>
-
-    <p>Hello [&#8220;(mum) &amp; dad&#8221;], see&#8230;</p>
-
-    <p>Hello (&#8220;[mum] &amp; dad&#8221;), see&#8230;</p>
-
-    <p>Hello {&#8220;(mum) &amp; dad&#8221;}, see&#8230;</p>
-
-    <p>[&#8220;Well, well (well)&#8221;] &#8230;</p>
-
-    <p>citation [&#8216;(Berk.) Hilton&#8217;], see<br />
-    [Papers &#8220;blah blah.&#8221;]</p>
-
-    <p>Hello (&#8216;Mum&#8217;)&#8230;</p>
-
-    <p>Hello [&#8216;(mum) &amp; dad&#8217;], see&#8230;</p>
-
-    <p>Hello (&#8216;[mum] &amp; dad&#8217;), see&#8230;</p>
-
-    <p>Hello {&#8216;(mum) &amp; dad&#8217;}, see&#8230;</p>
-
-    <p>[&#8216;Well, well (well)&#8217;] &#8230;</p>
-
 Notextile :
   input  : |
     ==*no* <b>textile</b>==

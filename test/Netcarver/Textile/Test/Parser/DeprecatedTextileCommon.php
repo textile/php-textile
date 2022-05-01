@@ -43,7 +43,6 @@ use Netcarver\Textile\Parser;
 /**
  * Test that deprecated textileCommon is deprecated.
  */
-
 class DeprecatedTextileCommon extends Parser
 {
     public function testTextileCommon($text, $lite)

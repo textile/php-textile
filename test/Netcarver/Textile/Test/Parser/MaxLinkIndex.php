@@ -43,13 +43,11 @@ use Netcarver\Textile\Parser;
 /**
  * Test parser with a low max link index limit.
  */
-
 class MaxLinkIndex extends Parser
 {
     /**
      * {@inheritdoc}
      */
-
     protected function getMaxLinkIndex()
     {
         return 0;

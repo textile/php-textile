@@ -2,12 +2,12 @@
 
 chdir(dirname(__DIR__));
 
-$options = getopt('hnDd', [
+$options = getopt('hnDd', array(
     'dry-run',
     'dryrun',
     'dev',
     'help',
-]);
+));
 
 $name = basename(__FILE__, '.php');
 $help = isset($options['h']) || isset($options['help']) || isset($options['version']);

@@ -43,11 +43,10 @@ use Netcarver\Textile\Parser;
 /**
  * Test that deprecated prepare arguments are deprecated.
  */
-
 class DeprecatedPrepare extends Parser
 {
     protected function prepare($lite = null, $noimage = null, $rel = null)
     {
-        return parent::prepare(true, true, 'nofollow');
+        parent::prepare(true, true, 'nofollow');
     }
 }

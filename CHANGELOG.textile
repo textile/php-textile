@@ -4,6 +4,8 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 3.7.7 - upcoming
 
+* Fix deprecation errors that appear on PHP >= 8.1 about preg_split limit argument's NULL value.
+
 h2. "Version 3.7.6 - 2020/01/08":https://github.com/textile/php-textile/releases/tag/v3.7.6
 
 * Support consecutive links without whitespace between using bracket syntax (closes "#202":https://github.com/textile/php-textile/issues/202, "#205":https://github.com/textile/php-textile/pull/205 and "#206":https://github.com/textile/php-textile/pull/206).

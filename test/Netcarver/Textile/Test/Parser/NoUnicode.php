@@ -43,13 +43,11 @@ use Netcarver\Textile\Parser;
 /**
  * Test parser with unicode support forced off.
  */
-
 class NoUnicode extends Parser
 {
     /**
      * {@inheritdoc}
      */
-
     protected function isMultiByteStringSupported()
     {
         return false;
@@ -58,7 +56,6 @@ class NoUnicode extends Parser
     /**
      * {@inheritdoc}
      */
-
     protected function isUnicodePcreSupported()
     {
         return false;

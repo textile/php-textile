@@ -43,13 +43,11 @@ use Netcarver\Textile\Parser;
 /**
  * Test parser with fixed unique token.
  */
-
 class FixedUniqueId extends Parser
 {
     /**
      * {@inheritdoc}
      */
-
     protected function configure()
     {
         $this->uid = 'textileRef:0000:';
@@ -58,7 +56,6 @@ class FixedUniqueId extends Parser
     /**
      * {@inheritdoc}
      */
-
     protected function cleanUniqueTokens($text)
     {
         return $text;

@@ -15,21 +15,17 @@ $ git config --global user.email john.doe@example.com
 
 Make sure to use an email address that is linked to your GitHub account. It can be a throwaway address or you can use GitHub's email protection features. We don't want your emails, but this is to make sure we know who did what. All commits nicely link to their author, instead of them coming from foobar@invalid.tld.
 
-h2. Dependencies
+h2. Development environment
 
-Dependencies are managed using "Composer":https://getcomposer.org. After you have cloned the repository, run composer install:
+Development environment uses "Docker":https://www.docker.com/ and docker-compose, and relevant commands can be accessed through GNU make. For list of available commands, run:
 
-bc. $ composer install
-
-And update before testing and committing:
-
-bc. $ composer update
+bc. $ make help
 
 h2. Coding standard
 
 The project follows the "PSR-4":https://www.php-fig.org/psr/psr-4/ and "PSR-2":https://www.php-fig.org/psr/psr-2/ standards. You can use PHP_CodeSniffer to make sure your additions follow them too:
 
-bc. $ composer cs
+bc. $ make lint
 
 h2. Versioning
 
@@ -43,10 +39,9 @@ Keep backwards compatibility in mind when you do changes to the Textile language
 
 h2. Testing and code coverage
 
-The project uses "PHPunit":https://phpunit.de for running its unit tests. As much of the codebase should be covered with tests as possible. When adding new features, also add tests for them. If you find a bug, create a test that can replicate the said bug and, if possible, fix it so that the tests pass. To run tests, simply run:
+The project uses "PHPunit":https://phpunit.de for running its unit tests and "PHPStan":https://phpstan.org/ for static analysis. As much of the codebase should be covered with tests as possible. When adding new features, also add tests for them. If you find a bug, create a test that can replicate the said bug and, if possible, fix it so that the tests pass. To run tests, simply run:
 
-bc. $ composer test
-
-Running tests requires PHP >=5.6.0 and PCRE with PCRE_UTF8 support. Generating optional code coverage reports requires "Xdebug":https://xdebug.org.
+bc. $ make test-unit
+$ make test-static
 
 Tests should pass before the changes can be merged to the codebase. If you create a pull requests that does not pass tests, CI will complain in the pull request thread. To get your changes merged, you should rework the code or tests until everything works smoothly.

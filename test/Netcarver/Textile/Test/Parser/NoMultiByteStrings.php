@@ -43,13 +43,11 @@ use Netcarver\Textile\Parser;
 /**
  * Test parser with mbstring function support forced off.
  */
-
 class NoMultiByteStrings extends Parser
 {
     /**
      * {@inheritdoc}
      */
-
     protected function isMultiByteStringSupported()
     {
         return false;

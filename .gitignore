@@ -2,7 +2,7 @@
 !.editorconfig
 !.gitattributes
 !.gitignore
-!.travis.yml
+!.github
 /build
 /vendor
 /composer.lock

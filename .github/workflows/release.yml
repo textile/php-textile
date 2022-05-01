@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  push:
+    tags:
+    - '*.*.*'
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Changelog
+        id: changelog
+        run: |
+          contents="$(sed -e '1,/h2./d' -e '/h2./,$d' CHANGELOG.textile)"
+          contents="${contents//'%'/'%25'}"
+          contents="${contents//$'\n'/'%0A'}"
+          contents="${contents//$'\r'/'%0D'}"
+          echo "::set-output name=contents::$contents"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: ${{ steps.changelog.outputs.contents }}
+          draft: false
+          prerelease: false
