@@ -32,7 +32,7 @@ EOT;
 }
 
 $url = 'https://github.com/textile/php-textile/releases/tag/v';
-$date = strftime('%Y/%m/%d');
+$date =  (new DateTime())->format('Y/m/d');
 $version = '0.0.0';
 $minor = '0.0';
 $install = '0.0.*';
@@ -72,7 +72,7 @@ $update = [
         },
     ],
     'composer.json' => [
-        '/("dev-master": ")([^"])(")/' => function ($m) use ($minor) {
+        '/("dev-master": ")([^"])(")/' => function ($m) use ($dev) {
             return $m[1] . $dev . $m[2];
         }
     ]
