@@ -29,7 +29,7 @@ Text-alignment is stripped in restricted mode, but kept with images and such:
 
     <p><img align="right" alt="" src="1.jpg" /></p>
 
-    <p><img align="center" alt="" src="1.jpg" /></p>
+    <p><img alt="" src="1.jpg" style="display: block; margin: 1em auto;" /></p>
 
 Alignment uses classes with HTML5:
   setup:

@@ -1,0 +1,9 @@
+Image should be centered when using '=':
+  input  : |
+    !=https://textile-lang.com/carver.png!
+
+    !={border: 1px solid black;}https://textile-lang.com/carver.png!
+  expect : |
+    <p><img alt="" src="https://textile-lang.com/carver.png" style="display: block; margin: 1em auto;" /></p>
+
+    <p><img alt="" src="https://textile-lang.com/carver.png" style="display: block; margin: 1em auto; border: 1px solid black;" /></p>

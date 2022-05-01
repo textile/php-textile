@@ -4767,12 +4767,12 @@ class Parser
         $atts_array = $this->parseAttribsToArray($atts, '', true, $extras);
 
         if ($align === 'center') {
-          $align = '';
-          if (array_key_exists('style', $atts_array)) {
-              $atts_array['style'] = 'display: block; margin: 1em auto; ' . $atts_array['style'];
-          } else {
-            $atts_array['style'] = 'display: block; margin: 1em auto;';
-          }
+            $align = '';
+            if (array_key_exists('style', $atts_array)) {
+                $atts_array['style'] = 'display: block; margin: 1em auto; ' . $atts_array['style'];
+            } else {
+                $atts_array['style'] = 'display: block; margin: 1em auto;';
+            }
         }
 
         $img = $this->newTag('img', $atts_array)

@@ -25,6 +25,6 @@ XHTML image alignment:
   expect: |
     <p><img align="right" alt="" height="10" src="10x10.gif" width="10" /></p>
 
-    <p><img align="center" alt="" height="10" src="10x10.gif" width="10" /></p>
+    <p><img alt="" height="10" src="10x10.gif" style="display: block; margin: 1em auto;" width="10" /></p>
 
     <p><img align="left" alt="" height="10" src="10x10.gif" width="10" /></p>
