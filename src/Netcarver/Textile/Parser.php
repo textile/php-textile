@@ -365,7 +365,18 @@ namespace Netcarver\Textile;
 
 class Parser
 {
+    /**
+     * HTML5 document type.
+     *
+     * @since 3.8.0
+     */
     const DOCTYPE_HTML5 = 'html5';
+
+    /**
+     * XHTML document type.
+     *
+     * @since 3.8.0
+     */
     const DOCTYPE_XHTML = 'xhtml';
 
     /**
