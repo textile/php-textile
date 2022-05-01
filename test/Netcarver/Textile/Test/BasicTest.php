@@ -273,4 +273,43 @@ class BasicTest extends TestCase
         $parser = new Textile();
         $this->assertEquals('test', $parser->setImagePrefix('test')->getImagePrefix());
     }
+
+    public function testAlignClasses()
+    {
+        $parser = new Textile();
+
+        $this->assertFalse(
+            $parser->isAlignClassesEnabled()
+        );
+
+        $parser->setDocumentType(Textile::DOCTYPE_HTML5);
+
+        $this->assertTrue(
+            $parser->isAlignClassesEnabled()
+        );
+
+        $parser->setAlignClasses(false);
+
+        $this->assertFalse(
+            $parser->isAlignClassesEnabled()
+        );
+
+        $parser->setDocumentType(Textile::DOCTYPE_XHTML);
+
+        $this->assertFalse(
+            $parser->isAlignClassesEnabled()
+        );
+
+        $parser->setAlignClasses(true);
+
+        $this->assertTrue(
+            $parser->isAlignClassesEnabled()
+        );
+
+        $parser->setAlignClasses(false);
+
+        $this->assertFalse(
+            $parser->isAlignClassesEnabled()
+        );
+    }
 }

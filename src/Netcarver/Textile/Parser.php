@@ -365,6 +365,9 @@ namespace Netcarver\Textile;
 
 class Parser
 {
+    const DOCTYPE_HTML5 = 'html5';
+    const DOCTYPE_XHTML = 'xhtml';
+
     /**
      * Version number.
      *
@@ -624,6 +627,13 @@ class Parser
     protected $lineWrapEnabled = true;
 
     /**
+     * Whether aligning with class selectors is enabled.
+     *
+     * @var bool|null
+     */
+    protected $isAlignClassesEnabled = null;
+
+    /**
      * Pattern for punctation.
      *
      * @var string
@@ -843,8 +853,8 @@ class Parser
      * @since 3.6.0
      */
     protected $doctypes = array(
-        'xhtml',
-        'html5',
+        self::DOCTYPE_XHTML,
+        self::DOCTYPE_HTML5,
     );
 
     /**
@@ -1031,7 +1041,8 @@ class Parser
      * a whole, such as the output doctype. To instruct the parser to return
      * HTML5 markup instead of XHTML, set $doctype argument to 'html5'.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser('html5');
+     * bc. use Netcarver\Textile\Parser;
+     * $parser = new Parser(Parser::DOCTYPE_HTML5);
      * echo $parser->parse('HTML(HyperText Markup Language)");
      *
      * @param string $doctype The output document type, either 'xhtml' or 'html5'
@@ -1039,6 +1050,8 @@ class Parser
      * @see Parser::configure()
      * @see Parser::parse()
      * @see Parser::setDocumentType()
+     * @see Parser::DOCTYPE_HTML5
+     * @see Parser::DOCTYPE_XHTML
      * @api
      */
     public function __construct($doctype = 'xhtml')
@@ -1137,15 +1150,18 @@ class Parser
     /**
      * Sets the output document type.
      *
-     * bc. $parser = new \Netcarver\Textile\Parser();
+     * bc. use Netcarver\Textile\Parser;
+     * $parser = new Parser();
      * echo $parser
-     *     ->setDocumentType('html5')
+     *     ->setDocumentType(Parser::DOCTYPE_HTML5)
      *     ->parse('HTML(HyperText Markup Language)");
      *
      * @param string $doctype Either 'xhtml' or 'html5'
      * @return Parser This instance
      * @since 3.6.0
      * @see Parser::getDocumentType()
+     * @see Parser::DOCTYPE_HTML5
+     * @see Parser::DOCTYPE_XHTML
      * @api
      */
     public function setDocumentType($doctype)
@@ -1475,6 +1491,59 @@ class Parser
     public function isRawBlocksEnabled()
     {
         return (bool) $this->rawBlocksEnabled;
+    }
+
+    /**
+     * Sets class alignment mode independent of the document type.
+     *
+     * In HTML5 document type, img elements are generated with align-left,
+     * align-center and align-right class selectors rather than align
+     * attribute being added to the image.
+     *
+     * With this option you can enable that functionality in XHTML document type mode too.
+     *
+     * bc. $parser = new \Netcarver\Textile\Parser();
+     * $parser
+     *     ->setAlignClasses(true)
+     *     ->parse(!<image.png!);
+     *
+     * Generates:
+     *
+     * bc. <p><img alt="" class="align-left" src="image.png" /></p>
+     *
+     * @param bool $enabled TRUE to enable, FALSE to disable
+     * @return Parser This instance
+     * @since 3.8.0
+     * @api
+     */
+    public function setAlignClasses($enabled)
+    {
+        $this->isAlignClassesEnabled = (bool) $enabled;
+        return $this;
+    }
+
+    /**
+     * Whether class alignment mode is enabled.
+     *
+     * bc. $parser = new \Netcarver\Textile\Parser();
+     * if ($parser->isAlignClassesEnabled() === true) {
+     *     echo 'Images are aligned with class instead of align attribute';
+     * }
+     *
+     * @return bool TRUE if enabled, FALSE otherwise
+     * @since 3.8.0
+     * @see Parser::setAlignClasses()
+     * @api
+     */
+    public function isAlignClassesEnabled()
+    {
+        if ($this->isAlignClassesEnabled === null
+            && $this->getDocumentType() === self::DOCTYPE_HTML5
+        ) {
+            return true;
+        }
+
+        return (bool) $this->isAlignClassesEnabled;
     }
 
     /**
@@ -4623,7 +4692,7 @@ class Parser
         );
 
         if (isset($alignments[$align])) {
-            if ($this->getDocumentType() === 'html5') {
+            if ($this->isAlignClassesEnabled()) {
                 $extras = 'align-'.$alignments[$align];
                 $align = '';
             } else {
