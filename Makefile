@@ -1,4 +1,4 @@
-.PHONY: all clean help lint lint-fix test test-static test-unit bump bump-dev process-reports
+.PHONY: all clean help lint lint-fix repl test test-static test-unit bump bump-dev process-reports
 
 IMAGE?=php_8_1
 PHP = docker-compose run --rm $(IMAGE)
@@ -25,6 +25,9 @@ test-static: vendor
 
 test-unit: vendor
 	$(PHP) composer test:unit
+
+repl: vendor
+	$(PHP) composer repl
 
 bump: vendor
 	$(PHP) composer bump
@@ -59,6 +62,9 @@ help:
 	@echo ""
 	@echo "  $$ make test-static"
 	@echo "  Run static tests"
+	@echo ""
+	@echo "  $$ make repl"
+	@echo "  Launch read-print-eval loop"
 	@echo ""
 	@echo "  $$ make bump"
 	@echo "  Bump version"

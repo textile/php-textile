@@ -27,7 +27,8 @@
         "phpstan/phpstan": "1.6.3",
         "phpunit/phpunit": "^9.5.20",
         "squizlabs/php_codesniffer": "3.*",
-        "symfony/yaml": "^4.4.3"
+        "symfony/yaml": "^4.4.3",
+        "psy/psysh": "^0.11.2"
     },
     "extra": {
         "branch-alias": {
@@ -44,6 +45,7 @@
         "bump-dev": "@php ./scripts/release.php --dev",
         "lint": "phpcs",
         "lint-fix": "phpcbf",
+        "repl": "psysh",
         "test:static": "phpstan analyse --level 8 src",
         "test:unit": "XDEBUG_MODE=coverage phpunit"
     }
