@@ -1,0 +1,14 @@
+Support slashes and brackets in class names:
+  input: |
+    p(m-auto w-6/12). Paragraph
+    
+    p(max-w-[140px]). Paragraph
+    
+    p(m-auto w-6/12 #unique). Paragraph
+
+  expect: |
+    <p class="m-auto w-6/12">Paragraph</p>
+    
+    <p class="max-w-[140px]">Paragraph</p>
+    
+    <p class="m-auto w-6/12" id="unique">Paragraph</p>

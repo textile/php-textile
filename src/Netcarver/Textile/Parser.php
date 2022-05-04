@@ -2514,25 +2514,15 @@ class Parser
             $matched = str_replace($sty[0], '', $matched);
         }
 
-        if (preg_match("/\[([^]]+)\]/U", $matched, $lng)) {
-            // Consume entire lang block -- valid or invalid.
-            $matched = str_replace($lng[0], '', $matched);
-            if ($element === 'code' && preg_match("/\[([a-zA-Z0-9_-]+)\]/U", $lng[0], $lng1)) {
-                $lang = $lng1[1];
-            } elseif (preg_match("/\[([a-zA-Z]{2}(?:[\-\_][a-zA-Z]{2})?)\]/U", $lng[0], $lng2)) {
-                $lang = $lng2[1];
-            }
-        }
-
         if (preg_match("/\(([^()]+)\)/U", $matched, $cls)) {
-            $class_regex = "/^([-a-zA-Z 0-9_\.]*)$/";
+            $class_regex = "/^([-a-zA-Z 0-9_\.\/\[\]]*)$/";
 
             // Consume entire class block -- valid or invalid.
             $matched = str_replace($cls[0], '', $matched);
 
             // Only allow a restricted subset of the CSS standard characters for classes/ids.
             // No encoding markers allowed.
-            if (preg_match("/\(([-a-zA-Z 0-9_\.\:\#]+)\)/U", $cls[0], $cls)) {
+            if (preg_match("/\(([-a-zA-Z 0-9_\/\[\]\.\:\#]+)\)/U", $cls[0], $cls)) {
                 $hashpos = strpos($cls[1], '#');
                 // If a textile class block attribute was found with a '#' in it
                 // split it into the css class and css id...
@@ -2549,6 +2539,16 @@ class Parser
                         $class = $ids[1];
                     }
                 }
+            }
+        }
+
+        if (preg_match("/\[([^]]+)\]/U", $matched, $lng)) {
+            // Consume entire lang block -- valid or invalid.
+            $matched = str_replace($lng[0], '', $matched);
+            if ($element === 'code' && preg_match("/\[([a-zA-Z0-9_-]+)\]/U", $lng[0], $lng1)) {
+                $lang = $lng1[1];
+            } elseif (preg_match("/\[([a-zA-Z]{2}(?:[\-\_][a-zA-Z]{2})?)\]/U", $lng[0], $lng2)) {
+                $lang = $lng2[1];
             }
         }
 
