@@ -8,6 +8,11 @@ services:
       - ${COMPOSER_HOME:-$HOME/.composer}:/tmp
     networks:
       - app
+    environment:
+      - XDEBUG_CONFIG
+      - XDEBUG_MODE
+      - XDEBUG_TRIGGER
+      - PHP_IDE_CONFIG
 
 networks:
   app:
