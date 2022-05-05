@@ -5,7 +5,6 @@
     "homepage": "https://github.com/textile/php-textile",
     "keywords": ["php-textile", "textile", "parser", "markup", "language", "html", "format", "plaintext", "document"],
     "support": {
-        "irc": "irc://irc.freenode.net/textile",
         "wiki": "https://github.com/textile/php-textile/wiki",
         "issues": "https://github.com/textile/php-textile/issues",
         "source": "https://github.com/textile/php-textile"

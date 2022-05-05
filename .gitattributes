@@ -1,10 +1,14 @@
+/docker export-ignore
 /scripts export-ignore
 /test export-ignore
 /.editorconfig export-ignore
 /.github export-ignore
 /.gitignore export-ignore
-/.travis.yml export-ignore
+/Makefile export-ignore
+/docker-compose.yml export-ignore
 /phpcs.xml export-ignore
+/phpstan.neon export-ignore
 /phpunit.xml export-ignore
+/sonar-project.properties export-ignore
 /textile-wordmark.png export-ignore
 /.gitattributes export-ignore
