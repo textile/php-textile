@@ -72,8 +72,8 @@ $update = [
         },
     ],
     'composer.json' => [
-        '/("dev-master": ")([^"])(")/' => function ($m) use ($dev) {
-            return $m[1] . $dev . $m[2];
+        '/("dev-master": ")([^"]+)(")/' => function ($m) use ($dev) {
+            return $m[1] . $dev . $m[3];
         }
     ]
 ];
