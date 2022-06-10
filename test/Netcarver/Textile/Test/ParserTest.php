@@ -200,7 +200,7 @@ class ParserTest extends TestCase
             $content = "Note[1]\n\nfn1. Footnote";
             $parsed[0] = $this->parser->parse($content);
             $parsed[1] = $this->parser->parse('*strong*');
-            $this->assertTrue($parsed[0] !== $previous[0]);
+            $this->assertNotSame($parsed[0], $previous[0]);
             $this->assertSame($previous[1], $parsed[1]);
             $previous[0] = $parsed[0];
             $previous[1] = $parsed[1];

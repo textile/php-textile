@@ -2500,10 +2500,10 @@ class Parser
             }
         }
 
-        if ($element == 'td' or $element == 'tr') {
-            if (preg_match("/^($this->vlgn)/", $matched, $vert)) {
-                $style[] = "vertical-align:" . $this->vAlign($vert[1]);
-            }
+        if (($element === 'td' || $element === 'tr')
+            && preg_match("/^($this->vlgn)/", $matched, $vert)
+        ) {
+            $style[] = "vertical-align:" . $this->vAlign($vert[1]);
         }
 
         if (preg_match("/\{([^}]*)\}/", $matched, $sty)) {
@@ -2552,12 +2552,12 @@ class Parser
             }
         }
 
-        if (preg_match("/([(]+)/", $matched, $pl)) {
+        if (preg_match("/(\(+)/", $matched, $pl)) {
             $style[] = "padding-left:" . strlen($pl[1]) . "em";
             $matched = str_replace($pl[0], '', $matched);
         }
 
-        if (preg_match("/([)]+)/", $matched, $pr)) {
+        if (preg_match("/(\)+)/", $matched, $pr)) {
             $style[] = "padding-right:" . strlen($pr[1]) . "em";
             $matched = str_replace($pr[0], '', $matched);
         }
@@ -2566,11 +2566,11 @@ class Parser
             $style[] = "text-align:" . $this->hAlign($horiz[1]);
         }
 
-        if ($element == 'col') {
-            if (preg_match("/(?:\\\\([0-9]+))?{$this->regex_snippets['space']}*([0-9]+)?/", $matched, $csp)) {
-                $span = isset($csp[1]) ? $csp[1] : '';
-                $width = isset($csp[2]) ? $csp[2] : '';
-            }
+        if ($element == 'col'
+            && preg_match("/(?:\\\\([0-9]+))?{$this->regex_snippets['space']}*([0-9]+)?/", $matched, $csp)
+        ) {
+            $span = isset($csp[1]) ? $csp[1] : '';
+            $width = isset($csp[2]) ? $csp[2] : '';
         }
 
         if ($this->isRestrictedModeEnabled()) {
@@ -2894,7 +2894,7 @@ class Parser
         $out = array();
 
         /** @var array<int, string> $text */
-        $text = preg_split('/\n(?=[-])/m', $in);
+        $text = preg_split('/\n(?=-)/m', $in);
 
         foreach ($text as $line) {
             $m = array();
@@ -4265,12 +4265,12 @@ class Parser
         // eg. "text":url][otherstuff... will have "[otherstuff" popped back out.
         //     "text":url?q[]=x][123]    will have "[123]" popped off the back, the remaining closing square brackets
         //                               will later be tested for balance
-        if ($counts[']']) {
-            if (1 === preg_match('@(?P<url>^.*\])(?P<tight>\[.*?)$@' . $this->regex_snippets['mod'], $url, $m)) {
-                $url = $m['url'];
-                $tight = $m['tight'];
-                $m = array();
-            }
+        if ($counts[']']
+            && 1 === preg_match('@(?P<url>^.*\])(?P<tight>\[.*?)$@' . $this->regex_snippets['mod'], $url, $m)
+        ) {
+            $url = $m['url'];
+            $tight = $m['tight'];
+            $m = array();
         }
 
         // Split off any trailing text that isn't part of an array assignment.
@@ -4278,12 +4278,12 @@ class Parser
         // "text":...?q[]=value1]following  ... would have "following"
         // popped back out and the remaining square bracket
         // will later be tested for balance
-        if ($counts[']']) {
-            if (1 === preg_match('@(?P<url>^.*\])(?!=)(?P<end>.*?)$@' . $this->regex_snippets['mod'], $url, $m)) {
-                $url = $m['url'];
-                $tight = $m['end'] . $tight;
-                $m = array();
-            }
+        if ($counts[']']
+            && 1 === preg_match('@(?P<url>^.*\])(?!=)(?P<end>.*?)$@' . $this->regex_snippets['mod'], $url, $m)
+        ) {
+            $url = $m['url'];
+            $tight = $m['end'] . $tight;
+            $m = array();
         }
 
         // Does this need to be mb_ enabled? We are only searching for text in the ASCII charset anyway
