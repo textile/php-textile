@@ -13,25 +13,17 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Changelog
         id: changelog
         run: |
-          contents="$(sed -e '1,/h2./d' -e '/h2./,$d' CHANGELOG.textile)"
-          contents="${contents//'%'/'%25'}"
-          contents="${contents//$'\n'/'%0A'}"
-          contents="${contents//$'\r'/'%0D'}"
-          echo "::set-output name=contents::$contents"
+          echo "contents<<CHANGELOGEOF" >> $GITHUB_OUTPUT
+          sed -e '1,/h2./d' -e '/h2./,$d' CHANGELOG.textile >> $GITHUB_OUTPUT
+          echo "CHANGELOGEOF" >> $GITHUB_OUTPUT
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: shogo82148/actions-create-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
           body: ${{ steps.changelog.outputs.contents }}
-          draft: false
-          prerelease: false
