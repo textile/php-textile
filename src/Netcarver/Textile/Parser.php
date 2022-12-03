@@ -3314,7 +3314,7 @@ class Parser
                 }
             }
 
-            $block = $whitespace . $this->doPBr($block);
+            $block = $whitespace . $this->doPBr((string) $block);
             if ($this->getDocumentType() === self::DOCTYPE_XHTML) {
                 $block = str_replace('<br>', '<br />', $block);
             }
