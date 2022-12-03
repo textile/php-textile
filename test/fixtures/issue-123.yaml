@@ -8,11 +8,11 @@ HTM5 image alignment:
     !<10x10.gif!
 
   expect: |
-    <p><img alt="" class="align-right" height="10" src="10x10.gif" width="10" /></p>
+    <p><img alt="" class="align-right" height="10" src="10x10.gif" width="10"></p>
 
-    <p><img alt="" class="align-center" height="10" src="10x10.gif" width="10" /></p>
+    <p><img alt="" class="align-center" height="10" src="10x10.gif" width="10"></p>
 
-    <p><img alt="" class="align-left" height="10" src="10x10.gif" width="10" /></p>
+    <p><img alt="" class="align-left" height="10" src="10x10.gif" width="10"></p>
 
 XHTML image alignment:
   input: |

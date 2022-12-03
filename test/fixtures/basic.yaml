@@ -3500,3 +3500,71 @@ Link and image encoding :
     <p><a href="http://example.com/?foo&amp;amp;bar">Entity is merely part of text</a></p>
 
     <p><a href="http://example.com/%26.html">In path component</a></p>
+
+Self-closing tag endings in XHTML doctype :
+  input:  |
+    This is a multiline
+    text block split by
+    manual line breaks
+
+    - Multiline
+    - text block
+    - with dashes
+    - (not bullets)
+
+    !http://textpattern.com/favicon.ico!
+
+    !<http://textpattern.com/favicon.ico!
+
+    !>http://textpattern.com/favicon.ico!
+
+  expect : |
+    <p>This is a multiline<br />
+    text block split by<br />
+    manual line breaks</p>
+
+    <p>- Multiline<br />
+    - text block<br />
+    - with dashes<br />
+    - (not bullets)</p>
+
+    <p><img alt="" src="http://textpattern.com/favicon.ico" /></p>
+
+    <p><img align="left" alt="" src="http://textpattern.com/favicon.ico" /></p>
+
+    <p><img align="right" alt="" src="http://textpattern.com/favicon.ico" /></p>
+
+Self-closing tag endings in HTML5 doctype :
+  doctype: html5
+  input:  |
+    This is a multiline
+    text block split by
+    manual line breaks
+
+    - Multiline
+    - text block
+    - with dashes
+    - (not bullets)
+
+    !http://textpattern.com/favicon.ico!
+
+    !<http://textpattern.com/favicon.ico!
+
+    !>http://textpattern.com/favicon.ico!
+
+  expect : |
+    <p>This is a multiline<br>
+    text block split by<br>
+    manual line breaks</p>
+
+    <p>- Multiline<br>
+    - text block<br>
+    - with dashes<br>
+    - (not bullets)</p>
+
+    <p><img alt="" src="http://textpattern.com/favicon.ico"></p>
+
+    <p><img alt="" class="align-left" src="http://textpattern.com/favicon.ico"></p>
+
+    <p><img alt="" class="align-right" src="http://textpattern.com/favicon.ico"></p>
+
