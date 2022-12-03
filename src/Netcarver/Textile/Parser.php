@@ -1206,18 +1206,6 @@ class Parser
     }
 
     /**
-     * Output line break according to document type.
-     *
-     * @return string The break tag
-     * @since  3.8.0
-     * @see    Parser::getDocumentType()
-     */
-    protected function getLineBreak()
-    {
-        return ($this->getDocumentType() === self::DOCTYPE_HTML5) ? '<br>' : '<br />';
-    }
-
-    /**
      * Sets the document root directory path.
      *
      * This method sets the path that is used to resolve relative file paths
@@ -2115,6 +2103,18 @@ class Parser
     {
         trigger_error('Parser::textileCommon() is deprecated.', E_USER_DEPRECATED);
         return $this->setLite($lite)->parse($text);
+    }
+
+    /**
+     * Output line break according to document type.
+     *
+     * @return string The break tag
+     * @since  4.0.0
+     * @see    Parser::getDocumentType()
+     */
+    protected function getLineBreak()
+    {
+        return ($this->getDocumentType() === self::DOCTYPE_HTML5) ? '<br>' : '<br />';
     }
 
     /**
