@@ -13,11 +13,11 @@ Alignment is accepted in restricted mode when doctype is set to HTML5 :
     !<10x10.gif!
 
   expect: |
-    <p><img alt="" class="align-center" height="10" src="10x10.gif" width="10" /></p>
+    <p><img alt="" class="align-center" height="10" src="10x10.gif" width="10"></p>
 
-    <p><img alt="" class="align-right" height="10" src="10x10.gif" width="10" /></p>
+    <p><img alt="" class="align-right" height="10" src="10x10.gif" width="10"></p>
 
-    <p><img alt="" class="align-left" height="10" src="10x10.gif" width="10" /></p>
+    <p><img alt="" class="align-left" height="10" src="10x10.gif" width="10"></p>
 
 In XHTML same generates align attribute:
   setup:

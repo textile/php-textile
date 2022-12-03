@@ -59,8 +59,8 @@ Alignment uses classes with HTML5:
 
     <p>Justified paragraph.</p>
 
-    <p><img alt="" class="align-left" src="1.jpg" /></p>
+    <p><img alt="" class="align-left" src="1.jpg"></p>
 
-    <p><img alt="" class="align-right" src="1.jpg" /></p>
+    <p><img alt="" class="align-right" src="1.jpg"></p>
 
-    <p><img alt="" class="align-center" src="1.jpg" /></p>
+    <p><img alt="" class="align-center" src="1.jpg"></p>

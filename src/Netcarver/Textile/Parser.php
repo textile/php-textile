@@ -1206,6 +1206,18 @@ class Parser
     }
 
     /**
+     * Output line break according to document type.
+     *
+     * @return string The break tag
+     * @since  3.8.0
+     * @see    Parser::getDocumentType()
+     */
+    protected function getLineBreak()
+    {
+        return ($this->getDocumentType() === self::DOCTYPE_HTML5) ? '<br>' : '<br />';
+    }
+
+    /**
      * Sets the document root directory path.
      *
      * This method sets the path that is used to resolve relative file paths
@@ -1981,7 +1993,7 @@ class Parser
         $text = $this->retrieveTags($text);
         $text = $this->retrieveURLs($text);
 
-        $text = str_replace("<br />", "<br />\n", $text);
+        $text = str_replace($this->getLineBreak(), $this->getLineBreak()."\n", $text);
 
         return $text;
     }
@@ -1990,12 +2002,12 @@ class Parser
      * Parses the given Textile input in un-restricted mode.
      *
      * This method is deprecated, use Parser::parse() method instead.
-     * This method is equilavent of:
+     * This method is equivalent of:
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
      * echo $parser->parse('h1. Hello World!');
      *
-     * Additinal arguments can be passed with setter methods:
+     * Additional arguments can be passed with setter methods:
      *
      * bc. $parser = new \Netcarver\Textile\Parser();
      * echo $parser
@@ -2380,7 +2392,7 @@ class Parser
      * Cleans a HTML attribute value.
      *
      * This method checks for presence of URL encoding in the value.
-     * If the number encoded characters exceeds the thereshold,
+     * If the number encoded characters exceeds the threshold,
      * the input is discarded. Otherwise the encoded
      * instances are decoded.
      *
@@ -2424,12 +2436,12 @@ class Parser
      *
      * @param string $name The HTML element name
      * @param array<string, int|string> $atts HTML attributes applied to the tag
-     * @param bool $selfclosing Determines if the tag should be selfclosing
+     * @param bool $selfclosing Determines if the tag should be self-closing
      * @return Tag
      */
     protected function newTag($name, $atts, $selfclosing = true)
     {
-        return new Tag($name, $atts, $selfclosing);
+        return new Tag($name, $atts, $selfclosing && $this->getDocumentType() !== self::DOCTYPE_HTML5);
     }
 
     /**
@@ -2930,7 +2942,7 @@ class Parser
                     $def = trim($def);
 
                     if ($this->isLineWrapEnabled()) {
-                        $def = str_replace("\n", "<br />", $def);
+                        $def = str_replace("\n", $this->getLineBreak(), $def);
                     }
 
                     if ($pos === 0) {
@@ -2938,7 +2950,7 @@ class Parser
                     }
 
                     if ($this->isLineWrapEnabled()) {
-                        $term = str_replace("\n", "<br />", $term);
+                        $term = str_replace("\n", $this->getLineBreak(), $term);
                     }
 
                     $term = $this->graf($term);
@@ -3182,7 +3194,7 @@ class Parser
         // Replaces those LFs that aren't followed by white-space, or at end, with <br /> or a space.
         $m['content'] = preg_replace(
             "/\n(?![\s|])/",
-            $this->isLineWrapEnabled() ? '<br />' : ' ',
+            $this->isLineWrapEnabled() ? $this->getLineBreak() : ' ',
             (string) $m['content']
         );
 
@@ -3199,7 +3211,7 @@ class Parser
     {
         $content = preg_replace(
             "@(.+)(?<!<br>|<br />|</li>|</dd>|</dt>)\n(?![\s|])@",
-            $this->isLineWrapEnabled() ? '$1<br />' : '$1 ',
+            $this->isLineWrapEnabled() ? '$1'.$this->getLineBreak() : '$1 ',
             $m['content']
         );
 
@@ -3302,8 +3314,10 @@ class Parser
                 }
             }
 
-            $block = $this->doPBr((string) $block);
-            $block = $whitespace. str_replace('<br>', '<br />', $block);
+            $block = $whitespace . $this->doPBr((string) $block);
+            if ($this->getDocumentType() === self::DOCTYPE_XHTML) {
+                $block = str_replace('<br>', '<br />', $block);
+            }
 
             // @phpstan-ignore-next-line
             if ($ext && $anonymous_block) {
@@ -4219,7 +4233,7 @@ class Parser
         $in = $m[0];
         $pre = $m['pre'];
         if ($this->isLineWrapEnabled()) {
-            $inner = str_replace("\n", '<br />', $m['inner']);
+            $inner = str_replace("\n", $this->getLineBreak(), $m['inner']);
         } else {
             $inner = str_replace("\n", ' ', $m['inner']);
         }
