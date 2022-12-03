@@ -18,6 +18,5 @@
 <!--- Put an `x` in all the boxes that apply. -->
 - [ ] I documented my additions and changes using PHPdoc.
 - [ ] I wrote fixtures to cover my additions.
-- [ ] `$ composer update`
-- [ ] `$ composer test`
-- [ ] `$ composer cs`
+- [ ] `$ make clean`
+- [ ] `$ make test`
