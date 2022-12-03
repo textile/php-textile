@@ -1993,7 +1993,7 @@ class Parser
         $text = $this->retrieveTags($text);
         $text = $this->retrieveURLs($text);
 
-        $text = (string) preg_replace("~<br[ ]*/?>~i", $this->getLineBreak()."\n", $text);
+        $text = str_replace($this->getLineBreak(), $this->getLineBreak()."\n", $text);
 
         return $text;
     }
