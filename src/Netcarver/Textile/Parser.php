@@ -1211,9 +1211,8 @@ class Parser
      * @return string The break tag
      * @since  3.8.0
      * @see    Parser::getDocumentType()
-     * @api
      */
-    public function getLineBreak()
+    protected function getLineBreak()
     {
         return ($this->getDocumentType() === self::DOCTYPE_HTML5) ? '<br>' : '<br />';
     }
