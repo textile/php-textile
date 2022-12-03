@@ -1215,7 +1215,7 @@ class Parser
      */
     public function getLineBreak()
     {
-        return ($this->getDocumentType() === 'html5') ? '<br>' : '<br />';
+        return ($this->getDocumentType() === self::DOCTYPE_HTML5) ? '<br>' : '<br />';
     }
 
     /**
@@ -2442,7 +2442,7 @@ class Parser
      */
     protected function newTag($name, $atts, $selfclosing = true)
     {
-        return new Tag($name, $atts, $selfclosing && $this->getDocumentType() !== 'html5');
+        return new Tag($name, $atts, $selfclosing && $this->getDocumentType() !== self::DOCTYPE_HTML5);
     }
 
     /**
@@ -3316,7 +3316,7 @@ class Parser
             }
 
             $block = $whitespace . $this->doPBr($block);
-            if ($this->getDocumentType() === 'xhtml') {
+            if ($this->getDocumentType() === self::DOCTYPE_XHTML) {
                 $block = str_replace('<br>', '<br />', $block);
             }
 
