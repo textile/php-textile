@@ -40,8 +40,8 @@
             "@composer test:static",
             "@composer test:unit"
         ],
-        "bump": "@php ./scripts/release.php",
-        "bump-dev": "@php ./scripts/release.php --dev",
+        "project:bump": "@php ./scripts/release.php",
+        "project:bump-dev": "@php ./scripts/release.php --dev",
         "lint": "phpcs",
         "lint-fix": "phpcbf",
         "repl": "psysh",

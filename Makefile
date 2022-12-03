@@ -30,10 +30,10 @@ repl: vendor
 	$(PHP) composer repl
 
 bump: vendor
-	$(PHP) composer bump
+	$(PHP) composer project:bump
 
 bump-dev: vendor
-	$(PHP) composer bump-dev
+	$(PHP) composer project:bump-dev
 
 process-reports:
 	$(PHP) bash -c "test -e build/logs/clover.xml && sed -i 's/\/app\///' build/logs/clover.xml"
