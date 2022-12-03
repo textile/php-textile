@@ -1206,6 +1206,19 @@ class Parser
     }
 
     /**
+     * Output line break according to document type.
+     *
+     * @return string The break tag
+     * @since  3.8.0
+     * @see    Parser::getDocumentType()
+     * @api
+     */
+    public function getLineBreak()
+    {
+        return ($this->getDocumentType() === 'html5') ? '<br>' : '<br />';
+    }
+
+    /**
      * Sets the document root directory path.
      *
      * This method sets the path that is used to resolve relative file paths
@@ -1981,7 +1994,7 @@ class Parser
         $text = $this->retrieveTags($text);
         $text = $this->retrieveURLs($text);
 
-        $text = str_replace("<br />", "<br />\n", $text);
+        $text = preg_replace("~<br[ ]*/?>~i", $this->getLineBreak()."\n", $text);
 
         return $text;
     }
@@ -2429,7 +2442,7 @@ class Parser
      */
     protected function newTag($name, $atts, $selfclosing = true)
     {
-        return new Tag($name, $atts, $selfclosing);
+        return new Tag($name, $atts, $selfclosing && $this->getDocumentType() !== 'html5');
     }
 
     /**
@@ -2930,7 +2943,7 @@ class Parser
                     $def = trim($def);
 
                     if ($this->isLineWrapEnabled()) {
-                        $def = str_replace("\n", "<br />", $def);
+                        $def = str_replace("\n", $this->getLineBreak(), $def);
                     }
 
                     if ($pos === 0) {
@@ -2938,7 +2951,7 @@ class Parser
                     }
 
                     if ($this->isLineWrapEnabled()) {
-                        $term = str_replace("\n", "<br />", $term);
+                        $term = str_replace("\n", $this->getLineBreak(), $term);
                     }
 
                     $term = $this->graf($term);
@@ -3182,7 +3195,7 @@ class Parser
         // Replaces those LFs that aren't followed by white-space, or at end, with <br /> or a space.
         $m['content'] = preg_replace(
             "/\n(?![\s|])/",
-            $this->isLineWrapEnabled() ? '<br />' : ' ',
+            $this->isLineWrapEnabled() ? $this->getLineBreak() : ' ',
             (string) $m['content']
         );
 
@@ -3199,7 +3212,7 @@ class Parser
     {
         $content = preg_replace(
             "@(.+)(?<!<br>|<br />|</li>|</dd>|</dt>)\n(?![\s|])@",
-            $this->isLineWrapEnabled() ? '$1<br />' : '$1 ',
+            $this->isLineWrapEnabled() ? '$1'.$this->getLineBreak() : '$1 ',
             $m['content']
         );
 
@@ -3302,8 +3315,10 @@ class Parser
                 }
             }
 
-            $block = $this->doPBr((string) $block);
-            $block = $whitespace. str_replace('<br>', '<br />', $block);
+            $block = $whitespace . $this->doPBr($block);
+            if ($this->getDocumentType() === 'xhtml') {
+                $block = str_replace('<br>', '<br />', $block);
+            }
 
             // @phpstan-ignore-next-line
             if ($ext && $anonymous_block) {
@@ -4219,7 +4234,7 @@ class Parser
         $in = $m[0];
         $pre = $m['pre'];
         if ($this->isLineWrapEnabled()) {
-            $inner = str_replace("\n", '<br />', $m['inner']);
+            $inner = str_replace("\n", $this->getLineBreak(), $m['inner']);
         } else {
             $inner = str_replace("\n", ' ', $m['inner']);
         }
