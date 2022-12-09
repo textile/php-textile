@@ -1,13 +1,13 @@
-FROM php:8.1-cli
+FROM php:7.4-cli
 
 RUN apt-get update && apt-get install -y \
     bash \
     git \
-    libz-dev \
-    zip \
-    wget
+    libzip-dev \
+    unzip \
+    zlib1g-dev
 
-RUN pecl install xdebug-3.2.0
+RUN pecl install xdebug-3.1.6
 
 RUN docker-php-ext-enable xdebug
 
