@@ -5,6 +5,7 @@ Here's a summary of changes in each release. The list doesn't include some small
 h2. Version 4.1.0 - upcoming
 
 * Support @:@ and @!@ characters in CSS class names (closes "#224":https://github.com/textile/php-textile/issues/224).
+* Support including textile escape sequences inside link title attribute (closes "#223":https://github.com/textile/php-textile/issues/223).
 
 h2. "Version 4.0.0 - 2022/12/03":https://github.com/textile/php-textile/releases/tag/v4.0.0
 

@@ -1,0 +1,6 @@
+Support including escape sequences in titles:
+  input: |
+    "lorem(dolor ==@== sit)":#ipsum
+
+  expect: |
+    <p><a href="#ipsum" title="dolor @ sit">lorem</a></p>

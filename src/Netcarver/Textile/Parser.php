@@ -20,7 +20,7 @@
  * Additions and fixes Copyright (c) 2010-17 Netcarver         https://github.com/netcarver
  * Additions and fixes Copyright (c) 2011    Jeff Soo          http://ipsedixit.net/
  * Additions and fixes Copyright (c) 2012    Robert Wetzlmayr  http://wetzlmayr.com/
- * Additions and fixes Copyright (c) 2012-19 Jukka Svahn       http://rahforum.biz/
+ * Additions and fixes Copyright (c) 2012-24 Jukka Svahn       https://rahforum.biz/
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1980,6 +1980,9 @@ class Parser
         $text = $this->replaceGlyphs($text);
         $text = $this->retrieveTags($text);
         $text = $this->retrieveURLs($text);
+
+        // Replace shelved instances that were inside tag and link attributes.
+        $text = $this->retrieve($text);
 
         $text = str_replace($this->getLineBreak(), $this->getLineBreak()."\n", $text);
 
