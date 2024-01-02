@@ -2527,14 +2527,14 @@ class Parser
         }
 
         if (preg_match("/\(([^()]+)\)/U", $matched, $cls)) {
-            $class_regex = "/^([-a-zA-Z 0-9_\.\/\[\]]*)$/";
+            $class_regex = "/^([-a-zA-Z 0-9_\.\/\[\]:!]*)$/";
 
             // Consume entire class block -- valid or invalid.
             $matched = str_replace($cls[0], '', $matched);
 
             // Only allow a restricted subset of the CSS standard characters for classes/ids.
             // No encoding markers allowed.
-            if (preg_match("/\(([-a-zA-Z 0-9_\/\[\]\.\:\#]+)\)/U", $cls[0], $cls)) {
+            if (preg_match("/\(([-a-zA-Z 0-9_\/\[\].:!#]+)\)/U", $cls[0], $cls)) {
                 $hashpos = strpos($cls[1], '#');
                 // If a textile class block attribute was found with a '#' in it
                 // split it into the css class and css id...
