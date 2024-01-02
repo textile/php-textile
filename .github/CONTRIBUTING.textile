@@ -45,3 +45,40 @@ bc. $ make test-unit
 $ make test-static
 
 Tests should pass before the changes can be merged to the codebase. If you create a pull requests that does not pass tests, CI will complain in the pull request thread. To get your changes merged, you should rework the code or tests until everything works smoothly.
+
+h2. Running tests on different PHP versions and platforms
+
+The project comes with multiple different PHP versions that can be used to run the test suite. To run tests on different PHP version, first build the target image and then run tests using it:
+
+bc. $ make docker-build IMAGE=php_8_3
+$ make test
+
+List of available images can be found by running:
+
+bc. $ make docker-images
+
+h2. Creating new release
+
+Releasing a new stable version requires replacing version references in the project source code, committing changes and creating a new tag. To do so, first run a command to bump the version:
+
+bc. make bump
+
+This will look for upcoming header line from CHANGELOG.textile file, and use it's included version number as the released version. It will then replace version references in source files and format the CHANGELOG.textile file, adding today's date to the upcoming header line.
+
+You can now commit the changes and create a new tag that matches the version. Replace @0.0.0@ with your version number, make sure that the tag starts with @v@ character:
+
+bc. $ git add -u
+$ git commit -m "Version 0.0.0"
+$ git push origin
+$ git tag -a v0.0.0 -m v0.0.0
+$ git push origin v0.0.0
+
+There is now a new stable release available; CI will take care of creating releases to GitHub. You can then set the branch to the next development version. To do so, add a @h2. Version 0.0.0 - upcoming@ header line to CHANGELOG.textile file and run the following command:
+
+bc. $ make bump-dev
+
+This will replace version references in the source code with the one that was added to CHANGELOG.textile file. Replace @0.0.0@ with the version number you want to use. Then commit the changes:
+
+bc. $ git add -u
+$ git commit -m "Bumped development version"
+$ git push origin

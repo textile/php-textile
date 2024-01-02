@@ -2,7 +2,7 @@ version: '3'
 
 services:
   php:
-    build: ./docker/image/${IMAGE:-php_8_2}
+    build: ./docker/image/${IMAGE:-php_8_3}
     volumes:
       - .:/app
       - ${COMPOSER_HOME:-$HOME/.composer}:/tmp
