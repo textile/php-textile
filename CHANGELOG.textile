@@ -4,7 +4,9 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 4.2.0 - upcoming
 
-* Links are still rendered when block tags are disabled (closes "#225":https://github.com/textile/php-textile/issues/225).
+h2. "Version 4.1.1 - 2024/06/07":https://github.com/textile/php-textile/releases/tag/v4.1.1
+
+* Links are now rendered when block tags are disabled (closes "#225":https://github.com/textile/php-textile/issues/225).
 
 h2. "Version 4.1.0 - 2024/01/02":https://github.com/textile/php-textile/releases/tag/v4.1.0
 
