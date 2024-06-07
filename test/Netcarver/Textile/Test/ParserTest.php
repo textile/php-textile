@@ -8,8 +8,6 @@
 
 namespace Netcarver\Textile\Test;
 
-use Netcarver\Textile\Test\Parser\DeprecatedPrepare;
-use Netcarver\Textile\Test\Parser\DeprecatedTextileCommon;
 use PHPUnit\Framework\TestCase;
 use Netcarver\Textile\Parser;
 
@@ -62,18 +60,6 @@ class ParserTest extends TestCase
         );
     }
 
-    public function testSetRelativeImagePrefixChaining()
-    {
-        $this->expectError();
-
-        $symbol = $this->parser
-            ->setRelativeImagePrefix('abc')
-            ->setSymbol('test', 'TestValue')
-            ->getSymbol('test');
-
-        $this->assertEquals('TestValue', $symbol);
-    }
-
     public function testSetGetDimensionlessImage()
     {
         $this->assertFalse(
@@ -95,94 +81,6 @@ class ParserTest extends TestCase
             '&amp; &amp; &#124; &amp;#x0022 &#x0022;',
             $result
         );
-    }
-
-    public function testDeprecatedEncodingArgument()
-    {
-        $this->expectDeprecation();
-
-        $this->assertSame(
-            'content',
-            @$this->parser->textileThis('content', false, true)
-        );
-
-        $this->assertSame(
-            'content',
-            $this->parser->textileEncode('content')
-        );
-
-        $this->parser->textileThis('content', false, true);
-    }
-
-    public function testDeprecatedTextileCommon()
-    {
-        $this->expectDeprecation();
-
-        $parser = new DeprecatedTextileCommon();
-
-        $this->assertSame(
-            ' content',
-            @$parser->testTextileCommon(' content', false)
-        );
-
-        $this->assertSame(
-            ' content',
-            @$parser->testTextileCommon(' content', true)
-        );
-
-        $parser->testTextileCommon('content', false);
-    }
-
-    public function testDeprecatedPrepare()
-    {
-        $this->expectDeprecation();
-
-        $parser = new DeprecatedPrepare();
-
-        $this->assertSame(
-            ' content',
-            @$parser->parse(' content')
-        );
-
-        $parser->parse('content');
-    }
-
-    public function testDeprecatedTextileRestricted()
-    {
-        $this->expectDeprecation();
-
-        $this->assertSame(
-            ' content',
-            @$this->parser->textileRestricted(' content')
-        );
-
-        $this->parser->textileRestricted('content');
-    }
-
-    public function testDeprecatedTextileThis()
-    {
-        $this->expectDeprecation();
-
-        $this->assertSame(
-            ' content',
-            @$this->parser->textileThis(' content')
-        );
-
-        $this->parser->textileThis('content');
-    }
-
-    public function testDeprecatedSetRelativeImagePrefix()
-    {
-        $this->expectDeprecation();
-
-        @$this->parser->setRelativeImagePrefix('/1/');
-
-        $this->assertSame(
-            ' <img alt="" src="/1/2.jpg" /> <a href="/1/2">1</a>',
-            $this->parser->parse(' !2.jpg! "1":2')
-        );
-
-        $this->parser->setRelativeImagePrefix('/1/');
     }
 
     public function testInvalidDocumentType()
