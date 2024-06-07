@@ -1,0 +1,13 @@
+Disabling block tags should not disable links:
+  setup:
+    - setBlockTags: false
+  input  : |
+    "Link":https://example.com
+  expect : |
+    <a href="https://example.com">Link</a>
+
+Link output should be similar with block tags enabled:
+  input  : |
+    "Link":https://example.com
+  expect : |
+    <p><a href="https://example.com">Link</a></p>

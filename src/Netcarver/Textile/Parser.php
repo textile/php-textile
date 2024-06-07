@@ -1972,6 +1972,9 @@ class Parser
             // Inline markup (em, strong, sup, sub, del etc).
             $text = $this->spans($text);
 
+            // Generate links.
+            $text = $this->links($text);
+
             // Glyph level substitutions (mainly typographic -- " & ' => curly quotes, -- => em-dash etc.
             $text = $this->glyphs($text);
         }
