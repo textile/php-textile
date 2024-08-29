@@ -2,7 +2,9 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
-h2. Version 4.2.0 - upcoming
+h2. Version 4.1.2 - upcoming
+
+* Fix PHP 8.4 compatibility issues (closes "#227":https://github.com/textile/php-textile/issues/227).
 
 h2. "Version 4.1.1 - 2024/06/07":https://github.com/textile/php-textile/releases/tag/v4.1.1
 

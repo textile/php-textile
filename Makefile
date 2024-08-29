@@ -29,6 +29,9 @@ test-unit: vendor
 repl: vendor
 	$(PHP) composer repl
 
+shell:
+	$(PHP) bash
+
 bump: vendor
 	$(PHP) composer project:bump
 
@@ -71,6 +74,9 @@ help:
 	@echo ""
 	@echo "  $$ make repl"
 	@echo "  Launch read-print-eval loop"
+	@echo ""
+	@echo "  $$ make shell"
+	@echo "  Login into the container"
 	@echo ""
 	@echo "  $$ make bump"
 	@echo "  Bump version"

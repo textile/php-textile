@@ -51,7 +51,7 @@ h2. Running tests on different PHP versions and platforms
 The project comes with multiple different PHP versions that can be used to run the test suite. To run tests on different PHP version, first build the target image and then run tests using it:
 
 bc. $ make docker-build IMAGE=php_8_3
-$ make test
+$ make test IMAGE=php_8_3
 
 List of available images can be found by running:
 
