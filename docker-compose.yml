@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   php:
     build: ./docker/image/${IMAGE:-php_8_3}
