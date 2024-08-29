@@ -1,4 +1,4 @@
-.PHONY: all clean docker-build docker-images help lint lint-fix repl test test-static test-unit bump bump-dev process-reports
+.PHONY: all clean docker-build docker-images help lint lint-fix repl shell test test-static test-unit bump bump-dev process-reports
 
 IMAGE ?= php_8_3
 PHP = docker compose run --rm php
