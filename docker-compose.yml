@@ -1,6 +1,6 @@
 services:
   php:
-    build: ./docker/image/${IMAGE:-php_8_3}
+    build: ./docker/image/${IMAGE:-php_8_4}
     volumes:
       - .:/app
       - ${COMPOSER_HOME:-$HOME/.composer}:/tmp

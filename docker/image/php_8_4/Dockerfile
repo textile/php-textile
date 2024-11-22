@@ -1,4 +1,4 @@
-FROM php:8.4-rc-cli
+FROM php:8.4-cli
 
 RUN apt-get update && apt-get install -y \
     bash \
@@ -7,6 +7,10 @@ RUN apt-get update && apt-get install -y \
     zip \
     wget
 
-COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
+RUN pecl install xdebug-3.4.0beta1
+
+RUN docker-php-ext-enable xdebug
+
+COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
