@@ -4719,6 +4719,10 @@ class Parser
         $title = (isset($m['title'])) ? $m['title'] : '';
         $href = (isset($m['href'])) ? $m['href'] : '';
 
+        if ($href && !$this->isValidUrl($href)) {
+            return $m[0];
+        }
+
         $alignments = array(
             '<'    => 'left',
             '='    => 'center',

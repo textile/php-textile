@@ -4,6 +4,9 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 4.1.3 - upcoming
 
+* This is a security update, which fixes stored XSS vulnerability in image link handing.
+* Fixed: In restricted mode, restrict image link protocol. Previously and an image link's href allowed all protocols in restricted mode. Now it goes through the same validation as text links.
+
 h2. "Version 4.1.2 - 2024/08/29":https://github.com/textile/php-textile/releases/tag/v4.1.2
 
 * Fix PHP 8.4 compatibility issues (closes "#227":https://github.com/textile/php-textile/issues/227).

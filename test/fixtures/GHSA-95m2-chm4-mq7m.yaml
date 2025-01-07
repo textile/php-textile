@@ -1,0 +1,11 @@
+In restricted mode, restrict protocol for image links too like it was already done for text links:
+  setup:
+    - setRestricted: true
+  input: |
+    !securing.pl(Click Tu)!:javascript:document.innerHTML='<script>alert(1);</script>'+document.cookie)
+
+    "securing.pl(Click Tu)":javascript:document.innerHTML='<script>alert(1);</script>'+document.cookie)
+  expect : |
+    <p>!securing.pl(Click Tu)!:javascript:document.innerHTML=&#8217;&lt;script&gt;alert(1);&lt;/script&gt;&#8217;+document.cookie)</p>
+
+    <p>&#8220;securing.pl(Click Tu)&#8221;:javascript:document.innerHTML=&#8217;&lt;script&gt;alert(1);&lt;/script&gt;&#8217;+document.cookie)</p>
