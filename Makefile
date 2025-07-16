@@ -1,7 +1,9 @@
 .PHONY: all clean docker-build docker-images help lint lint-fix repl shell test test-static test-unit bump bump-dev process-reports
 
+HOST_UID ?= `id -u`
+HOST_GID ?= `id -g`
 IMAGE ?= php_8_4
-PHP = docker compose run --rm php
+PHP = docker compose run --rm -u $(HOST_UID):$(HOST_GID) php
 
 all: test
 
@@ -9,7 +11,7 @@ vendor:
 	$(PHP) composer install
 
 clean:
-	$(PHP) rm -rf vendor composer.lock
+	$(PHP) rm -rf build vendor .phpunit.result.cache composer.lock
 
 lint: vendor
 	$(PHP) composer lint

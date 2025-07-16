@@ -3,7 +3,7 @@ services:
     build: ./docker/image/${IMAGE:-php_8_4}
     volumes:
       - .:/app
-      - ${COMPOSER_HOME:-$HOME/.composer}:/tmp
+      - ${COMPOSER_HOME:-$HOME/.composer}:/composer
     networks:
       - app
     environment:
@@ -12,6 +12,7 @@ services:
       - XDEBUG_TRIGGER
       - PHP_IDE_CONFIG
       - COMPOSER_ROOT_VERSION=dev-master
+      - COMPOSER_HOME=/composer
 
 networks:
   app:
