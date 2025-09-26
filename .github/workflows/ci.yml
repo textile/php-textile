@@ -1,6 +1,6 @@
 name: CI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -20,9 +20,14 @@ jobs:
         run: make test
 
       - name: Process test reports
+        id: report
         run: make process-reports
+        env:
+          SONAR_ENABLED: ${{ !!secrets.SONAR_TOKEN }}
+        if: ${{ env.SONAR_ENABLED == 'true' }}
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        if: ${{ steps.report.conclusion == 'success' }}
