@@ -4042,7 +4042,7 @@ class Parser
             } else {
                 $pp = explode('/', $parts['path']);
                 foreach ($pp as &$p) {
-                    $p = str_replace(array('%25', '%40'), array('%', '@'), rawurlencode($p));
+                    $p = str_replace(array('%25', '%40','%3D'), array('%', '@','='), rawurlencode($p));
                     if (!in_array($parts['scheme'], array('mailto'))) {
                         $p = str_replace('%2B', '+', $p);
                     }
