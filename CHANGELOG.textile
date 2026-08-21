@@ -2,7 +2,10 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
-h2. Version 4.1.5 - upcoming
+h2. "Version 4.1.5 - 2026/08/21":https://github.com/textile/php-textile/releases/tag/v4.1.5
+
+* This is a security update, which fixes stored XSS vulnerability in cite tag's cite attribute handling.
+* Fixed: Escape any HTML special characters used in cite tag's cite attribute.
 
 h2. "Version 4.1.4 - 2025/12/20":https://github.com/textile/php-textile/releases/tag/v4.1.4
 

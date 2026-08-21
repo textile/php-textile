@@ -1,0 +1,7 @@
+Escape cite span's cite attribute value:
+  setup:
+    - setRestricted: true
+  input: |
+    ??:url"style="umm" content??
+  expect : |
+    <p><cite cite="url&quot;style=&quot;umm&quot;">content</cite></p>
