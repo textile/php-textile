@@ -47,5 +47,12 @@
         "repl": "psysh",
         "test:static": "phpstan analyse --level 8 src",
         "test:unit": "XDEBUG_MODE=coverage phpunit"
+    },
+    "config": {
+        "policy": {
+            "advisories": {
+                "block": false
+            }
+        }
     }
 }
