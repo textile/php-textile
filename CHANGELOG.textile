@@ -2,7 +2,7 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
-h2. Version 4.1.6 - upcoming
+h2. "Version 4.1.6 - 2026/10/16":https://github.com/textile/php-textile/releases/tag/v4.1.6
 
 * Improved support for BCP 47 language tags. Reduces language code restrictions, allowing the use of three letter language codes, and languages with multiple RFC 5646 sub-tags (closes "#233":https://github.com/textile/php-textile/issues/233).
 
