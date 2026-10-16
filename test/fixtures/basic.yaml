@@ -2977,9 +2977,9 @@ Classes/ids/langs on phrase modifiers :
 
     **(c#id)[en-Gb]My text**
 
-    -(c#id)[ENG]My text-
+    -(c#id)[BDZ]My text-
 
-    +(c#id)[eng]My text+
+    +(c#id)[bdz]My text+
 
     _(c#id)[kjwwef89]My text_
 
@@ -2999,9 +2999,9 @@ Classes/ids/langs on phrase modifiers :
 
     <p><b class="c" id="id" lang="en-Gb">My text</b></p>
 
-    <p><del class="c" id="id">My text</del></p>
+    <p><del class="c" id="id" lang="BDZ">My text</del></p>
 
-    <p><ins class="c" id="id">My text</ins></p>
+    <p><ins class="c" id="id" lang="bdz">My text</ins></p>
 
     <p><em class="c" id="id">My text</em></p>
 
@@ -3029,9 +3029,9 @@ Classes/ids/langs on phrase modifiers (restricted) :
 
     **(c#id)[en-Gb]My text**
 
-    -(c#id)[ENG]My text-
+    -(c#id)[BDZ]My text-
 
-    +(c#id)[eng]My text+
+    +(c#id)[bdz]My text+
 
     _(c#id)[kjwwef89]My text_
 
@@ -3051,9 +3051,9 @@ Classes/ids/langs on phrase modifiers (restricted) :
 
     <p><b lang="en-Gb">My text</b></p>
 
-    <p><del>My text</del></p>
+    <p><del lang="BDZ">My text</del></p>
 
-    <p><ins>My text</ins></p>
+    <p><ins lang="bdz">My text</ins></p>
 
     <p><em>My text</em></p>
 

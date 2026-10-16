@@ -1,0 +1,25 @@
+BCP 47 language code syntax support:
+  input: |
+    %[de]Only two character language subtag%
+
+    %[gem]Only three character language subtag%
+
+    %[es-ES]Two character language, with two character region%
+
+    %[es-013]Two character language, with three digit region code%
+    
+    %[fr-Brai]Two character language, with script%
+
+    %[ru-Cyrl-BY]Two character language, with four character script and two character region%
+  expect: |
+    <p><span lang="de">Only two character language subtag</span></p>
+
+    <p><span lang="gem">Only three character language subtag</span></p>
+    
+    <p><span lang="es-ES">Two character language, with two character region</span></p>
+    
+    <p><span lang="es-013">Two character language, with three digit region code</span></p>
+    
+    <p><span lang="fr-Brai">Two character language, with script</span></p>
+    
+    <p><span lang="ru-Cyrl-BY">Two character language, with four character script and two character region</span></p>
