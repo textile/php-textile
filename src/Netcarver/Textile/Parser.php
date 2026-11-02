@@ -384,7 +384,7 @@ class Parser
      *
      * @var string
      */
-    protected $ver = '4.1.7-dev';
+    protected $ver = '4.1.7';
 
     /**
      * Regular expression snippets.
