@@ -15,4 +15,6 @@ COPY --from=ghcr.io/php/pie:1.5.0-rc.1-bin /pie /usr/bin/pie
 
 RUN pie install xdebug/xdebug:dev-master && docker-php-ext-enable xdebug
 
+RUN mkdir -p /.config/psysh && chmod 777 /.config/psysh
+
 WORKDIR /app

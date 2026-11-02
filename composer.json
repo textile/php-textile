@@ -53,6 +53,7 @@
             "advisories": {
                 "block": false
             }
-        }
+        },
+        "process-timeout": 0
     }
 }

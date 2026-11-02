@@ -13,4 +13,6 @@ RUN docker-php-ext-enable xdebug
 
 COPY --from=composer:2.10 /usr/bin/composer /usr/bin/composer
 
+RUN mkdir -p /.config/psysh && chmod 777 /.config/psysh
+
 WORKDIR /app
