@@ -2,6 +2,8 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
+h2. Version 4.1.8 - upcoming
+
 h2. "Version 4.1.7 - 2026/11/02":https://github.com/textile/php-textile/releases/tag/v4.1.7
 
 * Use tempered greedy token regular expression pattern for line-break conversion post-processing pass, to improve parsing performance when the parser is given a document with a deeply nested raw HTML paragraph structure.
