@@ -219,4 +219,14 @@ class ParserTest extends TestCase
             $this->parser->isAlignClassesEnabled()
         );
     }
+
+    public function testParsingMultipleOpenParagraphs()
+    {
+        $input = str_repeat('<p>', 32000);
+
+        $this->assertSame(
+            $input,
+            $this->parser->parse($input)
+        );
+    }
 }
