@@ -2,7 +2,10 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
-h2. Version 4.1.8 - upcoming
+h2. "Version 4.1.8 - 2026/11/09":https://github.com/textile/php-textile/releases/tag/v4.1.8
+
+* This is a security update, which fixes XSS vulnerability in notextile tag handling.
+* Fixed: In restricted mode, escape quotes used within notextile blocks (fixes "GHSA-vm23-93g8-64vv":https://github.com/textile/php-textile/security/advisories/GHSA-vm23-93g8-64vv).
 
 h2. "Version 4.1.7 - 2026/11/02":https://github.com/textile/php-textile/releases/tag/v4.1.7
 

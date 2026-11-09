@@ -1,0 +1,33 @@
+In restricted mode, escape quotes in shelved notextile content:
+  setup:
+    - setRestricted: true
+  input: |
+    !https://example.com/missing.png(==a" onerror="alert(document.domain)==)!
+    
+    "text(==x" onmouseover="alert(document.domain)==)":https://example.com
+    
+    ==This sentence "has" quotes.==
+    
+    bc. This is a "code" block.
+    
+    ==<h1>This should be escaped too.</h1>==
+    
+    Normal "quotes" within a paragraph.
+  expect: |
+    <p><img alt="a&quot; onerror=&quot;alert(document.domain)" src="https://example.com/missing.png" title="a&quot; onerror=&quot;alert(document.domain)" /></p>
+
+    <p><a href="https://example.com" title="x&quot; onmouseover=&quot;alert(document.domain)">text</a></p>
+
+    <p>This sentence &quot;has&quot; quotes.</p>
+    
+    <pre><code>This is a &quot;code&quot; block.</code></pre>
+
+    <p>&lt;h1&gt;This should be escaped too.&lt;/h1&gt;</p>
+
+    <p>Normal &#8220;quotes&#8221; within a paragraph.</p>
+
+In unrestricted mode, still allow raw HTML in notextile blocks:
+  input: |
+    ==<span class="red">This is allowed</span>==
+  expect: |
+    <p><span class="red">This is allowed</span></p>
