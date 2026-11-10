@@ -4,6 +4,8 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 4.1.9 - upcoming
 
+* Improve support for literal IPv6 addresses in links. Supports literal IPv6 address format's square bracket syntax in regular Textile links.
+
 h2. "Version 4.1.8 - 2026/11/09":https://github.com/textile/php-textile/releases/tag/v4.1.8
 
 * This is a security update, which fixes XSS vulnerability in notextile tag handling.

@@ -1492,3 +1492,40 @@ Max Link Index Test :
     <p><a class="myclass" href="http://slashdot.org/">(just in case you were wondering)</a></p>
 
     <p><a href="http://www.unicef.org/argentina/spanish/cartilla_3%281%29.pdf">Participar (para) poder</a></p>
+
+Links with trailing port number:
+  input: |
+    "Link":https://127.0.0.1:8080
+
+    "Link":https://localhost.tld:8080
+  expect: |
+    <p><a href="https://127.0.0.1:8080">Link</a></p>
+
+    <p><a href="https://localhost.tld:8080">Link</a></p>
+
+IPv6 literal URLs as links:
+  input: |
+    "host":http://[2001:db8::1]/
+    
+    "loopback":http://[::1]/
+    
+    "port":http://[::1]:8080/
+    
+    "t":http://example.com/x]?q=1
+    
+    "creds":http://user:pass@[::1]:8080/
+    
+    "invalid":javascript://user:pass@[::1]:8080/
+
+  expect: |
+    <p><a href="http://[2001:db8::1]/">host</a></p>
+    
+    <p><a href="http://[::1]/">loopback</a></p>
+    
+    <p><a href="http://[::1]:8080/">port</a></p>
+    
+    <p><a href="http://example.com/x">t</a>?q=1</p>
+    
+    <p><a href="http://user:pass@[::1]:8080/">creds</a></p>
+
+    <p>&#8220;invalid&#8221;:javascript://user:pass@[::1]:8080/</p>
