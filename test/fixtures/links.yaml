@@ -1506,26 +1506,64 @@ Links with trailing port number:
 IPv6 literal URLs as links:
   input: |
     "host":http://[2001:db8::1]/
-    
+
     "loopback":http://[::1]/
-    
+
     "port":http://[::1]:8080/
-    
+
     "t":http://example.com/x]?q=1
-    
+
     "creds":http://user:pass@[::1]:8080/
-    
+
     "invalid":javascript://user:pass@[::1]:8080/
 
   expect: |
     <p><a href="http://[2001:db8::1]/">host</a></p>
-    
+
     <p><a href="http://[::1]/">loopback</a></p>
-    
+
     <p><a href="http://[::1]:8080/">port</a></p>
-    
+
     <p><a href="http://example.com/x">t</a>?q=1</p>
-    
+
     <p><a href="http://user:pass@[::1]:8080/">creds</a></p>
 
     <p>&#8220;invalid&#8221;:javascript://user:pass@[::1]:8080/</p>
+
+Render trailing HTML-like tag after the link:
+  input: |
+    <span>"Link":https://example.tld/path/to</span>
+
+    <h1>"Link":https://example.tld/path/to</h1>
+  expect: |
+    <p><span><a href="https://example.tld/path/to">Link</a></span></p>
+
+    <h1><a href="https://example.tld/path/to">Link</a></h1>
+
+Render single trailing left angle bracket after the link:
+  input: |
+    "Link":https://example.tld/<
+  expect: |
+    <p><a href="https://example.tld/">Link</a>&lt;</p>
+
+Render single trailing right angle bracket after the link:
+  input: |
+    "Link":https://example.tld/>
+  expect: |
+    <p><a href="https://example.tld/">Link</a>&gt;</p>
+
+In restricted mode, render single trailing left angle bracket after the link:
+  setup:
+    - setRestricted: true
+  input: |
+    "Link":https://example.tld/<
+  expect: |
+    <p><a href="https://example.tld/">Link</a>&lt;</p>
+
+In restricted mode, render single trailing right angle bracket after the link:
+  setup:
+    - setRestricted: true
+  input: |
+    "Link":https://example.tld/>
+  expect: |
+    <p><a href="https://example.tld/">Link</a>&gt;</p>

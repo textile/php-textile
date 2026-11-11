@@ -229,4 +229,17 @@ class ParserTest extends TestCase
             $this->parser->parse($input)
         );
     }
+
+    public function testLeadingSpaces()
+    {
+        $this->assertSame(
+            ' <strong>strong</strong>',
+            $this->parser->parse(' *strong*')
+        );
+
+        $this->assertSame(
+            " <strong>line1</strong>\nline2\n<em>line3</em>",
+            $this->parser->parse(" *line1*\nline2\n_line3_\n")
+        );
+    }
 }

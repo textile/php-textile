@@ -4355,20 +4355,23 @@ class Parser
                 case '!':
                 case '?':
                 case ':':
-                case ';':
                 case '.':
                 case ',':
+                case '<':
                     $pop = $c . $pop;
                     $popped = true;
                     break;
 
                 case '>':
+                case ';':
                     $urlLeft = implode('', $url_chars);
+                    $popped = true;
 
-                    if (preg_match('@(?P<tag><\/[a-z]+)$@', $urlLeft, $m)) {
+                    if (preg_match('@(?P<tag>(<|&lt;)/?[^\s<>/]+(?:|\s+[^>]*|&gt)/?|&lt|&gt)$@', $urlLeft, $m)) {
                         $url_chars = str_split(substr($urlLeft, 0, strlen($m['tag']) * -1));
                         $pop = $m['tag'] . $c . $pop;
-                        $popped = true;
+                    } else {
+                        $pop = $c . $pop;
                     }
 
                     break;
