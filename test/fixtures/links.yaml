@@ -1517,6 +1517,16 @@ IPv6 literal URLs as links:
 
     "invalid":javascript://user:pass@[::1]:8080/
 
+    A ["footnoted link":http://user:pass@[::1]:8080/][1].
+
+    A ["footnoted link":http://user:pass@[::1]/path/to][2].
+
+    A ["footnoted link":http://user:pass@[::1]/path/to][3].
+
+    fn1. Footnote 1
+
+    fn2. Footnote 2
+
   expect: |
     <p><a href="http://[2001:db8::1]/">host</a></p>
 
@@ -1529,6 +1539,16 @@ IPv6 literal URLs as links:
     <p><a href="http://user:pass@[::1]:8080/">creds</a></p>
 
     <p>&#8220;invalid&#8221;:javascript://user:pass@[::1]:8080/</p>
+
+    <p>A <a href="http://user:pass@[::1]:8080/">footnoted link</a><sup class="footnote"><a>1</a></sup>.</p>
+
+    <p>A <a href="http://user:pass@[::1]/path/to">footnoted link</a><sup class="footnote"><a>2</a></sup>.</p>
+
+    <p>A <a href="http://user:pass@[::1]/path/to">footnoted link</a><sup class="footnote"><a>3</a></sup>.</p>
+
+    <p class="footnote"><sup>1</sup> Footnote 1</p>
+
+    <p class="footnote"><sup>2</sup> Footnote 2</p>
 
 Render trailing HTML-like tag after the link:
   input: |

@@ -4297,7 +4297,7 @@ class Parser
             ')' => null,
         );
 
-        // Split off leading IPv6 URLs to not be included the brackets in the balance check.
+        // Split off leading IPv6 address, excluding the included brackets from the balance check.
         if ($counts[']']
             && 1 === preg_match(
                 '#^(?P<preUrl>(?:[^:\#?]+:)?//(?:[^:@]+(?::[^:@]+)?@)?\[[0-9:a-f]+\](?::[0-9]+)?)#'.
@@ -4367,7 +4367,7 @@ class Parser
                     $urlLeft = implode('', $url_chars);
                     $popped = true;
 
-                    if (preg_match('@(?P<tag>(<|&lt;)/?[^\s<>/]+(?:|\s+[^>]*|&gt)/?|&lt|&gt)$@', $urlLeft, $m)) {
+                    if (preg_match('@(?P<tag>(?:<|&lt;)/?[^\s<>&/]+/?|&lt|&gt)$@', $urlLeft, $m)) {
                         $url_chars = str_split(substr($urlLeft, 0, strlen($m['tag']) * -1));
                         $pop = $m['tag'] . $c . $pop;
                     } else {
