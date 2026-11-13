@@ -2,7 +2,7 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
-h2. Version 4.1.9 - upcoming
+h2. "Version 4.1.9 - 2026/11/13":https://github.com/textile/php-textile/releases/tag/v4.1.9
 
 * Improve support for literal IPv6 addresses in links. Supports literal IPv6 address format's square bracket syntax in regular Textile links.
 * Fixed: Avoid eating single trailing angle bracket characters that is used right after link URL. Instead, render the trailing angle bracket after the link, similarly how @!@, @,@ and @.@ symbols already worked.
