@@ -8,12 +8,12 @@ RUN apt-get update && apt-get install -y \
     zip \
     wget
 
-RUN docker-php-ext-configure mbstring && docker-php-ext-install mbstring
+RUN docker-php-ext-install mbstring
 
 COPY --from=composer:2.11 /usr/bin/composer /usr/bin/composer
 COPY --from=ghcr.io/php/pie:1.5-bin /pie /usr/bin/pie
 
-RUN pie install xdebug/xdebug:dev-master && docker-php-ext-enable xdebug
+RUN pie install xdebug/xdebug:3.6.0alpha1
 
 RUN mkdir -p /.config/psysh && chmod 777 /.config/psysh
 
