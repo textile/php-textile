@@ -2,7 +2,7 @@
 
 HOST_UID ?= `id -u`
 HOST_GID ?= `id -g`
-IMAGE ?= php_8_5
+IMAGE ?= php_8_6
 PHP = docker compose run --rm -u $(HOST_UID):$(HOST_GID) php
 
 all: test

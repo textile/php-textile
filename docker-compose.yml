@@ -1,6 +1,6 @@
 services:
   php:
-    build: ./docker/image/${IMAGE:-php_8_5}
+    build: ./docker/image/${IMAGE:-php_8_6}
     volumes:
       - .:/app
       - ${COMPOSER_HOME:-$HOME/.composer}:/composer
