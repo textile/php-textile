@@ -1312,6 +1312,12 @@ Sanitize HTML within acronyms in restricted mode:
   expect : |
     <p><acronym title="Escaped &lt;span&gt; &#8220; HTML"><span class="caps">ESC</span></acronym>.</p>
 
+Multiple uppercase words on a single line:
+  input  : |
+    ABCD ABCD ABCD ABCD ABCD ABCD ABCD ABCD ABCD ABCD ABCD ABCD.
+  expect : |
+    <p><span class="caps">ABCD</span> <span class="caps">ABCD</span> <span class="caps">ABCD</span> <span class="caps">ABCD</span> <span class="caps">ABCD</span> <span class="caps">ABCD</span> <span class="caps">ABCD</span> <span class="caps">ABCD</span> <span class="caps">ABCD</span> <span class="caps">ABCD</span> <span class="caps">ABCD</span> <span class="caps">ABCD</span>.</p>
+
 Heading with class & id:
   input: |
     h2(heading#head). Hello!
