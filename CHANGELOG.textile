@@ -4,6 +4,8 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 4.1.11 - upcoming
 
+* Optimize uppercase word handling and caps span wrapping. Improves parsing performance when the parser is given a malicious document containing a long line of multiple uppercase words.
+
 h2. "Version 4.1.10 - 2026/11/26":https://github.com/textile/php-textile/releases/tag/v4.1.10
 
 * Use tempered greedy token regular expression pattern for span tag parsing pass, improving parsing performance when the parser is given a malicious document containing a deeply nested Textile span tag structure (fixes "GHSA-g2xq-387j-r2vx":https://github.com/textile/php-textile/security/advisories/GHSA-g2xq-387j-r2vx).

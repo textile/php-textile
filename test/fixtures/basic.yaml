@@ -1292,6 +1292,26 @@ Embedded acronym inside acronym:
   expect : |
     <p>Tell me, what is <acronym title="Asynchronous Javascript and XML"><span class="caps">AJAX</span></acronym>, please?</p>
 
+Avoid matching uppercase words within acronyms:
+  input  : |
+    And a SOMETHING(Just EXAMPLE acronym).
+  expect : |
+    <p>And a <acronym title="Just EXAMPLE acronym"><span class="caps">SOMETHING</span></acronym>.</p>
+
+Sanitize HTML within acronyms:
+  input  : |
+    ESC(Escaped <>" HTML).
+  expect : |
+    <p><acronym title="Escaped &lt;&gt;&#8221; HTML"><span class="caps">ESC</span></acronym>.</p>
+
+Sanitize HTML within acronyms in restricted mode:
+  setup:
+    - setRestricted: true
+  input  : |
+    ESC(Escaped <span> " HTML).
+  expect : |
+    <p><acronym title="Escaped &lt;span&gt; &#8220; HTML"><span class="caps">ESC</span></acronym>.</p>
+
 Heading with class & id:
   input: |
     h2(heading#head). Hello!

@@ -251,4 +251,13 @@ class ParserTest extends TestCase
             $this->parser->parse($input)
         );
     }
+
+    public function testLongUppercaseWordLine()
+    {
+        $input = str_repeat('ABCD ', 32000);
+
+        $this->assertIsString(
+            $this->parser->parse($input)
+        );
+    }
 }
