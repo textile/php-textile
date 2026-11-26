@@ -1,0 +1,11 @@
+Deeply nested span below the maximum span nesting level:
+  input: |
+    *_*_*_Nested spans._*_*_*
+  expect : |
+    <p><strong><em><strong><em><strong><em>Nested spans.</em></strong></em></strong></em></strong></p>
+
+Nested deeper than the maximum span nesting level:
+  input: |
+    *_*_*_*_*_*_Nested spans._*_*_*_*_*_*
+  expect : |
+    <p><strong><em><strong><em><strong><em>*_*_*_Nested spans._*_*_*</em></strong></em></strong></em></strong></p>

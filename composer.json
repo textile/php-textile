@@ -27,7 +27,7 @@
         "phpunit/phpunit": "^9.5.20",
         "squizlabs/php_codesniffer": "3.*",
         "symfony/yaml": "^5.4.40",
-        "psy/psysh": "^0.12.4"
+        "psy/psysh": "dev-main#b0d75ae4d3e2384770ce3dd0ad8e171ddd79ba86@dev"
     },
     "extra": {
         "branch-alias": {

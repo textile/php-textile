@@ -242,4 +242,13 @@ class ParserTest extends TestCase
             $this->parser->parse(" *line1*\nline2\n_line3_\n")
         );
     }
+
+    public function testParsingDeeplyNestedSpans()
+    {
+        $input = str_repeat('*_@[]"', 15400);
+
+        $this->assertIsString(
+            $this->parser->parse($input)
+        );
+    }
 }

@@ -4,6 +4,8 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 4.1.10 - upcoming
 
+* Use tempered greedy token regular expression pattern for span tag parsing pass, improving parsing performance when the parser is given a malicious document containing a deeply nested Textile span tag structure (fixes "GHSA-g2xq-387j-r2vx":https://github.com/textile/php-textile/security/advisories/GHSA-g2xq-387j-r2vx).
+
 h2. "Version 4.1.9 - 2026/11/13":https://github.com/textile/php-textile/releases/tag/v4.1.9
 
 * Improve support for literal IPv6 addresses in links. Supports literal IPv6 address format's square bracket syntax in regular Textile links.
