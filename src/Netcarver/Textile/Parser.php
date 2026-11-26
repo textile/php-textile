@@ -2212,20 +2212,6 @@ class Parser
             }
         }
 
-        /*
-        // 3+ uppercase
-        if ($this->symbols['caps'] !== false) {
-            $this->glyph_search[] = '/('.$this->regex_snippets['space'].'|^|[>(;-])'.
-                '(['.$this->regex_snippets['abr'].']{3,})'.
-                '(['.$this->regex_snippets['nab'].']*)(?='.
-                $this->regex_snippets['space'].'|'.$pnc.'|<|$)'.
-                '/'.$this->regex_snippets['mod'];
-            $this->glyph_replace[] = $this->replaceMarkers('$1'.$this->symbols['caps'].'$3', array(
-                'content' => $this->uid.':glyph:$2',
-            ));
-        }
-        */
-
         // Ellipsis
         if ($this->symbols['ellipsis'] !== false) {
             $this->glyph_search[] = '/([^.]?)\.{3}/';
