@@ -2,7 +2,7 @@ h1. Changelog
 
 Here's a summary of changes in each release. The list doesn't include some small changes or updates to test cases.
 
-h2. Version 4.1.10 - upcoming
+h2. "Version 4.1.10 - 2026/11/26":https://github.com/textile/php-textile/releases/tag/v4.1.10
 
 * Use tempered greedy token regular expression pattern for span tag parsing pass, improving parsing performance when the parser is given a malicious document containing a deeply nested Textile span tag structure (fixes "GHSA-g2xq-387j-r2vx":https://github.com/textile/php-textile/security/advisories/GHSA-g2xq-387j-r2vx).
 
