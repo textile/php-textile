@@ -4,6 +4,8 @@ Here's a summary of changes in each release. The list doesn't include some small
 
 h2. Version 4.1.12 - upcoming
 
+* Allow wrapping links in @+@, @-@ and @_@ Textile span tags. Previously the link would swallow the trailing Textile syntax character attached to the URL, making it part of the link href. Now the trailing tag syntax characters are excluded from the URL, unless the URL is wrapped in square brackets, allowing trailing @+@, @-@ and @_@ Textile syntax characters be used at the end of the URL (closes "#234":https://github.com/textile/php-textile/issues/234).
+
 h2. "Version 4.1.11 - 2026/11/26":https://github.com/textile/php-textile/releases/tag/v4.1.11
 
 * Optimize uppercase word handling and caps span wrapping. Improves parsing performance when the parser is given a malicious document containing a long line of multiple uppercase words.

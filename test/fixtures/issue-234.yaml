@@ -1,0 +1,59 @@
+Ins tags around a link:
+  input: |
+    +This is a "link":https://example.tld/.+
+  expect: |
+    <p><ins>This is a <a href="https://example.tld/">link</a>.</ins></p>
+
+Del tags around a link:
+  input: |
+    -This is a "link":https://example.tld/.-
+  expect: |
+    <p><del>This is a <a href="https://example.tld/">link</a>.</del></p>
+
+Em tags around a link:
+  input: |
+    _This is a "link":https://example.tld/._
+  expect: |
+    <p><em>This is a <a href="https://example.tld/">link</a>.</em></p>
+
+Brackets allow including trailing plus sign in the link:
+  input: |
+    +This is a ["link":https://example.tld/.+]+
+  expect: |
+    <p><ins>This is a <a href="https://example.tld/.+">link</a></ins></p>
+
+Brackets allow including trailing dash in the link:
+  input: |
+    -This is a ["link":https://example.tld/.-]-
+  expect: |
+    <p><del>This is a <a href="https://example.tld/.-">link</a></del></p>
+
+Brackets allow including trailing underscore in the link:
+  input: |
+    _This is a ["link":https://example.tld/._]_
+  expect: |
+    <p><em>This is a <a href="https://example.tld/._">link</a></em></p>
+
+Brackets can be wrapped in span tags:
+  input: |
+    +_["link":https://example.tld/.+]_+
+  expect: |
+    <p><ins><em><a href="https://example.tld/.+">link</a></em></ins></p>
+
+Plus signs are allowed middle of the URL:
+  input: |
+    +This is a "link":https://example.tld/example+link.+
+  expect: |
+    <p><ins>This is a <a href="https://example.tld/example+link">link</a>.</ins></p>
+
+Dashes are allowed middle of the URL:
+  input: |
+    -This is a "link":https://example.tld/example-link.-
+  expect: |
+    <p><del>This is a <a href="https://example.tld/example-link">link</a>.</del></p>
+
+Underscores are allowed middle of the URL:
+  input: |
+    _This is a "link":https://example.tld/example_link._
+  expect: |
+    <p><em>This is a <a href="https://example.tld/example_link">link</a>.</em></p>
