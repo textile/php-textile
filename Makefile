@@ -44,7 +44,7 @@ process-reports:
 	$(PHP) bash -c "test -e build/logs/clover.xml && sed -i 's/\/app\///' build/logs/clover.xml"
 
 docker-build:
-	docker-compose build php
+	docker compose build php
 
 docker-images:
 	@$(PHP) bash -c "cd docker/image && ls ."
